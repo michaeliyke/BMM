@@ -3,11 +3,9 @@
     "version": "0.0.1",
     "manifest_version": 3,
     "description": "testing",
-    "content_scripts": [
-        {
-            "matches": ["*://twitter.com/*"],
-            "js": ["inet.js"]
-            
-        }
-    ]
+    "content_scripts": [{
+        "matches": ["*://twitter.com/*"],
+        "js": ["index.js"]
+
+    }]
 }
