@@ -1,11 +1,15 @@
 {
-    "name": " custom inject",
+    "name": "Mass tweet deleter",
     "version": "0.0.1",
     "manifest_version": 3,
-    "description": "testing",
+    "description": "An extension to mass delete tweets and retweets",
+    "author": "Pius Ebiama",
     "content_scripts": [{
         "matches": ["*://twitter.com/*"],
         "js": ["index.js"]
 
-    }]
+    }],
+    "action": {
+        "default_popup": "index.html"
+    }
 }
