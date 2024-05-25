@@ -52,18 +52,28 @@ CREATE TABLE IF NOT EXISTS tags (
 DROP TABLE IF EXISTS bookmark_category;
 -- The bookmark_category junction table
 CREATE TABLE IF NOT EXISTS bookmark_category (
-	bookmark_id VARCHAR(60) NOT NULL,
-	category_id VARCHAR(60) NOT NULL,
+	bookmark_id VARCHAR(60),
+	category_id VARCHAR(60),
 	PRIMARY KEY (bookmark_id, category_id),
 	FOREIGN KEY (bookmark_id) REFERENCES bookmarks(id),
 	FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 -- Drop table
+DROP TABLE IF EXISTS category_tag;
+-- The category_tag junction table
+CREATE TABLE IF NOT EXISTS category_tag (
+	category_id VARCHAR(60),
+	tag_id VARCHAR(60),
+	PRIMARY KEY (category_id, tag_id),
+	FOREIGN KEY (category_id) REFERENCES categories(id),
+	FOREIGN KEY (tag_id) REFERENCES tags(id)
+);
+-- Drop table
 DROP TABLE IF EXISTS bookmark_tag;
 -- The bookmark_tag junction table
 CREATE TABLE IF NOT EXISTS bookmark_tag (
-	bookmark_id VARCHAR(60) NOT NULL,
-	tag_id VARCHAR(60) NOT NULL,
+	bookmark_id VARCHAR(60),
+	tag_id VARCHAR(60),
 	PRIMARY KEY (bookmark_id, tag_id),
 	FOREIGN KEY (bookmark_id) REFERENCES bookmarks(id),
 	FOREIGN KEY (tag_id) REFERENCES tags(id)
