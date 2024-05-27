@@ -41,7 +41,7 @@
 function updateDisplayPane() {
   const category = $(this).data('name');
   const bookmarks = $.categories.find((bkmrk) => bkmrk.name === category).data;
-  const displaypane = $('.display-pane');
+  const displaypane = $('ul.categories');
   displaypane.empty();
   const ul_display = document.createElement('ul');
   const li_tags = bookmarks.map((bookmark) => {
