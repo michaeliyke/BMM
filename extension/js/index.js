@@ -13,8 +13,9 @@ const log = console.log.bind(console);
   displaypane.empty();
 
   // Creating a new bookmark
+  const url = getUrl();
 
-  $('.form-group .url-input').val(location).select().focus();
+  $('.form-group .url-input').val(url).select().focus();
 
   $('.bookmark-form .create-button').click(bookmarkCreateHandler);
 
@@ -68,4 +69,15 @@ function getCategories(bookmarks) {
     return `<li><a href='#'>${bookmark.category.toUpperCase()}</a></li>`;
   });
   return [...new Set(categories)].sort().slice(0, 10);
+}
+
+function getUrl() {
+  // If in chrome extension environment, get the current tab url
+  if (typeof chrome !== 'undefines' && chrome.runtime) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      return tabs[0].url;
+    });
+  } else {
+    return window.location.href;
+  }
 }
