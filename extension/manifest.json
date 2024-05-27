@@ -18,7 +18,7 @@
 			"24": "img/icons/icon48.ico",
 			"16": "img/icons/icon16.png"
 		},
-		"default_popup": "templates/index.html",
+		"default_popup": "templates/mainpage.html",
 		"default_title": "BookMark Manager"
 	},
 	"options_ui": {
