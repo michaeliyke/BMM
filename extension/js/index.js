@@ -1,23 +1,27 @@
+import bookmark from './bookmark.js';
+const { bookmarkCreateHandler } = bookmark;
+
+
+const ce = document.createElement.bind(document); // Create a new element
+const log = console.log.bind(console);
+
 ; jQuery(function ($) {
-  const ce = document.createElement.bind(document); // Create a new element
-  const sel = document.querySelector.bind(document); // Select a single element
-  const selAll = document.querySelectorAll.bind(document); // all elements
-  const selId = document.getElementById.bind(document); // element by its ID
-  const selClass = document.getElementsByClassName.bind(document);  // by class
-  const selTag = document.getElementsByTagName.bind(document); // by tagName
-  const selName = document.getElementsByName.bind(document); // by name
-  const log = console.log.bind(console); // console.log
-  const l = console.log.bind(console); // console.log
   const ul_nav = ce('ul');
-  const ul_display = ce('ul');
   const navpane = $('.nav-pane');
   const displaypane = $('.display-pane');
-
   navpane.empty();
   displaypane.empty();
 
+  // Creating a new bookmark
 
-  loadBookmarks().then((categories) => {
+  $('.form-group .url-input').val(location).select().focus();
+
+  $('.bookmark-form .create-button').click(bookmarkCreateHandler);
+
+  // assign var url to the url of the current page using chrom API
+
+
+  /* loadBookmarks().then((categories) => {
     const li_tags = [];
     $.categories = categories; // Save the categories in the jQuery object
     for (const category of categories) {
@@ -34,9 +38,11 @@
   }).catch((err) => {
     console.error(err);
   });
-
+ */
 
 });
+
+
 
 function updateDisplayPane() {
   const category = $(this).data('name');
@@ -55,25 +61,7 @@ function updateDisplayPane() {
 
 }
 
-function loadBookmarks() {
-  const bookmarks_url = '../js/lib/MOCK_DATA.json';
-  return new Promise((resolve, reject) => {
-    try {
-      $.getJSON(bookmarks_url, function (data) {
-        // Get an array of bookmarks grouped by category names
-        let categories = data.map((bookmark) => bookmark.category);
-        categories = [...new Set(categories)].sort().slice(0, 10);
-        const bookmarks = categories.map((category) => {
-          const bkmrks = data.filter((bkmrk) => bkmrk.category === category);
-          return { name: category.toUpperCase(), data: bkmrks };
-        });
-        resolve(bookmarks);
-      });
-    } catch {
-      reject('Error loading bookmarks');
-    }
-  });
-}
+
 
 function getCategories(bookmarks) {
   categories = bookmarks.map((bookmark) => {
