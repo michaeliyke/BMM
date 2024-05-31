@@ -1,21 +1,21 @@
 #!/usr/bin/bash
-# This file must exit successfully for the bmm service to start
+# The starter script for the BMM service
 
-# Gunicorn dependency
-if ! command -v gunicorn; then
-	pip install gunicorn
-else
-	# copy gunicorn binary /bin
-	cp "$(command -v gunicorn)" ./bin
-fi
+# Move to the ROOT of the project
+cd ..
 
-# systemctl stop bmm
-
+# Check for the environment variables file and load it
 if [ -f ".env" ]; then
 	source ".env"
 else
-	echo "Please create a .env file in the project root directory"
+	echo "Environment variables file not found at the location"
 	exit 1
 fi
 
-exit 0
+# Start the BMM services
+# api
+/home/ubuntu/apps/BMM/bin/gunicorn --bind 0.0.0.0:5010 wsgi:app --workers 2 --threads 2
+# landing
+/home/ubuntu/apps/BMM/bin/gunicorn --bind 0.0.0.0:5011 landing.home:app --workers 2 --threads 2
+# files
+# /home/ubuntu/apps/BMM/bin/gunicorn --bind 0.0.0.0:5012 landing.files:app --workers 2 --threads 2

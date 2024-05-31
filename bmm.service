@@ -8,7 +8,7 @@ Group=www-data
 WorkingDirectory=/home/ubuntu/apps/BMM
 Environment=PATH=/home/ubuntu/apps/BMM/bin
 EnvironmentFile=/home/ubuntu/apps/BMM/.env
-ExecStart=/home/ubuntu/apps/BMM/bin/gunicorn --bind 0.0.0.0:5010 wsgi:app --workers 2 --threads 2
+ExecStart=/home/ubuntu/apps/BMM/bin/start.sh
 
 [Install]
 WantedBy=multi-user.target
