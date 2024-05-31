@@ -1,85 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet"
-		href="../css/style.css">
-	<script src="../js/lib/jquery.min.js"></script>
-	<script src="../js/index.js"></script>
-	<title>Linksway</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Bookmark Manager</title>
 </head>
-
 <body>
-	<!--header structure-->
-	<header>
-		<div class="logo"><a href="#">Linksway</a></div>
-		<div class="user-menu">
-			<div class="profile-icon"></div>
-			<div class="dropdown">
-				<ul>
-					<li class="a">Profile</li>
-					<li class="a">Settings</li>
-					<li class="a">Logout</li>
-				</ul>
-			</div>
-		</div>
-	</header>
-	<!---sidebar container-->
-	<div class="form-container">
-		<div class="bookmark-form">
-			<div class="form-group">
-				<label for="url">URL</label>
-				<input type="text"
-					id="url"
-					placeholder="URL">
-			</div>
-			<div class="form-group">
-				<label for="categories">Categories</label>
-				<select id="categories">
-					<option value="default">DEFAULT</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label for="description">Description</label>
-				<input type="text"
-					id="description"
-					placeholder="Description">
-			</div>
-			<button class="create-button">Create</button>
-		</div>
-	</div>
-	<div class="container">
-		<aside>
-			<div class="sidebar-header">
-				<h2>Categories</h2>
-			</div>
-			<ul class="categories">
-				<li>Career Paths</li>
-				<li>Programming</li>
-				<li>Lifestyle</li>
-			</ul>
-			<div class="add-buttons">
-				<button>+ Category</button>
-				<button>+ Tag</button>
-			</div>
-		</aside>
-		<main>
-			<div class="bookmark-list">
-				<div class="bookmark-item">
-					<h3>abc</h3>
-					<a href="https://www.abc.com">https://www.abc.com</a>
-					<p>Description* is a noun that refers to the act of nation of something using words.</p>
-					<div class="bookmark-actions">
-						<button>Edit</button>
-						<button>Delete</button>
-					</div>
-				</div>
-			</div>
-		</main>
-	</div>
-</body>
+    <!--header structure-->
+    <header>
+        <a href="index.html">
+            <img src="LOGO2.png" alt="Logo">
+        </a>
+        <div class="user-menu">
+            <div class="profile-icon"></div>
+            <div class="dropdown">
+                <ul>
+                    <li class="a">Profile</li>
+                    <li class="a">Settings</li>
+                    <li class="a">Logout</li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <!---sidebar container-->
+    <div class="form-container">
+        <div class="bookmark-form">
+            <div class="form-group">
+                <label for="url">URL</label>
+                <input type="text" id="url" placeholder="URL">
+            </div>
+            <div class="form-group">
+                <label for="category-dropdown">CATEGORY</label>
+                <select id="category-dropdown">
+                    <option value="default">Select Category</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tags">TAGS</label>
+                <div class="tags-container"></div>
+                <select id="tags-dropdown">
+                    <option value="default">Select Tags</option>
+                </select>
+            </div>
+            <button class="create-button">Create</button>
+        </div>  
+    </div>
+    <div class="container">
+        <aside>
+            <div class="sidebar-header">
+                <label for="filter-category">CATEGORIES</label>
+                <select id="filter-category">
+                    <option value="all">All</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="filter-tag">TAGS</label>
+                <select id="filter-tag">
+                    <option value="all">All</option>
+                </select>
+            </div>
+            <div class="add-buttons">
+                <button class="add-categories-btn">+ CATEGORIES</button>
+                <button class="add-tag-btn">+ TAG</button>
+        
+            </div>
+        
+        </aside>
+        <main>
+            <div class="bookmark-list">
+                <!-- Bookmark items will be appended here -->
+            </div>
+        </main>
+    </div>
 
+    <script src="filter.js"></script>
+</body>
 </html>
+
