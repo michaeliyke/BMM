@@ -1,0 +1,314 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1E90FF;
+    color: white;
+    padding: 10px 20px;
+}
+
+.logo {
+    font-size: 24px;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown ul li {
+    padding: 10px;
+}
+
+.dropdown ul li:hover {
+    background-color: #f0f4f8;
+}
+
+.user-menu:hover .dropdown {
+    display: block;
+}
+
+.form-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+.form-input-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+}
+
+
+.bookmark-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.bookmark-form .form-group {
+    flex-grow: 1;
+}
+.category-dropdown{
+margin-left: 20px;
+}
+.bookmark-form input,
+.bookmark-form select {
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.bookmark-form .create-button {
+    padding: 10px 20px;
+    background-color: #1E90FF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.bookmark-form .create-button:hover {
+    background-color: #1C86EE;
+    transform: scale(1.05);
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 50px);
+}
+
+aside {
+    width: 250px;
+    background-color: #9bcbf5;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.form-group {
+    margin-top: 20px;
+}
+
+.form-group h2 {
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+.categories {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.categories li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.categories li:hover {
+    background-color: #34495e;
+}
+
+.add-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-buttons button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    list-style: none;
+
+}
+
+.add-buttons button:hover {
+    background-color: #3b7dbf;
+}
+
+main {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.add_categoriesBtn, .add_tagBtn{
+    margin: 20px;
+    padding: 100px;
+    cursor: pointer;
+}
+
+.bookmark-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bookmark-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.bookmark-item h3 {
+    margin: 0;
+}
+
+.bookmark-item a {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+.bookmark-item p {
+    margin: 10px 0;
+    color: black;
+}
+
+.bookmark-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.bookmark-actions button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.bookmark-actions button:nth-child(1) {
+    background-color: #1E90FF;
+    color: white;
+}
+
+.bookmark-actions button:nth-child(1):hover {
+    background-color: #1C86EE;
+}
+
+.bookmark-actions button:nth-child(2) {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.bookmark-actions button:nth-child(2):hover {
+    background-color: #c0392b;
+}
+.form-group {
+    margin-bottom: 20px; /* Space between form groups */
+}
+
+/* Style for labels */
+label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space between label and select box */
+    font-weight: bold; /* Make label text bold */
+    font-size: 14px; /* Increase font size */
+    color: #333; /* Set label color */
+}
+
+/* Style for select boxes */
+select {
+    width: 100%; /* Make select box full width */
+    padding: 8px; /* Padding inside the select box */
+    font-size: 14px; /* Increase font size */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #fff; /* Background color */
+    color: #333; /* Text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+/* Additional styling for select box on focus */
+select:focus {
+    border-color: #007bff; /* Border color on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Focus shadow */
+}
+
+
+
+/* Style for labels */
+label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space between label and input/select */
+    font-weight: bold; /* Make label text bold */
+    font-size: 14px; /* Increase font size */
+    color: #333; /* Set label color */
+}
+
+/* Style for input fields */
+input[type="text"] {
+    width: 100%; /* Make input field full width */
+    padding: 8px; /* Padding inside the input field */
+    font-size: 14px; /* Increase font size */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+/* Style for select fields */
+select {
+    width: 100%; /* Make select field full width */
+    padding: 8px; /* Padding inside the select field */
+    font-size: 14px; /* Increase font size */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #fff; /* Background color */
+    color: #333; /* Text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+/* Additional styling for input/select fields on focus */
+input[type="text"]:focus,
+select:focus {
+    border-color: #007bff; /* Border color on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Focus shadow */
+}
