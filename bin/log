@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+# Show the last 50 log lines
+journalctl --follow --lines 50
+

@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+# Copy the service file to the desired folder
+sudo cp bmm.service /etc/systemd/system/bmm.service
+

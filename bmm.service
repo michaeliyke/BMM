@@ -3,14 +3,12 @@ Description=Gunicorn instance to serve BMM
 After=network.target
 
 [Service]
-User=michaeliyke
+User=ubuntu
 Group=www-data
-WorkingDirectory=/home/michaeliyke/michaeliyke/projects/BMM
-Environment=PATH=/home/michaeliyke/michaeliyke/projects/BMM/bin
-ConditionPathExists=/home/michaeliyke/michaeliyke/projects/BMM/.env
-ConitionExecStart=/home/michaeliyke/michaeliyke/projects/BMM/start.sh
-EnvironmentFile=/home/michaeliyke/michaeliyke/projects/BMM/.env
-ExecStart=/home/michaeliyke/michaeliyke/projects/BMM/bin/gunicorn --bind 0.0.0.0:5000 wsgi:app -m 007 --workers 2 --threads 2 --timeout 90 --log-level=debug --log-file=logs/gunicorn.log --access-logfile=logs/access.log --error-logfile=logs/error.log --capture-output --enable-stdio-inheritance
+WorkingDirectory=/home/ubuntu/apps/BMM
+Environment=PATH=/home/ubuntu/apps/BMM/bin
+EnvironmentFile=/home/ubuntu/apps/BMM/.env
+ExecStart=/home/ubuntu/apps/BMM/bin/gunicorn --bind 0.0.0.0:5010 wsgi:app --workers 2 --threads 2
 
 [Install]
 WantedBy=multi-user.target
