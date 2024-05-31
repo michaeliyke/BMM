@@ -4,6 +4,9 @@
 # Gunicorn dependency
 if ! command -v gunicorn; then
 	pip install gunicorn
+else
+	# copy gunicorn binary /bin
+	cp "$(command -v gunicorn)" ./bin
 fi
 
 # systemctl stop bmm

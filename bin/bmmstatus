@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+# Copy the service file to the desired folder
+sudo systemctl status bmm
+
