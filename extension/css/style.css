@@ -64,6 +64,13 @@ header {
     padding: 20px;
     border-bottom: 1px solid #ddd;
 }
+.form-input-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+}
+
 
 .bookmark-form {
     display: flex;
@@ -74,7 +81,9 @@ header {
 .bookmark-form .form-group {
     flex-grow: 1;
 }
-
+.category-dropdown{
+margin-left: 20px;
+}
 .bookmark-form input,
 .bookmark-form select {
     padding: 10px;
@@ -90,6 +99,7 @@ header {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 20px;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
@@ -114,11 +124,11 @@ aside {
     border-top-right-radius: 20px;
 }
 
-.sidebar-header {
+.form-group {
     margin-top: 20px;
 }
 
-.sidebar-header h2 {
+.form-group h2 {
     margin: 0;
     margin-bottom: 20px;
 }
@@ -152,6 +162,8 @@ aside {
     border: none;
     cursor: pointer;
     border-radius: 5px;
+    list-style: none;
+
 }
 
 .add-buttons button:hover {
@@ -162,6 +174,12 @@ main {
     flex-grow: 1;
     padding: 20px;
     background-color: #f4f4f4;
+}
+
+.add_categoriesBtn, .add_tagBtn{
+    margin: 20px;
+    padding: 100px;
+    cursor: pointer;
 }
 
 .bookmark-list {
@@ -220,4 +238,77 @@ main {
 .bookmark-actions button:nth-child(2):hover {
     background-color: #c0392b;
 }
+.form-group {
+    margin-bottom: 20px; /* Space between form groups */
+}
 
+/* Style for labels */
+label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space between label and select box */
+    font-weight: bold; /* Make label text bold */
+    font-size: 14px; /* Increase font size */
+    color: #333; /* Set label color */
+}
+
+/* Style for select boxes */
+select {
+    width: 100%; /* Make select box full width */
+    padding: 8px; /* Padding inside the select box */
+    font-size: 14px; /* Increase font size */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #fff; /* Background color */
+    color: #333; /* Text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+/* Additional styling for select box on focus */
+select:focus {
+    border-color: #007bff; /* Border color on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Focus shadow */
+}
+
+
+
+/* Style for labels */
+label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space between label and input/select */
+    font-weight: bold; /* Make label text bold */
+    font-size: 14px; /* Increase font size */
+    color: #333; /* Set label color */
+}
+
+/* Style for input fields */
+input[type="text"] {
+    width: 100%; /* Make input field full width */
+    padding: 8px; /* Padding inside the input field */
+    font-size: 14px; /* Increase font size */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+/* Style for select fields */
+select {
+    width: 100%; /* Make select field full width */
+    padding: 8px; /* Padding inside the select field */
+    font-size: 14px; /* Increase font size */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #fff; /* Background color */
+    color: #333; /* Text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+/* Additional styling for input/select fields on focus */
+input[type="text"]:focus,
+select:focus {
+    border-color: #007bff; /* Border color on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Focus shadow */
+}
