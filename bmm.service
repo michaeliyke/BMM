@@ -3,12 +3,12 @@ Description=Gunicorn instance to serve BMM
 After=network.target
 
 [Service]
-User=ubuntu
+User=michaeliyke
 Group=www-data
-WorkingDirectory=/home/ubuntu/apps/BMM
-Environment=PATH=/home/ubuntu/apps/BMM/bin
-EnvironmentFile=/home/ubuntu/apps/BMM/.env
-ExecStart=/home/ubuntu/apps/BMM/bin/gunicorn --bind 0.0.0.0:5010 wsgi:app --workers 2 --threads 2
+WorkingDirectory=/home/michaeliyke/michaeliyke/projects/BMM
+Environment=PATH=/home/michaeliyke/michaeliyke/projects/BMM/bin
+EnvironmentFile=/home/michaeliyke/michaeliyke/projects/BMM/.env
+ExecStart=/home/michaeliyke/michaeliyke/projects/BMM/start.sh
 
 [Install]
 WantedBy=multi-user.target
