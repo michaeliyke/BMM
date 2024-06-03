@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+# Copy the service file to the desired folder
+
+tail -20 /var/log/nginx/error.log
+

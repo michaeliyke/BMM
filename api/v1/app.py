@@ -4,18 +4,16 @@
 from flasgger.utils import swag_from
 from flasgger import Swagger
 from flask_cors import CORS
-from flask import Flask, render_template, make_response, jsonify
+from flask import Flask, make_response, jsonify
 from api.v1.views import app_views
+from landing import web_view
 from os import environ
-
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
+app.register_blueprint(web_view)
 # cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 

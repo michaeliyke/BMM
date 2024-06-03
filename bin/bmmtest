@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+# Copy the service file to the desired folder
+
+clear
+
+echo "Exec: curl 127.0.0.0:5000/api/v1/status -I"
+curl 127.0.0.0:5000/api/v1/status -I
+echo
+
+echo "Exec: curl 127.0.0.0/bmm/api/status -I"
+curl 127.0.0.0/bmm/api/status -I
+echo
+
+echo "Exec: curl 127.0.0.0:5000/web/v1/health -I"
+curl 127.0.0.0:5000/web/v1/health -I
+echo
+
+echo "Exec: curl 127.0.0.0/health -I"
+curl 127.0.0.0/health -I
+echo
+
+echo "Exec: curl 127.0.0.0:5000/web/v1/ -I"
+curl 127.0.0.0:5000/web/v1/ -I
+echo
+
+echo "Exec: curl 127.0.0.0/ -I"
+curl 127.0.0.0/ -I
+echo
+
+# echo "Exec: curl 127.0.0.0:5011 -I"
+# curl 127.0.0.0:5011 -I
+# echo
