@@ -35,7 +35,7 @@ class DBStorage:
     def all(self, cls):
         """Return all of a certain model class"""
         new_dict = {}
-        if cls is None:
+        if cls:
             objs = self.__session.query(cls).all()
             for obj in objs:
                 key = obj.__class__.__name__ + '.' + obj.id
