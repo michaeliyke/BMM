@@ -7,7 +7,7 @@ from flask import abort, jsonify, make_response, request
 
 
 @app_views.route('/tags', methods=['GET', 'POST'], strict_slashes=False)
-def get_all_or_create():
+def get_all_or_create_tag():
     """
     Retrieve all tag objects or create a new tag object
     """
@@ -28,8 +28,7 @@ def get_all_or_create():
 
 
 @app_views.route(
-    '/tags/<tag_id>', methods=['GET', 'POST', 'DELETE'],
-    strict_slashes=False)
+    '/tags/<id>', methods=['GET', 'POST', 'DELETE'], strict_slashes=False)
 def update_delete_get_tag(tag_id):
     """ Retrieve, update, or delete a specific tag"""
     # if request method is GET, retrieve the tag object

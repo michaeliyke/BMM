@@ -6,9 +6,5 @@ app_views = Blueprint('app_views', __name__, url_prefix='/api/v1')
 if True:  # Dummy if to keep the imports below the app_views definition
     from api.v1.views.index import *
     from api.v1.views.tags import *
-    # from api.v1.views.places import *
-    # from api.v1.views.places_reviews import *
-    # from api.v1.views.cities import *
-    # from api.v1.views.amenities import *
-    # from api.v1.views.users import *
-    # from api.v1.views.places_amenities import *
+    from api.v1.views.categories import *
+    from api.v1.views.users import *
