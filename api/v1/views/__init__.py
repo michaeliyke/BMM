@@ -8,3 +8,4 @@ if True:  # Dummy if to keep the imports below the app_views definition
     from api.v1.views.tags import *
     from api.v1.views.categories import *
     from api.v1.views.users import *
+    from api.v1.views.bookmarks import *
