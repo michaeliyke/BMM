@@ -67,4 +67,4 @@ def update_delete_get_bookmark(ID):
         return make_response(jsonify(bookmark.to_dict()), 200)
 
 # curl -X POST -H "Content-Type: application/json" -d '{"url":"https://www.google.com"}' http://localhost:5000/api/v1/bookmarks
-# curl -X GET http://localhost:5000/api/v1/bookmarks
+# # curl -X GET http://localhost:5000/api/v1/bookmarks
