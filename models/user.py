@@ -19,3 +19,6 @@ class User(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """Initializes a new User"""
         super().__init__(*args, **kwargs)
+        # If email was omitted, create a dummy one using the id
+        if not self.email:
+            self.email = self.id + "@localhost"
