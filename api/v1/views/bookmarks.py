@@ -26,6 +26,12 @@ def get_all_or_create_bookmark():
         instance.save()
         return make_response(jsonify(instance.to_dict()), 201)
 
+    # REQUEST METHOD IS HEADER
+    if request.method == 'HEAD':
+        return make_response(jsonify({}), 200)
+    # 405 Method Not Allowed
+    return make_response(jsonify({}), 405)
+
 
 @app_views.route(
     '/bookmarks/<ID>', methods=['GET', 'POST', 'DELETE'], strict_slashes=False)
