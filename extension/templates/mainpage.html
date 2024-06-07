@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
-    <script src="../js/app.js"></script>
+   
     <title>Bookmark Manager</title>
 </head>
 <body>
@@ -76,87 +76,7 @@
         </main>
     </div>
 
-  
+    <script src="../js/app.js" type="module"></script>
+    <script src="../js/fetch.js" type="module"></script>
 </body>
 </html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
-    <title>Bookmark Manager</title>
-</head>
-<body>
-    <!--header structure-->
-    <header>
-        <a href="index.html">
-            <img src="../img/icons/LOGO2.png" alt="Logo">
-        </a>
-        <div class="user-menu">
-            <div class="profile-icon"></div>
-            <div class="dropdown">
-                <ul>
-                    <li class="a">Profile</li>
-                    <li class="a">Settings</li>
-                    <li class="a">Logout</li>
-                </ul>
-            </div>
-        </div>
-    </header>
-    <!---sidebar container-->
-    <div class="form-container">
-        <div class="bookmark-form">
-            <div class="form-group">
-                <label for="url">URL</label>
-                <input type="text" id="url" placeholder="URL">
-            </div>
-            <div class="form-group">
-                <label for="category-dropdown">CATEGORY</label>
-                <select id="category-dropdown">
-                    <option value="default">Select Category</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="tags">TAGS</label>
-                <div class="tags-container"></div>
-                <select id="tags-dropdown">
-                    <option value="default">Select Tags</option>
-                </select>
-            </div>
-            <button class="create-button">Create</button>
-        </div>
-    </div>
-    <div class="container">
-        <aside>
-            <div class="sidebar-header">
-                <label for="filter-category">CATEGORIES</label>
-                <select id="filter-category">
-                    <option value="all">All</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="filter-tag">TAGS</label>
-                <select id="filter-tag">
-                    <option value="all">All</option>
-                </select>
-            </div>
-            <div class="add-buttons">
-                <button class="add-categories-btn">+ CATEGORIES</button>
-                <button class="add-tag-btn">+ TAG</button>
-
-            </div>
-
-        </aside>
-        <main>
-            <div class="bookmark-list">
-                <!-- Bookmark items will be appended here -->
-            </div>
-        </main>
-    </div>
-
-    <script src="filter.js"></script>
-</body>
-</html>
-

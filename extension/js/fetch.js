@@ -1,103 +1,54 @@
-const tag_url = "http://localhost:5000/api/v1/tags";
-
-export const fetchTags = async () => {
-    try {
-        const response = await fetch(api_url);
-        if (!response.ok) {
-            throw new Error("Not found")
-        }
-        const data = await response.json();
-        return data;
-    }catch (error) {
-        console.error('Error fetching tags:', error);
-        throw error;
-    }
-    };
-
-
-const post_tagurl = "http://localhost:5000/api/v1/tags/";
-
-export const addTag = async (tags) => {
-try{
-   const response = await fetch(post_url, {
-    method: 'POST',
-    header:{
-       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(tags),
-   });
-   if (!response.ok){
-    throw new Error('Not found')
-   }
-   const data = await response.json();
-   return data;
-}catch(error) {
-    console.error('Error adding tags:', error);
-    throw error;
-}
-}
-
-
-const links_url = "localhost:5000/api/v1/bookmarks";
-
-export const fetchLinks  = async () => {
-    try {
-        const response = await fetch(api_url);
-        if (!response.ok) {
-            throw new Error("Not found")
-        }
-        const data = await response.json();
-        return data;
-    }catch (error) {
-        console.error('Error fetching links:', error);
-        throw error;
-    }
-//tags
-const tag_url = "http://localhost:5000/api/v1/tags";
+const base_url = "http://localhost:5000/api/v1";
+const tag_url = `${base_url}/tags`;
+const post_tagurl = `${base_url}/tags/`;
+const update_tags = `${base_url}/tags/`;
+const delete_tags = `${base_url}/tags/`;
+const links_url = `${base_url}/bookmarks`;
+const post_linkurl = `${base_url}/bookmarks`;
+const update_links = `${base_url}/bookmarks`;
+const delete_links = `${base_url}/bookmarks`;
+const categories_url = `${base_url}/categories`;
+const post_categoriesurl = `${base_url}/categories`;
+const update_Categories = `${base_url}/categories`;
+const delete_categories = `${base_url}/categories`;
 
 export const fetchTags = async () => {
     try {
         const response = await fetch(tag_url);
         if (!response.ok) {
-            throw new Error("Not found")
+            throw new Error("Not found");
         }
         const data = await response.json();
         return data;
-    }catch (error) {
+    } catch (error) {
         console.error('Error fetching tags:', error);
         throw error;
     }
-    };
-
-
-const post_tagurl = "http://localhost:5000/api/v1/tags/";
+};
 
 export const addTag = async (tags) => {
-try{
-   const response = await fetch(post_tagurl, {
-    method: 'POST',
-    headers:{
-       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(tags),
-   });
-   if (!response.ok){
-    throw new Error('Not found')
-   }
-   const data = await response.json();
-   return data;
-}catch(error) {
-    console.error('Error adding tags:', error);
-    throw error;
-}
-}
-
-
-const update_tags = "http://localhost:5000/api/v1/tags/";
+    try {
+        const response = await fetch(post_tagurl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(tags),
+        });
+        if (!response.ok) {
+            throw new Error('Not found');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error adding tags:', error);
+        throw error;
+    }
+};
 
 export const updateTags = async (id, updatedTag) => {
     try {
-        const response = await fetch(update_tags, {
+        const response = await fetch(`${update_tags}${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,12 +66,9 @@ export const updateTags = async (id, updatedTag) => {
     }
 };
 
-
-
-const delete_tags = "http://localhost:5000/api/v1/tags/";
 export const deleteTags = async (id) => {
     try {
-        const response = await fetch(delete_tags, {
+        const response = await fetch(`${delete_tags}${id}`, {
             method: 'DELETE',
         });
         if (!response.ok) {
@@ -128,57 +76,48 @@ export const deleteTags = async (id) => {
         }
         return response.json();
     } catch (error) {
-        console.error('Error deleting Tags:', error);
+        console.error('Error deleting tags:', error);
         throw error;
     }
 };
 
-//links
-
-const links_url = "localhost:5000/api/v1/bookmarks";
-
-export const fetchLinks  = async () => {
+export const fetchLinks = async () => {
     try {
         const response = await fetch(links_url);
         if (!response.ok) {
-            throw new Error("Not found")
+            throw new Error("Not found");
         }
         const data = await response.json();
         return data;
-    }catch (error) {
+    } catch (error) {
         console.error('Error fetching links:', error);
         throw error;
     }
-    };
+};
 
+export const addLink = async (link) => {
+    try {
+        const response = await fetch(post_linkurl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(link),
+        });
+        if (!response.ok) {
+            throw new Error('Not found');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error adding links:', error);
+        throw error;
+    }
+};
 
-
-const post_linkurl = "http://localhost:5000/api/v1/bookmarks";
-
-export const addLinks = async (links) => {
-try{
-   const response = await fetch(post_linkurl, {
-    method: 'POST',
-    header:{
-       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(links),
-   });
-   if (!response.ok){
-    throw new Error('Not found')
-   }
-   const data = await response.json();
-   return data;
-}catch(error) {
-    console.error('Error adding links:', error);
-    throw error;
-}
-}
-
-const update_links = "http://localhost:5000/api/v1/bookmarks";
 export const updateLink = async (id, updatedLink) => {
     try {
-        const response = await fetch(update_links, {
+        const response = await fetch(`${update_links}${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -196,13 +135,9 @@ export const updateLink = async (id, updatedLink) => {
     }
 };
 
-
-
-
-const delete_links = "http://localhost:5000/api/v1/bookmarks";
 export const deleteLink = async (id) => {
     try {
-        const response = await fetch(delete_links, {
+        const response = await fetch(`${delete_links}${id}`, {
             method: 'DELETE',
         });
         if (!response.ok) {
@@ -210,56 +145,48 @@ export const deleteLink = async (id) => {
         }
         return response.json();
     } catch (error) {
-        console.error('Error deleting Links:', error);
+        console.error('Error deleting links:', error);
         throw error;
     }
 };
 
-//categories
-const categories_url = "localhost:5000/api/v1/categories";
-
-export const fetchCategories  = async () => {
+export const fetchCategories = async () => {
     try {
         const response = await fetch(categories_url);
         if (!response.ok) {
-            throw new Error("Not found")
+            throw new Error("Not found");
         }
         const data = await response.json();
         return data;
-    }catch (error) {
+    } catch (error) {
         console.error('Error fetching categories:', error);
         throw error;
     }
-    };
-
-
-
-const post_categoriesurl = "http://localhost:5000/api/v1/categories";
+};
 
 export const addCategories = async (category) => {
-try{
-   const response = await fetch(post_categoriesurl, {
-    method: 'POST',
-    header:{
-       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(category),
-   });
-   if (!response.ok){
-    throw new Error('Not found')
-   }
-   const data = await response.json();
-   return data;
-}catch(error) {
-    console.error('Error adding category:', error);
-    throw error;
-}
-}
+    try {
+        const response = await fetch(post_categoriesurl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(category),
+        });
+        if (!response.ok) {
+            throw new Error('Not found');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error adding category:', error);
+        throw error;
+    }
+};
 
-const update_Categories = "http://localhost:5000/api/v1/categories";
 export const updateCategories = async (id, updatedCategories) => {
     try {
-        const response = await fetch(update_Categories, {
+        const response = await fetch(`${update_Categories}${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -272,15 +199,14 @@ export const updateCategories = async (id, updatedCategories) => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error updating Categories:', error);
+        console.error('Error updating categories:', error);
         throw error;
     }
 };
 
-const delete_categories = "http://localhost:5000/api/v1/categories";
-export const deleteCartegoiries = async (id) => {
+export const deleteCategories = async (id) => {
     try {
-        const response = await fetch(delete_categories, {
+        const response = await fetch(`${delete_categories}${id}`, {
             method: 'DELETE',
         });
         if (!response.ok) {
@@ -288,8 +214,7 @@ export const deleteCartegoiries = async (id) => {
         }
         return response.json();
     } catch (error) {
-        console.error('Error deleting Categories:', error);
+        console.error('Error deleting categories:', error);
         throw error;
     }
 };
-    };    
