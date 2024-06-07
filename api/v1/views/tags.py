@@ -66,4 +66,7 @@ def update_delete_get_tag(tag_id):
         storage.save()
         return make_response(jsonify(tag.to_dict()), 200)
 
-# curl -X POST http://localhost:5000/api/v1/tags -H "Content-Type: application/json" -d '{"name": "school"}'
+# curl -X GET http://localhost/bmm/api/tags/
+# curl -X POST http://localhost/bmm/api/tags -H "Content-Type: application/json" -d '{"name": "educative"}'
+# curl -X GET http://localhost/bmm/api/tags/id
+# curl -X POST http://localhost/bmm/api/tags/id -H "Content-Type: application/json" -d '{"name": "informative"}'

@@ -184,3 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Populate default dropdowns
   populateDefaultDropdowns();
 });
+
+// comamnd to create git tag named v1.0.0 with a title "Version 1.0.0"
+// git tag v1.0.0 -m "Version 1.0.0"

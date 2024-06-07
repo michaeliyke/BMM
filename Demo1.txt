@@ -1,0 +1,26 @@
+
+
+
+
+1. Start Dev server
+2. Load extension
+3. Test extension is working on page
+4. Test some backend endpoints - users, tags, categories, bookmarks
+5. Close
+
+
+USERS
+curl -X GET http://localhost/bmm/api/users
+curl -X POST http://localhost/bmm/api/users -H "Content-Type: application/json" -d '{"email": "user@michael.iyke", "password": "password"}'
+curl -X GET http://localhost/bmm/api/users/id
+curl -X POST http://localhost/bmm/api/users/id -H "Content-Type: application/json" -d '{"first_name": "odo", "last_name": "Gwu"}'
+
+
+TAGS
+curl -X GET http://localhost/bmm/api/tags/
+
+CATEGORIES
+curl -X GET http://localhost/bmm/api/categories
+
+BOOKMARKS
+curl -X GET http://localhost/bmm/api/bookmarks

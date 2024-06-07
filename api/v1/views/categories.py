@@ -68,6 +68,7 @@ def update_delete_get_category(id):
         storage.save()
         return make_response(jsonify(category.to_dict()), 200)
 
-# curl -X POST -H "Content-Type: application/json" -d '{"name": "new category", "user_id": "1"}' http://localhost:5000/api/v1/categories
 # curl -X GET http://localhost:5000/api/v1/categories
-# curl -X GET http://localhost:5000/api/v1/categories/1
+# curl -X POST -H "Content-Type: application/json" -d '{"name": "Online", "user_id": "1"}' http://localhost:5000/api/v1/categories
+# curl -X GET http://localhost:5000/api/v1/categories/id
+# curl -X POST http://localhost:5000/api/v1/categories/id -H "Content-Type: application/json" -d '{"name": "Surfing"}'
