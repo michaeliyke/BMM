@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+# Reload the BMM system service
+service nginx status

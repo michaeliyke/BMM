@@ -4,18 +4,16 @@
 from flasgger.utils import swag_from
 from flasgger import Swagger
 from flask_cors import CORS
-from flask import Flask, render_template, make_response, jsonify
+from flask import Flask, make_response, jsonify
 from api.v1.views import app_views
+from landing import web_view
 from os import environ
-
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
+app.register_blueprint(web_view)
 # cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
@@ -37,6 +35,12 @@ def not_found(error):
     return make_response(jsonify({'error': "Not found"}), 404)
 
 
+@app.errorhandler(400)
+def bad_request(error):
+    """400 bad request error"""
+    return make_response(jsonify({"error": error.description}), 400)
+
+
 app.config['SWAGGER'] = {
     'title': 'BookMark Manager (BMM) Restful API',
     'uiversion': 3
@@ -51,5 +55,5 @@ if __name__ == "__main__":
     if not host:
         host = '0.0.0.0'
     if not port:
-        port = '5001'
-    app.run(host=host, port=port, threaded=True)
+        port = '5000'
+    app.run(host=host, port=port, threaded=True, debug=True)

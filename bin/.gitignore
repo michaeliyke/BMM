@@ -2,3 +2,6 @@
 !.gitignore
 !bmm*
 !log
+!nginx*
+!remote
+

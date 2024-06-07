@@ -1,0 +1,15 @@
+[Unit]
+Description=BMM Gunicorn Service
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/apps/BMM
+Environment=PATH=/home/ubuntu/apps/BMM/bin
+EnvironmentFile=/home/ubuntu/apps/BMM/.env
+ExecStart=/home/ubuntu/apps/BMM/bin/gunicorn --bind 0.0.0.0:5000 wsgi:app --workers 2
+
+[Install]
+WantedBy=multi-user.target
+
