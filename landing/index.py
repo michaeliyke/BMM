@@ -17,4 +17,4 @@ def status():
 def hbnb():
     """ BMM landing page is alive! """
 
-    return render_template('home.html', cache_id=uuid.uuid4())
+    return render_template('index.html', cache_id=uuid.uuid4())
