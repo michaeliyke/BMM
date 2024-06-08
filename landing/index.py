@@ -14,7 +14,14 @@ def status():
 
 
 @web_view.route('/', strict_slashes=False)
-def hbnb():
+def home():
     """ BMM landing page is alive! """
 
     return render_template('index.html', cache_id=uuid.uuid4())
+
+
+@web_view.route('/about', strict_slashes=False)
+def about():
+    """ BMM landing about page is alive! """
+
+    return render_template('about.html', cache_id=uuid.uuid4())
