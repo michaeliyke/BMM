@@ -30,7 +30,8 @@ class DBStorage:
 
     def close(self):
         """Closes the current session and engine"""
-        self.__session.remove()
+        # self.__session.remove()
+        self.__session.close()
 
     def all(self, cls):
         """Return all of a certain model class"""
