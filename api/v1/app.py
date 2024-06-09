@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ Flask Application """
-# from models import storage
+from models import storage
 from flasgger.utils import swag_from
 from flasgger import Swagger
 from flask_cors import CORS
@@ -18,10 +18,10 @@ app.register_blueprint(web_view)
 cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
-# @app.teardown_appcontext
-# def close_db(error):
-#     """ Close Storage """
-#     storage.close()
+@app.teardown_appcontext
+def close_db(error):
+    """ Close Storage """
+    storage.close()
 
 
 @app.errorhandler(404)

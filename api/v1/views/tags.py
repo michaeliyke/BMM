@@ -28,19 +28,19 @@ def get_all_or_create_tag():
 
 
 @app_views.route(
-    '/tags/<id>', methods=['GET', 'POST', 'DELETE'], strict_slashes=False)
-def update_delete_get_tag(tag_id):
+    '/tags/<ID>', methods=['GET', 'POST', 'DELETE'], strict_slashes=False)
+def update_delete_get_tag(ID):
     """ Retrieve, update, or delete a specific tag"""
     # if request method is GET, retrieve the tag object
     if request.method == 'GET':
-        tag = storage.get(Tag, tag_id)
+        tag = storage.get(Tag, ID)
         if not tag:
             abort(404)
         return make_response(jsonify(tag.to_dict()), 200)
 
     # if request method is DELETE, delete the tag object
     if request.method == 'DELETE':
-        tag = storage.get(Tag, tag_id)
+        tag = storage.get(Tag, ID)
         if not tag:
             abort(404)
         storage.delete(tag)
@@ -49,7 +49,7 @@ def update_delete_get_tag(tag_id):
 
     # if request method is PUT, modify the tag object
     if request.method == 'POST':
-        tag = storage.get(Tag, tag_id)
+        tag = storage.get(Tag, ID)
 
         if not tag:
             abort(404)

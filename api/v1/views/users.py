@@ -33,10 +33,10 @@ def get_all_or_create_user():
 
 
 @app_views.route(
-    '/users/<user_id>', methods=['GET', 'POST', 'DELETE'], strict_slashes=False)
-def update_delete_get_user(user_id):
+    '/users/<ID>', methods=['GET', 'POST', 'DELETE'], strict_slashes=False)
+def update_delete_get_user(ID):
     """ Retrieve, update, or delete a specific user"""
-    user = storage.get(User, user_id)
+    user = storage.get(User, ID)
 
     # Retrieve the user object if the request method is GET
     if request.method == 'GET':
