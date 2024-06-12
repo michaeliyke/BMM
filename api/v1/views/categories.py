@@ -30,19 +30,19 @@ def get_all_or_create_category():
 
 
 @app_views.route(
-    '/categories/<id>', methods=['GET', 'POST', 'DELETE'], strict_slashes=False)
-def update_delete_get_category(id):
+    '/categories/<ID>', methods=['GET', 'POST', 'DELETE'], strict_slashes=False)
+def update_delete_get_category(ID):
     """ Retrieve, update, or delete a specific category"""
     # if request method is GET, retrieve the category object
     if request.method == 'GET':
-        category = storage.get(Category, id)
+        category = storage.get(Category, ID)
         if not category:
             abort(404)
         return make_response(jsonify(category.to_dict()), 200)
 
     # if request method is DELETE, delete the category object
     if request.method == 'DELETE':
-        category = storage.get(Category, id)
+        category = storage.get(Category, ID)
         if not category:
             abort(404)
         storage.delete(category)
@@ -52,7 +52,7 @@ def update_delete_get_category(id):
     # if request method is POST, modify the tag object
     data = request.get_json()
     if request.method == 'POST':
-        category = storage.get(Category, id)
+        category = storage.get(Category, ID)
 
         if not category:
             abort(404)
