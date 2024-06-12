@@ -12,7 +12,7 @@
     <!--header structure-->
     <header>
         <div class="logo-container">
-            <img src="../img/logo4 (5).png" alt="Logo" class="logo">
+            <img src="../img/logo4 (5).png" alt="Logo" class="logo"> 
         </div>
         <div class="separator"> </div>
             <div class="bookmark-manager">BOOKMARK MANAGER</div>
@@ -57,28 +57,17 @@
     <div class="container">
         <aside>
             <div class="sidebar-header">
-                <!-- <label for="category-dropdown">FILTERS</label> -->
-                <select id="category-dropdown">
-                    <option value="categories">Categories</option>
-                    <option value="filter-tags">Filter:Tags</option>
-                    <option value="filter-category-tags">Filter:Category/Tags</option>
+                <label for="filter-category">CATEGORIES</label>
+                <select id="filter-category">
+                    <option value="all">All</option>
                 </select>
-				<dic class="filtered-list">
-					<ul>
-						<li>Career Paths</li>
-						<li>Programming</li>
-						<li>Frontend World</li>
-						<li>Backend World</li>
-						<li>Human World</li>
-					</ul>
-				</dic>
             </div>
-           <!--  <div class="form-group">
+            <div class="form-group">
                 <label for="filter-tag">TAGS</label>
                 <select id="filter-tag">
                     <option value="all">All</option>
                 </select>
-            </div> -->
+            </div>
             <div class="add-buttons">
                 <button class="add-categories-btn">+ CATEGORIES</button>
                 <button class="add-tag-btn">+ TAG</button>

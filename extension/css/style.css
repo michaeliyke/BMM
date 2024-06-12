@@ -19,7 +19,7 @@ header {
 
 .logo-container{
     display: flex;
-    align-items: center; 
+    align-items: center;
     margin-right: 10px;
 }
 .logo {
@@ -132,7 +132,7 @@ margin-left: 20px;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 50px;
-  
+
     transition: background-color 0.3s ease, transform 0.3s ease
 }
 
@@ -158,6 +158,31 @@ aside {
     padding: 20px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+}
+
+.filtered-list {
+	flex-direction: column;
+	display: flex;
+	gap: 10px;
+}
+
+.filtered-list ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.filtered-list li {
+	padding: 10px;
+	cursor: pointer;
+	font-size: 80%;
+	background-color: #007bff;
+	margin-top: 10px;
+	list-style: none;
+	text-align: center;
+	border: 0.16em solid white;
+	border-radius: 10px;
+	font-weight: bold;
 }
 
 .form-group {
