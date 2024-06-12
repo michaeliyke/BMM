@@ -151,6 +151,7 @@ margin-left: 20px;
 aside {
     width: 250px;
     background-color: #9bcbf5;
+	background-color: #88cdea;
     color: white;
     display: flex;
     justify-content: space-between;
@@ -158,6 +159,27 @@ aside {
     padding: 20px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+}
+
+aside .sidebar-header select {
+	padding: 7px 10px;
+	width: 100%;
+	border: 0.16em solid white;
+	border-radius: 10px;
+	background-color: #50aae8;
+	color: white;
+	/* appearance: none; */
+}
+
+aside .sidebar-header select option {
+	background-color: #50aae8;
+	color: white;
+}
+
+aside .sidebar-header select option.current {
+
+	color: #777777;
+	font-weight: bold;
 }
 
 .filtered-list {
@@ -176,13 +198,14 @@ aside {
 	padding: 10px;
 	cursor: pointer;
 	font-size: 80%;
-	background-color: #007bff;
+	background-color: #50aae8;
 	margin-top: 10px;
 	list-style: none;
 	text-align: center;
 	border: 0.16em solid white;
 	border-radius: 10px;
 	font-weight: bold;
+	width: 80%;
 }
 
 .form-group {
