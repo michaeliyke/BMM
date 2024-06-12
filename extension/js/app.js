@@ -24,12 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
       categoryDropdown.appendChild(newOption);
     });
 
-    defaultTags.forEach(tag => {
-      const newOption = document.createElement("option");
-      newOption.value = tag.toLowerCase().replace(/\s+/g, '-');
-      newOption.textContent = tag;
-      tagDropdown.appendChild(newOption);
-    });
+  //  defaultTags.forEach(tag => {
+  //  const newOption = document.createElement("option");
+  //  newOption.value = tag.toLowerCase().replace(/\s+/g, '-');
+  //  newOption.textContent = tag;
+  //  tagDropdown.appendChild(newOption);
+ //   });
 
     populateFilterDropdowns();
   }
@@ -48,14 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    Array.from(tagDropdown.options).forEach(option => {
-      if (option.value !== "default") {
-        const filterOption = document.createElement("option");
-        filterOption.value = option.value;
-        filterOption.textContent = option.textContent;
-        filterTagDropdown.appendChild(filterOption);
-      }
-    });
+   // Array.from(tagDropdown.options).forEach(option => {
+  //      if (option.value !== "default") {
+ //           const filterOption = document.createElement("option");
+ //           filterOption.value = option.value;
+ //           filterOption.textContent = option.textContent;
+ //           filterTagDropdown.appendChild(filterOption);
+ //        }
+ //   });
   }
 
   // Call this function whenever a new category or tag is added
@@ -95,8 +95,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   createButton.addEventListener("click", () => {
     const url = document.querySelector("#url").value;
+    const description = document.querySelector("#description").value
     const category = categoryDropdown.value;
-    const tags = Array.from(tagsContainer.children).map(tag => tag.textContent);
+  //  const tags = Array.from(tagsContainer.children).map(tag => tag.textContent);
 
     if (url.trim() === '') {
       alert("URL cannot be empty");
@@ -115,20 +116,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Clear inputs
     document.querySelector("#url").value = '';
+    document.querySelector("#description").value = '';
     categoryDropdown.value = 'default';
-    tagsContainer.innerHTML = '';
+    //tagsContainer.innerHTML = '';
   });
 
   function editBookmark(bookmarkItem) {
     const newUrl = prompt("Enter the new URL:", bookmarkItem.querySelector("a").href);
     const newCategory = prompt("Enter the new category:", bookmarkItem.querySelector("h3").textContent.split(": ")[1]);
-    const newTags = prompt("Enter the new tags (comma-separated):", bookmarkItem.querySelector("p").textContent.split(": ")[1]);
+    const newDescription = prompt("Enter the new description:", bookmarkItem.querySelector("p").textContent.split(": ")[1]);
+    //const newTags = prompt("Enter the new tags (comma-separated):", bookmarkItem.querySelector("p").textContent.split(": ")[1]);
 
     if (newUrl && newCategory && newTags) {
       bookmarkItem.querySelector("a").href = newUrl;
       bookmarkItem.querySelector("a").textContent = newUrl;
+      bookmarkItem.querySelector("p").textContent =`Description: ${newDescription}`;
       bookmarkItem.querySelector("h3").textContent = `Category: ${newCategory}`;
-      bookmarkItem.querySelector("p").textContent = `Tags: ${newTags}`;
+      //bookmarkItem.querySelector("p").textContent = `Tags: ${newTags}`;
     } else {
       alert("All fields must be filled out to edit the bookmark");
     }
@@ -150,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     listItem.innerHTML = `
             <h3>Category: ${link.category || ""}</h3>
             <a href="${link.url}" target="_blank">${link.url}</a>
-            <p>Tags: ${tags}</p>
+            <p>Description"${link.description}.join(",")</p>
             <button class="edit-button">Edit</button>
             <button class="delete-button">Delete</button>
         `;
@@ -158,7 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
     bookmarkList.appendChild(listItem);
 
     // Add event listeners for edit and delete buttons
-    listItem.querySelector(".edit-button").addEventListener("click", () => editBookmark(listItem));
+    listItem.que
+rySelector(".edit-button").addEventListener("click", () => editBookmark(listItem));
     listItem.querySelector(".delete-button").addEventListener("click", () => deleteBookmark(listItem));
   };
 
