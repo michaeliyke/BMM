@@ -7,6 +7,7 @@ body {
     background-color: white;
 	background-color: #ecf3fd;
     height: 100vh;
+	width: 900px;
 }
 
 header {
@@ -44,7 +45,7 @@ header {
 }
 
 #description {
-margin-right: 20px;
+/* margin-right: 20px; */
 }
 
 .user-menu {
@@ -106,27 +107,46 @@ margin-right: 20px;
 
 .bookmark-form {
     display: flex;
-    gap: 185px;
+    /* gap: 185px; */
     align-items: center;
+	padding-left: 10px;
+	background-color: #123456;
+	width: 100%;
+	box-sizing: border-box;
+	justify-content: start;
+	flex-wrap: wrap;
+	align-items: stretch;
 }
 
 .bookmark-form .form-group {
     flex-grow: 1;
+	flex-shrink: 0;
+	flex-basis: 28%;
+	max-width: 33%;
+	background-color: #654321;
+	padding: 0;
+	margin-right: 15px;
+}
+
+.bookmark-form .form-group:last-of-type {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
 }
 .category-dropdown{
-margin-left: 20px;
+/* margin-left: 20px; */
 }
 
 .bookmark-form input,
 .bookmark-form select {
     padding: 10px;
     width: 100%;
-    border: 1px solid none;
-    border-radius: 15px;
+    border: none;
+    border-radius: 10px;
 	color: white;
 	background-color: #6cbde8;
 }
-
 .bookmark-form .create-button {
     padding: 10px;
     background-color: #1E90FF;
@@ -134,7 +154,7 @@ margin-left: 20px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 50px;
+    /* margin-top: 50px; */
 
     transition: background-color 0.3s ease, transform 0.3s ease
 }
@@ -177,6 +197,8 @@ aside .sidebar-header select {
 	background-color: #50aae8;
 	color: white;
 	/* appearance: none; */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
 aside .sidebar-header select option {
@@ -347,7 +369,7 @@ label {
 
 /* Style for input fields */
 input[type="text"] {
-    width: 100%; /* Make input field full width */
+    /* width: 80%; */ /* Make input field full width */
     font-size: 14px; /* Increase font size */
     border: 1px solid #ccc; /* Border color */
     border-radius: 4px; /* Rounded corners */
@@ -361,19 +383,6 @@ input[type="text"] {
 
 input[type="text"]::placeholder {
     color: white;
-}
-
-/* Style for select fields */
-select {
-    width: 100%; /* Make select field full width */
-    padding: 8px; /* Padding inside the select field */
-    font-size: 14px; /* Increase font size */
-    border: 1px solid #ccc; /* Border color */
-    border-radius: 4px; /* Rounded corners */
-    background-color: #fff; /* Background color */
-    color: #333; /* Text color */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
 /* Additional styling for input/select fields on focus */
