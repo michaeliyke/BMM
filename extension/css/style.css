@@ -340,6 +340,7 @@ label {
     font-weight: bold; /* Make label text bold */
     font-size: 14px; /* Increase font size */
     color: black; /* Set label color */
+	color: #6cafd4;
 }
 
 /* Style for input fields */
@@ -351,6 +352,14 @@ input[type="text"] {
     border-radius: 4px; /* Rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
     box-sizing: border-box; /* Ensure padding is included in the width */
+	background-color: #6bbee7;
+	color: white;
+	border: none;
+	border-radius: 10px;
+}
+
+input[type="text"]::placeholder {
+    color: white;
 }
 
 /* Style for select fields */
