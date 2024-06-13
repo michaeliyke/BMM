@@ -14,3 +14,4 @@ if True:  # Dummy if to keep the imports below the app_views definition
     from api.v1.views.users import *
     from api.v1.views.bookmarks import *
     from api.v1.views.bookmark_categories import *
+    from api.v1.views.bookmark_tags import *
