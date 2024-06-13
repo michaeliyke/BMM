@@ -85,13 +85,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const newLink = { url, category, description };
 
     // Call the addLink function to send the data to the backend
-    addLink(newLink);
+    addLink(newLink)
+    .then(displayLink)
+    .catch(error => {
+        console.error('Error adding link:', error);
+        alert('Error adding link: ' + error.message);
+    });
 
     // Clear inputs
     document.querySelector("#url").value = '';
     document.querySelector("#description").value = '';
     categoryDropdown.value = 'default';
-    tagsContainer.innerHTML = '';
+   // tagsContainer.innerHTML = '';
   });
 
   function editBookmark(bookmarkItem) {
@@ -120,8 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const displayLink = (link) => {
     const listItem = document.createElement("div");
     listItem.classList.add("bookmark-item");
-
-    const tags = link.tags ? link.tags.join(", ") : "";
 
     listItem.innerHTML = `
       <h3>Category: ${link.category || ""}</h3>

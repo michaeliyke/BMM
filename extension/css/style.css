@@ -46,9 +46,7 @@ header {
     font-size: 15px; /* Adjusted margin to move text closer to the left */
 }
 
-#description {
-/* margin-right: 20px; */
-}
+
 
 .user-menu {
     position: relative;
@@ -145,12 +143,8 @@ header {
     background-color:#007bff; ;
 }
 .category-dropdown{
-<<<<<<< HEAD
 margin-left: 20px;
 background-color: #007bff;
-=======
-/* margin-left: 20px; */
->>>>>>> 3d42012231e2bfff86ae046862feb7dc647f3472
 }
 
 .bookmark-form input,
@@ -165,11 +159,8 @@ background-color: #007bff;
 .bookmark-form select{
 	padding: 5px 10px;
 }
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 3d42012231e2bfff86ae046862feb7dc647f3472
 .bookmark-form .create-button {
     padding: 10px;
     background-color: #1E90FF;
@@ -177,12 +168,7 @@ background-color: #007bff;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-<<<<<<< HEAD
     margin-top: 50px;
-=======
-    /* margin-top: 50px; */
-
->>>>>>> 3d42012231e2bfff86ae046862feb7dc647f3472
     transition: background-color 0.3s ease, transform 0.3s ease
 }
 
@@ -414,21 +400,8 @@ input[type="text"] {
 	border-radius: 10px;
 }
 
-<<<<<<< HEAD
-/* Style for select fields */
-select {
-    width: 100%; /* Make select field full width */
-    padding: 8px; /* Padding inside the select field */
-    font-size: 14px; /* Increase font size */
-    border: 1px solid #ccc; /* Border color */
-    border-radius: 4px; /* Rounded corners */
-    color: #333; /* Text color */
-    
-    box-sizing: border-box; /* Ensure padding is included in the width */
-=======
 input[type="text"]::placeholder {
     color: white;
->>>>>>> 3d42012231e2bfff86ae046862feb7dc647f3472
 }
 
 /* Additional styling for input/select fields on focus */
