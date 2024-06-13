@@ -54,6 +54,8 @@ DROP TABLE IF EXISTS bookmark_category;
 CREATE TABLE IF NOT EXISTS bookmark_category (
 	bookmark_id VARCHAR(60),
 	category_id VARCHAR(60),
+	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (bookmark_id, category_id),
 	FOREIGN KEY (bookmark_id) REFERENCES bookmarks(id),
 	FOREIGN KEY (category_id) REFERENCES categories(id)
@@ -64,6 +66,8 @@ DROP TABLE IF EXISTS category_tag;
 CREATE TABLE IF NOT EXISTS category_tag (
 	category_id VARCHAR(60),
 	tag_id VARCHAR(60),
+	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (category_id, tag_id),
 	FOREIGN KEY (category_id) REFERENCES categories(id),
 	FOREIGN KEY (tag_id) REFERENCES tags(id)
@@ -74,6 +78,8 @@ DROP TABLE IF EXISTS bookmark_tag;
 CREATE TABLE IF NOT EXISTS bookmark_tag (
 	bookmark_id VARCHAR(60),
 	tag_id VARCHAR(60),
+	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (bookmark_id, tag_id),
 	FOREIGN KEY (bookmark_id) REFERENCES bookmarks(id),
 	FOREIGN KEY (tag_id) REFERENCES tags(id)
@@ -89,3 +95,12 @@ GRANT SELECT,
 GRANT SELECT ON performance_schema.* to 'BMM_db_user' @'localhost';
 -- Flush privileges to ensure that they are reloaded by the server
 FLUSH PRIVILEGES;
+-------------------------------------------------------------------------------------------------
+-- ALTER TABLE category_tag
+-- ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+-- ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+--
+-- ALTER TABLE bookmark_tag
+-- ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+-- ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+---------------------------------------------------------------------------------------------

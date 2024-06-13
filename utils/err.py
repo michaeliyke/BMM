@@ -16,6 +16,8 @@ def err_ctxt(error: Exception) -> str:
           |-- (other database specific errors)
     """
 
+    print(error)
+
     if isinstance(error, sqlalchemy.exc.IntegrityError):
         return "ORM Integrity Error"
 

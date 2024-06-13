@@ -9,3 +9,6 @@ AirBnB_clone_v4
 default
 config
 logging
+*.test
+test*
+

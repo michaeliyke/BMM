@@ -5,8 +5,8 @@ from flasgger.utils import swag_from
 from flasgger import Swagger
 from flask_cors import CORS
 from flask import Flask, make_response, jsonify
-from api.v1.views import app_views
-from landing import web_view
+from api.v1.views import app_views  # The api Blueprint
+from landing import web_view  # The web Blueprint
 from os import environ
 
 
@@ -14,6 +14,7 @@ app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
 app.register_blueprint(web_view)
+# CORS handles the OPTIONS request for us along with CORS headers
 # cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
@@ -22,6 +23,18 @@ cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 def close_db(error):
     """ Close Storage """
     storage.close()
+
+
+@app.errorhandler(405)
+def method_not_allowed(error):
+    """405 method not allowed error"""
+    return make_response(jsonify({"error": "Not allowed"}), 405)
+
+
+@app.errorhandler(501)
+def method_not_allowed(error):
+    """405 method not allowed error"""
+    return make_response(jsonify({"error": "Not implemented"}), 501)
 
 
 @app.errorhandler(404)

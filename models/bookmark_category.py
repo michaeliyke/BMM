@@ -3,7 +3,7 @@ from sqlalchemy import Column, String, ForeignKey
 from models.base_model import BaseModel, Base
 
 
-class BookmarkCategory(Base):
+class BookmarkCategory(Base, BaseModel):
     """Defines a junction table for many-to-many relationship"""
     __tablename__ = 'bookmark_category'
     bookmark_id = Column(
