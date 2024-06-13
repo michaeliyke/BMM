@@ -119,18 +119,20 @@ margin-left: 20px;
 
 .bookmark-form input,
 .bookmark-form select {
-    padding: 20px;
+    padding: 10px;
     width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid none;
+    border-radius: 15px;
+	color: white;
+	background-color: #6cbde8;
 }
 
 .bookmark-form .create-button {
-    padding: 10px 20px;
+    padding: 10px;
     background-color: #1E90FF;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     margin-top: 50px;
 
@@ -346,7 +348,6 @@ label {
 /* Style for input fields */
 input[type="text"] {
     width: 100%; /* Make input field full width */
-    padding: 8px; /* Padding inside the input field */
     font-size: 14px; /* Increase font size */
     border: 1px solid #ccc; /* Border color */
     border-radius: 4px; /* Rounded corners */
