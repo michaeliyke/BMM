@@ -112,8 +112,17 @@ margin-right: 20px;
 .bookmark-form .form-group {
     flex-grow: 1;
 }
+
+#url{
+  background-color:#007bff;
+}
+
+#description{
+    background-color:#007bff; ;
+}
 .category-dropdown{
 margin-left: 20px;
+background-color: #007bff;
 }
 
 .bookmark-form input,
@@ -124,6 +133,7 @@ margin-left: 20px;
     border-radius: 5px;
 }
 
+
 .bookmark-form .create-button {
     padding: 10px 20px;
     background-color: #1E90FF;
@@ -132,7 +142,6 @@ margin-left: 20px;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 50px;
-
     transition: background-color 0.3s ease, transform 0.3s ease
 }
 
@@ -199,6 +208,12 @@ aside {
     padding: 0;
     margin: 0;
     flex-grow: 1;
+
+}
+#category-dropdown{
+width:230px;
+height: 35px;
+background-color:#007bff;
 }
 
 .categories li {
@@ -318,9 +333,9 @@ input[type="text"] {
     width: 100%; /* Make input field full width */
     padding: 8px; /* Padding inside the input field */
     font-size: 14px; /* Increase font size */
-    border: 1px solid #ccc; /* Border color */
+    border: 1px solid white; /* Border color */
     border-radius: 4px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  
     box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
@@ -331,16 +346,15 @@ select {
     font-size: 14px; /* Increase font size */
     border: 1px solid #ccc; /* Border color */
     border-radius: 4px; /* Rounded corners */
-    background-color: #fff; /* Background color */
     color: #333; /* Text color */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    
     box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
 /* Additional styling for input/select fields on focus */
 input[type="text"]:focus,
 select:focus {
-    border-color: #007bff; /* Border color on focus */
+    border-color: white; /* Border color on focus */
     outline: none; /* Remove default outline */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Focus shadow */
+   
 }

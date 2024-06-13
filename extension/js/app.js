@@ -24,41 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
       categoryDropdown.appendChild(newOption);
     });
 
-  //  defaultTags.forEach(tag => {
-  //  const newOption = document.createElement("option");
-  //  newOption.value = tag.toLowerCase().replace(/\s+/g, '-');
-  //  newOption.textContent = tag;
-  //  tagDropdown.appendChild(newOption);
- //   });
+   // defaultTags.forEach(tag => {
+    //  const newOption = document.createElement("option");
+     // newOption.value = tag.toLowerCase().replace(/\s+/g, '-');
+     // newOption.textContent = tag;
+      //tagDropdown.appendChild(newOption);
+//});
 
-    populateFilterDropdowns();
+  
   }
 
-  // Populate filter dropdowns with categories and tags
-  function populateFilterDropdowns() {
-    filterCategoryDropdown.innerHTML = '<option value="all">All</option>';
-    filterTagDropdown.innerHTML = '<option value="all">All</option>';
+ 
 
-    Array.from(categoryDropdown.options).forEach(option => {
-      if (option.value !== "default") {
-        const filterOption = document.createElement("option");
-        filterOption.value = option.value;
-        filterOption.textContent = option.textContent;
-        filterCategoryDropdown.appendChild(filterOption);
-      }
-    });
-
-   // Array.from(tagDropdown.options).forEach(option => {
-  //      if (option.value !== "default") {
- //           const filterOption = document.createElement("option");
- //           filterOption.value = option.value;
- //           filterOption.textContent = option.textContent;
- //           filterTagDropdown.appendChild(filterOption);
- //        }
- //   });
-  }
-
-  // Call this function whenever a new category or tag is added
+  // Call this function to populate dropdowns with default values
   populateDefaultDropdowns();
 
   addCategoriesBtn.addEventListener("click", () => {
@@ -95,44 +73,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   createButton.addEventListener("click", () => {
     const url = document.querySelector("#url").value;
-    const description = document.querySelector("#description").value
+    const description = document.querySelector("#description").value;
     const category = categoryDropdown.value;
-  //  const tags = Array.from(tagsContainer.children).map(tag => tag.textContent);
+    //const tags = Array.from(tagsContainer.children).map(tag => tag.textContent);
 
     if (url.trim() === '') {
       alert("URL cannot be empty");
       return;
     }
 
-    const newLink = { url, category, tags };
+    const newLink = { url, category, description };
 
     // Call the addLink function to send the data to the backend
-    addLink(newLink)
-      .then(displayLink)
-      .catch(error => {
-        console.error('Error adding link:', error);
-        alert('Error adding link: ' + error.message);
-      });
+    addLink(newLink);
 
     // Clear inputs
     document.querySelector("#url").value = '';
     document.querySelector("#description").value = '';
     categoryDropdown.value = 'default';
-    //tagsContainer.innerHTML = '';
+    tagsContainer.innerHTML = '';
   });
 
   function editBookmark(bookmarkItem) {
     const newUrl = prompt("Enter the new URL:", bookmarkItem.querySelector("a").href);
     const newCategory = prompt("Enter the new category:", bookmarkItem.querySelector("h3").textContent.split(": ")[1]);
     const newDescription = prompt("Enter the new description:", bookmarkItem.querySelector("p").textContent.split(": ")[1]);
-    //const newTags = prompt("Enter the new tags (comma-separated):", bookmarkItem.querySelector("p").textContent.split(": ")[1]);
+    const newTags = prompt("Enter the new tags (comma-separated):", bookmarkItem.querySelector("p").textContent.split(": ")[1]);
 
     if (newUrl && newCategory && newTags) {
       bookmarkItem.querySelector("a").href = newUrl;
       bookmarkItem.querySelector("a").textContent = newUrl;
-      bookmarkItem.querySelector("p").textContent =`Description: ${newDescription}`;
+      bookmarkItem.querySelector("p").textContent = `Description: ${newDescription}`;
       bookmarkItem.querySelector("h3").textContent = `Category: ${newCategory}`;
-      //bookmarkItem.querySelector("p").textContent = `Tags: ${newTags}`;
+      bookmarkItem.querySelector(".tags").textContent = `Tags: ${newTags}`;
     } else {
       alert("All fields must be filled out to edit the bookmark");
     }
@@ -147,23 +120,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const displayLink = (link) => {
     const listItem = document.createElement("div");
     listItem.classList.add("bookmark-item");
-    const tags = "";
-    if (typeof link.tags === 'string') {
-      link.tags = link.tags.split(',');
-    }
+
+    const tags = link.tags ? link.tags.join(", ") : "";
+
     listItem.innerHTML = `
-            <h3>Category: ${link.category || ""}</h3>
-            <a href="${link.url}" target="_blank">${link.url}</a>
-            <p>Description"${link.description}.join(",")</p>
-            <button class="edit-button">Edit</button>
-            <button class="delete-button">Delete</button>
-        `;
+      <h3>Category: ${link.category || ""}</h3>
+      <a href="${link.url}" target="_blank">${link.url}</a>
+      <p>Description: ${link.description}</p>
+      <p class="tags">Tags: ${tags}</p>
+      <button class="edit-button">Edit</button>
+      <button class="delete-button">Delete</button>
+    `;
 
     bookmarkList.appendChild(listItem);
 
     // Add event listeners for edit and delete buttons
-    listItem.que
-rySelector(".edit-button").addEventListener("click", () => editBookmark(listItem));
+    listItem.querySelector(".edit-button").addEventListener("click", () => editBookmark(listItem));
     listItem.querySelector(".delete-button").addEventListener("click", () => deleteBookmark(listItem));
   };
 
@@ -176,8 +148,7 @@ rySelector(".edit-button").addEventListener("click", () => editBookmark(listItem
       const tags = await fetchTags();
       tags.forEach(tag => {
         const newOption = document.createElement("option");
-        newOption.value = (typeof tag === "string" ? tag : "")
-          .toLowerCase().replace(/\s+/g, '-');
+        newOption.value = (typeof tag === "string" ? tag : "").toLowerCase().replace(/\s+/g, '-');
         newOption.textContent = tag;
         tagDropdown.appendChild(newOption);
       });
@@ -189,6 +160,3 @@ rySelector(".edit-button").addEventListener("click", () => editBookmark(listItem
   // Populate default dropdowns
   populateDefaultDropdowns();
 });
-
-// comamnd to create git tag named v1.0.0 with a title "Version 1.0.0"
-// git tag v1.0.0 -m "Version 1.0.0"

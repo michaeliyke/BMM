@@ -34,16 +34,19 @@
                 <label for="url">URL</label>
                 <input type="text" id="url" placeholder="URL">
             </div>
-             <div class="form-group">
-                <label for="description">DESCRIPTION</label>
-                <input type="text" id="description" placeholder="description">
-            </div>
+             
             <div class="form-group">
                 <label for="category-dropdown">CATEGORY</label>
                 <select id="category-dropdown">
-                    <option value="default">Select Category</option>
+                    <option value="default" id="category-dropdown">Select Category</option>
                 </select>
             </div>
+
+             <div class="form-group">
+                <label for="description">TITLE</label>
+                <input type="text" id="description" placeholder="DESCRIPTION">
+            </div>
+     
             <!-- <div class="form-group">
                 <label for="tags">TAGS</label>
                 <div class="tags-container"></div>
@@ -58,7 +61,7 @@
         <aside>
             <div class="sidebar-header">
                 <!-- <label for="category-dropdown">FILTERS</label> -->
-                <select id="category-dropdown">
+                <select id="category-dropdowns">
                     <option value="categories">Categories</option>
                     <option value="filter-tags">Filter:Tags</option>
                     <option value="filter-category-tags">Filter:Category/Tags</option>
