@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+ * {
+	box-sizing: border-box !important;
+ }
 body {
     margin: 0;
     padding: 0;
@@ -110,7 +112,6 @@ header {
     /* gap: 185px; */
     align-items: center;
 	padding-left: 10px;
-	background-color: #123456;
 	width: 100%;
 	box-sizing: border-box;
 	justify-content: start;
@@ -123,9 +124,9 @@ header {
 	flex-shrink: 0;
 	flex-basis: 28%;
 	max-width: 33%;
-	background-color: #654321;
 	padding: 0;
 	margin-right: 15px;
+	margin-top: 10px;
 }
 
 .bookmark-form .form-group:last-of-type {
@@ -133,6 +134,7 @@ header {
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
+	margin-top: -2px;
 }
 .category-dropdown{
 /* margin-left: 20px; */
@@ -146,6 +148,9 @@ header {
     border-radius: 10px;
 	color: white;
 	background-color: #6cbde8;
+}
+.bookmark-form select{
+	padding: 5px 10px;
 }
 .bookmark-form .create-button {
     padding: 10px;
