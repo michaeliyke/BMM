@@ -5,6 +5,7 @@ body {
     padding: 0;
     font-family: 'Poppins', sans-serif;
     background-color: white;
+	background-color: #ecf3fd;
     height: 100vh;
 }
 
@@ -143,9 +144,10 @@ margin-left: 20px;
 
 
 .container {
-    margin-top: 10px;
+    /* margin-top: 10px; */
     display: flex;
     height:80vh;
+	background-color: #ecf3fd;
 }
 
 aside {
@@ -157,8 +159,12 @@ aside {
     justify-content: space-between;
     flex-direction: column;
     padding: 20px;
-    border-top-left-radius: 20px;
+    border-top-left-radius: 0px;
     border-top-right-radius: 20px;
+	height: 100vh;
+	margin-top: 0;
+	margin-bottom: 0;
+
 }
 
 aside .sidebar-header select {
