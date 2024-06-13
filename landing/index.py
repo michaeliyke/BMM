@@ -1,10 +1,14 @@
 #!/usr/bin/python3
-"""  """
+"""The Web Blueprint for the BMM landing page"""
 from flask import render_template, jsonify, Blueprint
 import uuid
+# from utils.decorate.all_reqs import dec_html_head
+
 
 web_view = Blueprint(
     'web_view', __name__, url_prefix='/web/v1', template_folder='templates')
+# Decorator for all HTML HEAD requests
+# web_view.before_app_request(dec_html_head)
 
 
 @web_view.route('/health', methods=['GET'], strict_slashes=False)

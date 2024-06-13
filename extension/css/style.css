@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+ * {
+	box-sizing: border-box !important;
+ }
 body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
     background-color: white;
+	background-color: #ecf3fd;
     height: 100vh;
+	width: 900px;
 }
 
 header {
@@ -43,7 +47,7 @@ header {
 }
 
 #description {
-margin-right: 20px;
+/* margin-right: 20px; */
 }
 
 .user-menu {
@@ -105,12 +109,32 @@ margin-right: 20px;
 
 .bookmark-form {
     display: flex;
-    gap: 185px;
+    /* gap: 185px; */
     align-items: center;
+	padding-left: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	justify-content: start;
+	flex-wrap: wrap;
+	align-items: stretch;
 }
 
 .bookmark-form .form-group {
     flex-grow: 1;
+	flex-shrink: 0;
+	flex-basis: 28%;
+	max-width: 33%;
+	padding: 0;
+	margin-right: 15px;
+	margin-top: 10px;
+}
+
+.bookmark-form .form-group:last-of-type {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	margin-top: -2px;
 }
 
 #url{
@@ -121,27 +145,44 @@ margin-right: 20px;
     background-color:#007bff; ;
 }
 .category-dropdown{
+<<<<<<< HEAD
 margin-left: 20px;
 background-color: #007bff;
+=======
+/* margin-left: 20px; */
+>>>>>>> 3d42012231e2bfff86ae046862feb7dc647f3472
 }
 
 .bookmark-form input,
 .bookmark-form select {
-    padding: 20px;
+    padding: 10px;
     width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: none;
+    border-radius: 10px;
+	color: white;
+	background-color: #6cbde8;
 }
+.bookmark-form select{
+	padding: 5px 10px;
+}
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3d42012231e2bfff86ae046862feb7dc647f3472
 .bookmark-form .create-button {
-    padding: 10px 20px;
+    padding: 10px;
     background-color: #1E90FF;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
+<<<<<<< HEAD
     margin-top: 50px;
+=======
+    /* margin-top: 50px; */
+
+>>>>>>> 3d42012231e2bfff86ae046862feb7dc647f3472
     transition: background-color 0.3s ease, transform 0.3s ease
 }
 
@@ -152,21 +193,50 @@ background-color: #007bff;
 
 
 .container {
-    margin-top: 10px;
+    /* margin-top: 10px; */
     display: flex;
     height:80vh;
+	background-color: #ecf3fd;
 }
 
 aside {
     width: 250px;
     background-color: #9bcbf5;
+	background-color: #88cdea;
     color: white;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     padding: 20px;
-    border-top-left-radius: 20px;
+    border-top-left-radius: 0px;
     border-top-right-radius: 20px;
+	height: 100vh;
+	margin-top: 0;
+	margin-bottom: 0;
+
+}
+
+aside .sidebar-header select {
+	padding: 7px 10px;
+	width: 100%;
+	border: 0.16em solid white;
+	border-radius: 10px;
+	background-color: #50aae8;
+	color: white;
+	/* appearance: none; */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+aside .sidebar-header select option {
+	background-color: #50aae8;
+	color: white;
+}
+
+aside .sidebar-header select option.current {
+
+	color: #777777;
+	font-weight: bold;
 }
 
 .filtered-list {
@@ -185,13 +255,14 @@ aside {
 	padding: 10px;
 	cursor: pointer;
 	font-size: 80%;
-	background-color: #007bff;
+	background-color: #50aae8;
 	margin-top: 10px;
 	list-style: none;
 	text-align: center;
 	border: 0.16em solid white;
 	border-radius: 10px;
 	font-weight: bold;
+	width: 80%;
 }
 
 .form-group {
@@ -326,19 +397,24 @@ label {
     font-weight: bold; /* Make label text bold */
     font-size: 14px; /* Increase font size */
     color: black; /* Set label color */
+	color: #6cafd4;
 }
 
 /* Style for input fields */
 input[type="text"] {
-    width: 100%; /* Make input field full width */
-    padding: 8px; /* Padding inside the input field */
+    /* width: 80%; */ /* Make input field full width */
     font-size: 14px; /* Increase font size */
     border: 1px solid white; /* Border color */
     border-radius: 4px; /* Rounded corners */
   
     box-sizing: border-box; /* Ensure padding is included in the width */
+	background-color: #6bbee7;
+	color: white;
+	border: none;
+	border-radius: 10px;
 }
 
+<<<<<<< HEAD
 /* Style for select fields */
 select {
     width: 100%; /* Make select field full width */
@@ -349,6 +425,10 @@ select {
     color: #333; /* Text color */
     
     box-sizing: border-box; /* Ensure padding is included in the width */
+=======
+input[type="text"]::placeholder {
+    color: white;
+>>>>>>> 3d42012231e2bfff86ae046862feb7dc647f3472
 }
 
 /* Additional styling for input/select fields on focus */
