@@ -11,19 +11,22 @@ simple and serving one single purpose which is to manage links and and get the b
 
 ## Installation
 
-- First head over to the link above and download the zip archive
-- Open your Chrome browser and load the extenion
+- Download the [zip archive](http://anexe.tech/) and extract
+- Open your Chrome Browser
+- Click on the three vertical dots on top right of your screen
+- Click On Manage Extensions
+- Turn on Developer mode towards the top right of the screen
+- Click on Load unpacked
+- Navigate to the extension directory, and click select
 
-## Contibuting
+## Contibutor
 
-Michael C Iyke
-Jumoke  Kazeem
-Dawit Getu
+1. Michael C Iyke
+2. Jumoke  Kazeem
+3. Dawit Getu
 
 ### Related projects
 
 - Diigo
 - Pocket App
 - Microsoft Collections
-
-
