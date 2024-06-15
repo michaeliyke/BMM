@@ -3,7 +3,7 @@ from sqlalchemy.orm import declarative_base
 from models.base_model import BaseModel, Base
 
 
-class CategoryTag(Base):
+class CategoryTag(Base, BaseModel):
     """Defines a junction table for many-to-many relationship"""
     __tablename__ = 'category_tag'
     category_id =\
