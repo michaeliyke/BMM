@@ -19,6 +19,7 @@ from utils.err import err_ctxt
 def get_all_categories_or_create(bookmark_id):
     """
     Retrieves the list of all Category objects of a Bookmark
+    Or creates(or adds) a new Category object for a Bookmark
     """
     if request.method == 'GET':
         try:
@@ -51,16 +52,20 @@ def get_all_categories_or_create(bookmark_id):
             if not user:
                 abort(404)
 
+            if 'name' in data and 'category_id' in data:
+                msg = "Found both name and category id, only one needed"
+                abort(400, description=msg)
+
+            if 'name' not in data and 'category_id' not in data:
+                msg = "Mising both name and category id, only one needed"
+                abort(400, description=msg)
+
             if 'name' in data:  # create a new category
                 category = Category(**data)
                 del data['name']
                 data['category_id'] = category.id
             elif 'category_id' in data:  # add an existing category
                 category = storage.get(Category, data['category_id'])
-
-            if 'name' not in data and 'category_id' not in data:
-                msg = "Mising both name and category id, only one needed"
-                abort(400, description=msg)
 
             if not category:
                 abort(404)
@@ -73,6 +78,6 @@ def get_all_categories_or_create(bookmark_id):
         except Exception as e:
             abort(400, description=err_ctxt(e))
 
-# curl -X POST -H "Content-Type: application/json" -d '{"name":"new category", "user_id":"1"}' http://localhost/bmm/api/bookmarks/1/categories
+# curl -X POST -H "Content-Type: application/json" -d '{"name":"new category", "user_id":"1"}' 0/bmm/api/bookmarks/1/categories
+# curl -X POST -H "Content-Type: application/json" -d '{"category_id":"2", "user_id":"1"}' 0/bmm/api/bookmarks/1/categories
 # curl -X GET http://localhost/bmm/api/bookmarks/1/categories
-# curl -X DELETE http://localhost/bmm/api/bookmarks/1/categories

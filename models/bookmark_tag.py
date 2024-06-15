@@ -3,7 +3,7 @@ from models.base_model import BaseModel, Base
 from models import storage
 
 
-class BookmarkTag(Base):
+class BookmarkTag(Base, BaseModel):
     """Defines a junction table for many-to-many relationship"""
     __tablename__ = 'bookmark_tag'
     bookmark_id =\

@@ -21,7 +21,6 @@ def get_all_tags_or_create(bookmark_id):
     Retrieves the list of all Tag objects of a Bookmark OR
     creates(or adds) a new Tag object for a Bookmark
     """
-    print("bookmark_id ISSSSSSSSSSSSSSSSSs", bookmark_id)
     if request.method == 'GET':
         try:
             bookmark = storage.get(Bookmark, bookmark_id)
@@ -43,13 +42,13 @@ def get_all_tags_or_create(bookmark_id):
             if not data:
                 abort(400, description="Not a JSON")
 
-            # if 'user_id' not in data:
-            #     abort(400, description="Missing user_id")
+            if 'name' in data and 'tag_id' in data:
+                msg = "Found both name and tag id, only one needed"
+                abort(400, description=msg)
 
-            # user = storage.get(User, data['user_id'])
-
-            # if not user:
-            #     abort(404)
+            if 'name' not in data and 'tag_id' not in data:
+                msg = "Mising both name and tag id, only one needed"
+                abort(400, description=msg)
 
             if 'name' in data:  # create a new tag
                 tag = Tag(**data)
@@ -57,10 +56,6 @@ def get_all_tags_or_create(bookmark_id):
                 data['tag_id'] = tag.id
             elif 'tag_id' in data:  # add an existing tag
                 tag = storage.get(Tag, data['tag_id'])
-
-            if 'name' not in data and 'tag_id' not in data:
-                msg = "Mising both name and tag id, only one needed"
-                abort(400, description=msg)
 
             if not tag:
                 abort(404, description="Tag not found")
@@ -72,6 +67,5 @@ def get_all_tags_or_create(bookmark_id):
         except Exception as e:
             abort(400, description=err_ctxt(e))
 
-# curl -X POST -H "Content-Type: application/json" -d '{"name":"new tag", "user_id":"1"}' http://localhost/bmm/api/bookmarks/1/tags
+# curl -X POST -H "Content-Type: application/json" -d '{"name":"new tag"}' 0/bmm/api/bookmarks/1/tags
 # curl -X GET http://localhost/bmm/api/bookmarks/1/tags
-# curl -X DELETE http://localhost/bmm/api/bookmarks/1/tags
