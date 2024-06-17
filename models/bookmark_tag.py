@@ -15,14 +15,3 @@ class BookmarkTag(Base, BaseModel):
         super().__init__(*[], **{})
         self.bookmark_id = bookmark_id
         self.tag_id = tag_id
-
-    @classmethod
-    def add(BookmarkTag, *, bookmark_id: str, tag_id: str):
-        """Initializes a junction table instance"""
-        from models import storage
-
-        bt = BookmarkTag()
-        bt.bookmark_id = bookmark_id
-        bt.tag_id = tag_id
-        # print(bt)
-        return bt

@@ -63,7 +63,7 @@ def get_all_tags_or_create(bookmark_id):
             bookmark_tag = BookmarkTag(**data)
             tag.save()
             bookmark_tag.save()
-            return make_response(jsonify(tag.to_dict()), 201)
+            return make_response(jsonify(bookmark_tag.to_dict()), 201)
         except Exception as e:
             abort(400, description=err_ctxt(e))
 
