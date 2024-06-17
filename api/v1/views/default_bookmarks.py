@@ -17,6 +17,9 @@ def default_bookmarks():
     try:
         if request.method == 'GET':
             categories = []
+            # The default category contains all the bookmarks there is
+            default_category = {'name': 'default', 'bookmarks': [], }
+            categories.append(default_category)
             # create an empty dict
             for cat in storage.all(Category).values():
                 category = {}
@@ -33,6 +36,7 @@ def default_bookmarks():
                     category_bookmark['tags'] = tags
                     # Add the bookmark to the list of category bookmarks
                     category['bookmarks'].append(category_bookmark)
+                    default_category['bookmarks'].append(category_bookmark)
                 # Add current category to the list of categories
                 categories.append(category)
             return make_response(jsonify(categories), 200)
