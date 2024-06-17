@@ -19,3 +19,4 @@ if True:  # Dummy if to keep the imports below the app_views definition
     from api.v1.views.category_bookmarks import *
     from api.v1.views.tag_categories import *
     from api.v1.views.tag_bookmarks import *
+    from api.v1.views.default_bookmarks import *

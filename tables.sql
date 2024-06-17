@@ -100,10 +100,16 @@ GRANT SELECT ON performance_schema.* to 'BMM_db_user' @'localhost';
 FLUSH PRIVILEGES;
 -------------------------------------------------------------------------------------------------
 -- ALTER TABLE category_tag
+-- id VARCHAR(60) DEFAULT NULL,
 -- ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 -- ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 --
+-- ALTER TABLE category_bookmark
+-- id VARCHAR(60) DEFAULT NULL,
+-- ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+-- ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 -- ALTER TABLE bookmark_tag
+-- id VARCHAR(60) DEFAULT NULL,
 -- ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 -- ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 ---------------------------------------------------------------------------------------------
