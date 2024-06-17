@@ -15,14 +15,3 @@ class CategoryTag(Base, BaseModel):
         super().__init__(*[], **{})
         self.category_id = category_id
         self.tag_id = tag_id
-
-    @classmethod
-    def add(CategoryTag, *, tag_id: str, category_id: str):
-        """Initializes a junction table instance"""
-        from models import storage
-
-        bt = CategoryTag()
-        bt.tag_id = tag_id
-        bt.category_id = category_id
-        # print(bt)
-        return bt

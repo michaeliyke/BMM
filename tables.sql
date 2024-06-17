@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS tags (
 DROP TABLE IF EXISTS bookmark_category;
 -- The bookmark_category junction table
 CREATE TABLE IF NOT EXISTS bookmark_category (
+	id VARCHAR(60) DEFAULT NULL,
 	bookmark_id VARCHAR(60),
 	category_id VARCHAR(60),
 	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -64,6 +65,7 @@ CREATE TABLE IF NOT EXISTS bookmark_category (
 DROP TABLE IF EXISTS category_tag;
 -- The category_tag junction table
 CREATE TABLE IF NOT EXISTS category_tag (
+	id VARCHAR(60) DEFAULT NULL,
 	category_id VARCHAR(60),
 	tag_id VARCHAR(60),
 	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -73,9 +75,23 @@ CREATE TABLE IF NOT EXISTS category_tag (
 	FOREIGN KEY (tag_id) REFERENCES tags(id)
 );
 -- Drop table
+DROP TABLE IF EXISTS category_bookmark;
+-- The category_tag junction table
+CREATE TABLE IF NOT EXISTS category_bookmark (
+	id VARCHAR(60) DEFAULT NULL,
+	category_id VARCHAR(60),
+	bookmark_id VARCHAR(60),
+	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (category_id, bookmark_id),
+	FOREIGN KEY (category_id) REFERENCES categories(id),
+	FOREIGN KEY (bookmark_id) REFERENCES bookmarks(id)
+);
+-- Drop table
 DROP TABLE IF EXISTS bookmark_tag;
 -- The bookmark_tag junction table
 CREATE TABLE IF NOT EXISTS bookmark_tag (
+	id VARCHAR(60) DEFAULT NULL,
 	bookmark_id VARCHAR(60),
 	tag_id VARCHAR(60),
 	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

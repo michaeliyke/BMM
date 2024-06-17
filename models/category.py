@@ -11,6 +11,8 @@ class Category(BaseModel, Base):
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
     name = Column(String(255), nullable=False)
     # Establishes: Category.tags and Tag.categories
+    # Serves: /categories/<id>/tags and /tags/<id>/categories
+    # Needed: category_tag.py and tag_categories.py respectively
     tags = REL('Tag', secondary="category_tag", backref='categories')
     # Category.bookmarks setup using backref in Bookmark model
 
