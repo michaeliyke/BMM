@@ -11,8 +11,11 @@ class Bookmark(BaseModel, Base):
     url = Column(String(1024), nullable=False)
     description = Column(String(1024), nullable=True)
     title = Column(String(255), nullable=True)
+    # Establishes: Bookmark.categories and Category.bookmarks
+    # Serves: /bookmarks/<id>/categories and /categories/<id>/bookmarks
+    # Needed: bookmark_categories.py and category_bookmarks.py respectively
     categories =\
-        REL('Category', secondary='bookmark_category', backref='bookmarks')
+        REL('Category', secondary='category_bookmark', backref='bookmarks')
     # Bookmark.tags setup using backref in Tag model
 
     def __init__(self, *args, **kwargs):

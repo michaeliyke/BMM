@@ -75,7 +75,6 @@ class DBStorage:
         """create all tables in the database"""
         from models.base_model import BaseModel, Base
         from models.bookmark import Bookmark
-        from models.bookmark_category import BookmarkCategory
         from models.bookmark_tag import BookmarkTag
         from models.category import Category
         from models.category_tag import CategoryTag

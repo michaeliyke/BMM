@@ -49,19 +49,6 @@ CREATE TABLE IF NOT EXISTS tags (
 	`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 -- Drop table
-DROP TABLE IF EXISTS bookmark_category;
--- The bookmark_category junction table
-CREATE TABLE IF NOT EXISTS bookmark_category (
-	id VARCHAR(60) DEFAULT NULL,
-	bookmark_id VARCHAR(60),
-	category_id VARCHAR(60),
-	`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (bookmark_id, category_id),
-	FOREIGN KEY (bookmark_id) REFERENCES bookmarks(id),
-	FOREIGN KEY (category_id) REFERENCES categories(id)
-);
--- Drop table
 DROP TABLE IF EXISTS category_tag;
 -- The category_tag junction table
 CREATE TABLE IF NOT EXISTS category_tag (

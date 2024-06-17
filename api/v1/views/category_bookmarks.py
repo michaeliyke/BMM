@@ -13,11 +13,6 @@ from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from utils.err import err_ctxt
 
-from models.bookmark_tag import BookmarkTag
-
-data = {'bookmark_id': 'xyz', 'tag_id': 'xyz'}
-bookmark_tag = BookmarkTag(**data)
-
 
 @app_views.route('/categories/<category_id>/bookmarks',
                  methods=['GET', 'POST'], strict_slashes=False)

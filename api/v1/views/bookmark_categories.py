@@ -6,7 +6,7 @@ To delete a category, use the categories endpoints
 """
 from models.category import Category
 from models.bookmark import Bookmark
-from models.bookmark_category import BookmarkCategory
+from models.category_bookmark import CategoryBookmark
 from models.user import User
 from models import storage
 from api.v1.views import app_views
@@ -16,7 +16,7 @@ from utils.err import err_ctxt
 
 @app_views.route('/bookmarks/<bookmark_id>/categories', methods=['GET', 'POST'],
                  strict_slashes=False)
-def get_all_categories_or_create(bookmark_id):
+def get_all_bookmark_categories_or_create(bookmark_id):
     """
     Retrieves the list of all Category objects of a Bookmark
     Or creates(or adds) a new Category object for a Bookmark
@@ -26,8 +26,7 @@ def get_all_categories_or_create(bookmark_id):
             bookmark = storage.get(Bookmark, bookmark_id)
             if not bookmark:
                 abort(404)
-            categories = [category.to_dict()
-                          for category in bookmark.categories]
+            categories = [cat.to_dict() for cat in bookmark.categories]
             return make_response(jsonify(categories), 200)
         except Exception as e:
             abort(400, description=err_ctxt(e))
@@ -44,14 +43,6 @@ def get_all_categories_or_create(bookmark_id):
             if not data:
                 abort(400, description="Not a JSON")
 
-            if 'user_id' not in data:
-                abort(400, description="Missing user_id")
-
-            user = storage.get(User, data['user_id'])
-
-            if not user:
-                abort(404)
-
             if 'name' in data and 'category_id' in data:
                 msg = "Found both name and category id, only one needed"
                 abort(400, description=msg)
@@ -61,19 +52,26 @@ def get_all_categories_or_create(bookmark_id):
                 abort(400, description=msg)
 
             if 'name' in data:  # create a new category
+                if 'user_id' not in data:
+                    abort(400, description="Missing user_id")
+                if not storage.get(User, data['user_id']):
+                    abort(404)
+
                 category = Category(**data)
                 del data['name']
+                del data['user_id']
                 data['category_id'] = category.id
             elif 'category_id' in data:  # add an existing category
+                if 'user_id' in data:
+                    abort(400, description="Unnecessary user_id")
                 category = storage.get(Category, data['category_id'])
 
             if not category:
-                abort(404)
+                abort(404, description="Category not found")
             data['bookmark_id'] = bookmark_id
-            del data['user_id']
-            bookmark_category = BookmarkCategory(**data)
+            category_bookmark = CategoryBookmark(**data)
             category.save()
-            bookmark_category.save()
+            category_bookmark.save()
             return make_response(jsonify(category.to_dict()), 201)
         except Exception as e:
             abort(400, description=err_ctxt(e))
