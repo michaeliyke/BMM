@@ -14,7 +14,12 @@ def get_all_or_create_bookmark():
     """
     try:
         if request.method == 'GET':
-            bookmarks = [b.to_dict() for b in storage.all(Bookmark).values()]
+            bookmarks = []
+            for _bookmark in storage.all(Bookmark).values():
+                bookmark = _bookmark.to_dict()
+                bookmark['tags'] = [tag.name for tag in _bookmark.tags]
+                # categories = [cat.name for cat in b.categories] unuseful
+                bookmarks.append(bookmark)
             return make_response(jsonify(bookmarks), 200)
 
         # if request method is POST, create a new bookmark object
