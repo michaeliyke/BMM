@@ -146,8 +146,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Call these functions to fetch initial data
   (async () => {
     try {
-      const links = await fetchLinks();
-      links.forEach(displayLink);
+      // const links = await fetchLinks();
+      const allCategories = await fetchLinks();
+      // links.forEach((link));
+
+      /* Display all bookmarks */
+      for (const category of allCategories) {
+        for (const bookmark of category.bookmarks) {
+          displayLink(bookmark);
+        }
+      }
+
+      /* Display all categories */
+      displayCategoryNames(allCategories.map((cat) => cat.name));
 
       const tags = await fetchTags();
       tags.forEach((tag) => {
@@ -164,3 +175,28 @@ document.addEventListener('DOMContentLoaded', () => {
   // Populate default dropdowns
   populateDefaultDropdowns();
 });
+
+/* Display a list of strings as category names */
+function displayCategoryNames(names) {
+  // Filter out the string default, capilize the first letter of the others
+  // sort ASCENDING, and then add the string Default back at index[0]
+  names = names.filter((name) => name && name.toLowerCase() !== "default")
+  names = names.map((str) => str.charAt(0).toUpperCase() + str.slice(1));
+  names.sort();
+  names.unshift("Default");
+
+  // Empty the category list and display the new names
+  document.querySelector("aside .filtered-list ul").innerHTML = "";
+  for (const name of names) {
+    displayCategoryName(name);
+  }
+}
+
+function displayCategoryName(name) {
+  const list = document.querySelector("aside .filtered-list ul");
+  const listItem = document.createElement("li");
+  listItem.textContent = name;
+  // list.insertBefore(listItem, list.firstChild);
+  list.appendChild(listItem);
+}
+
