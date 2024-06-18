@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const addCategoriesBtn = document.querySelector(".add-categories-btn");
   const addTagBtn = document.querySelector(".add-tag-btn");
   const categoryDropdown = document.querySelector("#category-dropdown");
-  const tagDropdown = document.querySelector("#tags-dropdown");
+  // const t_agDropdown = document.querySelector("#tags-dropdown");
   const filterCategoryDropdown = document.querySelector("#filter-category");
   const filterTagDropdown = document.querySelector("#filter-tag");
   const createButton = document.querySelector(".create-button");
@@ -24,17 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
       categoryDropdown.appendChild(newOption);
     });
 
-   // defaultTags.forEach(tag => {
+    // defaultTags.forEach(tag => {
     //  const newOption = document.createElement("option");
-     // newOption.value = tag.toLowerCase().replace(/\s+/g, '-');
-     // newOption.textContent = tag;
-      //tagDropdown.appendChild(newOption);
-//});
+    // newOption.value = tag.toLowerCase().replace(/\s+/g, '-');
+    // newOption.textContent = tag;
+    //t_agDropdown.appendChild(newOption);
+    //});
 
-  
+
   }
 
- 
+
 
   // Call this function to populate dropdowns with default values
   populateDefaultDropdowns();
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const newOption = document.createElement("option");
       newOption.value = tagName.toLowerCase().replace(/\s+/g, '-');
       newOption.textContent = tagName;
-      tagDropdown.appendChild(newOption);
+      // t_agDropdown.appendChild(newOption);
       populateFilterDropdowns(); // Update filter dropdowns
       alert("New tag added successfully");
     } else {
@@ -86,17 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Call the addLink function to send the data to the backend
     addLink(newLink)
-    .then(displayLink)
-    .catch(error => {
+      .then(displayLink)
+      .catch(error => {
         console.error('Error adding link:', error);
         alert('Error adding link: ' + error.message);
-    });
+      });
 
     // Clear inputs
     document.querySelector("#url").value = '';
     document.querySelector("#description").value = '';
     categoryDropdown.value = 'default';
-   // tagsContainer.innerHTML = '';
+    // tagsContainer.innerHTML = '';
   });
 
   function editBookmark(bookmarkItem) {
@@ -123,14 +123,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const displayLink = (link) => {
+    const { url, tags = ["--"], description = "--", category = "--" } = link;
     const listItem = document.createElement("div");
     listItem.classList.add("bookmark-item");
 
     listItem.innerHTML = `
-      <h3>Category: ${link.category || ""}</h3>
-      <a href="${link.url}" target="_blank">${link.url}</a>
-      <p>Description: ${link.description}</p>
-      <p class="tags">Tags: ${tags}</p>
+      <h3>Category: ${category}</h3>
+      <a href="${url}" target="_blank">${url}</a>
+      <p>Description: ${description || "--"}</p>
+      <p class="tags">Tags: ${tags.join(', ')}</p>
       <button class="edit-button">Edit</button>
       <button class="delete-button">Delete</button>
     `;
@@ -149,11 +150,11 @@ document.addEventListener('DOMContentLoaded', () => {
       links.forEach(displayLink);
 
       const tags = await fetchTags();
-      tags.forEach(tag => {
+      tags.forEach((tag) => {
         const newOption = document.createElement("option");
         newOption.value = (typeof tag === "string" ? tag : "").toLowerCase().replace(/\s+/g, '-');
         newOption.textContent = tag;
-        tagDropdown.appendChild(newOption);
+        // t_agDropdown.appendChild(newOption);
       });
     } catch (error) {
       console.error('Error initializing app:', error);
