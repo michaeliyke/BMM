@@ -180,9 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function displayCategoryNames(names) {
   // Filter out the string default, capilize the first letter of the others
   // sort ASCENDING, and then add the string Default back at index[0]
-  names = names.filter((name) => name && name.toLowerCase() !== "default")
-  names = names.map((str) => str.charAt(0).toUpperCase() + str.slice(1));
-  names.sort();
+  names = names.filter((name) => name && name.toLowerCase() !== "default");
+  names = names.map((name) => capilize(name)).sort();
   names.unshift("Default");
 
   // Empty the category list and display the new names
@@ -200,3 +199,10 @@ function displayCategoryName(name) {
   list.appendChild(listItem);
 }
 
+/* Capitalizes first letter of each word in a string */
+function capilize(str) {
+  const words = str.split(" ").map((word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  });
+  return words.join(" ");
+}
