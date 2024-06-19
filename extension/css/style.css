@@ -135,13 +135,6 @@ header {
 	margin-top: -2px;
 }
 
-#url{
-  background-color:#007bff;
-}
-
-#description{
-    background-color:#007bff; ;
-}
 .category-dropdown{
 margin-left: 20px;
 background-color: #007bff;
@@ -153,11 +146,12 @@ background-color: #007bff;
     width: 100%;
     border: none;
     border-radius: 10px;
-	color: white;
-	background-color: #6cbde8;
+	color: rgba(255, 255, 255, 0.8);
+	background-color: #6bbee7;
+	font-weight: bold;
 }
 .bookmark-form select{
-	padding: 5px 10px;
+	padding: 10px 10px;
 }
 
 
@@ -202,6 +196,34 @@ aside {
 	padding-left: 2em;
 	padding-right: 4em;
 
+}
+
+.select.wrapper {
+	display: inline-block;
+	position: relative;
+	width: 100%;
+}
+
+.select.wrapper::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	width: 0;
+	height: 0;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-top: 7px solid rgba(255, 255, 255, 0.5);
+	transform: translateY(-100%);
+	/* The arrow should not respond to click events */
+	pointer-events: none;
+}
+
+select.select {
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	cursor: pointer;
 }
 
 aside .sidebar-header select {
@@ -391,20 +413,19 @@ label {
 
 /* Style for input fields */
 input[type="text"] {
-    /* width: 80%; */ /* Make input field full width */
     font-size: 14px; /* Increase font size */
     border: 1px solid white; /* Border color */
     border-radius: 4px; /* Rounded corners */
 
     box-sizing: border-box; /* Ensure padding is included in the width */
 	background-color: #6bbee7;
-	color: white;
+	color: rgba(255, 255, 255, 0.7);
 	border: none;
 	border-radius: 10px;
 }
 
 input[type="text"]::placeholder {
-    color: white;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 /* Additional styling for input/select fields on focus */

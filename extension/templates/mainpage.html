@@ -38,9 +38,11 @@
 
             <div class="form-group">
 				<label for="category-dropdown">CATEGORY</label>
-                <select id="category-dropdown">
+				<div class="select wrapper">
+                <select id="category-dropdown" class="select">
 					<option value="default" class="current">DEFAULT</option>
                 </select>
+				</div>
             </div>
 
              <div class="form-group">
@@ -64,11 +66,13 @@
         <aside>
             <div class="sidebar-header">
                 <!-- <label for="category-dropdown">FILTERS</label> -->
-                <select id="category-dropdown">
+				<div class="select wrapper">
+                <select id="category-dropdown" class="select">
                     <option value="categories" class="current">Categories</option>
                     <option value="filter-tags">Filter:Tags</option>
                     <option value="filter-category-tags">Filter:Category/Tags</option>
                 </select>
+				</div>
 				<div class="filtered-list">
 					<ul>
 						<li><span>Career Paths</span></li>
