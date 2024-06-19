@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-
   // Call this function to populate dropdowns with default values
   populateDefaultDropdowns();
 
@@ -174,7 +173,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Populate default dropdowns
   populateDefaultDropdowns();
+
+  // Add the active class to the currently selected filter option on page load
+  highlightSelectedFilter()
 });
+
+function highlightSelectedFilter() {
+  const filter = querySelector("aside select");
+  const selected = filter.options[filter.selectedIndex];
+  for (const current of filter.options) {
+    if (current.classList.contains("current")) {
+      current.classList.remove("current");
+      break;
+    }
+  }
+  if (selected)
+    selected.classList.add("current");
+  console.log("INDEX OF SELECTION: ", filter.selectedIndex, selected)
+}
 
 /* Display a list of strings as category names */
 function displayCategoryNames(names) {
@@ -208,3 +224,12 @@ function capilize(str) {
   });
   return words.join(" ");
 }
+
+/* Select a DOM element using the querySelector API */
+function querySelector(selector, context = document) {
+  if (!(context instanceof EventTarget))
+    throw new TypeError("querySelector: context must be a DOM object")
+  return document.querySelector(selector);
+}
+
+

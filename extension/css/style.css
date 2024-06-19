@@ -186,43 +186,40 @@ background-color: #007bff;
 }
 
 aside {
-    width: 250px;
     background-color: #9bcbf5;
 	background-color: #88cdea;
-    color: white;
+    color: #FFFFFF;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    padding: 20px;
     border-top-left-radius: 0px;
     border-top-right-radius: 20px;
 	height: 100vh;
 	margin-top: 0;
 	margin-bottom: 0;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	padding-left: 2em;
+	padding-right: 4em;
 
 }
 
 aside .sidebar-header select {
 	padding: 7px 10px;
-	width: 100%;
-	border: 0.16em solid white;
+	width: 106%;
+	border: 0.16em solid rgba(255, 255, 255, 0.7);
 	border-radius: 10px;
 	background-color: #50aae8;
-	color: white;
-	/* appearance: none; */
+	color: rgba(255,255,255,0.4);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    box-sizing: border-box; /* Ensure padding is included in the width */
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 8px;
 }
 
 aside .sidebar-header select option {
 	background-color: #50aae8;
 	color: white;
-}
-
-aside .sidebar-header select option.current {
-
-	color: #777777;
-	font-weight: bold;
 }
 
 .filtered-list {
@@ -245,19 +242,19 @@ aside .sidebar-header select option.current {
 	padding: 10px;
 	cursor: pointer;
 	background-color: #50aae8;
-	margin-top: 10px;
+	margin-top: 5px;
 	list-style: none;
-	border: 0.16em solid white;
+	border: 0.16em solid rgba(255, 255, 255, 0.7);
 	border-radius: 10px;
-	font-weight: bold;
+	font-weight: 400;
 	width: 100%;
 	display: block;
+	font-size: 14px;
 }
 
 .filtered-list li span {
 	text-align: left;
 	display: block;
-	background-color: red;
 	width: 80%;
 	margin: 0 auto;
 }
@@ -277,11 +274,6 @@ aside .sidebar-header select option.current {
     margin: 0;
     flex-grow: 1;
 
-}
-#category-dropdown{
-width:230px;
-height: 35px;
-background-color:#007bff;
 }
 
 .categories li {
