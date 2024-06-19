@@ -14,7 +14,7 @@ body {
 
 header {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     background-color: #6bbee7;
     color: rgba(255, 255, 255, 0.8);
@@ -22,29 +22,33 @@ header {
 	gap: 2em;
 }
 
+header .div-1, header .div-2 {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+header .div-1 {
+	justify-content: flex-start;
+	gap: 2em;
+}
+
 .logo-container{
     display: flex;
     align-items: center;
-    /* margin-right: 10px; */
 }
 .logo {
-    height: 40px; /* Adjust the height as needed */
-    /* margin-right: 20px; */
+    height: 40px;
 }
 
 .separator{
-    /* position: absolute; */
-    height: 30px;
+    height: 17px;
     width: 2px;
     background-color: rgba(255, 255, 255, 0.8);
-    /* left: 80px; */
-    /* margin-right: 5px; */
 }
 
 .bookmark-manager {
-    /* position: absolute; */
-    /* left: 100px; */
-    font-size: 15px; /* Adjusted margin to move text closer to the left */
+    font-size: 15px;
 	font-weight: bold;
 	color: rgba(255, 255, 255, 1);
 }
@@ -123,7 +127,6 @@ header {
 	flex-basis: 28%;
 	max-width: 33%;
 	padding: 0;
-	/* margin-right: 15px; */
 	margin-top: 10px;
 }
 
