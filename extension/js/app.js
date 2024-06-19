@@ -194,8 +194,10 @@ function displayCategoryNames(names) {
 function displayCategoryName(name) {
   const list = document.querySelector("aside .filtered-list ul");
   const listItem = document.createElement("li");
-  listItem.textContent = name;
-  // list.insertBefore(listItem, list.firstChild);
+  const span = document.createElement("span");
+  span.textContent = name;
+  listItem.appendChild(span);
+  // listItem.textContent = name;
   list.appendChild(listItem);
 }
 

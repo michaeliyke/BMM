@@ -229,26 +229,37 @@ aside .sidebar-header select option.current {
 	flex-direction: column;
 	display: flex;
 	gap: 10px;
+	justify-content: center;
 }
 
 .filtered-list ul {
 	list-style: none;
 	padding: 0;
 	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .filtered-list li {
 	padding: 10px;
 	cursor: pointer;
-	font-size: 80%;
 	background-color: #50aae8;
 	margin-top: 10px;
 	list-style: none;
-	text-align: center;
 	border: 0.16em solid white;
 	border-radius: 10px;
 	font-weight: bold;
+	width: 100%;
+	display: block;
+}
+
+.filtered-list li span {
+	text-align: left;
+	display: block;
+	background-color: red;
 	width: 80%;
+	margin: 0 auto;
 }
 
 .form-group {
@@ -392,7 +403,7 @@ input[type="text"] {
     font-size: 14px; /* Increase font size */
     border: 1px solid white; /* Border color */
     border-radius: 4px; /* Rounded corners */
-  
+
     box-sizing: border-box; /* Ensure padding is included in the width */
 	background-color: #6bbee7;
 	color: white;
@@ -409,5 +420,5 @@ input[type="text"]:focus,
 select:focus {
     border-color: white; /* Border color on focus */
     outline: none; /* Remove default outline */
-   
+
 }
