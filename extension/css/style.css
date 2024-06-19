@@ -9,7 +9,7 @@ body {
     background-color: white;
 	background-color: #ecf3fd;
     height: 100vh;
-	width: 900px;
+	width: 780px;
 }
 
 header {
@@ -89,10 +89,7 @@ header {
 }
 
 .form-container {
-    padding-bottom:10px ;
     background-color: #f9f9f9;
-    border-bottom: 1px solid #ddd;
-
 }
 .form-input-container {
     border: 1px solid #ccc;
@@ -107,7 +104,7 @@ header {
 
 .bookmark-form {
     display: flex;
-    /* gap: 185px; */
+    gap: 10px;
     align-items: center;
 	padding-left: 10px;
 	width: 100%;
@@ -123,16 +120,20 @@ header {
 	flex-basis: 28%;
 	max-width: 33%;
 	padding: 0;
-	margin-right: 15px;
+	/* margin-right: 15px; */
 	margin-top: 10px;
+}
+
+.bookmark-form .form-group:nth-of-type(3) {
+	margin-right: 15px;
 }
 
 .bookmark-form .form-group:last-of-type {
 	margin-left: auto;
 	display: flex;
-	align-items: center;
 	justify-content: flex-end;
-	margin-top: -2px;
+	margin-top: -20px;
+	margin-right: 15px;
 }
 
 .category-dropdown{
@@ -157,12 +158,12 @@ background-color: #007bff;
 
 .bookmark-form .create-button {
     padding: 10px;
-    background-color: #1E90FF;
+    background-color: #6bbee7;
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 50px;
+    /* margin-top: 50px; */
     transition: background-color 0.3s ease, transform 0.3s ease
 }
 
@@ -173,7 +174,7 @@ background-color: #007bff;
 
 
 .container {
-    /* margin-top: 10px; */
+    margin-top: -10px;
     display: flex;
     height:80vh;
 	background-color: #ecf3fd;
