@@ -6,4 +6,6 @@
 !remote
 !etc
 !etc/*
+!*.service
+!start*
 
