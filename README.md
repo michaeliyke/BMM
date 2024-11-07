@@ -17,13 +17,18 @@ simple and serving one single purpose which is to manage links and and get the b
 
 ### General Installation
 
-- Clone the repository: `git clone repo_url`
+1. Clone the repository: `git clone repo_url` BMM
+1. Change directory: `cd BMM`
+1. Create a virtual environment: `python3 -m venv venv`
+1. Activate the virtual environment: `source venv/bin/activate`
+1. Install the dependencies: `pip install -r requirements.txt`
+1. Run the project: `gunicorn --bind 0.0.0.0:5000 wsgi:app --workers 2`
 
-## Contibutor
+## Contibutors
 
-1. Michael C Iyke
-2. Jumoke  Kazeem
-3. Dawit Getu
+1. [Michael C Iyke](https://github.com/michaeliyke) - Backend Engineer
+1. [Jumoke  Kazeem](https://github.com/Jumoke1) - Frontend Engineer
+1. [Dawit Getu](https://github.com/dawitgetuu) - Designer/Frontend Engineer
 
 ### Related projects
 
