@@ -159,6 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
       /* Display all categories */
       displayCategoryNames(allCategories.map((cat) => cat.name));
 
+      /* const timeout = setTimeout(() => {
+        correctWidth(".bookmarks.wrapper", ".bookmark-list");
+        clearTimeout(timeout);
+      }, 2000); */
+
       const tags = await fetchTags();
       tags.forEach((tag) => {
         const newOption = document.createElement("option");
@@ -233,3 +238,16 @@ function querySelector(selector, context = document) {
 }
 
 
+// correct the width of a fixed item
+function correctWidth(fixedClass, contentClass) {
+  const fixed = querySelector(fixedClass);
+  const content = querySelector(contentClass);
+
+  if (!(fixed && content))
+    return;
+
+  fixed.classList.remove("fixed");
+  const height = getComputedStyle(content).height;
+  fixed.classList.add("fixed");
+  content.style.height = height;
+}

@@ -9,15 +9,15 @@ simple and serving one single purpose which is to manage links and and get the b
 
 [SEE THE LANDING PAGE](http://anexe.tech/)
 
-## Installation Instructions
+## Installation
 
-- For the extension, see the [README](./extension/README.md)
-- For the landing page, see the [README](./landing/README.md)
-- For the API, see the [README](./api/README.md)
-
-### General Installation
-
-- Clone the repository: `git clone repo_url`
+- Download the [zip archive](http://anexe.tech/) and extract
+- Open your Chrome Browser
+- Click on the three vertical dots on top right of your screen
+- Click On Manage Extensions
+- Turn on Developer mode towards the top right of the screen
+- Click on Load unpacked
+- Navigate to the extension directory, and click select
 
 ## Contibutor
 

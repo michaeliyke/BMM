@@ -6,10 +6,26 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: white;
 	background-color: #ecf3fd;
-    /* height: 100v_h; */
-	width: 780px;
+}
+
+.app {
+	max-width: 780px;
+	width: 100%;
+}
+
+.fixed {
+	position: fixed;
+}
+
+.main-body {
+	position: fixed;
+	max-width: inherit;
+	width: 100%;
+}
+
+.bookmark-list {
+	overflow: auto;
 }
 
 header {
@@ -194,7 +210,6 @@ aside {
     flex-direction: column;
     border-top-left-radius: 0px;
     border-top-right-radius: 20px;
-	height: 72vh;
 	margin-top: 0;
 	margin-bottom: 0;
 	padding-bottom: 5px;

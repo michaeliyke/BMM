@@ -13,12 +13,13 @@ class DBStorage:
         """Returns a sqlachemy orm object of models currently the storage"""
         from models.base_model import Base
 
-        USER = os.getenv("BMM_DB_USER")
-        PWD = os.getenv("BMM_DB_PWD")
-        HOST = os.getenv("BMM_DB_HOST")
-        DB = os.getenv("BMM_DB_NAME")
+        USER = os.getenv("SUPABASE_DB_USER")
+        PWD = os.getenv("SUPABASE_DB_PWD")
+        HOST = os.getenv("SUPABASE_DB_HOST")
+        DB = os.getenv("SUPABASE_DB_NAME")
         ENV = os.getenv("BMM_ENV")
-        conn_str = "mysql+mysqldb://{}:{}@{}/{}".format(USER, PWD, HOST, DB)
+        PORT = os.getenv("SUPABASE_DB_PORT")
+        conn_str = f"postgresql://{USER}:{PWD}@{HOST}:{PORT}/{DB}"
         self.__engine = create_engine(conn_str, pool_pre_ping=True)
         Base.metadata.create_all(self.__engine)
 
