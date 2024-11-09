@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fixed Layout with Scrollable Sections</title>
+  <style>
+    /* https://chatgpt.com/share/672f6fcd-3ebc-8005-92b8-9b0fde6f82b2 */
+    /* Basic reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Page layout */
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    /* Header - Full width, fixed */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background-color: #333;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      z-index: 1000;
+    }
+
+    /* Main content area */
+    .main {
+      display: flex;
+      padding-top: 80px; /* Push down for fixed header */
+      height: calc(100vh - 80px); /* Full height minus header */
+      overflow: hidden;
+    }
+
+    /* Left sidebar */
+    .sidebar {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      background-color: #f4f4f4;
+    }
+
+    /* Right content */
+    .content {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+      background-color: #eaeaea;
+    }
+
+    /* Fixed header and footer */
+    .sidebar-header, .sidebar-footer, .content-header, .content-footer {
+      padding: 10px;
+      background-color: #555;
+      color: white;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    /* Scrollable middle sections */
+    .sidebar-body, .content-body {
+      overflow-y: auto;
+      padding: 15px;
+      flex-grow: 1;
+    }
+
+    /* Sample content */
+    .sidebar-body ul, .content-body .block {
+      margin-bottom: 15px;
+    }
+
+    .content-body .block {
+      background-color: #ccc;
+      padding: 20px;
+      margin-bottom: 15px;
+      height: 150px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">Main Header</div>
+
+  <!-- Main layout container -->
+  <div class="main">
+
+    <!-- Left sidebar with fixed header and footer -->
+    <div class="sidebar">
+      <div class="sidebar-header">Sidebar Header</div>
+      <div class="sidebar-body">
+        <ul>
+          <li>List item 1</li>
+          <li>List item 2</li>
+          <li>List item 3</li>
+          <li>List item 4</li>
+          <li>List item 5</li>
+          <!-- <li>List item 6</li>
+            <li>List item 7</li>
+            <li>List item 8</li>
+            <li>List item 9</li>
+            <li>List item 10</li>
+            <li>List item 11</li>
+            <li>List item 12</li>
+            <li>List item 13</li>
+            <li>List item 14</li>
+            <li>List item 15</li>
+            <li>List item 16</li>
+            <li>List item 17</li>
+            <li>List item 18</li>
+            <li>List item 19</li>
+            <li>List item 20</li>
+            <li>List item 21</li>
+            <li>List item 22</li>
+            <li>List item 23</li>
+            <li>List item 24</li>
+            <li>List item 25</li>
+            <li>List item 26</li>
+            <li>List item 27</li>
+            <li>List item 28</li>
+            <li>List item 29</li>
+            <li>List item 30</li>
+            <li>List item 31</li>
+            <li>List item 32</li>
+            <li>List item 33</li>
+            <li>List item 34</li>
+            <li>List item 35</li>
+            <li>List item 36</li>
+            <li>List item 37</li>
+            <li>List item 38</li>
+            <li>List item 39</li>
+            <li>List item 40</li> -->
+        </ul>
+      </div>
+      <div class="sidebar-footer">Sidebar Footer</div>
+    </div>
+
+    <!-- Right content with fixed header and footer -->
+    <div class="content">
+      <div class="content-header">Content Header</div>
+      <div class="content-body">
+        <div class="block">Content Block 1</div>
+        <div class="block">Content Block 2</div>
+        <div class="block">Content Block 3</div>
+        <div class="block">Content Block 4</div>
+        <!-- Add more blocks to make it scrollable -->
+      </div>
+      <div class="content-footer">Content Footer</div>
+    </div>
+
+  </div>
+
+</body>
+</html>
