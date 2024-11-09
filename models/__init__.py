@@ -1,12 +1,10 @@
 #!/usr/bin/python3
 """This module instantiates an object of class a named storage engine"""
 import os
-from dotenv import load_dotenv
+import utils.params as pa
 
-load_dotenv()
 
-storage_type = os.getenv("STORAGE_TYPE")
-if not storage_type or storage_type == "db":
+if not pa.STORAGE_TYPE or pa.STORAGE_TYPE == "db":
     from models.engine.db_storage import DBStorage
     storage = DBStorage()  # We use the database here
 

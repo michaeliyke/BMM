@@ -1,7 +1,7 @@
 """Defines a class to manage the BMM db storage using SQLAlchemy """
 from sqlalchemy import create_engine, MetaData
 import sqlalchemy.orm as orm
-import os
+import utils.params as pa
 
 
 class DBStorage:
@@ -12,18 +12,12 @@ class DBStorage:
     def __init__(self):
         """Returns a sqlachemy orm object of models currently the storage"""
         from models.base_model import Base
-
-        USER = os.getenv("SUPABASE_DB_USER")
-        PWD = os.getenv("SUPABASE_DB_PWD")
-        HOST = os.getenv("SUPABASE_DB_HOST")
-        DB = os.getenv("SUPABASE_DB_NAME")
-        ENV = os.getenv("BMM_ENV")
-        PORT = os.getenv("SUPABASE_DB_PORT")
-        conn_str = f"postgresql://{USER}:{PWD}@{HOST}:{PORT}/{DB}"
+        s1 = f"{pa.DB_USER}:{pa.DB_PWD}@{pa.DB_HOST}:{pa.DB_PORT}/{pa.DB_NAME}"
+        conn_str = f"postgresql://{s1}"
         self.__engine = create_engine(conn_str, pool_pre_ping=True)
         Base.metadata.create_all(self.__engine)
 
-        if ENV == "test":
+        if pa.BMM_ENV == "test":
             metadata = MetaData()  # Meta data object
             metadata.reflect(self.__engine)  # Analyze db relationships
             # Drop all tables in their dependencies order

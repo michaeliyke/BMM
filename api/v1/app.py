@@ -7,7 +7,7 @@ from flask_cors import CORS
 from flask import Flask, make_response, jsonify
 from api.v1.views import app_views  # The api Blueprint
 from landing import web_view  # The web Blueprint
-from os import environ
+import utils.params as pa
 
 
 app = Flask(__name__)
@@ -63,10 +63,12 @@ Swagger(app)
 
 
 if __name__ == "__main__":
-    host = environ.get('BMM_API_HOST')
-    port = environ.get('BMM_API_PORT')
-    if not host:
-        host = '0.0.0.0'
-    if not port:
-        port = '5000'
-    app.run(host=host, port=port, threaded=True, debug=True)
+
+    app.run(
+        host=pa.BMM_API_HOST,
+        port=pa.BMM_API_PORT,
+        threaded=True,
+        debug=pa.BMM_API_DEBUG)
+
+# Command to start the Flask app
+# FLASK_APP=app.py FLASK_ENV=development flask run
