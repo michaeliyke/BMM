@@ -1,7 +1,15 @@
-:root {
+/* https://chatgpt.com/share/672f6fcd-3ebc-8005-92b8-9b0fde6f82b2 */
+    /* Basic reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
     --max-height: 535px;
     --max-width: 800px;
-    --header-height: 300px;
+    --header-height: 80px;
     --body-hight: calc(var(--max-height) - var(--header-height));
     --sidebar-width: 30%;
     --content-bar-width: 70%;
@@ -16,67 +24,163 @@ body {
     max-width: var(--max-width);
     height: var(--max-height);
     max-height: var(--max-height);
+    font-family: Arial, sans-serif;
 }
 
 body > header {
-    font-size: 2em;
-    padding: 1em;
-    background-color: #f0f0f0;
     position: fixed;
-    width: 100%;
     top: 0;
     left: 0;
-    height: var(--header-height);
+    width: 100%;
+    height: 80px;
+    background-color: #333;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.5rem;
     z-index: 1000;
 }
 
 main {
-    padding-top: var(--header-height);
-    height: var(--body-hight);
+    display: flex;
+    padding-top: var(--header-height); /* Push down for fixed header */
+    height: var(--max-height);
     overflow: hidden;
 }
 
-aside.sidebar {
+/* Left sidebar */
+main > aside.sidebar {
+    background-color: #f4f4f4;
+    background-color: #9bcbf5;
+    background-color: #88cdea;
+    color: #FFFFFF;
+    width: var(--sidebar-width);
     display: flex;
     flex-direction: column;
-    max-width: var(--sidebar-width);
-    background-color: #f4f4f4;
+    justify-content: space-between;
 }
 
-/* section.content-bar {
+/* Right content */
+main > section.content {
+    width: var(--content-bar-width);
     display: flex;
     flex-direction: column;
-    max-width: var(--content-bar-width);
     background-color: #eaeaea;
-} */
-/*
-.sidebar > header, .sidebar > footer, .content-bar > header, .content-bar > footer {
+}
+
+/* Fixed header and footer */
+.sidebar > header, .sidebar > footer, .content > header, .content > footer {
     padding: 10px;
     background-color: #555;
     color: white;
     text-align: center;
     flex-shrink: 0;
-    background-color: red;
 }
 
-.sidebar > section, .content-bar > section {
+/* Scrollable middle sections */
+.content > section{
     overflow-y: auto;
     padding: 15px;
     flex-grow: 1;
-} */
+}
 
-/* Sample content */
-/* .sidebar > section > ul, .content-bar > section .block {
+/* TODO: REMOVE */
+.sidebar > section > ul, .content > section > .block {
     margin-bottom: 15px;
-} */
+}
 
-/* sample tiles in content area */
-/* .content-bar > section .block {
+/* TODO: REMOVE */
+.content > section > .block {
     background-color: #ccc;
     padding: 20px;
     margin-bottom: 15px;
     height: 150px;
-} */
+}
+
+.sidebar > section {
+    overflow-y: auto;
+    padding: 15px;
+    flex-grow: 1;
+	flex-direction: column;
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+}
+
+.sidebar > section > ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.sidebar > section > ul > li {
+	padding: 10px;
+	cursor: pointer;
+	background-color: #50aae8;
+	margin-top: 5px;
+	list-style: none;
+	border: 0.16em solid rgba(255, 255, 255, 0.7);
+	border-radius: 10px;
+	font-weight: 400;
+	width: 100%;
+	display: block;
+	font-size: 14px;
+}
+
+.sidebar > section > ul > li > span {
+	text-align: left;
+	display: block;
+	width: 80%;
+	margin: 0 auto;
+}
+
+select.select {
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	cursor: pointer;
+}
+
+aside.sidebar > header select {
+	padding: 7px 10px;
+	width: 106%;
+	border: 0.16em solid rgba(255, 255, 255, 0.7);
+	border-radius: 10px;
+	background-color: #50aae8;
+	color: rgba(255,255,255,0.4);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+
+aside.sidebar > header select > option {
+	background-color: #50aae8;
+	color: white;
+}
+
+
+.select-wrapper {
+	display: inline-block;
+	position: relative;
+	width: 100%;
+}
+
+.select-wrapper::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	width: 0;
+	height: 0;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-top: 7px solid rgba(255, 255, 255, 0.5);
+	transform: translateY(-100%);
+	/* The arrow should not respond to click events */
+	pointer-events: none;
+}

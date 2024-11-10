@@ -15,4 +15,5 @@ logging
 *.test
 test*
 extension/templates/_index_.html
+extension/css/_style_.css
 
