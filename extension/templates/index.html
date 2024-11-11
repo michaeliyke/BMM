@@ -16,27 +16,66 @@
 
 <body>
     <header>
-        <article class="banner">
-            <figure class="logo-container">
-                <img src="../img/logo.png"
-                    alt="Logo"
-                    class="logo">
-            </figure>
-            <h1 class="logo-caption">BOOKMARK MANAGER</h1>
-            <figure class="tagline-separator"> </figure>
-            <h2 class="project-tagline">BOOKMARK MANAGER</h2>
+        <article>
+            <section class="banner">
+                <figure class="logo-container">
+                    <img src="../img/logo.png"
+                        alt="Logo"
+                        class="logo">
+                </figure>
+                <h1 class="logo-caption">BOOKMARK MANAGER</h1>
+                <figure class="tagline-separator"> </figure>
+                <h2 class="project-tagline">BOOKMARK MANAGER</h2>
+            </section>
+            <section class="profile">
+                <figure class="user-menu">
+                    <div class="profile-icon"></div>
+                    <section class="dropdown">
+                        <ul>
+                            <li class="a">Profile</li>
+                            <li class="a">Settings</li>
+                            <li class="a">Logout</li>
+                        </ul>
+                    </section>
+                </figure>
+            </section>
         </article>
-        <article class="profile">
-            <figure class="user-menu">
-                <div class="profile-icon"></div>
-                <section class="dropdown">
-                    <ul>
-                        <li class="a">Profile</li>
-                        <li class="a">Settings</li>
-                        <li class="a">Logout</li>
-                    </ul>
-                </section>
-            </figure>
+        <article class="form-container">
+            <form>
+                <div class="form-control">
+                    <label for="url">URL</label>
+                    <input type="text"
+                        id="url"
+                        placeholder="">
+                </div>
+                <div class="form-control">
+                    <label for="title">TITLE</label>
+                    <input type="text"
+                        id="title"
+                        placeholder="">
+                </div>
+                <div class="form-control">
+                    <label for="category">CATEGORY</label>
+                    <div class="select wrapper">
+                        <select id="category"
+                            class="select">
+                            <option value="default"
+                                class="current">DEFAULT</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="form-control">
+        				<label for="tags">TAGS</label>
+                        <div class="tags-container"></div>
+                        <select id="tags-dropdown">
+        					<option value="default">Select Tags</option>
+                        </select>
+                    </div>  -->
+                <div class="form-control">
+                    <button type="button">Create</button>
+                </div>
+            </form>
         </article>
     </header>
 
@@ -44,9 +83,8 @@
 
         <article class="sidebar">
             <header>
-                <section class="select-wrapper">
-                    <select id="category-dropdown"
-                        class="select">
+                <section>
+                    <select>
                         <option value="categories"
                             class="current">Categories</option>
                         <option value="filter-tags">Filter:Tags</option>
