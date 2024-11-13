@@ -13,7 +13,7 @@
 :root {
     --max-height: 535px;
     --max-width: 800px;
-    --header-height: 80px;
+    --header-height: 153px;
     --body-hight: calc(var(--max-height) - var(--header-height));
     --sidebar-width: 30%;
     --content-bar-width: 70%;
@@ -40,18 +40,20 @@ body>header {
     width: 100%;
     position: fixed;
     z-index: 1000;
-    background-color: #6bbee7;
+    background-color: white;
     color: rgba(255, 255, 255, 0.8);
-    padding: 5px 20px;
-    padding-left: 8px;
+    padding: 0;
 }
 
-header>article:first-of-type {
+body>header>article:first-of-type {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 2em;
+    background-color: #6bbee7;
+    padding: 3px 8px;
+    padding-right: 20px;
 }
 
 .banner,
@@ -236,13 +238,6 @@ main>article.content {
     margin: 0 auto;
 }
 
-select.select {
-    appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-}
-
 .sidebar>header select {
     padding: 7px 10px;
     width: 106%;
@@ -286,7 +281,8 @@ select.select {
 
 /* FORM STYLING */
 .form-container {
-    background-color: #f9f9f9;
+    background-color: white;
+    padding-left: 7px;
 }
 
 .form-input-container {
@@ -297,24 +293,25 @@ select.select {
 }
 
 
-header form {
+body>header form {
     display: flex;
     flex-wrap: wrap;
 }
 
-header form>div {
+body>header form>div {
     flex-grow: 1;
     flex-basis: 28%;
     max-width: 33%;
     padding: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 header form>div:nth-of-type(3) {
     margin-right: 15px;
 }
 
-header form>div:last-of-type {
+body>header form>div:last-of-type {
     margin-left: auto;
     display: flex;
     justify-content: flex-end;
@@ -322,8 +319,7 @@ header form>div:last-of-type {
     margin-right: 15px;
 }
 
-header form input,
-header form select {
+body>header form input {
     padding: 7px 11px;
     width: 100%;
     border: none;
@@ -333,18 +329,36 @@ header form select {
     font-weight: bold;
 }
 
+body>header form span {
+    background-color: rgba(15, 98, 126, 0.1);
+    outline: none;
+    color: rgba(17, 34, 51, 0.27);
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 10px;
+    width: 100%;
+    border: none;
+    padding: 7px 11px;
+    display: block;
+}
 
-header form button {
+
+body>header form button {
     padding: 10px 20px;
     background-color: #6bbee7;
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 2em;
+    margin-bottom: 10px;
 }
 
-header form button:hover {
+body>header form button:hover {
     background-color: #1C86EE;
     transform: scale(1.05);
 }
@@ -375,6 +389,7 @@ label {
 .form-control input:focus {
     background-color: #0f627e;
     outline: none;
+    color: rgba(255, 255, 255, 1);
 }
 
 .add-buttons {
