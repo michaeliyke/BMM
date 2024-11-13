@@ -147,8 +147,8 @@ main {
 
 /* Left sidebar */
 main>.sidebar {
-    background-color: #f4f4f4;
-    background-color: #9bcbf5;
+    /* background-color: #f4f4f4; */
+    /* background-color: #9bcbf5; */
     background-color: #88cdea;
     color: #FFFFFF;
     width: var(--sidebar-width);
@@ -170,11 +170,12 @@ main>article.content {
 .sidebar>footer,
 .content>header,
 .content>footer {
-    padding: 10px;
-    background-color: #555;
-    color: white;
-    text-align: center;
     flex-shrink: 0;
+}
+
+.sidebar>header {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 /* Scrollable middle sections */
@@ -240,16 +241,16 @@ main>article.content {
 
 .sidebar>header select {
     padding: 7px 10px;
-    width: 106%;
+    /* width: 106%; */
     border: 0.16em solid rgba(255, 255, 255, 0.7);
     border-radius: 10px;
     background-color: #50aae8;
+    background-color: #007bff;
     color: rgba(255, 255, 255, 0.4);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* Add a subtle shadow */
     font-size: 16px;
     font-weight: bold;
-    margin-bottom: 8px;
+    /* margin-bottom: 8px; */
 }
 
 .sidebar>header select>option {
@@ -262,6 +263,7 @@ main>article.content {
     display: inline-block;
     position: relative;
     width: 100%;
+    margin-left: 15px;
 }
 
 .sidebar>header>section ::after {
@@ -415,7 +417,3 @@ label {
 }
 
 /* Categories side starts */
-.sidebar>header select {
-    margin-left: 20px;
-    background-color: #007bff;
-}
