@@ -203,10 +203,11 @@ main>article.content {
     overflow-y: auto;
     padding: 15px;
     flex-grow: 1;
-    flex-direction: column;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
+    padding-top: 0;
+    /* flex-direction: column; */
+    /* display: flex; */
+    /* gap: 10px; */
+    /* justify-content: center; */
 }
 
 .sidebar>section>ul {
@@ -250,7 +251,26 @@ main>article.content {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: 16px;
     font-weight: bold;
-    /* margin-bottom: 8px; */
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cpath fill='%23FFF' d='M0 0h10L5 6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+
+.sidebar>header select::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 7px solid rgba(255, 255, 255, 0.5);
+    transform: translateY(-100%);
+    pointer-events: none;
 }
 
 .sidebar>header select>option {
@@ -266,20 +286,6 @@ main>article.content {
     margin-left: 15px;
 }
 
-.sidebar>header>section ::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    width: 0;
-    height: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 7px solid rgba(255, 255, 255, 0.5);
-    transform: translateY(-100%);
-    /* The arrow should not respond to click events */
-    pointer-events: none;
-}
 
 /* FORM STYLING */
 .form-container {
@@ -335,10 +341,7 @@ body>header form span {
     background-color: rgba(15, 98, 126, 0.1);
     outline: none;
     color: rgba(17, 34, 51, 0.27);
-    appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
+    cursor: default;
     font-weight: bold;
     border-radius: 10px;
     width: 100%;
@@ -417,3 +420,27 @@ label {
 }
 
 /* Categories side starts */
+/* Container styles */
+.container {
+    position: relative;
+    width: 200px;
+}
+
+/* Select styles */
+.container select {
+    width: 100%;
+    padding-right: 30px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23333' d='M0 0h10L5 6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+}
