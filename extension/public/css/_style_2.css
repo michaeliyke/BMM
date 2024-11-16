@@ -1,0 +1,87 @@
+.bookmark-list {
+    overflow: auto;
+}
+
+
+
+/* Categories side starts */
+.category-dropdown {
+    margin-left: 20px;
+    background-color: #007bff;
+}
+
+.categories {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+
+}
+
+.categories li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.categories li:hover {
+    background-color: #34495e;
+}
+
+/* Categories side ends */
+
+.bookmark-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bookmark-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.bookmark-item h3 {
+    margin: 0;
+}
+
+.bookmark-item a {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+.bookmark-item p {
+    margin: 10px 0;
+    color: black;
+}
+
+.bookmark-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.bookmark-actions button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.bookmark-actions button:nth-child(1) {
+    background-color: #1E90FF;
+    color: white;
+}
+
+.bookmark-actions button:nth-child(1):hover {
+    background-color: #1C86EE;
+}
+
+.bookmark-actions button:nth-child(2) {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.bookmark-actions button:nth-child(2):hover {
+    background-color: #c0392b;
+}
