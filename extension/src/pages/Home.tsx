@@ -6,8 +6,10 @@ export default function Home() {
   return (
     <>
         <Header />
-        <SideBar />
-        <ContentBar />
+        <section>
+            <SideBar />
+            <ContentBar />
+        </section>
     </>
   )
 }

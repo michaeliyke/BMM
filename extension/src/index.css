@@ -36,8 +36,8 @@ body > header {
     }
     */
 
-body>header {
-    width: 100%;
+main>header {
+    width: var(--max-width);
     position: fixed;
     z-index: 1000;
     background-color: white;
@@ -45,7 +45,7 @@ body>header {
     padding: 0;
 }
 
-body>header>article:first-of-type {
+main>header>article:first-of-type {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -136,8 +136,7 @@ body>header>article:first-of-type {
     display: block;
 }
 
-
-main {
+main>section {
     display: flex;
     padding-top: var(--header-height);
     /* Push down for fixed header */
@@ -146,7 +145,7 @@ main {
 }
 
 /* Left sidebar */
-main>.sidebar {
+main>section>.sidebar {
     /* background-color: #f4f4f4; */
     /* background-color: #9bcbf5; */
     background-color: #88cdea;
@@ -158,7 +157,7 @@ main>.sidebar {
 }
 
 /* Right content */
-main>article.content {
+main>section>article.content {
     width: var(--content-bar-width);
     display: flex;
     flex-direction: column;
@@ -301,12 +300,12 @@ main>article.content {
 }
 
 
-body>header form {
+main>header form {
     display: flex;
     flex-wrap: wrap;
 }
 
-body>header form>div {
+main>header form>div {
     flex-grow: 1;
     flex-basis: 28%;
     max-width: 33%;
@@ -319,7 +318,7 @@ header form>div:nth-of-type(3) {
     margin-right: 15px;
 }
 
-body>header form>div:last-of-type {
+main>header form>div:last-of-type {
     margin-left: auto;
     display: flex;
     justify-content: flex-end;
@@ -327,7 +326,7 @@ body>header form>div:last-of-type {
     margin-right: 15px;
 }
 
-body>header form input {
+main>header form input {
     padding: 7px 11px;
     width: 100%;
     border: none;
@@ -337,7 +336,7 @@ body>header form input {
     font-weight: bold;
 }
 
-body>header form span {
+main>header form span {
     background-color: rgba(15, 98, 126, 0.1);
     outline: none;
     color: rgba(17, 34, 51, 0.27);
@@ -351,7 +350,7 @@ body>header form span {
 }
 
 
-body>header form button {
+main>header form button {
     padding: 10px 20px;
     background-color: #6bbee7;
     color: white;
@@ -363,7 +362,7 @@ body>header form button {
     margin-bottom: 10px;
 }
 
-body>header form button:hover {
+main>header form button:hover {
     background-color: #1C86EE;
     transform: scale(1.05);
 }
