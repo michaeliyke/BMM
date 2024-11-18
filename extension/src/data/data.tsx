@@ -1,33 +1,97 @@
-export const categories = [
-    {"name": "1. Career Paths",},
-    {"name": "2. Programming",},
-    {"name": "3. Frontend World",},
-    {"name": "4. Backend",},
-    {"name": "5. Human World",},
-    {"name": "6. Career Paths",},
-    {"name": "7. Programming",},
-    {"name": "8. Frontend World",},
-    {"name": "9. Backend",},
-    {"name": "10. Human World",},
-    {"name": "11. Career Paths",},
-    {"name": "12. Programming",},
-    {"name": "13. Frontend World",},
-    {"name": "14. Backend",},
-    {"name": "15. Human World",},
-    {"name": "16. Career Paths",},
-    {"name": "17. Programming",},
-    {"name": "18. Frontend World",},
-    {"name": "19. Backend",},
-    {"name": "20. Human World",},
-    {"name": "21. Career Paths",},
-    {"name": "22. Programming",},
-    {"name": "23. Frontend World",},
-    {"name": "24. Backend",},
-    {"name": "25. Human World",},
-    {"name": "26. Career Paths",},
-    {"name": "27. Programming",},
-    {"name": "28. Frontend World",},
-    {"name": "29. Backend",},
-    {"name": "30. Human World",},
+import { TBookmark, TCategory } from "../utils/types.payload";
 
+const bookmarks: TBookmark[] = [
+    {
+        id: 0,
+        title: "Google Career Certificates",
+        description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
+        url: "https://grow.google/certificates/",
+        updated: "2021-09-01",
+    },
+    {
+        id: 1,
+        title: "Google Career Certificates",
+        description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
+        url: "https://grow.google/certificates/",
+        updated: "2021-09-01",
+    },
+    {
+        id: 2,
+        title: "Google Career Certificates",
+        description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
+        url: "https://grow.google/certificates/",
+        updated: "2021-09-01",
+    },
+    {
+        id: 3,
+        title: "Google Career Certificates",
+        description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
+        url: "https://grow.google/certificates/",
+        updated: "2021-09-01",
+    },
 ];
+
+const categories: TCategory[] = [
+    {
+        name: "Career Paths",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Programming",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Frontend World",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Backend",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Human World",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Career Paths",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Programming",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Frontend World",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Backend",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Human World",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Career Paths",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Programming",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Frontend World",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Backend",
+        bookmarks: bookmarks,
+    },
+    {
+        name: "Human World",
+        bookmarks: bookmarks,
+    },
+];
+
+export default categories;

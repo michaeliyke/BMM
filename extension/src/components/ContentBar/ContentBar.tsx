@@ -1,26 +1,24 @@
-export default function ContentBar() {
-  return (
-      <article className="content">
-          <header>Content Header</header>
-          <section>
-              <div className="block">Content Block 1</div>
-              <div className="block">Content Block 2</div>
-              <div className="block">Content Block 3</div>
-              <div className="block">Content Block 4</div>
-              <div className="block">Content Block 1</div>
-              <div className="block">Content Block 2</div>
-              <div className="block">Content Block 3</div>
-              <div className="block">Content Block 4</div>
-              <div className="block">Content Block 1</div>
-              <div className="block">Content Block 2</div>
-              <div className="block">Content Block 3</div>
-              <div className="block">Content Block 4</div>
-              <div className="block">Content Block 1</div>
-              <div className="block">Content Block 2</div>
-              <div className="block">Content Block 3</div>
-              <div className="block">Content Block 4</div>
-          </section>
-          <footer>Content Footer</footer>
-      </article>
-  )
+import { TCategory } from "../../utils/types.payload";
+
+type SideBarProps = {
+    categories: TCategory[],
+};
+
+
+export default function ContentBar(props: SideBarProps) {
+    const { categories } = props;
+
+    return (
+        <article className="content">
+            <header>Content Header</header>
+            <section>
+                {categories.map((category) => (
+                    category.bookmarks.map((bookmark, index) => (
+                        <div className="block" key={index}>{bookmark.title}</div>
+                    ))
+                ))}
+            </section>
+            <footer>Content Footer</footer>
+        </article>
+    )
 }
