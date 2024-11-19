@@ -1,7 +1,8 @@
 import { TCategory } from "../../utils/types.payload";
 
 type SideBarProps = {
-    categories: TCategory[],
+    categories: TCategory[];
+    updateCategory?: (category: TCategory) => void;
 };
 
 
