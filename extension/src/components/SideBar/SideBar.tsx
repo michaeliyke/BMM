@@ -2,8 +2,10 @@ import { TCategory } from "../../utils/types.payload";
 import { useState } from "react";
 
 type SideBarProps = {
-    categories: TCategory[],
-    updateCategory?: (category: TCategory) => void
+    categories: TCategory[];
+    updateCategory?: (category: TCategory) => void;
+    setSelectedCategory: (category: TCategory | null) => void;
+    selectedCategory: TCategory | null;
 };
 
 // Remove class selected from all categories and add it target
@@ -43,8 +45,7 @@ function resetSelections() {
 }
 
 export default function SideBar(props: SideBarProps) {
-    const { categories } = props;
-    const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(null);
+    const { categories, selectedCategory, setSelectedCategory } = props;
     const [highlightedCategory, setHighlightedCategory] = useState<TCategory | null>(null);
 
     function toggleSelected(event: React.MouseEvent<HTMLLIElement>) {
