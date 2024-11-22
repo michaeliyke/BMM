@@ -66,13 +66,7 @@ export default function ContentBar(props: SideBarProps) {
     return (
         <article className="content">
             <header>Content Header</header>
-            <section>
-                {categories.map((category) => (
-                    category.bookmarks.map((bookmark, index) => (
-                        <div className="block font-poppins text-blue-500 text-4xl bg-gray-100" key={index}>{bookmark.title}</div>
-                    ))
-                ))}
-            </section>
+            <ListBookmarks categories={categories} />
             <footer>Content Footer</footer>
         </article>
     )
