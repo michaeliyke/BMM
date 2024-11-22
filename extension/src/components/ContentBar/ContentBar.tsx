@@ -16,62 +16,65 @@ const ListBookmarks = ({ categories }: ListBookmarksProps) => {
         <section className="grid grid-cols-1 gap-6 p-6 bg-gray-50">
             {categories.map((category) =>
                 category.bookmarks.map((bookmark, index) => (
-                    <div
+                    <article
                         key={index}
                         className="relative p-5 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"
                     >
-                        {/* Top Section: Title, Timestamp, and Action Icons */}
-                        <div className="flex justify-between items-center">
-                            <h3 className="text-lg font-semibold text-gray-900 truncate">
+                        {/* Header: Title, Timestamp, and Action Icons */}
+                        <header className="flex justify-between items-center">
+                            <h2 className="text-lg font-semibold text-gray-900 truncate">
                                 {bookmark.title}
-                            </h3>
+                            </h2>
                             <div className="flex items-center space-x-5">
-                                {/* Action Icons */}
+                                {/* Action Buttons */}
                                 <div className="flex space-x-3 opacity-0 group-hover:opacity-100 transition duration-300">
                                     <button
                                         className="text-gray-500 hover:text-blue-600 transition duration-200"
-                                        title="Archive"
+                                        aria-label="Archive"
                                     >
                                         <MdOutlineArchive size={20} />
                                     </button>
                                     <button
                                         className="text-gray-500 hover:text-green-600 transition duration-200"
-                                        title="Edit"
+                                        aria-label="Edit"
                                     >
                                         <MdOutlineEdit size={20} />
                                     </button>
                                     <button
                                         className="text-gray-500 hover:text-red-600 transition duration-200"
-                                        title="Delete"
+                                        aria-label="Delete"
                                     >
                                         <MdOutlineDelete size={20} />
                                     </button>
                                 </div>
                                 {/* Timestamp */}
-                                <span className="text-sm text-gray-400">
+                                <time
+                                    className="text-sm text-gray-400"
+                                    dateTime={moment(bookmark.updated).toISOString()}
+                                >
                                     {moment(bookmark.updated).fromNow()}
-                                </span>
+                                </time>
                             </div>
-                        </div>
+                        </header>
 
-                        {/* Bookmark Details */}
-                        <div className="mt-4">
+                        {/* Main Content: Bookmark Details */}
+                        <section className="mt-4">
                             <p className="text-sm text-gray-600 truncate">{bookmark.url}</p>
                             <p className="text-sm text-gray-700 truncate">
                                 {bookmark.description}
                             </p>
-                        </div>
+                        </section>
 
-                        {/* Star Icon */}
-                        <div className="absolute right-4 top-1/2 transform -translate-y-1/3">
+                        {/* Favorite Button */}
+                        <aside className="absolute right-4 top-1/2 transform -translate-y-1/3">
                             <button
                                 className="text-yellow-500 hover:text-yellow-600 transition duration-200"
-                                title="Favorite"
+                                aria-label="Favorite"
                             >
                                 <MdOutlineStar size={24} />
                             </button>
-                        </div>
-                    </div>
+                        </aside>
+                    </article>
                 ))
             )}
         </section>
