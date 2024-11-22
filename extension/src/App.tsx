@@ -1,5 +1,4 @@
 import categories from './data/data';
-import './index.css'
 import Home from "./pages/Home";
 import { DataProvider } from './utils/contexts';
 import { useState } from 'react';

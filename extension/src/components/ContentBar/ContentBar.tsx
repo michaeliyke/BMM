@@ -1,5 +1,4 @@
 import { TCategory } from "../../utils/types.payload";
-import React from 'react';
 import moment from 'moment';
 import { FaArchive, FaEdit, FaTrashAlt, FaStar } from 'react-icons/fa';
 
@@ -70,7 +69,7 @@ export default function ContentBar(props: SideBarProps) {
             <section>
                 {categories.map((category) => (
                     category.bookmarks.map((bookmark, index) => (
-                        <div className="block" key={index}>{bookmark.title}</div>
+                        <div className="block font-poppins text-blue-500 text-4xl bg-gray-100" key={index}>{bookmark.title}</div>
                     ))
                 ))}
             </section>

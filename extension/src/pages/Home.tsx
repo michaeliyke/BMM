@@ -2,10 +2,9 @@ import Header from '../components/HeaderBar/Header'
 import SideBar from '../components/SideBar/SideBar'
 import ContentBar from '../components/ContentBar/ContentBar'
 import categories from '../data/data'
-import { useState, Dispatch, SetStateAction, useContext } from 'react'
+import { useState, Dispatch, SetStateAction } from 'react'
 import { TCategory } from '../utils/types.payload'
 import { update } from '../utils/crud'
-import { DataContext } from '../utils/contexts'
 
 type HomeProps = {
     data: TCategory[];
@@ -14,7 +13,6 @@ type HomeProps = {
 
 export default function Home({ data, setData }: HomeProps) {
     const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(null);
-    const { defaultCategory } = useContext(DataContext)
     let filteredData = categories;
 
     if (selectedCategory)
