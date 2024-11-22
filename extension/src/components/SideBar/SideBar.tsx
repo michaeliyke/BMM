@@ -1,31 +1,40 @@
+import { DataContext } from "../../utils/contexts";
+import { addClass, removeClass, setDefaultCategoryText } from "../../utils/domHelpers";
 import { TCategory } from "../../utils/types.payload";
-import { useState } from "react";
+import { useState, useContext, Dispatch, SetStateAction, useEffect } from "react";
+
 
 type SideBarProps = {
     categories: TCategory[];
     updateCategory?: (category: TCategory) => void;
-    setSelectedCategory: (category: TCategory | null) => void;
     selectedCategory: TCategory | null;
+    setSelectedCategory: Dispatch<SetStateAction<TCategory | null>>;
 };
 
 // Remove class selected from all categories and add it target
 function toggleSelectedClass(target: HTMLLIElement) {
     const categories = document.querySelectorAll('.category');
     categories.forEach((category) => {
-        category.classList.remove('selected');
+        if (category.classList.contains('selected') && category !== target) {
+            removeClass(category, 'selected');
+        }
     });
-    target.classList.add('selected');
+
+    if (!target.classList.contains('selected')) {
+        addClass(target, 'selected');
+    }
 }
 // Remove class highlighted from all categories and add it target
 function toggleHighlightedClass(target: HTMLLIElement) {
     const categories = document.querySelectorAll('.category');
     categories.forEach((category) => {
-        category.classList.remove('highlighted');
+        if (category.classList.contains('highlighted') && category !== target) {
+            removeClass(category, 'highlighted');
+        }
     });
-    target.classList.add('highlighted');
-    const _curr = document.querySelector('.current-category');
-    if (_curr) {
-        _curr.textContent = target.textContent;
+
+    if (!target.classList.contains('highlighted')) {
+        addClass(target, 'highlighted');
     }
 }
 
@@ -33,30 +42,49 @@ function toggleHighlightedClass(target: HTMLLIElement) {
 function resetSelections() {
     const categories = document.querySelectorAll('.category');
     categories.forEach((category) => {
-        category.classList.remove('selected');
-        category.classList.remove('highlighted');
+        removeClass(category, 'selected');
+        removeClass(category, 'highlighted');
     });
-    categories[0].classList.add('selected');
-    categories[1].classList.add('highlighted');
-    const _curr = document.querySelector('.current-category');
-    if (_curr) {
-        _curr.textContent = 'DEFAULT';
-    }
+    addClass(categories[0], 'selected');
+    addClass(categories[1], 'highlighted');
 }
 
 export default function SideBar(props: SideBarProps) {
+    const { defaultCategory } = useContext(DataContext);
     const { categories, selectedCategory, setSelectedCategory } = props;
-    const [highlightedCategory, setHighlightedCategory] = useState<TCategory | null>(null);
+
+    useEffect(() => {
+        // Set the default category text in the header
+        setDefaultCategoryText(defaultCategory.name);
+    }, [defaultCategory]);
+
 
     function toggleSelected(event: React.MouseEvent<HTMLLIElement>) {
         const target = event.currentTarget;
         const category = categories.find((cat) => cat.name === target.textContent);
         if (category) {
             setSelectedCategory(category);
-            setHighlightedCategory(category);
+            // Update the category text in the header
+            setDefaultCategoryText(category.name);
             toggleSelectedClass(target);
             toggleHighlightedClass(target);
         }
+    }
+
+    // Brings the selection and highlighting to the default state
+    function restoreDefaultSection(e: React.MouseEvent<HTMLLIElement>) {
+        const target = e.currentTarget;
+        // If the default category is already selected
+        if (selectedCategory?.name === defaultCategory.name) {
+            addClass(target, 'selected');
+            if (target.nextElementSibling)
+                removeClass(target.nextElementSibling, 'selected');
+            return
+        }
+        removeClass(target, 'selected');
+        setSelectedCategory(defaultCategory);
+        resetSelections();
+        setDefaultCategoryText(defaultCategory.name);
     }
 
     return (
@@ -73,24 +101,15 @@ export default function SideBar(props: SideBarProps) {
             </header>
             <section className="filtered-list">
                 <ul className="categories">
-                    {selectedCategory ? (
-                        <li className="category all" onClick={() => {
-                            setSelectedCategory(null);
-                            setHighlightedCategory(null);
-                            resetSelections();
-                        }}><span>All Categories</span></li>
-                    ) : (
-                        <li className="category all selected"><span>All Categories</span></li>
-                    )}
+                    <li
+                        className="category all selected"
+                        onClick={restoreDefaultSection}
+                    ><span>All Categories</span></li>
                     {categories.map((category, index) => (
-                        index === 0 && !highlightedCategory ? (
-                            <li key={index} className="category highlighted" onClick={toggleSelected}>
-                                <span>{category.name}</span>
-                            </li>) : (
-                            <li key={index} className="category" onClick={toggleSelected}>
-                                <span>{category.name}</span>
-                            </li>
-                        )
+                        <li key={index} className={index === 0 ? "category highlighted" : "category"}
+                            onClick={toggleSelected}>
+                            <span>{category.name}</span>
+                        </li>
                     ))}
                 </ul>
             </section>

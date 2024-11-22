@@ -1,6 +1,7 @@
+import { Dispatch, SetStateAction } from "react";
 // BookMark Interface
 export type TBookmark = {
-    id: number;
+    id?: number;
     title: string;
     description: string;
     url: string;
@@ -19,3 +20,8 @@ export type TCategory = {
     name: string;
     bookmarks: TBookmark[];
 };
+
+export interface IDataContext {
+    defaultCategory: TCategory;
+    setDefaultCategory: Dispatch<SetStateAction<TCategory>>;
+}

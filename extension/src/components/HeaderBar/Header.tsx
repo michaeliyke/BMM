@@ -1,4 +1,41 @@
-export default function Header() {
+import { useState } from "react"
+import { TCategory } from "../../utils/types.payload";
+import { create } from "../../utils/crud";
+
+type HeaderProps = {
+    selectedCategory: TCategory | null;
+    categories: TCategory[];
+    setData: (categories: TCategory[]) => void;
+};
+
+export default function Header(props: HeaderProps) {
+    const [url, setUrl] = useState('');
+    const [title, setTitle] = useState('');
+
+    const { selectedCategory, categories, setData } = props;
+
+
+    function createBookmark() {
+        if (!url || !title) {
+            return;
+        }
+
+        if (!selectedCategory) {
+            return;
+        }
+
+        const newBookmark = {
+            title,
+            description: '',
+            url,
+            updated: new Date().toISOString(),
+        };
+
+        selectedCategory.bookmarks.push(newBookmark);
+        setData(create(categories, selectedCategory));
+
+    }
+
     return (
         <header>
             <article>
@@ -31,12 +68,14 @@ export default function Header() {
                         <label htmlFor="url">URL</label>
                         <input type="text"
                             id="url"
+                            onChange={(e) => setUrl(e.target.value)}
                             placeholder="" />
                     </div>
                     <div className="form-control">
                         <label htmlFor="title">TITLE</label>
                         <input type="text"
                             id="title"
+                            onChange={(e) => setTitle(e.target.value)}
                             placeholder="" />
                     </div>
                     <div className="form-control">
@@ -44,7 +83,7 @@ export default function Header() {
                         <div className="select wrapper"><span className="current-category">DEFAULT</span></div>
                     </div>
                     <div className="form-control">
-                        <button type="button">Create</button>
+                        <button type="button" onClick={createBookmark}>Create</button>
                     </div>
                 </form>
             </article>

@@ -1,26 +1,22 @@
-import { TCategory, TCRUD } from "./types.payload";
+import { TCategory} from "./types.payload";
 
-const crud: TCRUD = {
+export function create (categories: TCategory[], category: TCategory): TCategory[] {
+    // Append the new category to the existing categories
+    return [...categories, category];
+    // Trigger persistence if any
+}
 
-    create (categories: TCategory[], category: TCategory): TCategory[] {
-        // Append the new category to the existing categories
-        return [...categories, category];
-    },
+export function read (categories: TCategory[]): TCategory[] {
+    // Return the existing categories
+    return categories;
+}
 
-    read (categories: TCategory[]): TCategory[] {
-        // Return the existing categories
-        return categories;
-    },
+export function update (categories: TCategory[], category: TCategory): TCategory[] {
+    // Update the category with the new category
+    return categories.map((cat) => cat.name === category.name ? category : cat);
+}
 
-    update (categories: TCategory[], category: TCategory): TCategory[] {
-        // Update the category with the new category
-        return categories.map((cat) => cat.name === category.name ? category : cat);
-    },
-
-    delete (categories: TCategory[], category: TCategory): TCategory[] {
-        // Remove the category from the existing categories
-        return categories.filter((cat) => cat.name !== category.name);
-    },
-};
-
-export default crud;
+export function delete_ (categories: TCategory[], category: TCategory): TCategory[] {
+    // Remove the category from the existing categories
+    return categories.filter((cat) => cat.name !== category.name);
+}

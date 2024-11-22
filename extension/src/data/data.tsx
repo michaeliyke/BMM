@@ -33,7 +33,7 @@ const bookmarks: TBookmark[] = [
 
 const categories: TCategory[] = [
     {
-        name: "Career Paths",
+        name: "Default Category",
         bookmarks: bookmarks,
     },
     {
