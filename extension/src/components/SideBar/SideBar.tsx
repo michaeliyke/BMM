@@ -1,7 +1,7 @@
 import { DataContext } from "../../utils/contexts";
 import { addClass, removeClass, setDefaultCategoryText } from "../../utils/domHelpers";
 import { TCategory } from "../../utils/types.payload";
-import { useState, useContext, Dispatch, SetStateAction, useEffect } from "react";
+import { useContext, Dispatch, SetStateAction, useEffect } from "react";
 
 
 type SideBarProps = {
@@ -74,6 +74,7 @@ export default function SideBar(props: SideBarProps) {
     // Brings the selection and highlighting to the default state
     function restoreDefaultSection(e: React.MouseEvent<HTMLLIElement>) {
         const target = e.currentTarget;
+        setSelectedCategory(null);
         // If the default category is already selected
         if (selectedCategory?.name === defaultCategory.name) {
             addClass(target, 'selected');
@@ -82,7 +83,6 @@ export default function SideBar(props: SideBarProps) {
             return
         }
         removeClass(target, 'selected');
-        setSelectedCategory(defaultCategory);
         resetSelections();
         setDefaultCategoryText(defaultCategory.name);
     }

@@ -13,11 +13,11 @@ type HomeProps = {
 };
 
 export default function Home({ data, setData }: HomeProps) {
-    const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(data[0] || null);
+    const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(null);
     const { defaultCategory } = useContext(DataContext)
     let filteredData = categories;
 
-    if (selectedCategory && selectedCategory != defaultCategory)
+    if (selectedCategory)
         filteredData = [selectedCategory];
 
     // Update a single category of the category list identified by its name
