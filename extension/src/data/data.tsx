@@ -1,4 +1,4 @@
-import { TBookmark, TCategory } from "../utils/types.payload";
+import { TBookmark, TCategory } from "../utils/types/payload";
 
 const bookmarks: TBookmark[] = [
     {

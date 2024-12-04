@@ -3,7 +3,7 @@ import SideBar from '../components/SideBar/SideBar'
 import ContentBar from '../components/ContentBar/ContentBar'
 import categories from '../data/data'
 import { useState, Dispatch, SetStateAction } from 'react'
-import { TCategory } from '../utils/types.payload'
+import { TCategory } from '../utils/types/payload'
 import { update } from '../utils/crud'
 
 type HomeProps = {

@@ -1,6 +1,6 @@
 import { DataContext } from "../../utils/contexts";
 import { addClass, removeClass, setDefaultCategoryText } from "../../utils/domHelpers";
-import { TCategory } from "../../utils/types.payload";
+import { TCategory } from "../../utils/types/payload";
 import { useContext, Dispatch, SetStateAction, useEffect } from "react";
 
 

@@ -1,4 +1,4 @@
-import { TCategory } from "../../utils/types.payload";
+import { TCategory } from "../../utils/types/payload";
 import moment from 'moment';
 import { MdOutlineArchive, MdOutlineEdit, MdOutlineDelete, MdOutlineStar } from 'react-icons/md';
 

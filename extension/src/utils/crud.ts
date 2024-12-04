@@ -1,4 +1,4 @@
-import { TCategory} from "./types.payload";
+import { TCategory} from "./types/payload";
 
 export function create (categories: TCategory[], category: TCategory): TCategory[] {
     // Append the new category to the existing categories

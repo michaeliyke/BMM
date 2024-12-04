@@ -1,5 +1,5 @@
 import React, { useState, createContext } from 'react';
-import { IDataContext, TCategory } from './types.payload';
+import { IDataContext, TCategory } from './types/payload';
 
 type DataProviderProps = {
     children: React.ReactNode;

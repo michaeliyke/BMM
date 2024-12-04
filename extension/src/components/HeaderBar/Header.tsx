@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { TCategory } from "../../utils/types.payload";
+import { TCategory } from "../../utils/types/payload";
 import { create } from "../../utils/crud";
 
 type HeaderProps = {
