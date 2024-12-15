@@ -1,22 +1,16 @@
-import bookmark from "./adapters/bookmark";
-import category from "./adapters/category";
-import tag from "./adapters/tag";
-import user from "./adapters/user";
-import bookmarkTag from "./adapters/bookmark_tag";
-import categoryBookmark from "./adapters/category_bookmark";
-import categoryTag from "./adapters/category_tag";
-import { TCategory } from "../utils/types/payload";
+import Bookmark from "./adapters/bookmark";
+import Category from "./adapters/category";
+import Tag from "./adapters/tag";
+// import User from "./adapters/user";
+import BookmarkTag from "./adapters/bookmark_tag";
+import CategoryBookmark from "./adapters/category_bookmark";
+import CategoryTag from "./adapters/category_tag";
+import { ICategory } from "../utils/types/schemas";
+import { v4 as uuid4 } from 'uuid';
 
 export default {
-    ...bookmark,
-    ...category,
-    ...tag,
-    ...user,
-    ...bookmarkTag,
-    ...categoryBookmark,
-    ...categoryTag,
-    async getAll(): Promise<TCategory> {
-        return new Promise(() => { })
+    async getAll(): Promise<ICategory[]> {
+        return Category.getAll();
     },
 
     /**
@@ -29,24 +23,40 @@ export default {
      * @param data - An array of categories, each containing bookmarks and tags to be loaded into the database.
      * @returns A promise that resolves when the data has been successfully loaded.
      */
-    async loadInitialData(data: TCategory[]): Promise<void> {
+    async loadInitialData(data: ICategory[]): Promise<void> {
         for (const category of data) {
-            await this.createCategory(category); // Save the category
-
+            // Save the category
+            await new Category(category).create();
             // save category-tags relationship
             for (const tag of category.tags) {
-                await this.createTag(tag); // Save the tag
-                await this.createCategoryTag(tag.id, category.id); // Save category-tag
+                await new Tag(tag).create(); // Save the tag
+                // Save category-tag
+                await new CategoryTag({
+                    id: uuid4(),
+                    category_id: category.id,
+                    tag_id: tag.id,
+                }).create();
             }
 
+            // Save bookmarks, category-bookmarks, and bookmark-tags relationships
             for (const bookmark of category.bookmarks) {
-                await this.createBookmark(bookmark); // Save bookmark
+                await new Bookmark(bookmark).create(); // Save bookmark
                 // Save category-bookmark
-                await this.createCategoryBookmark(category.id, bookmark.id);
+                await new CategoryBookmark({
+                    id: uuid4(),
+                    category_id: category.id,
+                    bookmark_id: bookmark.id,
+                }).create();
+
                 // save bookmark-tags relationship
                 for (const tag of bookmark.tags) {
-                    await this.createTag(tag); // Save the tag if not exists
-                    await this.createBookmarkTag(tag.id, bookmark.id); // Save bookmark-tag
+                    await new Tag(tag).create(); // Save the tag if not exists
+                    // Save bookmark-tag
+                    await new BookmarkTag({
+                        id: uuid4(),
+                        bookmark_id: bookmark.id,
+                        tag_id: tag.id,
+                    }).create();
                 }
             }
         }

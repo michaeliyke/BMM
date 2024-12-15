@@ -1,9 +1,9 @@
 import React, { useState, createContext } from 'react';
-import { IDataContext, TCategory } from './types/payload';
+import { IDataContext, ICategory } from './types/schemas';
 
 type DataProviderProps = {
     children: React.ReactNode;
-    defaultCategory: TCategory;
+    defaultCategory: ICategory;
 };
 
 const fallbackData = {
@@ -20,7 +20,7 @@ const DataContext = createContext<IDataContext>(fallbackData);
 
 
 function DataProvider({ children, defaultCategory }: DataProviderProps) {
-    const [defaultCategory_, setDefaultCategory] = useState<TCategory>(defaultCategory);
+    const [defaultCategory_, setDefaultCategory] = useState<ICategory>(defaultCategory);
 
     const contextData: IDataContext = {
         defaultCategory: defaultCategory_,

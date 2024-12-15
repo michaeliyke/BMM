@@ -1,14 +1,14 @@
-import { TCategory } from "../../utils/types/payload";
+import { ICategory } from "../../utils/types/schemas";
 import moment from 'moment';
 import { MdOutlineArchive, MdOutlineEdit, MdOutlineDelete, MdOutlineStar } from 'react-icons/md';
 
 type SideBarProps = {
-    categories: TCategory[];
-    updateCategory?: (category: TCategory) => void;
+    categories: ICategory[];
+    updateCategory?: (category: ICategory) => void;
 };
 
 type ListBookmarksProps = {
-    categories: TCategory[];
+    categories: ICategory[];
 };
 
 const ListBookmarks = ({ categories }: ListBookmarksProps) => {

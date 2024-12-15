@@ -1,3 +1,4 @@
+import { LockManager } from "../../utils/locker";
 import {
     IBookmark,
     IBookmarkTag,
@@ -5,36 +6,58 @@ import {
     ITag,
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
-import { v4 as uuid4 } from 'uuid';
 
-export default {
+const lockManager = new LockManager();
+
+export default class CategoryBookmark implements ICategoryBookmark {
+    id: string;
+    category_id: string;
+    bookmark_id: string;
+
+    async exists(): Promise<boolean> {
+        const query = [this.category_id, this.bookmark_id];
+        try {
+            if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
+                return true;
+        } catch (error) {
+            throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
+        }
+        return false;
+    }
+
+    constructor(categoryBookmark: ICategoryBookmark) {
+        this.id = categoryBookmark.id;
+        this.category_id = categoryBookmark.category_id;
+        this.bookmark_id = categoryBookmark.bookmark_id;
+    }
 
     /**
      * Adds a bookmark to a specified category.
      *
-     * @param {IBookmark} bookmark - The bookmark to be added.
-     * @param {string} categoryId - The ID of the category to which the bookmark will be added.
      * @returns {Promise<void>} A promise that resolves when the bookmark has been added to the category.
      * @throws {Error} If the category with the given ID does not exist.
      * @throws {Error} If the bookmark with the given ID already exists.
      */
-    async createCategoryBookmark(bookmarkId: string, categoryId: string): Promise<void> {
-        // Ensure the category exists
-        if (!(await Operator.getRecordById('categories', categoryId)))
-            throw new Error(`Category with id ${categoryId} not found`);
+    async create(): Promise<void> {
+        lockManager.acquire(this.bookmark_id, async () => {
+            try {
+                // Ensure the category exists
+                if (!(await Operator.getRecordById('categories', this.category_id)))
+                    throw new Error(`CategoryBookmark.create:- Category not found: ${this.category_id}`);
 
-        // Ensure the bookmark exist
-        if (!(await Operator.getRecordById('bookmarks', bookmarkId)))
-            throw new Error(`Bookmark with id ${bookmarkId} does not exist`);
+                // Ensure the bookmark exist
+                if (!(await Operator.getRecordById('bookmarks', this.bookmark_id)))
+                    throw new Error(`CategoryBookmark.create:- Bookmark not found: ${this}`);
 
-        // Ensure the bookmark doesn't already exist in the category
-        const query = [categoryId, bookmarkId];
-        if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
-            throw new Error(`Bookmark with id ${bookmarkId} already exists in category ${categoryId}`);
-
-        const data = { bookmarkId: bookmarkId, categoryId, id: uuid4() };
-        await Operator.createRecord('category_bookmarks', data);
-    },
+                // Ensure the bookmark doesn't already exist in the category
+                if (!(await this.exists())) {
+                    await Operator.createRecord('category_bookmarks', this);
+                }
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryBookmark.create:- ${error}, ${this.id}`);
+            }
+        });
+    }
 
     /**
      * Retrieves all bookmarks associated with a given category ID.
@@ -54,26 +77,28 @@ export default {
      * console.log(bookmarks);
      * ```
      */
-    async getCategoryBookmarks(categoryId: string): Promise<IBookmark[]> {
-        // Get all bookmarks linked to a given category by id
-
+    static async getCategoryBookmarks(categoryId: string): Promise<IBookmark[]> {
         // Get all category_bookmarks linked to the category
-        const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
-        const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
+        try {
+            const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
+            const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
 
-        // Save all the bookmark promses in a variable
-        const promises = categoryBookmarks.map(async ({ bookmark_id }) => {
-            const bookmark = await Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', bookmark_id);
+            // Save all the bookmark promses in a variable
+            const promises = categoryBookmarks.map(async ({ bookmark_id }) => {
+                const bookmark = await Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', bookmark_id);
 
-            // Get all tags linked to the bookmark and add them to the bookmark object
-            const query = IDBKeyRange.bound([bookmark_id, ""], [bookmark_id, "\uffff"]);
-            const bookmarkTags = await Operator.getRecordsByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
-            for (const { tag_id } of bookmarkTags) {
-                bookmark.tags = await Operator.getRecordsByIndex<ITag>('tags', 'tags_index', tag_id);
-            }
-            return bookmark;
-        });
+                // Get all tags linked to the bookmark and add them to the bookmark object
+                const query = IDBKeyRange.bound([bookmark_id, ""], [bookmark_id, "\uffff"]);
+                const bookmarkTags = await Operator.getRecordsByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
+                for (const { tag_id } of bookmarkTags) {
+                    bookmark.tags = await Operator.getRecordsByIndex<ITag>('tags', 'tags_index', tag_id);
+                }
+                return bookmark;
+            });
 
-        return await Promise.all(promises);
-    },
-};
+            return await Promise.all(promises);
+        } catch (error) {
+            throw new Error(`An error occurred in CategoryBookmark.getCategoryBookmarks:- ${error}, ${this}`);
+        }
+    };
+}

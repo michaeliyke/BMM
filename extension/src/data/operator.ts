@@ -1,4 +1,7 @@
-import { TCategory } from "../utils/types/payload";
+import { QueueManager } from "../utils/locker";
+import { ICategory } from "../utils/types/schemas";
+
+const queueManager = new QueueManager();
 
 export const Operator = {
     /**
@@ -95,6 +98,31 @@ export const Operator = {
     },
 
     /**
+     * Iterates over an IndexedDB cursor and processes each entry using the provided callback function.
+     *
+     * @param request - The IDBRequest object that provides the cursor.
+     * @param processCursor - A callback function that processes each cursor entry.
+     * @returns A Promise that resolves when the cursor has iterated over all entries.
+     */
+    async iterateCursor(request: IDBRequest<IDBCursorWithValue | null>,
+        processCursor: (cursor: IDBCursorWithValue) => void): Promise<void> {
+        return queueManager.enqueue(async () => {
+            return new Promise<void>((resolve, reject) => {
+                request.onsuccess = () => {
+                    const cursor = request.result;
+                    if (cursor) {
+                        processCursor(cursor);
+                        cursor.continue();
+                    } else {
+                        resolve();
+                    }
+                };
+                request.onerror = () => reject(request.error);
+            });
+        });
+    },
+
+    /**
      * Retrieves all records from the specified object store.
      *
      * @template T - The type of the records to be retrieved.
@@ -103,13 +131,15 @@ export const Operator = {
      * @throws Will reject the promise if there is an error during the transaction or retrieval process.
      */
     async getRecords<T>(storeName: string): Promise<T[]> {
-        const db = await this.initializeDatabase();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, "readonly");
-            const store = transaction.objectStore(storeName);
-            const request = store.getAll();
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return await new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readonly");
+                const store = tx.objectStore(storeName);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
         });
     },
 
@@ -123,13 +153,17 @@ export const Operator = {
      * @throws Will reject the promise if there is an error during the retrieval process.
      */
     async getRecordById<T>(storeName: string, id: string): Promise<T> {
-        const db = await this.initializeDatabase();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, "readonly");
-            const store = transaction.objectStore(storeName);
-            const request = store.get(id);
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return await new Promise((resolve, reject) => {
+                console.log(`Getting record ${storeName} with id: ${id}`);
+                const tx = db.transaction(storeName, "readonly");
+                const store = tx.objectStore(storeName);
+                const request = store.get(id);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
         });
     },
 
@@ -142,13 +176,15 @@ export const Operator = {
      * @returns {Promise<void>} A promise that resolves when the data has been successfully added, or rejects with an error.
      */
     async createRecord<T>(storeName: string, data: T): Promise<void> {
-        const db = await this.initializeDatabase();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, "readwrite");
-            const store = transaction.objectStore(storeName);
-            const request = store.add(data);
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+                const request = store.add(data);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve();
+            });
         });
     },
 
@@ -160,13 +196,15 @@ export const Operator = {
      * @returns Promise that reolves to no value
      */
     async updateRecord<T>(storeName: string, data: T, key?: string): Promise<void> {
-        const db = await this.initializeDatabase();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, "readwrite");
-            const store = transaction.objectStore(storeName);
-            const request = store.put(data, key);
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+                const request = store.put(data, key);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve();
+            });
         });
     },
 
@@ -178,13 +216,15 @@ export const Operator = {
      * @returns A promise that resolves when the record is successfully deleted, or rejects with an error.
      */
     async deleteRecord(storeName: string, id: string): Promise<void> {
-        const db = await this.initializeDatabase();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, "readwrite");
-            const store = transaction.objectStore(storeName);
-            const request = store.delete(id);
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+                const request = store.delete(id);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve();
+            });
         });
     },
 
@@ -199,15 +239,16 @@ export const Operator = {
      * @throws Will reject the promise if there is an error during the transaction or query.
      */
     async getRecordsByIndex<T>(storeName: string, indexName: string, query?: IDBKeyRange | string): Promise<T[]> {
-        const db = await this.initializeDatabase();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, "readonly");
-            const store = transaction.objectStore(storeName);
-            const index = store.index(indexName);
-            const request = query ? index.getAll(query) : index.getAll();
-
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return await new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readonly");
+                const store = tx.objectStore(storeName);
+                const index = store.index(indexName);
+                const request = query ? index.getAll(query) : index.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
         });
     },
 
@@ -222,15 +263,16 @@ export const Operator = {
      * @throws Will reject the promise if there is an error during the transaction or query.
      */
     async getRecordByIndex<T>(storeName: string, indexName: string, query: IDBKeyRange | IDBValidKey): Promise<T> {
-        const db = await this.initializeDatabase();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, "readonly");
-            const store = transaction.objectStore(storeName);
-            const index = store.index(indexName);
-            const request = index.get(query);
-
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return await new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, "readonly");
+                const store = tx.objectStore(storeName);
+                const index = store.index(indexName);
+                const request = index.get(query);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
         });
     },
 
@@ -241,19 +283,20 @@ export const Operator = {
      * "categories" object store, and retrieves the record where the `is_default` field is 1
      * using the "default_category_index".
      *
-     * @returns {Promise<TCategory>} A promise that resolves to the default category.
+     * @returns {Promise<ICategory>} A promise that resolves to the default category.
      * @throws Will reject the promise if there is an error during the database transaction.
      */
-    async getDefaultCategory(): Promise<TCategory> {
-        const db = await this.initializeDatabase();
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction("categories", "readonly");
-            const store = transaction.objectStore("categories");
-            const index = store.index("default_category_index");
-            const request = index.get(1);  // return the record whose is_default === 1
-
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
+    async getDefaultCategory(): Promise<ICategory> {
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return await new Promise((resolve, reject) => {
+                const tx = db.transaction("categories", "readonly");
+                const store = tx.objectStore("categories");
+                const index = store.index("default_category_index");
+                const request = index.get(1);  // return the record whose is_default === 1
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+            });
         });
     },
 
@@ -268,30 +311,13 @@ export const Operator = {
      * @throws Will throw an error if there is an issue with the deletion process.
      */
     async deleteRecordsByIndex(storeName: string, indexName: string, query: IDBKeyRange | IDBValidKey): Promise<void> {
-        const db = await this.initializeDatabase();
-        const tx = db.transaction(storeName, "readwrite");
-        const store = tx.objectStore(storeName);
-
-        await new Promise<void>((resolve, reject) => {
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            const tx = db.transaction(storeName, "readwrite");
+            const store = tx.objectStore(storeName);
             const index = store.index(indexName);
             const request = index.openCursor(query);
-
-            request.onsuccess = () => {
-                const cursor = request.result;
-                if (cursor) {
-                    cursor.delete();
-                    cursor.continue();
-                } else {
-                    console.log(`All matching records with query ${query} have been deleted.`);
-                    resolve();
-                }
-            };
-
-            request.onerror = () => {
-                console.error(`Error deleting records with query ${query}:`, request.error);
-                reject(request.error);
-            };
+            await this.iterateCursor(request, (cursor) => cursor.delete());
         });
-        await this.waitForTransactionComplete(tx);
     },
 };

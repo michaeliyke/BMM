@@ -1,7 +1,9 @@
+
+import { Dispatch, SetStateAction } from "react";
+
 /**
  * @description: Following file contains the interfaces for the data schemas
  */
-
 export interface IUser {
     id: string;
     username: string;
@@ -23,7 +25,6 @@ export interface ITag {
 export interface ICategory {
     id: string;
     name: string;
-    user_id: string;
     is_default: number; // 0 or 1
     created_at: string;
     updated_at: string;
@@ -59,3 +60,13 @@ export interface IBookmarkTag {
     bookmark_id: string;
     tag_id: string;
 };
+
+// All Data Adapters should implement the following interface
+export interface IDATA {
+    exists(): Promise<boolean>;
+};
+
+export interface IDataContext {
+    defaultCategory: ICategory;
+    setDefaultCategory: Dispatch<SetStateAction<ICategory>>;
+}

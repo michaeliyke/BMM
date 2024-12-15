@@ -1,14 +1,14 @@
 import { DataContext } from "../../utils/contexts";
 import { addClass, removeClass, setDefaultCategoryText } from "../../utils/domHelpers";
-import { TCategory } from "../../utils/types/payload";
+import { ICategory } from "../../utils/types/schemas";
 import { useContext, Dispatch, SetStateAction, useEffect } from "react";
 
 
 type SideBarProps = {
-    categories: TCategory[];
-    updateCategory?: (category: TCategory) => void;
-    selectedCategory: TCategory | null;
-    setSelectedCategory: Dispatch<SetStateAction<TCategory | null>>;
+    categories: ICategory[];
+    updateCategory?: (category: ICategory) => void;
+    selectedCategory: ICategory | null;
+    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
 };
 
 // Remove class selected from all categories and add it target

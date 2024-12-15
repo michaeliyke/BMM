@@ -1,11 +1,11 @@
 import { useState } from "react"
-import { TCategory } from "../../utils/types/payload";
+import { ICategory } from "../../utils/types/schemas";
 import { create } from "../../utils/crud";
 
 type HeaderProps = {
-    selectedCategory: TCategory | null;
-    categories: TCategory[];
-    setData: (categories: TCategory[]) => void;
+    selectedCategory: ICategory | null;
+    categories: ICategory[];
+    setData: (categories: ICategory[]) => void;
 };
 
 export default function Header(props: HeaderProps) {
