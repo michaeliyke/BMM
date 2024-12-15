@@ -24,13 +24,26 @@ export default class Tag implements ITag {
      * @returns A promise that resolves to true if the tag exists, and false otherwise.
      */
     async exists(): Promise<boolean> {
-        return lockManager.acquire(this.id, async () => {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
                 if (await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.id))
                     return true;
                 return false;
             } catch (error) {
-                throw new Error(`An error occurred in Tag.exists:- ${error}, ${this}`);
+                throw new Error(`An error occurred in Tag.exists:- ${error}, ${this.id}`);
+            }
+        });
+    }
+    static async tagExists(ID: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${ID}`, async () => {
+            try {
+                if (await Operator.getRecordByIndex<ITag>('tags', 'tags_index', ID))
+                    return true;
+                return false;
+            } catch (error) {
+                throw new Error(`An error occurred in Tag.exists:- ${error}, ${ID}`);
             }
         });
     }
@@ -41,7 +54,7 @@ export default class Tag implements ITag {
      * @returns {Promise<void>} A promise that resolves when the tag has been created.
      */
     async create(): Promise<void> {
-        lockManager.acquire(this.id, async () => {
+        lockManager.acquire(`Tag.create:${this.id}`, async () => {
             // Create a new tag record in the database if not exists
             try {
                 if (!(await this.exists()))
@@ -59,7 +72,7 @@ export default class Tag implements ITag {
      * @throws {Error} Throws an error if the tag does not exist.
      */
     async update(): Promise<void> {
-        lockManager.acquire(this.id, async () => {
+        lockManager.acquire(`Tag.update:${this.id}`, async () => {
             if (await this.exists()) {
                 throw new Error(`Tag.update:- Tag not found: ${this}`);
             }
@@ -78,7 +91,7 @@ export default class Tag implements ITag {
      * @throws An error if the tag with the specified ID is not found.
      */
     async delete(): Promise<void> {
-        lockManager.acquire(this.id, async () => {
+        lockManager.acquire(`Tag.delete:${this.id}`, async () => {
             // Ensure tag exists
             if (!(await this.exists()))
                 throw new Error(`Tag.delete:- Tag not found: ${this}`);
@@ -105,24 +118,28 @@ export default class Tag implements ITag {
      * @returns {Promise<ITag[]>} A promise that resolves to an array of tags.
      */
     static async getTags(): Promise<ITag[]> {
-        try {
-            return await Operator.getRecordsByIndex<ITag>('tags', 'tags_index');
-        } catch (error) {
-            throw new Error(`An error occurred in Tag.getTags:- ${error}, ${this}`);
-        }
+        return lockManager.acquire('Tag.getTags', async () => {
+            try {
+                return await Operator.getRecordsByIndex<ITag>('tags', 'tags_index');
+            } catch (error) {
+                throw new Error(`An error occurred in Tag.getTags:- ${error}, ${this}`);
+            }
+        });
     }
 
     /**
      * Retrieves a tag by its unique identifier.
      *
-     * @param id - The unique identifier of the tag to retrieve.
+     * @param ID - The unique identifier of the tag to retrieve.
      * @returns A promise that resolves to the tag object.
      */
-    static async getTagById(id: string): Promise<ITag> {
-        try {
-            return await Operator.getRecordByIndex<ITag>('tags', 'tags_index', id);
-        } catch (error) {
-            throw new Error(`An error occurred in Tag.getTagById:- ${error}, ${this}`);
-        }
+    static async getTagById(ID: string): Promise<ITag> {
+        return lockManager.acquire(`Tag.getTagById:${ID}`, async () => {
+            try {
+                return await Operator.getRecordByIndex<ITag>('tags', 'tags_index', ID);
+            } catch (error) {
+                throw new Error(`An error occurred in Tag.getTagById:- ${error}, ${this}`);
+            }
+        });
     }
 }

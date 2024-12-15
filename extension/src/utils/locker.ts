@@ -10,27 +10,28 @@ export class LockManager {
     }
 
     async acquire<T>(id: string, task: () => Promise<T>): Promise<T> {
-        const key = this.getLockKey(id);  // make a key string
-        // Get the previous operation of the same key or a resolved promise
-        const previousLock = this.locks.get(key);
+        // id is a unique identifier for the task
 
+        const key = this.getLockKey(id);  // make a key string
+
+        // If a task is already in the pipeline, return its result (Promise)
+        if (this.locks.has(key)) {
+            return this.locks.get(key) as Promise<T>;
+        }
+
+        // Create a new lock
         const currentLock = (async () => {
-            try {
-                // Wait for the previous operation to complete
-                if (previousLock)
-                    await previousLock;
-                // Execute the task
+            try { // Execute the task and return its result
                 return await task();
-            } finally {
-                // Remove the lock when the task is completed
+            } finally { // Remove the lock once the task is completed
                 this.locks.delete(key);
             }
         })();
 
-        // Store the current lock
+        // Store the current lock in the map
         this.locks.set(key, currentLock);
-        // Wait for the current lock to complete
-        return await currentLock;
+        // Wait for the current lock to complete and return its result
+        return currentLock;
     }
 }
 

@@ -1,6 +1,8 @@
 import { LockManager } from "../../utils/locker";
 import { ICategory, ICategoryTag, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
+import Category from "./category";
+import Tag from "./tag";
 
 const lockManager = new LockManager();
 
@@ -16,14 +18,45 @@ export default class CategoryTag implements ICategoryTag {
     }
 
     async exists(): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.category_id, this.tag_id];
-        try {
-            if (await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query))
-                return true;
-        } catch (error) {
-            throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${this}`);
-        }
-        return false;
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query))
+                    return true;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${this}`);
+            }
+            return false;
+        });
+    }
+
+    async categoryTagExists(categoryId: string, tagId: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [categoryId, tagId];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query))
+                    return true;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${query}`);
+            }
+            return false;
+        });
+    }
+
+    static async CategoryTagExists(categoryId: string, tagId: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [categoryId, tagId];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query))
+                    return true;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${query}`);
+            }
+            return false;
+        });
     }
 
     /**
@@ -35,7 +68,9 @@ export default class CategoryTag implements ICategoryTag {
      * @throws Will throw an error if the tag does not exist under the specified category.
      */
     async delete(): Promise<void> {
-        lockManager.acquire(this.tag_id, async () => {
+        // TODO: ...
+        const query = [this.category_id, this.tag_id];
+        lockManager.acquire(`CategoryTag.delete:${query}`, async () => {
             // Ensure tag exists
             try {
                 if (!(await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.tag_id)))
@@ -115,17 +150,16 @@ export default class CategoryTag implements ICategoryTag {
     * - Links the tag to the category by creating a record in the `category_tags` table.
     */
     async create(): Promise<void> {
-        lockManager.acquire(this.tag_id, async () => {
+        const query = [this.category_id, this.tag_id];
+        lockManager.acquire(`CategoryTag.create:${query}`, async () => {
             const { tag_id: tagId, category_id: categoryId } = this;
             // Ensure category exists
             try {
-                const category = await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', categoryId);
-                if (!category)
+                if (!(await Category.categoryExists(categoryId)))
                     throw new Error(`CategoryTag.create:- Category not found: ${this}`);
 
-
                 // Ensure tag exists
-                if (!(await Operator.getRecordByIndex<ITag>('tags', 'tags_index', tagId)))
+                if (!(await Tag.tagExists(tagId)))
                     throw new Error(`CategoryTag.create:- Tag not found: ${this}`);
 
                 // Ensure tag doesn't already exist under the category

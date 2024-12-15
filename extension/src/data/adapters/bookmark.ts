@@ -24,14 +24,33 @@ export default class Bookmark implements IBookmark {
         this.tags = bookmark.tags;
     }
 
+    static async bookmarkExists(ID: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${ID}`, async () => {
+            try {
+                const bmk = Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', ID);
+                if (await bmk)
+                    return true;
+                return false;
+            } catch (error) {
+                throw new Error(`An error occurred in Bookmark.bokmarkExists:- ${error}, ${ID}`);
+            }
+        });
+    }
+
     async exists(): Promise<boolean> {
-        try {
-            if (await Operator.getRecordById<IBookmark>('bookmarks', this.id))
-                return true;
-            return false;
-        } catch (error) {
-            throw new Error(`An error occurred in Bookmark.exists:- ${error}, ${this.id}`);
-        }
+        // get the calling method name
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${this.id}`, async () => {
+            try {
+                const bmk = Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', this.id);
+                if (await bmk)
+                    return true;
+                return false;
+            } catch (error) {
+                throw new Error(`An error occurred in Bookmark.bokmarkExists:- ${error}, ${this.id}`);
+            }
+        });
     }
 
     /**
@@ -41,7 +60,7 @@ export default class Bookmark implements IBookmark {
      * @throws {Error} Throws an error if a bookmark with the same id already exists.
      */
     async create(): Promise<void> {
-        await lockManager.acquire(this.id, async () => {
+        await lockManager.acquire(`Bookmark.create:${this.id}`, async () => {
             this.tags = []; // Do not save tags in the bookmark object
             // Create a new bookmark record in the database if not exists
             if (await this.exists()) return;
@@ -60,7 +79,7 @@ export default class Bookmark implements IBookmark {
      * @throws An error if the bookmark with the specified ID does not exist.
      */
     async update(): Promise<void> {
-        await lockManager.acquire(this.id, async () => {
+        await lockManager.acquire(`Bookmark.update:${this.id}`, async () => {
             this.tags = []; // Do not save tags in the bookmark object
             if (!(await this.exists()))
                 throw new Error(`Bookmark.update: Bookmark does not exist: ${this}`);
@@ -79,7 +98,7 @@ export default class Bookmark implements IBookmark {
      * @throws {Error} If the bookmark with the specified ID does not exist.
      */
     async delete(): Promise<void> {
-        lockManager.acquire(this.id, async () => {
+        lockManager.acquire(`Bookmark.delete:${this.id}`, async () => {
             if (!(await this.exists()))
                 throw new Error(`Bookmark.delete:- Bookmark not found: ${this}`);
             // TODO: Check & raise an error to call this.moveTags and this.moveCategories
@@ -97,25 +116,29 @@ export default class Bookmark implements IBookmark {
      * @returns {Promise<IBookmark[]>} A promise that resolves to an array of bookmarks.
      */
     static async getBookmarks(): Promise<IBookmark[]> {
-        try {
-            return await Operator.getRecords<IBookmark>('bookmarks');
-        } catch (error) {
-            throw new Error(`An error occurred in Bookmark.getBookmarks:- ${error}`);
-        }
+        return lockManager.acquire('Bookmark.getBookmarks', async () => {
+            try {
+                return await Operator.getRecords<IBookmark>('bookmarks');
+            } catch (error) {
+                throw new Error(`An error occurred in Bookmark.getBookmarks:- ${error}`);
+            }
+        });
     }
 
     /**
      * Retrieves a bookmark by its unique identifier.
      *
-     * @param {string} id - The unique identifier of the bookmark.
+     * @param {string} ID - The unique identifier of the bookmark.
      * @returns {Promise<IBookmark>} A promise that resolves to the bookmark object.
      */
-    static async getBookmarkById(id: string): Promise<IBookmark> {
-        try {
-            return await Operator.getRecordById<IBookmark>('bookmarks', id);
-        } catch (error) {
-            throw new Error(`An error occurred in Bookmark.getBookmarkById:- ${error}, ${id}`);
-        }
+    static async getBookmarkById(ID: string): Promise<IBookmark> {
+        return lockManager.acquire(`Bookmark.getBookmarkById:${ID}`, async () => {
+            try {
+                return await Operator.getRecordById<IBookmark>('bookmarks', ID);
+            } catch (error) {
+                throw new Error(`An error occurred in Bookmark.getBookmarkById:- ${error}, ${ID}`);
+            }
+        });
     }
 
 }

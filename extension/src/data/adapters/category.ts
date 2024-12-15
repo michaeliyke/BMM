@@ -36,9 +36,21 @@ export default class Category implements ICategory {
      * @returns A promise that resolves to `true` if the category exists, otherwise `false`.
      */
     async exists(): Promise<boolean> {
-        if (await Operator.getRecordById<ICategory>('categories', this.id))
-            return true;
-        return false;
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${this.id}`, async () => {
+            if (await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.id))
+                return true;
+            return false;
+        });
+    }
+
+    static async categoryExists(ID: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${ID}`, async () => {
+            if (await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', ID))
+                return true;
+            return false;
+        });
     }
 
     static async getAll(): Promise<ICategory[]> {
@@ -52,7 +64,7 @@ export default class Category implements ICategory {
      * @returns A promise that resolves when the category has been successfully created.
      */
     async create(): Promise<void> {
-        lockManager.acquire(this.id, async () => {
+        lockManager.acquire(`Category.create:${this.id}`, async () => {
             this.tags = []; // Do not save tags in the category object
             this.bookmarks = []; // Do not save bookmarks in the category object
             // Only proceed if the category does not already exist
@@ -72,7 +84,7 @@ export default class Category implements ICategory {
      * @returns A promise that resolves when the update operation is complete.
      */
     async update(): Promise<void> {
-        lockManager.acquire(this.id, async () => {
+        lockManager.acquire(`Category.update:${this.id}`, async () => {
             try {
                 if (await this.exists()) {
                     this.tags = []; // Do not save tags in the category object
@@ -91,11 +103,13 @@ export default class Category implements ICategory {
      * @returns {Promise<ICategory[]>} A promise that resolves to an array of category objects.
      */
     static async getCategories(): Promise<ICategory[]> {
-        try {
-            return await Operator.getRecords<ICategory>('categories');
-        } catch (error) {
-            throw new Error(`An error occurred in Category.getCategories:- ${error}, ${this}`);
-        }
+        return lockManager.acquire('Category.getCategories', async () => {
+            try {
+                return await Operator.getRecords<ICategory>('categories');
+            } catch (error) {
+                throw new Error(`An error occurred in Category.getCategories:- ${error}, ${this}`);
+            }
+        });
     }
 
     /**
@@ -105,11 +119,13 @@ export default class Category implements ICategory {
      * @returns {Promise<ICategory>} A promise that resolves to the category object.
      */
     static async getCategoryById(ID: string): Promise<ICategory> {
-        try {
-            return Operator.getRecordByIndex<ICategory>('categories', 'categories_index', ID);
-        } catch (error) {
-            throw new Error(`An error occurred in Category.getCategoryById:- ${error}, ${this}`);
-        }
+        return lockManager.acquire(`Category.getCategoryById:${ID}`, async () => {
+            try {
+                return Operator.getRecordByIndex<ICategory>('categories', 'categories_index', ID);
+            } catch (error) {
+                throw new Error(`An error occurred in Category.getCategoryById:- ${error}, ${this}`);
+            }
+        });
     }
 
     /**
@@ -121,7 +137,7 @@ export default class Category implements ICategory {
      * @returns A promise that resolves when the category has been deleted and its bookmarks and tags have been migrated.
      */
     async delete(): Promise<void> {
-        lockManager.acquire(this.id, async () => {
+        lockManager.acquire(`Category.delete:${this.id}`, async () => {
             // Ensure the category exists
             try {
                 if (!(await Operator.getRecordByIndex('categories', 'categories_index', this.id)))

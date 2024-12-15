@@ -5,6 +5,8 @@ import {
     ITag,
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
+import Bookmark from "./bookmark";
+import Tag from "./tag";
 
 const lockManager = new LockManager();
 
@@ -20,14 +22,30 @@ export default class BookmarkTag implements IBookmarkTag {
     }
 
     async exists(): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.bookmark_id, this.tag_id];
-        try {
-            if (!await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query))
-                return true;
-        } catch (error) {
-            throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${this}`);
-        }
-        return false;
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (!await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query))
+                    return true;
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${this}`);
+            }
+            return false;
+        });
+    }
+    static async bookmarkTagExists(bookmarkId: string, tagId: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [bookmarkId, tagId];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (!await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query))
+                    return true;
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${query}`);
+            }
+            return false;
+        });
     }
 
     /**
@@ -41,14 +59,15 @@ export default class BookmarkTag implements IBookmarkTag {
      * @throws Will throw an error if the tag already exists under the given category.
      */
     async create(): Promise<void> {
-        lockManager.acquire(this.tag_id, async () => {
+        const query = [this.bookmark_id, this.tag_id];
+        lockManager.acquire(`BookmarkTag.create:${query}`, async () => {
             // Ensure bookmark exists
             try {
-                if (!(await Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', this.bookmark_id)))
+                if (!(await Bookmark.bookmarkExists(this.bookmark_id)))
                     throw new Error(`BookmakrTag.create:- Bookmark not found: ${this}`);
 
                 // Ensure tag exists
-                if (!(await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.tag_id)))
+                if (!(await Tag.tagExists(this.tag_id)))
                     throw new Error(`BookmakrTag.create:- Tag not found: ${this}`);
 
                 // Ensure tag does not already exist under the bookmark

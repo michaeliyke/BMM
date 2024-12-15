@@ -6,6 +6,8 @@ import {
     ITag,
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
+import Bookmark from "./bookmark";
+import Category from "./category";
 
 const lockManager = new LockManager();
 
@@ -15,14 +17,31 @@ export default class CategoryBookmark implements ICategoryBookmark {
     bookmark_id: string;
 
     async exists(): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.category_id, this.bookmark_id];
-        try {
-            if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
-                return true;
-        } catch (error) {
-            throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
-        }
-        return false;
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
+                    return true;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
+            }
+            return false;
+        });
+    }
+
+    static async categoryBookmarkExists(categoryId: string, bookmarkId: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [categoryId, bookmarkId];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
+                    return true;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${query}`);
+            }
+            return false;
+        });
     }
 
     constructor(categoryBookmark: ICategoryBookmark) {
@@ -39,14 +58,15 @@ export default class CategoryBookmark implements ICategoryBookmark {
      * @throws {Error} If the bookmark with the given ID already exists.
      */
     async create(): Promise<void> {
-        lockManager.acquire(this.bookmark_id, async () => {
+        const query = [this.category_id, this.bookmark_id];
+        lockManager.acquire(`CategoryBookmark.create:${query}`, async () => {
             try {
                 // Ensure the category exists
-                if (!(await Operator.getRecordById('categories', this.category_id)))
+                if (!(await Category.categoryExists(this.category_id)))
                     throw new Error(`CategoryBookmark.create:- Category not found: ${this.category_id}`);
 
                 // Ensure the bookmark exist
-                if (!(await Operator.getRecordById('bookmarks', this.bookmark_id)))
+                if (!(await Bookmark.bookmarkExists(this.bookmark_id)))
                     throw new Error(`CategoryBookmark.create:- Bookmark not found: ${this}`);
 
                 // Ensure the bookmark doesn't already exist in the category
@@ -78,27 +98,29 @@ export default class CategoryBookmark implements ICategoryBookmark {
      * ```
      */
     static async getCategoryBookmarks(categoryId: string): Promise<IBookmark[]> {
-        // Get all category_bookmarks linked to the category
-        try {
-            const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
-            const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
+        return lockManager.acquire(`CategoryBookmark.getCategoryBookmarks:${categoryId}`, async () => {
+            // Get all category_bookmarks linked to the category
+            try {
+                const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
+                const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
 
-            // Save all the bookmark promses in a variable
-            const promises = categoryBookmarks.map(async ({ bookmark_id }) => {
-                const bookmark = await Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', bookmark_id);
+                // Save all the bookmark promses in a variable
+                const promises = categoryBookmarks.map(async ({ bookmark_id }) => {
+                    const bookmark = await Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', bookmark_id);
 
-                // Get all tags linked to the bookmark and add them to the bookmark object
-                const query = IDBKeyRange.bound([bookmark_id, ""], [bookmark_id, "\uffff"]);
-                const bookmarkTags = await Operator.getRecordsByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
-                for (const { tag_id } of bookmarkTags) {
-                    bookmark.tags = await Operator.getRecordsByIndex<ITag>('tags', 'tags_index', tag_id);
-                }
-                return bookmark;
-            });
+                    // Get all tags linked to the bookmark and add them to the bookmark object
+                    const query = IDBKeyRange.bound([bookmark_id, ""], [bookmark_id, "\uffff"]);
+                    const bookmarkTags = await Operator.getRecordsByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
+                    for (const { tag_id } of bookmarkTags) {
+                        bookmark.tags = await Operator.getRecordsByIndex<ITag>('tags', 'tags_index', tag_id);
+                    }
+                    return bookmark;
+                });
 
-            return await Promise.all(promises);
-        } catch (error) {
-            throw new Error(`An error occurred in CategoryBookmark.getCategoryBookmarks:- ${error}, ${this}`);
-        }
-    };
+                return await Promise.all(promises);
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryBookmark.getCategoryBookmarks:- ${error}, ${this}`);
+            }
+        });
+    }
 }
