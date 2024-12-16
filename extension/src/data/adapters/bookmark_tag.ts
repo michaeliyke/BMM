@@ -91,7 +91,8 @@ export default class BookmarkTag implements IBookmarkTag {
      * @throws Will throw an error if the tag does not exist under the source bookmark.
      */
     static async moveBookmarkTag(tagId: string, fromBookmarkId: string, toBookmarkId: string): Promise<void> {
-        lockManager.acquire(tagId, async () => {
+        const query = [fromBookmarkId, tagId];
+        lockManager.acquire(`BookmarkTag.moveBookmarkTag:${query}`, async () => {
             // Move a tag from one bookmark to another
 
             // Ensure tag exists
@@ -130,7 +131,8 @@ export default class BookmarkTag implements IBookmarkTag {
      * @throws Will throw an error if the tag is not associated with the bookmark.
      */
     async delete(): Promise<void> {
-        lockManager.acquire(this.tag_id, async () => {
+        const query = [this.bookmark_id, this.tag_id];
+        lockManager.acquire(`BookmarkTag.delete:${query}`, async () => {
             // Ensure tag exists
             try {
                 if (!(await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.tag_id)))

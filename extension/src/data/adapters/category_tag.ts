@@ -31,7 +31,7 @@ export default class CategoryTag implements ICategoryTag {
         });
     }
 
-    async categoryTagExists(categoryId: string, tagId: string): Promise<boolean> {
+    async categoryTagExists_(categoryId: string, tagId: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [categoryId, tagId];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
@@ -45,7 +45,7 @@ export default class CategoryTag implements ICategoryTag {
         });
     }
 
-    static async CategoryTagExists(categoryId: string, tagId: string): Promise<boolean> {
+    static async categoryTagExists(categoryId: string, tagId: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [categoryId, tagId];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
@@ -106,7 +106,8 @@ export default class CategoryTag implements ICategoryTag {
      * @throws Will throw an error if the tag does not exist under the source category.
      */
     static async moveCategoryTag(tagId: string, fromCategoryId: string, toCategoryId: string): Promise<void> {
-        lockManager.acquire(tagId, async () => {
+        const query = [fromCategoryId, tagId];
+        lockManager.acquire(`CategoryTag.moveCategoryTag:${query}`, async () => {
             // Ensure tag exists
             try {
                 const tag = await Operator.getRecordByIndex<ITag>('tags', 'tags_index', tagId);
