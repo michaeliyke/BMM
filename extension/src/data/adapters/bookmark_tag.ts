@@ -48,6 +48,32 @@ export default class BookmarkTag implements IBookmarkTag {
         });
     }
 
+    static async getAll(query?: IDBKeyRange): Promise<IBookmarkTag[]> {
+        return lockManager.acquire(`BookmarkTag.getAll:${query}`, async () => {
+            try {
+                return Operator.getRecordsByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.getAll:- ${error}, ${query}`);
+            }
+        });
+    }
+
+    static async getTags(bookmarkId: string): Promise<ITag[]> {
+        return lockManager.acquire(`BookmarkTag.getTags:${bookmarkId}`, async () => {
+            try {
+                // Query to handle compound keys between bookmark_id and any other key: [bookmarkId, "..."]
+                const query = IDBKeyRange.bound([bookmarkId, ""], [bookmarkId, "\uffff"]);
+                const bookmarkTags = await BookmarkTag.getAll(query);
+                const allTags = await Tag.getTags();
+                return allTags.filter((tag) => {
+                    return bookmarkTags.some((bookmarkTag) => bookmarkTag.tag_id === tag.id);
+                });
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.getTags:- ${error}, ${bookmarkId}`);
+            }
+        });
+    }
+
     /**
      * Adds a tag to a bookmark and links it to a given category.
      *

@@ -55,7 +55,7 @@ export default function SideBar(props: SideBarProps) {
 
     useEffect(() => {
         // Set the default category text in the header
-        setDefaultCategoryText(defaultCategory.name);
+        setDefaultCategoryText(defaultCategory?.name);
     }, [defaultCategory]);
 
 
@@ -76,7 +76,7 @@ export default function SideBar(props: SideBarProps) {
         const target = e.currentTarget;
         setSelectedCategory(null);
         // If the default category is already selected
-        if (selectedCategory?.name === defaultCategory.name) {
+        if (selectedCategory?.name === defaultCategory?.name) {
             addClass(target, 'selected');
             if (target.nextElementSibling)
                 removeClass(target.nextElementSibling, 'selected');
@@ -84,7 +84,7 @@ export default function SideBar(props: SideBarProps) {
         }
         removeClass(target, 'selected');
         resetSelections();
-        setDefaultCategoryText(defaultCategory.name);
+        setDefaultCategoryText(defaultCategory?.name);
     }
 
     return (

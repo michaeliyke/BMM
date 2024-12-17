@@ -7,6 +7,9 @@ import {
     ITag,
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
+import BookmarkTag from "./bookmark_tag";
+import CategoryBookmark from "./category_bookmark";
+import CategoryTag from "./category_tag";
 
 const lockManager = new LockManager();
 
@@ -55,7 +58,20 @@ export default class Category implements ICategory {
 
     static async getAll(): Promise<ICategory[]> {
         // TODO: Modify to fetch all categories, its bookmarks and tags and their refs
-        return await Operator.getRecords<ICategory>('categories');
+        return lockManager.acquire('Category.getAll', async () => {
+            const categories = await Category.getCategories();
+            for (const category of categories) {
+                const tags = await CategoryTag.getTags(category.id);
+                const bookmarks = await CategoryBookmark.getBookmarks(category.id);
+                for (const bookmark of bookmarks) {
+                    const tags = await BookmarkTag.getTags(bookmark.id);
+                    bookmark.tags = tags;
+                }
+                category.bookmarks = bookmarks;
+                category.tags = tags;
+            }
+            return categories;
+        });
     }
 
     /**

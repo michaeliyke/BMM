@@ -69,4 +69,6 @@ export interface IDATA {
 export interface IDataContext {
     defaultCategory: ICategory;
     setDefaultCategory: Dispatch<SetStateAction<ICategory>>;
+    data: ICategory[];
+    setData: Dispatch<SetStateAction<ICategory[]>>;
 }

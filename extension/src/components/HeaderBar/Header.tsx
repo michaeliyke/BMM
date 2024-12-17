@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { ICategory } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import { create } from "../../utils/crud";
+import { v4 as uuid4 } from 'uuid';
 
 type HeaderProps = {
     selectedCategory: ICategory | null;
@@ -24,16 +25,18 @@ export default function Header(props: HeaderProps) {
             return;
         }
 
-        const newBookmark = {
+        const newBookmark: IBookmark = {
+            id: uuid4(),
             title,
             description: '',
             url,
-            updated: new Date().toISOString(),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            tags: [],
         };
 
         selectedCategory.bookmarks.push(newBookmark);
         setData(create(categories, selectedCategory));
-
     }
 
     return (

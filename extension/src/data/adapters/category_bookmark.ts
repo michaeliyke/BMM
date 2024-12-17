@@ -30,6 +30,32 @@ export default class CategoryBookmark implements ICategoryBookmark {
         });
     }
 
+    static async getAll(query?: IDBKeyRange): Promise<ICategoryBookmark[]> {
+        return lockManager.acquire(`CategoryBookmark.getAll:${query}`, async () => {
+            try {
+                return Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryBookmark.getAll:- ${error}, ${query}`);
+            }
+        });
+    }
+
+    static async getBookmarks(categoryId: string): Promise<IBookmark[]> {
+        return lockManager.acquire(`CategoryBookmark.getBookmarks:${categoryId}`, async () => {
+            try {
+                // Query to handle compound keys between category_id and any other key: [categoryId, "..."]
+                const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
+                const categoryBookmarks = await CategoryBookmark.getAll(query);
+                const allBookmarks = await Bookmark.getBookmarks();
+                return allBookmarks.filter((bookmark) => {
+                    return categoryBookmarks.some((cateBookmark) => cateBookmark.bookmark_id === bookmark.id);
+                });
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryBookmark.getBookmarks:- ${error}, ${categoryId}`);
+            }
+        });
+    }
+
     static async categoryBookmarkExists(categoryId: string, bookmarkId: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [categoryId, bookmarkId];

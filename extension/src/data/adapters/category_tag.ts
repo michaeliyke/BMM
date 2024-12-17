@@ -31,6 +31,32 @@ export default class CategoryTag implements ICategoryTag {
         });
     }
 
+    static async getAll(query?: IDBKeyRange): Promise<ICategoryTag[]> {
+        return lockManager.acquire(`CategoryTag.getAll:${query}`, async () => {
+            try {
+                return Operator.getRecordsByIndex<ICategoryTag>('category_tags', 'category_tags_index', query);
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryTag.getAll:- ${error}, ${query}`);
+            }
+        });
+    }
+
+    static async getTags(categoryId: string): Promise<ITag[]> {
+        return lockManager.acquire(`CategoryTag.getTags:${categoryId}`, async () => {
+            try {
+                // Query to handle compound keys between category_id and any other key: [categoryId, "..."]
+                const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
+                const categoryTags = await CategoryTag.getAll(query);
+                const allTags = await Tag.getTags();
+                return allTags.filter((tag) => {
+                    return categoryTags.some((cateTag) => cateTag.tag_id === tag.id);
+                });
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryTag.getTags:- ${error}, ${categoryId}`);
+            }
+        });
+    }
+
     async categoryTagExists_(categoryId: string, tagId: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [categoryId, tagId];
