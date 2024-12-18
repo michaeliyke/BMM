@@ -37,6 +37,7 @@ function DataProvider({ children }: DataProviderProps) {
             setData(_data);
             // await adapters.loadInitialData(data);
             for (const category of _data) {
+                console.log(category.name);
                 if (category.is_default === 1) {
                     setDefaultCategory(category);
                 }

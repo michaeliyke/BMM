@@ -1,29 +1,30 @@
 import { useState } from "react"
 import { IBookmark, ICategory } from "../../utils/types/schemas";
-import { create } from "../../utils/crud";
 import { v4 as uuid4 } from 'uuid';
 
 type HeaderProps = {
     selectedCategory: ICategory | null;
     categories: ICategory[];
-    setData: (categories: ICategory[]) => void;
+    // setData takes in fn, a function that takes in the old state (ICategory[])
+    // and returns the new state (ICategory[])
+    // setData itself returns void
+    setData: (fn: (categories: ICategory[]) => ICategory[]) => void;
+    defaultCategory: ICategory;
 };
+
 
 export default function Header(props: HeaderProps) {
     const [url, setUrl] = useState('');
     const [title, setTitle] = useState('');
 
-    const { selectedCategory, categories, setData } = props;
+    const { selectedCategory, setData, defaultCategory } = props;
 
 
     function createBookmark() {
-        if (!url || !title) {
-            return;
-        }
+        const _selectedCategory = selectedCategory || defaultCategory;
+        if (!url || !title) return;
 
-        if (!selectedCategory) {
-            return;
-        }
+        if (!_selectedCategory) return;
 
         const newBookmark: IBookmark = {
             id: uuid4(),
@@ -35,8 +36,24 @@ export default function Header(props: HeaderProps) {
             tags: [],
         };
 
-        selectedCategory.bookmarks.push(newBookmark);
-        setData(create(categories, selectedCategory));
+        setUrl('');
+        setTitle('');
+        // setData(create(newBookmark, _selectedCategory));
+        setData((state: ICategory[]) => {
+            const newState = [...state]; // shallow copy of the state array
+
+            const index = newState.findIndex((x) => x.id === _selectedCategory.id);
+            if (index === -1) return state; // Safety check: if not found, return the current state
+
+            const updatedCategory = {
+                ...newState[index], // shallow copy of the category object
+                bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
+            };
+
+            newState[index] = updatedCategory; // Replace the category with the updated one
+            return newState; // Return the new state
+        });
+
     }
 
     return (
@@ -71,6 +88,7 @@ export default function Header(props: HeaderProps) {
                         <label htmlFor="url">URL</label>
                         <input type="text"
                             id="url"
+                            value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             placeholder="" />
                     </div>
@@ -78,11 +96,12 @@ export default function Header(props: HeaderProps) {
                         <label htmlFor="title">TITLE</label>
                         <input type="text"
                             id="title"
+                            value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="" />
                     </div>
                     <div className="form-control">
-                        <label>CATEGORY (current)</label>
+                        <div className="div-as-label">CATEGORY (current)</div>
                         <div className="select wrapper"><span className="current-category">DEFAULT</span></div>
                     </div>
                     <div className="form-control">

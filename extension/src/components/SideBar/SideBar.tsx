@@ -1,7 +1,6 @@
-import { DataContext } from "../../utils/contexts";
 import { addClass, removeClass, setDefaultCategoryText } from "../../utils/domHelpers";
 import { ICategory } from "../../utils/types/schemas";
-import { useContext, Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 
 type SideBarProps = {
@@ -9,6 +8,7 @@ type SideBarProps = {
     updateCategory?: (category: ICategory) => void;
     selectedCategory: ICategory | null;
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
+    defaultCategory: ICategory;
 };
 
 // Remove class selected from all categories and add it target
@@ -50,7 +50,7 @@ function resetSelections() {
 }
 
 export default function SideBar(props: SideBarProps) {
-    const { defaultCategory } = useContext(DataContext);
+    const { defaultCategory } = props;
     const { categories, selectedCategory, setSelectedCategory } = props;
 
     useEffect(() => {
@@ -90,14 +90,14 @@ export default function SideBar(props: SideBarProps) {
     return (
         <article className="sidebar">
             <header>
-                <section>
-                    <select aria-label="Filter Options">
+                <form>
+                    <select aria-label="Filter Options" name="filter-options">
                         <option value="categories"
                             className="current">Categories</option>
                         <option value="filter:tags">Filter:Tags</option>
                         <option value="filter:category/tags">Filter:Category/Tags</option>
                     </select>
-                </section>
+                </form>
             </header>
             <section className="filtered-list">
                 <ul className="categories">

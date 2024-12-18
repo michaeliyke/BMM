@@ -305,7 +305,7 @@ main>section>article.content {
 }
 
 
-.sidebar>header>section {
+.sidebar>header>form {
     display: inline-block;
     position: relative;
     width: 100%;
@@ -399,7 +399,8 @@ main>header form button:hover {
     margin-bottom: 20px;
 }
 
-label {
+label,
+.div-as-label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
@@ -456,9 +457,9 @@ label {
 .container select {
     width: 100%;
     padding-right: 30px;
-    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+    appearance: none;
     background-color: #f1f1f1;
     border: 1px solid #ccc;
     padding: 10px;
