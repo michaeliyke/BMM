@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { IBookmark, ICategory } from "../../utils/types/schemas";
 import { v4 as uuid4 } from 'uuid';
-import Bookmark from "../../data/adapters/bookmark";
 import CategoryBookmark from "../../data/adapters/category_bookmark";
 
 type HeaderProps = {
