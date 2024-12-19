@@ -49,6 +49,25 @@ function resetSelections() {
     addClass(categories[1], 'highlighted');
 }
 
+
+function sortedCategories(data: ICategory[]): ICategory[] {
+    // Deep copy the original data to avoid mutation
+    const copy: ICategory[] = JSON.parse(JSON.stringify(data));
+    // Sort the categories alphabetically by name
+    copy.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Push the defaultCategory to the front of the array
+    const defaultCategoryIndex = copy.findIndex((cat) => cat.is_default === 1);
+    // If found, remove it from its current index and push it to the front
+    if (defaultCategoryIndex !== -1) {
+        const removedCategory = copy.splice(defaultCategoryIndex, 1)[0];
+        copy.unshift(removedCategory);
+        return copy;
+    }
+
+    return copy;
+}
+
 export default function SideBar(props: SideBarProps) {
     const { defaultCategory } = props;
     const { categories, selectedCategory, setSelectedCategory } = props;
@@ -105,8 +124,8 @@ export default function SideBar(props: SideBarProps) {
                         className="category all selected"
                         onClick={restoreDefaultSection}
                     ><span>All Categories</span></li>
-                    {categories.map((category, index) => (
-                        <li key={index} className={index === 0 ? "category highlighted" : "category"}
+                    {sortedCategories(categories).map((category, index) => (
+                        <li key={index} className={category.is_default === 1 ? "category highlighted" : "category"}
                             onClick={toggleSelected}>
                             <span>{category.name}</span>
                         </li>

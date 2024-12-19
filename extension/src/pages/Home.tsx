@@ -20,6 +20,7 @@ const _defaultCategory = {
     bookmarks: []
 };
 
+
 export default function Home(props: IHomeProps) {
     const { data, setData } = props;
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
