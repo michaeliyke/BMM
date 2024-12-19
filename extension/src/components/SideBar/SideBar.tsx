@@ -1,10 +1,13 @@
+import Category from "../../data/adapters/category";
 import { addClass, removeClass, setDefaultCategoryText } from "../../utils/domHelpers";
 import { ICategory } from "../../utils/types/schemas";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
+import { v4 as uuid4 } from 'uuid';
 
 type SideBarProps = {
     categories: ICategory[];
+    setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
     selectedCategory: ICategory | null;
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
@@ -70,7 +73,7 @@ function sortedCategories(data: ICategory[]): ICategory[] {
 
 export default function SideBar(props: SideBarProps) {
     const { defaultCategory } = props;
-    const { categories, selectedCategory, setSelectedCategory } = props;
+    const { categories, setData, selectedCategory, setSelectedCategory } = props;
 
     const [showCategoryPopup, setShowCategoryPopup] = useState(false);
     const [showTagPopup, setShowTagPopup] = useState(false);
@@ -78,9 +81,27 @@ export default function SideBar(props: SideBarProps) {
     const [tagName, setTagName] = useState("");
 
     const handleCreateCategory = () => {
-        console.log("Category Created:", categoryName);
-        setShowCategoryPopup(false);
-        setCategoryName("");
+        const category = new Category({
+            name: categoryName,
+            is_default: 0,
+            bookmarks: [],
+            id: uuid4(),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            tags: [],
+        });
+        category.create()
+            .then(() => {
+                setData((state: ICategory[]) => {
+                    return [...state, category]; // shallow copy of the state array
+                });
+                console.log("Category Created:", categoryName);
+                setShowCategoryPopup(false);
+                setCategoryName("");
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     const handleCreateTag = () => {
@@ -213,3 +234,4 @@ export default function SideBar(props: SideBarProps) {
 
     )
 }
+

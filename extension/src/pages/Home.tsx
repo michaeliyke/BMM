@@ -39,6 +39,9 @@ export default function Home(props: IHomeProps) {
         }
     }, [data]);
 
+    console.log(data.map((cat) => cat.name));
+
+
     return (
         <>
             <Header
@@ -54,6 +57,7 @@ export default function Home(props: IHomeProps) {
                     updateCategory={updateCategory}
                     setSelectedCategory={setSelectedCategory}
                     categories={data}
+                    setData={setData}
                     defaultCategory={defaultCategory}>
                 </SideBar>
                 <ContentBar
