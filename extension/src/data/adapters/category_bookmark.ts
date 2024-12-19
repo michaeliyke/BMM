@@ -2,6 +2,7 @@ import { LockManager } from "../../utils/locker";
 import {
     IBookmark,
     IBookmarkTag,
+    ICategory,
     ICategoryBookmark,
     ITag,
 } from "../../utils/types/schemas";
@@ -74,6 +75,32 @@ export default class CategoryBookmark implements ICategoryBookmark {
         this.id = categoryBookmark.id;
         this.category_id = categoryBookmark.category_id;
         this.bookmark_id = categoryBookmark.bookmark_id;
+    }
+
+    static async createBookmark(bookmark: IBookmark, category: ICategory): Promise<void> {
+        return lockManager.acquire(`CategoryBookmark.createBookmark:${bookmark.id}`, async () => {
+            try {
+                // Ensure the category exists
+                if (!(await Category.categoryExists(category.id)))
+                    throw new Error(`CategoryBookmark.createBookmark:- Category not found: ${category.id}`);
+
+                // Create the bookmark if not exists
+                if (!(await Bookmark.bookmarkExists(bookmark.id))) {
+                    await new Bookmark(bookmark).create();
+                }
+
+                // Ensure the bookmark doesn't already exist in the category
+                if (!(await CategoryBookmark.categoryBookmarkExists(category.id, bookmark.id))) {
+                    await Operator.createRecord('category_bookmarks', {
+                        id: `${category.id}_${bookmark.id}`,
+                        category_id: category.id,
+                        bookmark_id: bookmark.id,
+                    });
+                }
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryBookmark.createBookmark:- ${error}, ${bookmark}`);
+            }
+        });
     }
 
     /**

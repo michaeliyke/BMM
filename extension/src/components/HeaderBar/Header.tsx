@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { IBookmark, ICategory } from "../../utils/types/schemas";
 import { v4 as uuid4 } from 'uuid';
+import Bookmark from "../../data/adapters/bookmark";
+import CategoryBookmark from "../../data/adapters/category_bookmark";
 
 type HeaderProps = {
     selectedCategory: ICategory | null;
@@ -37,23 +39,30 @@ export default function Header(props: HeaderProps) {
             tags: [],
         };
 
-        setUrl(location.href);
-        setTitle('');
-        // setData(create(newBookmark, _selectedCategory));
-        setData((state: ICategory[]) => {
-            const newState = [...state]; // shallow copy of the state array
+        CategoryBookmark.createBookmark(newBookmark, _selectedCategory)
+            .then(() => {
 
-            const index = newState.findIndex((x) => x.id === _selectedCategory.id);
-            if (index === -1) return state; // Safety check: if not found, return the current state
+                setUrl(location.href);
+                setTitle('');
+                // setData(create(newBookmark, _selectedCategory));
+                setData((state: ICategory[]) => {
+                    const newState = [...state]; // shallow copy of the state array
 
-            const updatedCategory = {
-                ...newState[index], // shallow copy of the category object
-                bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
-            };
+                    const index = newState.findIndex((x) => x.id === _selectedCategory.id);
+                    if (index === -1) return state; // Safety check: if not found, return the current state
 
-            newState[index] = updatedCategory; // Replace the category with the updated one
-            return newState; // Return the new state
-        });
+                    const updatedCategory = {
+                        ...newState[index], // shallow copy of the category object
+                        bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
+                    };
+
+                    newState[index] = updatedCategory; // Replace the category with the updated one
+                    return newState; // Return the new state
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
 
     }
 
