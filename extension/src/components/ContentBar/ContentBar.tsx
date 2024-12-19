@@ -15,13 +15,14 @@ function sortedBookmarks(bookmarks: IBookmark[]): IBookmark[] {
 type ContentBarProps = {
     data: ICategory[];
     updateCategory?: (category: ICategory) => void;
+    selectedCategory: ICategory | null;
 };
 
 type ListBookmarksProps = {
     categories: ICategory[];
 };
 
-const ListBookmarks = ({ categories }: ListBookmarksProps) => {
+function ListBookmarks({ categories }: ListBookmarksProps) {
 
     const bookmarks: IBookmark[] = [];
     for (const category of categories) {
@@ -108,12 +109,13 @@ const ListBookmarks = ({ categories }: ListBookmarksProps) => {
 };
 
 export default function ContentBar(props: ContentBarProps) {
-    const { data } = props;
+    const { data, selectedCategory } = props;
+    const filteredCategories = selectedCategory ? [selectedCategory] : data;
 
     return (
         <article className="content">
             <header>Content Header</header>
-            <ListBookmarks categories={data} />
+            <ListBookmarks categories={filteredCategories} />
             <footer>Content Footer</footer>
         </article>
     )

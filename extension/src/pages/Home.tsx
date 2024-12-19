@@ -58,6 +58,7 @@ export default function Home(props: IHomeProps) {
                 </SideBar>
                 <ContentBar
                     updateCategory={updateCategory}
+                    selectedCategory={selectedCategory}
                     data={data}>
                 </ContentBar>
             </section>

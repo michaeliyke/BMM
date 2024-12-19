@@ -14,10 +14,11 @@ type HeaderProps = {
 
 
 export default function Header(props: HeaderProps) {
-    const [url, setUrl] = useState('');
+    const [url, setUrl] = useState(location.href);
     const [title, setTitle] = useState('');
 
     const { selectedCategory, setData, defaultCategory } = props;
+
 
 
     function createBookmark() {
@@ -36,7 +37,7 @@ export default function Header(props: HeaderProps) {
             tags: [],
         };
 
-        setUrl('');
+        setUrl(location.href);
         setTitle('');
         // setData(create(newBookmark, _selectedCategory));
         setData((state: ICategory[]) => {
