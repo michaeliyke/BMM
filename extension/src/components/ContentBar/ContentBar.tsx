@@ -110,8 +110,7 @@ function ListBookmarks({ categories }: ListBookmarksProps) {
 
 export default function ContentBar(props: ContentBarProps) {
     const { data, selectedCategory } = props;
-    const filteredCategories = selectedCategory ? [selectedCategory] : data;
-
+    const filteredCategories = selectedCategory ? data.filter((cat) => cat.id === selectedCategory.id) : data;
     return (
         <article className="content">
             <header>Content Header</header>
