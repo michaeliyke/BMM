@@ -6,7 +6,6 @@ import BookmarkTag from "./adapters/bookmark_tag";
 import CategoryBookmark from "./adapters/category_bookmark";
 import CategoryTag from "./adapters/category_tag";
 import { ICategory } from "../utils/types/schemas";
-import { v4 as uuid4 } from 'uuid';
 
 export default {
     async getAll(): Promise<ICategory[]> {
@@ -32,7 +31,7 @@ export default {
                 await new Tag(tag).create(); // Save the tag
                 // Save category-tag
                 await new CategoryTag({
-                    id: uuid4(),
+                    id: "",
                     category_id: category.id,
                     tag_id: tag.id,
                 }).create();
@@ -43,7 +42,7 @@ export default {
                 await new Bookmark(bookmark).create(); // Save bookmark
                 // Save category-bookmark
                 await new CategoryBookmark({
-                    id: uuid4(),
+                    id: "",
                     category_id: category.id,
                     bookmark_id: bookmark.id,
                 }).create();
@@ -53,7 +52,7 @@ export default {
                     await new Tag(tag).create(); // Save the tag if not exists
                     // Save bookmark-tag
                     await new BookmarkTag({
-                        id: uuid4(),
+                        id: "",
                         bookmark_id: bookmark.id,
                         tag_id: tag.id,
                     }).create();

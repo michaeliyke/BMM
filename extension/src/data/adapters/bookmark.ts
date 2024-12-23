@@ -2,6 +2,7 @@
 import { LockManager } from "../../utils/locker";
 import { IBookmark, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
+import { v4 as uuid4 } from 'uuid';
 
 const lockManager = new LockManager();
 
@@ -15,12 +16,12 @@ export default class Bookmark implements IBookmark {
     tags: ITag[];
 
     constructor(bookmark: IBookmark) {
-        this.id = bookmark.id;
+        this.id = uuid4();
         this.title = bookmark.title;
         this.url = bookmark.url;
         this.description = bookmark.description;
-        this.created_at = bookmark.created_at;
-        this.updated_at = bookmark.updated_at;
+        this.created_at = (new Date()).toISOString();
+        this.updated_at = this.created_at;
         this.tags = bookmark.tags;
     }
 
@@ -28,8 +29,7 @@ export default class Bookmark implements IBookmark {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${ID}`, async () => {
             try {
-                const bmk = Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', ID);
-                if (await bmk)
+                if (await Operator.getRecordById<IBookmark>('bookmarks', ID))
                     return true;
                 return false;
             } catch (error) {
@@ -43,8 +43,7 @@ export default class Bookmark implements IBookmark {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
-                const bmk = Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', this.id);
-                if (await bmk)
+                if (await Operator.getRecordById<IBookmark>('bookmarks', this.id))
                     return true;
                 return false;
             } catch (error) {
@@ -59,13 +58,13 @@ export default class Bookmark implements IBookmark {
      * @returns {Promise<void>} A promise that resolves when the bookmark is created.
      * @throws {Error} Throws an error if a bookmark with the same id already exists.
      */
-    async create(): Promise<void> {
-        await lockManager.acquire(`Bookmark.create:${this.id}`, async () => {
+    async create(): Promise<IBookmark> {
+        return lockManager.acquire(`Bookmark.create:${this.id}`, async () => {
             this.tags = []; // Do not save tags in the bookmark object
             // Create a new bookmark record in the database if not exists
-            if (await this.exists()) return;
+            if (await this.exists()) return this;
             try {
-                await Operator.createRecord<IBookmark>('bookmarks', this);
+                return await Operator.createRecord<IBookmark>('bookmarks', this);
             } catch (error) {
                 throw new Error(`An error occurred in Bookmark.create:- ${error}, ${this.id}`);
             }

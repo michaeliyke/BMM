@@ -22,57 +22,54 @@ export const Operator = {
     async initializeDatabase(): Promise<IDBDatabase> {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open("bmm", 1);
+            const unique = { unique: true };
+
+            // compound keys
+            const bookmarkTag = ["bookmark_id", "tag_id"];
+            const categoryBookmark = ["category_id", "bookmark_id"];
+            const categoryTag = ["category_id", "tag_id"];
 
             // Create a schema or upgrade an existing one
             request.onupgradeneeded = function upgrade() {
                 const db = request.result;
 
                 // bookmarks table
+                // No need for index here as only the PK (id) needs to be unique
                 if (!db.objectStoreNames.contains("bookmarks"))
-                    db.createObjectStore("bookmarks", { keyPath: "id" })
-                        .createIndex("bookmarks_index", "id");
+                    db.createObjectStore("bookmarks", { keyPath: "id" });
 
-                // tags table
+                // tags table: uniqueness needed for the name field
                 if (!db.objectStoreNames.contains("tags"))
                     db.createObjectStore("tags", { keyPath: "id" })
-                        .createIndex("tags_index", "id");
+                        .createIndex("tags_index", "name", unique);
 
-                // categories table
+                // categories table: uniqueness needed for the name field
                 if (!db.objectStoreNames.contains("categories")) {
                     const temp = db.createObjectStore("categories", { keyPath: "id" });
                     temp.createIndex("default_category_index", "is_default");
-                    temp.createIndex("categories_index", "id");
+                    temp.createIndex("categories_index", "name", unique);
                 }
 
                 // users table
                 if (!db.objectStoreNames.contains("users"))
                     db.createObjectStore("users", { keyPath: "id" });
 
-                // Relationship tables
+                /* RELATIONSHIP TABLES */
+
                 // Between bookmarks and tags
-                if (!db.objectStoreNames.contains("bookmark_tags")) { // bookmark_tag table
+                if (!db.objectStoreNames.contains("bookmark_tags")) // bookmark_tag table
                     db.createObjectStore("bookmark_tags", { keyPath: "id" })
-                        .createIndex(
-                            "bookmark_tags_index",
-                            ["bookmark_id", "tag_id"], // compound key path
-                            { unique: true });
-                }
+                        .createIndex("bookmark_tags_index", bookmarkTag, unique);
+
                 // Between bookmarks and categories
-                if (!db.objectStoreNames.contains("category_bookmarks")) { // category_bookmark table
+                if (!db.objectStoreNames.contains("category_bookmarks")) // category_bookmark table
                     db.createObjectStore("category_bookmarks", { keyPath: "id" })
-                        .createIndex(
-                            "category_bookmarks_index",
-                            ["category_id", "bookmark_id"], // compound key path
-                            { unique: true });
-                }
+                        .createIndex("category_bookmarks_index", categoryBookmark, unique);
+
                 // Between categories and tags
-                if (!db.objectStoreNames.contains("category_tags")) { // category_tag table
+                if (!db.objectStoreNames.contains("category_tags")) // category_tag table
                     db.createObjectStore("category_tags", { keyPath: "id" })
-                        .createIndex(
-                            "category_tags_index",
-                            ["category_id", "tag_id"], // compound key path
-                            { unique: true });
-                }
+                        .createIndex("category_tags_index", categoryTag, unique);
             };
 
             request.onsuccess = () => resolve(request.result);
@@ -156,7 +153,6 @@ export const Operator = {
         return queueManager.enqueue(async () => {
             const db = await this.initializeDatabase();
             return await new Promise((resolve, reject) => {
-                console.log(`Getting record ${storeName} with id: ${id}`);
                 const tx = db.transaction(storeName, "readonly");
                 const store = tx.objectStore(storeName);
                 const request = store.get(id);
@@ -175,7 +171,7 @@ export const Operator = {
      * @param {T} data - The data to be added to the store.
      * @returns {Promise<void>} A promise that resolves when the data has been successfully added, or rejects with an error.
      */
-    async createRecord<T>(storeName: string, data: T): Promise<void> {
+    async createRecord<T>(storeName: string, data: T): Promise<T> {
         return queueManager.enqueue(async () => {
             const db = await this.initializeDatabase();
             return new Promise((resolve, reject) => {
@@ -183,7 +179,7 @@ export const Operator = {
                 const store = tx.objectStore(storeName);
                 const request = store.add(data);
                 request.onerror = () => reject(request.error);
-                request.onsuccess = () => resolve();
+                request.onsuccess = () => resolve(data);
             });
         });
     },

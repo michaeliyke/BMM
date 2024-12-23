@@ -1,4 +1,5 @@
 import Category from "../../data/adapters/category";
+import Tag from "../../data/adapters/tag";
 import { addClass, removeClass, setDefaultCategoryText } from "../../utils/domHelpers";
 import { ICategory } from "../../utils/types/schemas";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -105,9 +106,40 @@ export default function SideBar(props: SideBarProps) {
     };
 
     const handleCreateTag = () => {
-        console.log("Tag Created:", tagName);
-        setShowTagPopup(false);
-        setTagName("");
+        const tag = new Tag({
+            name: tagName,
+            id: uuid4(),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+        });
+
+        tag.create()
+            .then(() => {
+                setData((state: ICategory[]) => {
+                    // Find the index of the selected category
+                    const index = state.findIndex((cat) => cat.id === selectedCategory?.id);
+                    if (index === -1) return state; // Safety check: if not found, return the current state
+
+                    // Modify the selected category's tags array and return the new state
+                    const updatedCategory = {
+                        ...state[index], // shallow copy of the category object
+                        tags: [...state[index].tags, tag], // new tags array
+                    };
+
+                    // Replace the category with the updated one
+                    state[index] = updatedCategory;
+                    return state; // Return the new state
+                });
+            })
+            .then(() => {
+                console.log("Tag Created:", tagName);
+                setShowTagPopup(false);
+                setTagName("");
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
     };
 
     function toggleSelected(event: React.MouseEvent<HTMLLIElement>) {
@@ -162,6 +194,7 @@ export default function SideBar(props: SideBarProps) {
                         onClick={restoreDefaultSection}
                     ><span>All Categories</span></li>
                     {sortedCategories(categories).map((category, index) => (
+                        (category.tags.length > 0 && console.log(`${category.name}:`, category.tags)),
                         <li
                             key={index}
                             className={category.is_default === 1 ? "category highlighted" : "category"}

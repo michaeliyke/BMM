@@ -39,9 +39,6 @@ export default function Home(props: IHomeProps) {
         }
     }, [data]);
 
-    console.log(data.map((cat) => cat.name));
-
-
     return (
         <>
             <Header

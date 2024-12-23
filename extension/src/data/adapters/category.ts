@@ -10,6 +10,7 @@ import { Operator } from "../operator";
 import BookmarkTag from "./bookmark_tag";
 import CategoryBookmark from "./category_bookmark";
 import CategoryTag from "./category_tag";
+import { v4 as uuid4 } from 'uuid';
 
 const lockManager = new LockManager();
 
@@ -24,11 +25,11 @@ export default class Category implements ICategory {
     tags: ITag[];
 
     constructor(category: ICategory) {
-        this.id = category.id;
+        this.id = uuid4();
         this.name = category.name;
         this.is_default = category.is_default;
-        this.created_at = category.created_at;
-        this.updated_at = category.updated_at;
+        this.created_at = (new Date()).toISOString();
+        this.updated_at = this.created_at;
         this.bookmarks = category.bookmarks;
         this.tags = category.tags;
     }
@@ -41,16 +42,16 @@ export default class Category implements ICategory {
     async exists(): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
-            if (await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.id))
+            if (await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.name))
                 return true;
             return false;
         });
     }
 
-    static async categoryExists(ID: string): Promise<boolean> {
+    static async categoryExists(name: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        return lockManager.acquire(`${callerName}:${ID}`, async () => {
-            if (await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', ID))
+        return lockManager.acquire(`${callerName}:${name}`, async () => {
+            if (await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', name))
                 return true;
             return false;
         });
@@ -79,17 +80,17 @@ export default class Category implements ICategory {
      *
      * @returns A promise that resolves when the category has been successfully created.
      */
-    async create(): Promise<void> {
-        lockManager.acquire(`Category.create:${this.id}`, async () => {
+    async create(): Promise<ICategory> {
+        return lockManager.acquire(`Category.create:${this.id}`, async () => {
             this.tags = []; // Do not save tags in the category object
             this.bookmarks = []; // Do not save bookmarks in the category object
             // Only proceed if the category does not already exist
             try {
-                if (!await this.exists()) {
-                    await Operator.createRecord<ICategory>('categories', this);
-                }
+                if (!await this.exists())
+                    return Operator.createRecord<ICategory>('categories', this);
+                return this;
             } catch (error) {
-                throw new Error(`An error occurred in Category.create:- ${error}, ${this}`);
+                throw new Error(`An error occurred in Category.create:- ${error}, ${JSON.stringify(this)}`);
             }
         });
     }
@@ -137,7 +138,17 @@ export default class Category implements ICategory {
     static async getCategoryById(ID: string): Promise<ICategory> {
         return lockManager.acquire(`Category.getCategoryById:${ID}`, async () => {
             try {
-                return Operator.getRecordByIndex<ICategory>('categories', 'categories_index', ID);
+                return Operator.getRecordById<ICategory>('categories', ID);
+            } catch (error) {
+                throw new Error(`An error occurred in Category.getCategoryById:- ${error}, ${this}`);
+            }
+        });
+    }
+
+    static async getCategoryByName(name: string): Promise<ICategory> {
+        return lockManager.acquire(`Category.getCategoryById:${name}`, async () => {
+            try {
+                return Operator.getRecordByIndex<ICategory>('categories', 'categories_index', name);
             } catch (error) {
                 throw new Error(`An error occurred in Category.getCategoryById:- ${error}, ${this}`);
             }

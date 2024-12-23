@@ -5,8 +5,8 @@ import {
     ITag,
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
-import Bookmark from "./bookmark";
 import Tag from "./tag";
+import { v4 as uuid4 } from 'uuid';
 
 const lockManager = new LockManager();
 
@@ -16,7 +16,7 @@ export default class BookmarkTag implements IBookmarkTag {
     tag_id: string;
 
     constructor(bookmarkTag: IBookmarkTag) {
-        this.id = bookmarkTag.id;
+        this.id = uuid4();
         this.bookmark_id = bookmarkTag.bookmark_id;
         this.tag_id = bookmarkTag.tag_id;
     }
@@ -84,21 +84,15 @@ export default class BookmarkTag implements IBookmarkTag {
      * @throws Will throw an error if the category with the given ID is not found.
      * @throws Will throw an error if the tag already exists under the given category.
      */
-    async create(): Promise<void> {
+    async create(): Promise<IBookmarkTag> {
         const query = [this.bookmark_id, this.tag_id];
-        lockManager.acquire(`BookmarkTag.create:${query}`, async () => {
+        return lockManager.acquire(`BookmarkTag.create:${query}`, async () => {
             // Ensure bookmark exists
             try {
-                if (!(await Bookmark.bookmarkExists(this.bookmark_id)))
-                    throw new Error(`BookmakrTag.create:- Bookmark not found: ${this}`);
-
-                // Ensure tag exists
-                if (!(await Tag.tagExists(this.tag_id)))
-                    throw new Error(`BookmakrTag.create:- Tag not found: ${this}`);
-
                 // Ensure tag does not already exist under the bookmark
                 if (!(await this.exists()))
-                    await Operator.createRecord<IBookmarkTag>('bookmark_tags', this);
+                    return Operator.createRecord<IBookmarkTag>('bookmark_tags', this);
+                return this;
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.create:- ${error}, ${this}`);
             }

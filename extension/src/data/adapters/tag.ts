@@ -1,6 +1,7 @@
 import { LockManager } from "../../utils/locker";
 import { ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
+import { v4 as uuid4 } from 'uuid';
 
 const lockManager = new LockManager();
 
@@ -12,10 +13,10 @@ export default class Tag implements ITag {
     updated_at: string;
 
     constructor(tag: ITag) {
-        this.id = tag.id;
+        this.id = uuid4();
         this.name = tag.name;
-        this.created_at = tag.created_at;
-        this.updated_at = tag.updated_at;
+        this.created_at = (new Date()).toISOString();
+        this.updated_at = this.created_at;
     }
 
     /**
@@ -27,7 +28,7 @@ export default class Tag implements ITag {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
-                if (await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.id))
+                if (await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.name))
                     return true;
                 return false;
             } catch (error) {
@@ -35,15 +36,15 @@ export default class Tag implements ITag {
             }
         });
     }
-    static async tagExists(ID: string): Promise<boolean> {
+    static async tagExists(name: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        return lockManager.acquire(`${callerName}:${ID}`, async () => {
+        return lockManager.acquire(`${callerName}:${name}`, async () => {
             try {
-                if (await Operator.getRecordByIndex<ITag>('tags', 'tags_index', ID))
+                if (await Operator.getRecordByIndex<ITag>('tags', 'tags_index', name))
                     return true;
                 return false;
             } catch (error) {
-                throw new Error(`An error occurred in Tag.exists:- ${error}, ${ID}`);
+                throw new Error(`An error occurred in Tag.exists:- ${error}, ${name}`);
             }
         });
     }
@@ -53,12 +54,13 @@ export default class Tag implements ITag {
      *
      * @returns {Promise<void>} A promise that resolves when the tag has been created.
      */
-    async create(): Promise<void> {
-        lockManager.acquire(`Tag.create:${this.id}`, async () => {
+    async create(): Promise<ITag> {
+        return lockManager.acquire(`Tag.create:${this.id}`, async () => {
             // Create a new tag record in the database if not exists
             try {
                 if (!(await this.exists()))
-                    await Operator.createRecord<ITag>('tags', this);
+                    return await Operator.createRecord<ITag>('tags', this);
+                return this;
             } catch (error) {
                 throw new Error(`An error occurred in Tag.create:- ${error}, ${this}`);
             }

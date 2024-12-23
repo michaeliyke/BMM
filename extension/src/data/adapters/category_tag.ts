@@ -1,8 +1,8 @@
 import { LockManager } from "../../utils/locker";
 import { ICategory, ICategoryTag, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
-import Category from "./category";
 import Tag from "./tag";
+import { v4 as uuid4 } from 'uuid';
 
 const lockManager = new LockManager();
 
@@ -12,7 +12,7 @@ export default class CategoryTag implements ICategoryTag {
     tag_id: string;
 
     constructor(categoryTag: ICategoryTag) {
-        this.id = categoryTag.id;
+        this.id = uuid4();
         this.category_id = categoryTag.category_id;
         this.tag_id = categoryTag.tag_id;
     }
@@ -176,23 +176,15 @@ export default class CategoryTag implements ICategoryTag {
     * - Creates the tag if it does not already exist.
     * - Links the tag to the category by creating a record in the `category_tags` table.
     */
-    async create(): Promise<void> {
+    async create(): Promise<ICategoryTag> {
         const query = [this.category_id, this.tag_id];
-        lockManager.acquire(`CategoryTag.create:${query}`, async () => {
-            const { tag_id: tagId, category_id: categoryId } = this;
+        return lockManager.acquire(`CategoryTag.create:${query}`, async () => {
             // Ensure category exists
             try {
-                if (!(await Category.categoryExists(categoryId)))
-                    throw new Error(`CategoryTag.create:- Category not found: ${this}`);
-
-                // Ensure tag exists
-                if (!(await Tag.tagExists(tagId)))
-                    throw new Error(`CategoryTag.create:- Tag not found: ${this}`);
-
                 // Ensure tag doesn't already exist under the category
-                if (!(await this.exists())) {
-                    await Operator.createRecord<ICategoryTag>('category_tags', this);
-                }
+                if (!(await this.exists()))
+                    return await Operator.createRecord<ICategoryTag>('category_tags', this);
+                return this;
             } catch (error) {
                 throw new Error(`An error occurred in CategoryTag.create:- ${error}, ${this}`);
             }

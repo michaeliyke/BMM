@@ -2,13 +2,13 @@ import { LockManager } from "../../utils/locker";
 import {
     IBookmark,
     IBookmarkTag,
-    ICategory,
     ICategoryBookmark,
     ITag,
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 import Bookmark from "./bookmark";
 import Category from "./category";
+import { v4 as uuid4 } from 'uuid';
 
 const lockManager = new LockManager();
 
@@ -72,31 +72,33 @@ export default class CategoryBookmark implements ICategoryBookmark {
     }
 
     constructor(categoryBookmark: ICategoryBookmark) {
-        this.id = categoryBookmark.id;
+        this.id = uuid4();
         this.category_id = categoryBookmark.category_id;
         this.bookmark_id = categoryBookmark.bookmark_id;
     }
 
-    static async createBookmark(bookmark: IBookmark, category: ICategory): Promise<void> {
+    static async createBookmark(bookmark: Bookmark, category: Category): Promise<IBookmark> {
         return lockManager.acquire(`CategoryBookmark.createBookmark:${bookmark.id}`, async () => {
+            const query = [category.id, bookmark.id];
             try {
                 // Ensure the category exists
-                if (!(await Category.categoryExists(category.id)))
+                if (!(await category.exists()))
                     throw new Error(`CategoryBookmark.createBookmark:- Category not found: ${category.id}`);
 
-                // Create the bookmark if not exists
-                if (!(await Bookmark.bookmarkExists(bookmark.id))) {
-                    await new Bookmark(bookmark).create();
-                }
-
                 // Ensure the bookmark doesn't already exist in the category
-                if (!(await CategoryBookmark.categoryBookmarkExists(category.id, bookmark.id))) {
-                    await Operator.createRecord('category_bookmarks', {
-                        id: `${category.id}_${bookmark.id}`,
-                        category_id: category.id,
-                        bookmark_id: bookmark.id,
-                    });
-                }
+                if (!(await CategoryBookmark.categoryBookmarkExists(category.id, bookmark.id)))
+                    throw new Error(`CategoryBookmark.createBookmark:- index already exists: ${query}`);
+
+                await new CategoryBookmark({
+                    category_id: category.id,
+                    bookmark_id: bookmark.id,
+                    id: "",
+                }).create();
+
+                // Create the bookmark if not exists
+                if (!(bookmark.exists()))
+                    return bookmark.create();
+                return bookmark;
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.createBookmark:- ${error}, ${bookmark}`);
             }
@@ -110,22 +112,14 @@ export default class CategoryBookmark implements ICategoryBookmark {
      * @throws {Error} If the category with the given ID does not exist.
      * @throws {Error} If the bookmark with the given ID already exists.
      */
-    async create(): Promise<void> {
+    async create(): Promise<ICategoryBookmark> {
         const query = [this.category_id, this.bookmark_id];
-        lockManager.acquire(`CategoryBookmark.create:${query}`, async () => {
+        return lockManager.acquire(`CategoryBookmark.create:${query}`, async () => {
             try {
-                // Ensure the category exists
-                if (!(await Category.categoryExists(this.category_id)))
-                    throw new Error(`CategoryBookmark.create:- Category not found: ${this.category_id}`);
-
-                // Ensure the bookmark exist
-                if (!(await Bookmark.bookmarkExists(this.bookmark_id)))
-                    throw new Error(`CategoryBookmark.create:- Bookmark not found: ${this}`);
-
                 // Ensure the bookmark doesn't already exist in the category
-                if (!(await this.exists())) {
-                    await Operator.createRecord('category_bookmarks', this);
-                }
+                if (!(await this.exists()))
+                    return Operator.createRecord('category_bookmarks', this);
+                return this;
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.create:- ${error}, ${this.id}`);
             }
