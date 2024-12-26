@@ -233,7 +233,7 @@ export default function SideBar(props: SideBarProps) {
                             placeholder="Category Name"
                             value={categoryName}
                             onChange={(e) => setCategoryName(e.target.value)}
-                            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
+                            className="w-full text-gray-500 p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
                         />
                         <button
                             onClick={handleCreateCategory}
@@ -261,7 +261,7 @@ export default function SideBar(props: SideBarProps) {
                             placeholder="Tag Name"
                             value={tagName}
                             onChange={(e) => setTagName(e.target.value)}
-                            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-green-300"
+                            className="w-full p-2 border text-gray-500 border-gray-300 rounded focus:outline-none focus:ring focus:ring-green-300"
                         />
                         <button
                             onClick={handleCreateTag}
