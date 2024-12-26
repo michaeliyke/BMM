@@ -1,5 +1,5 @@
 import { FaArrowLeft } from "react-icons/fa";
-import { BookmarksDisplayProps } from "../../utils/types/commons";
+import { BookmarksDisplayProps } from "../../utils/types/props";
 export default function GoBackButton(props: BookmarksDisplayProps) {
     const { setBookmarkToShow } = props;
     const handleGoBack = () => {

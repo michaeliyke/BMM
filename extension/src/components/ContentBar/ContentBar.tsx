@@ -1,5 +1,5 @@
 
-import { ContentBarProps } from "../../utils/types/commons";
+import { ContentBarProps } from "../../utils/types/props";
 import BookmarksDisplay from "./BookmarksDisplay";
 import GoBackButton from "./WidgetGoBack";
 

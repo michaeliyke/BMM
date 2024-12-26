@@ -1,5 +1,5 @@
 import { FaClock, FaCommentDots, FaStar } from "react-icons/fa";
-import { BookmarksDisplayProps } from "../../utils/types/commons";
+import { BookmarksDisplayProps } from "../../utils/types/props";
 import moment from "moment";
 
 export default function BookmarkDetails(props: BookmarksDisplayProps) {

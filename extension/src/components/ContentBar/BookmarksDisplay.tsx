@@ -1,4 +1,4 @@
-import { BookmarksDisplayProps } from "../../utils/types/commons";
+import { BookmarksDisplayProps } from "../../utils/types/props";
 import BookmarkDetails from "./BookmarkDetails";
 import ShowBookmarks from "./ShowBookmarks";
 

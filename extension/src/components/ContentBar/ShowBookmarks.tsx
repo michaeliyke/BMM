@@ -1,5 +1,5 @@
 import moment from "moment";
-import { BookmarksDisplayProps } from "../../utils/types/commons";
+import { BookmarksDisplayProps } from "../../utils/types/props";
 import { MdOutlineArchive, MdOutlineEdit, MdOutlineDelete, MdOutlineStar } from "react-icons/md";
 import { sortedBookmarks } from "../../utils/common";
 import { IBookmark } from "../../utils/types/schemas";
