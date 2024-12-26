@@ -1,7 +1,7 @@
 import Category from "../../data/adapters/category";
 import Tag from "../../data/adapters/tag";
 import { addClass, removeClass, setDefaultCategoryText } from "../../utils/domHelpers";
-import { ICategory } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { v4 as uuid4 } from 'uuid';
@@ -13,6 +13,8 @@ type SideBarProps = {
     selectedCategory: ICategory | null;
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
     defaultCategory: ICategory;
+    bookmarkToShow: IBookmark | null;
+    setBookmarkToShow: (bookmark: IBookmark | null) => void;
 };
 
 // Remove class selected from all categories and add it target
@@ -73,8 +75,14 @@ function sortedCategories(data: ICategory[]): ICategory[] {
 }
 
 export default function SideBar(props: SideBarProps) {
-    const { defaultCategory } = props;
-    const { categories, setData, selectedCategory, setSelectedCategory } = props;
+    const {
+        defaultCategory,
+        categories,
+        setData,
+        selectedCategory,
+        setSelectedCategory,
+        setBookmarkToShow,
+    } = props;
 
     const [showCategoryPopup, setShowCategoryPopup] = useState(false);
     const [showTagPopup, setShowTagPopup] = useState(false);
@@ -147,6 +155,7 @@ export default function SideBar(props: SideBarProps) {
         const category = categories.find((cat) => cat.name === target.textContent);
         if (category) {
             setSelectedCategory(category);
+            setBookmarkToShow(null);
             // Update the category text in the header
             setDefaultCategoryText(category.name);
             toggleSelectedClass(target);
@@ -158,6 +167,7 @@ export default function SideBar(props: SideBarProps) {
     function restoreDefaultSection(e: React.MouseEvent<HTMLLIElement>) {
         const target = e.currentTarget;
         setSelectedCategory(null);
+        setBookmarkToShow(null);
         // If the default category is already selected
         if (selectedCategory?.name === defaultCategory?.name) {
             addClass(target, 'selected');
