@@ -13,7 +13,7 @@ export default class Tag implements ITag {
     updated_at: string;
 
     constructor(tag: ITag) {
-        this.id = uuid4();
+        this.id = tag.id || uuid4();
         this.name = tag.name;
         this.created_at = (new Date()).toISOString();
         this.updated_at = this.created_at;

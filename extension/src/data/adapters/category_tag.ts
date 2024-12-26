@@ -12,7 +12,7 @@ export default class CategoryTag implements ICategoryTag {
     tag_id: string;
 
     constructor(categoryTag: ICategoryTag) {
-        this.id = uuid4();
+        this.id = categoryTag.id || uuid4();
         this.category_id = categoryTag.category_id;
         this.tag_id = categoryTag.tag_id;
     }

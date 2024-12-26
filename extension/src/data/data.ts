@@ -1,8 +1,9 @@
+import { v4 as uuidv4 } from "uuid";
 import { IBookmark, ICategory } from "../utils/types/schemas";
 
 const bookmarks: IBookmark[] = [
     {
-        id: "0",
+        id: uuidv4(),
         title: "Google Career Certificates",
         description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
         url: "https://grow.google/certificates/",
@@ -11,7 +12,7 @@ const bookmarks: IBookmark[] = [
         tags: [],
     },/*
     {
-        id: "1",
+        id: uuidv4(),
         title: "Google Career Certificates",
         description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
         url: "https://grow.google/certificates/",
@@ -20,7 +21,7 @@ const bookmarks: IBookmark[] = [
         tags: [],
     },
     {
-        id: "2",
+        id: uuidv4(),
         title: "Google Career Certificates",
         description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
         url: "https://grow.google/certificates/",
@@ -29,7 +30,7 @@ const bookmarks: IBookmark[] = [
         tags: [],
     },
     {
-        id: "3",
+        id: uuidv4(),
         title: "Google Career Certificates",
         description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
         url: "https://grow.google/certificates/",
@@ -41,7 +42,7 @@ const bookmarks: IBookmark[] = [
 
 const categories: ICategory[] = [
     {
-        id: "0",
+        id: uuidv4(),
         is_default: 1,
         name: "Default Category",
         bookmarks: bookmarks,
@@ -50,7 +51,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "1",
+        id: uuidv4(),
         is_default: 0,
         name: "Programming",
         bookmarks: bookmarks,
@@ -59,7 +60,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "2",
+        id: uuidv4(),
         is_default: 0,
         name: "Frontend World",
         bookmarks: bookmarks,
@@ -68,7 +69,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "3",
+        id: uuidv4(),
         is_default: 0,
         name: "Backend",
         bookmarks: bookmarks,
@@ -78,7 +79,7 @@ const categories: ICategory[] = [
     },
     /*
     {
-        id: "4",
+        id: uuidv4(),
         is_default: 0,
         name: "Human World",
         bookmarks: bookmarks,
@@ -87,7 +88,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "5",
+        id: uuidv4(),
         is_default: 0,
         name: "Career Paths",
         bookmarks: bookmarks,
@@ -96,7 +97,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "6",
+        id: uuidv4(),
         is_default: 0,
         name: "Programming",
         bookmarks: bookmarks,
@@ -105,7 +106,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "7",
+        id: uuidv4(),
         is_default: 0,
         name: "Frontend World",
         bookmarks: bookmarks,
@@ -114,7 +115,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "8",
+        id: uuidv4(),
         is_default: 0,
         name: "Backend",
         bookmarks: bookmarks,
@@ -123,7 +124,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "9",
+        id: uuidv4(),
         is_default: 0,
         name: "Human World",
         bookmarks: bookmarks,
@@ -132,7 +133,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "10",
+        id: uuidv4(),
         is_default: 0,
         name: "Career Paths",
         bookmarks: bookmarks,
@@ -141,7 +142,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "11",
+        id: uuidv4(),
         is_default: 0,
         name: "Programming",
         bookmarks: bookmarks,
@@ -150,7 +151,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "12",
+        id: uuidv4(),
         is_default: 0,
         name: "Frontend World",
         bookmarks: bookmarks,
@@ -159,7 +160,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "13",
+        id: uuidv4(),
         is_default: 0,
         name: "Backend",
         bookmarks: bookmarks,
@@ -168,7 +169,7 @@ const categories: ICategory[] = [
         tags: [],
     },
     {
-        id: "14",
+        id: uuidv4(),
         is_default: 0,
         name: "Human World",
         bookmarks: bookmarks,

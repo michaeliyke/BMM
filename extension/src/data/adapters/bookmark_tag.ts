@@ -16,7 +16,7 @@ export default class BookmarkTag implements IBookmarkTag {
     tag_id: string;
 
     constructor(bookmarkTag: IBookmarkTag) {
-        this.id = uuid4();
+        this.id = bookmarkTag.id || uuid4();
         this.bookmark_id = bookmarkTag.bookmark_id;
         this.tag_id = bookmarkTag.tag_id;
     }

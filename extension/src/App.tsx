@@ -13,6 +13,8 @@ export default function App() {
         adapters.loadInitialData(originalData).then(() => {
             adapters.getAll()
                 .then((res) => {
+                    const bbb = res.flatMap((category) => category.bookmarks);
+                    console.log(bbb);
                     setData(res);
                 })
                 .catch((err) => {

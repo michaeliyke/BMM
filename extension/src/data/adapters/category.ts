@@ -25,7 +25,7 @@ export default class Category implements ICategory {
     tags: ITag[];
 
     constructor(category: ICategory) {
-        this.id = uuid4();
+        this.id = category.id || uuid4();
         this.name = category.name;
         this.is_default = category.is_default;
         this.created_at = (new Date()).toISOString();
@@ -64,6 +64,7 @@ export default class Category implements ICategory {
             for (const category of categories) {
                 const tags = await CategoryTag.getTags(category.id);
                 const bookmarks = await CategoryBookmark.getBookmarks(category.id);
+                console.log(bookmarks);
                 for (const bookmark of bookmarks) {
                     const tags = await BookmarkTag.getTags(bookmark.id);
                     bookmark.tags = tags;

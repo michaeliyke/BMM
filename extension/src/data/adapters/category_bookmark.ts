@@ -72,7 +72,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
     }
 
     constructor(categoryBookmark: ICategoryBookmark) {
-        this.id = uuid4();
+        this.id = categoryBookmark.id || uuid4();
         this.category_id = categoryBookmark.category_id;
         this.bookmark_id = categoryBookmark.bookmark_id;
     }

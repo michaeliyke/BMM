@@ -16,7 +16,7 @@ export default class Bookmark implements IBookmark {
     tags: ITag[];
 
     constructor(bookmark: IBookmark) {
-        this.id = uuid4();
+        this.id = bookmark.id || uuid4();
         this.title = bookmark.title;
         this.url = bookmark.url;
         this.description = bookmark.description;
