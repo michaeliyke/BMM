@@ -10,15 +10,6 @@ const bookmarks: IBookmark[] = [
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
         tags: [],
-    },/*
-    {
-        id: uuidv4(),
-        title: "Google Career Certificates",
-        description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
-        url: "https://grow.google/certificates/",
-        updated_at: "2021-09-01",
-        created_at: "2021-09-01",
-        tags: [],
     },
     {
         id: uuidv4(),
@@ -37,7 +28,16 @@ const bookmarks: IBookmark[] = [
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
         tags: [],
-    }, */
+    },
+    {
+        id: uuidv4(),
+        title: "Google Career Certificates",
+        description: "Google Career Certificates are part of Grow with Google, an initiative that draws on Google's 20-year history of building products, platforms, and services that help people and businesses grow.",
+        url: "https://grow.google/certificates/",
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+        tags: [],
+    },
 ];
 
 const categories: ICategory[] = [
@@ -53,7 +53,7 @@ const categories: ICategory[] = [
     {
         id: uuidv4(),
         is_default: 0,
-        name: "Programming",
+        name: "Programming Languages",
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
@@ -62,7 +62,7 @@ const categories: ICategory[] = [
     {
         id: uuidv4(),
         is_default: 0,
-        name: "Frontend World",
+        name: "Frontend Space",
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
@@ -71,17 +71,62 @@ const categories: ICategory[] = [
     {
         id: uuidv4(),
         is_default: 0,
-        name: "Backend",
+        name: "Backend Space",
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
         tags: [],
     },
-    /*
+
     {
         id: uuidv4(),
         is_default: 0,
-        name: "Human World",
+        name: "The Physical World",
+        bookmarks: bookmarks,
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+        tags: [],
+    },
+    {
+        id: uuidv4(),
+        is_default: 0,
+        name: "Career Solutions",
+        bookmarks: bookmarks,
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+        tags: [],
+    },
+    {
+        id: uuidv4(),
+        is_default: 0,
+        name: "Programming World",
+        bookmarks: bookmarks,
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+        tags: [],
+    },
+    {
+        id: uuidv4(),
+        is_default: 0,
+        name: "Frontend",
+        bookmarks: bookmarks,
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+        tags: [],
+    },
+    {
+        id: uuidv4(),
+        is_default: 0,
+        name: "Backend Engineering",
+        bookmarks: bookmarks,
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+        tags: [],
+    },
+    {
+        id: uuidv4(),
+        is_default: 0,
+        name: "Human Emotions",
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
@@ -132,52 +177,7 @@ const categories: ICategory[] = [
         created_at: "2021-09-01",
         tags: [],
     },
-    {
-        id: uuidv4(),
-        is_default: 0,
-        name: "Career Paths",
-        bookmarks: bookmarks,
-        updated_at: "2021-09-01",
-        created_at: "2021-09-01",
-        tags: [],
-    },
-    {
-        id: uuidv4(),
-        is_default: 0,
-        name: "Programming",
-        bookmarks: bookmarks,
-        updated_at: "2021-09-01",
-        created_at: "2021-09-01",
-        tags: [],
-    },
-    {
-        id: uuidv4(),
-        is_default: 0,
-        name: "Frontend World",
-        bookmarks: bookmarks,
-        updated_at: "2021-09-01",
-        created_at: "2021-09-01",
-        tags: [],
-    },
-    {
-        id: uuidv4(),
-        is_default: 0,
-        name: "Backend",
-        bookmarks: bookmarks,
-        updated_at: "2021-09-01",
-        created_at: "2021-09-01",
-        tags: [],
-    },
-    {
-        id: uuidv4(),
-        is_default: 0,
-        name: "Human World",
-        bookmarks: bookmarks,
-        updated_at: "2021-09-01",
-        created_at: "2021-09-01",
-        tags: [],
-    },
-    */
+
 ];
 
 export default categories;
