@@ -16,7 +16,7 @@ import {
     setDefaultCategoryText,
 } from "../../../utils/domHelpers";
 
-export default function ByCategoryTags({ props }: { props: SideBarProps }) {
+export default function ByCategoryTags({ props }: SideBarProps) {
     const {
         defaultCategory,
         categories,
@@ -65,7 +65,9 @@ export default function ByCategoryTags({ props }: { props: SideBarProps }) {
 
     return (
         <article className="sidebar">
-            <SideBarHeader></SideBarHeader>
+            <SideBarHeader
+                props={props}
+            ></SideBarHeader>
             <section className="filtered-list">
                 <ul className="categories">
                     <li

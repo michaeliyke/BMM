@@ -1,5 +1,5 @@
 import Header from '../components/HeaderBar/Header'
-import SideBarVariator from '../components/SideBar/SideBarVariator'
+import SideBar from '../components/SideBar/SideBar'
 import ContentBar from '../components/ContentBar/ContentBar'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { IBookmark, ICategory } from '../utils/types/schemas'
@@ -50,17 +50,19 @@ export default function Home(props: IHomeProps) {
             >
             </Header>
             <section>
-                <SideBarVariator
-                    selectedCategory={selectedCategory}
-                    updateCategory={updateCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    categories={data}
-                    setData={setData}
-                    defaultCategory={defaultCategory}
-                    setBookmarkToShow={setBookmarkToShow}
-                    bookmarkToShow={bookmarkToShow}
+                <SideBar
+                    props={{
+                        categories: data,
+                        setData,
+                        selectedCategory,
+                        setSelectedCategory,
+                        defaultCategory,
+                        bookmarkToShow,
+                        setBookmarkToShow,
+                        updateCategory,
+                    }}
                 >
-                </SideBarVariator>
+                </SideBar>
                 <ContentBar
                     updateCategory={updateCategory}
                     selectedCategory={selectedCategory}

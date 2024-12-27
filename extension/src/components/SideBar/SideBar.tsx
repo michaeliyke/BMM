@@ -3,11 +3,11 @@ import { SideBarProps } from "../../utils/types/props";
 import ByCategories from "./filter/ByCategories";
 
 
-export default function SideBarVariator(_props: SideBarProps) {
+export default function SideBar({ props: _props }: SideBarProps) {
     const [filterBy, setFilterBy] = useState('categories');
 
     const props = {
-        ..._props.props,
+        ..._props,
         filterBy,
         setFilterBy
     };

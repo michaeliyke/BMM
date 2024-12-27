@@ -16,16 +16,18 @@ export type BookmarksDisplayProps = {
 };
 
 export type SideBarProps = {
-    categories: ICategory[];
-    setData: Dispatch<SetStateAction<ICategory[]>>;
-    updateCategory?: (category: ICategory) => void;
-    selectedCategory: ICategory | null;
-    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
-    defaultCategory: ICategory;
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
-    filterBy?: string;
-    setFilterBy?: Dispatch<SetStateAction<string>>;
+    props: {
+        categories: ICategory[];
+        setData: Dispatch<SetStateAction<ICategory[]>>;
+        updateCategory?: (category: ICategory) => void;
+        selectedCategory: ICategory | null;
+        setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
+        defaultCategory: ICategory;
+        bookmarkToShow: IBookmark | null;
+        setBookmarkToShow: (bookmark: IBookmark | null) => void;
+        filterBy?: string;
+        setFilterBy?: Dispatch<SetStateAction<string>>;
+    };
 };
 
 

@@ -17,7 +17,7 @@ import {
 } from "../../../utils/domHelpers";
 
 
-export default function ByCategories({ props }: { props: SideBarProps }) {
+export default function ByCategories({ props }: SideBarProps) {
     const {
         defaultCategory,
         categories,

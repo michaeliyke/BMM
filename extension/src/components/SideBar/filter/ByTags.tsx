@@ -17,7 +17,7 @@ import {
 } from "../../../utils/domHelpers";
 
 
-export default function ByTags({ props }: { props: SideBarProps }) {
+export default function ByTags({ props }: SideBarProps) {
     const {
         defaultCategory,
         categories,
@@ -66,7 +66,9 @@ export default function ByTags({ props }: { props: SideBarProps }) {
 
     return (
         <article className="sidebar">
-            <SideBarHeader></SideBarHeader>
+            <SideBarHeader
+                props={props}
+            ></SideBarHeader>
             <section className="filtered-list">
                 <ul className="categories">
                     <li

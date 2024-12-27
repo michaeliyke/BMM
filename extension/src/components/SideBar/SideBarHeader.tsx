@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
 import { SideBarProps } from "../../utils/types/props";
 
-export default function SideBarHeader({ props }: { props: SideBarProps }) {
+export default function SideBarHeader({ props }: SideBarProps) {
     const { filterBy, setFilterBy } = props;
 
     function handleFilterSelection(event: ChangeEvent<HTMLSelectElement>) {
