@@ -64,7 +64,6 @@ export default class Category implements ICategory {
             for (const category of categories) {
                 const tags = await CategoryTag.getTags(category.id);
                 const bookmarks = await CategoryBookmark.getBookmarks(category.id);
-                console.log(bookmarks);
                 for (const bookmark of bookmarks) {
                     const tags = await BookmarkTag.getTags(bookmark.id);
                     bookmark.tags = tags;

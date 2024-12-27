@@ -1,23 +1,31 @@
-import { Dispatch, SetStateAction } from "react";
-import { ICategory } from "../../utils/types/schemas";
+import { ChangeEvent } from "react";
+import { SideBarProps } from "../../utils/types/props";
 
-type SideBarHeaderProps = {
-    categories: ICategory[];
-    selectedCategory: ICategory | null;
-    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
-    defaultCategory: ICategory;
-};
+export default function SideBarHeader({ props }: { props: SideBarProps }) {
+    const { filterBy, setFilterBy } = props;
 
+    function handleFilterSelection(event: ChangeEvent<HTMLSelectElement>) {
+        if (setFilterBy)
+            setFilterBy(event.target.value);
+        console.log(event.target.value);
+    }
 
-export default function SideBarHeader() {
     return (
         <header>
             <form>
-                <select aria-label="Filter Options" name="filter-options">
-                    <option value="categories" className="current">Categories</option>
-                    <option value="filter:tags">Filter:Tags</option>
-                    <option value="filter:category/tags">Filters:Category/Tags</option>
-                </select>
+                <label htmlFor="filter-options">
+                    <select
+                        id="filter-options"
+                        aria-label="Filter by"
+                        name="filter-options"
+                        value={filterBy}
+                        onChange={handleFilterSelection}
+                    >
+                        <option value="categories" className="current">Categories</option>
+                        <option value="filter:tags">Filter:Tags</option>
+                        <option value="filter:category/tags">Filters:Category/Tags</option>
+                    </select>
+                </label>
             </form>
         </header>
     );

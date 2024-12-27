@@ -1,11 +1,22 @@
-import { addClass, removeClass, setDefaultCategoryText } from "../../utils/domHelpers";
 import { useEffect } from "react";
-import SideBarFooter from "./SideBarFooter";
-import { toggleSelectedClass, toggleHighlightedClass, resetSelections, sortedCategories } from "../../utils/common";
-import { SideBarProps } from "../../utils/types/props";
-import SideBarHeader from "./SideBarHeader";
+import { SideBarProps } from "../../../utils/types/props";
+import SideBarHeader from "../SideBarHeader";
+import SideBarFooter from "../SideBarFooter";
 
-export default function SideBar(props: SideBarProps) {
+import {
+    toggleSelectedClass,
+    toggleHighlightedClass,
+    resetSelections,
+    sortedCategories,
+} from "../../../utils/common";
+
+import {
+    addClass,
+    removeClass,
+    setDefaultCategoryText,
+} from "../../../utils/domHelpers";
+
+export default function ByCategoryTags({ props }: { props: SideBarProps }) {
     const {
         defaultCategory,
         categories,

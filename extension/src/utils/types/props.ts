@@ -1,5 +1,4 @@
-// For commons types
-
+// Types store for component props
 import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory } from "./schemas";
 export type ContentBarProps = {
@@ -25,6 +24,14 @@ export type SideBarProps = {
     defaultCategory: ICategory;
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    filterBy?: string;
+    setFilterBy?: Dispatch<SetStateAction<string>>;
 };
 
 
+export type SideBarHeaderProps = {
+    categories: ICategory[];
+    selectedCategory: ICategory | null;
+    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
+    defaultCategory: ICategory;
+};
