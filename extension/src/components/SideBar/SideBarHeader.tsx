@@ -7,7 +7,6 @@ export default function SideBarHeader({ props }: SideBarProps) {
     function handleFilterSelection(event: ChangeEvent<HTMLSelectElement>) {
         if (setFilterBy)
             setFilterBy(event.target.value);
-        console.log(event.target.value);
     }
 
     return (

@@ -1,7 +1,5 @@
 import { useEffect } from "react";
-import SideBarFooter from "../SideBarFooter";
 import { SideBarProps } from "../../../utils/types/props";
-import SideBarHeader from "../SideBarHeader";
 
 import {
     toggleSelectedClass,
@@ -21,7 +19,6 @@ export default function ByTags({ props }: SideBarProps) {
     const {
         defaultCategory,
         categories,
-        setData,
         selectedCategory,
         setSelectedCategory,
         setBookmarkToShow,
@@ -63,37 +60,25 @@ export default function ByTags({ props }: SideBarProps) {
         setDefaultCategoryText(defaultCategory?.name);
     }, [defaultCategory]);
 
-
     return (
-        <article className="sidebar">
-            <SideBarHeader
-                props={props}
-            ></SideBarHeader>
-            <section className="filtered-list">
-                <ul className="categories">
+        <section className="filtered-list">
+            <ul className="categories">
+                <li
+                    className="category all selected"
+                    onClick={restoreDefaultSection}
+                ><span>All Categories</span></li>
+                {sortedCategories(categories).map((category, index) => (
+                    (category.tags.length > 0 && console.log(`${category.name}:`, category.tags)),
                     <li
-                        className="category all selected"
-                        onClick={restoreDefaultSection}
-                    ><span>All Categories</span></li>
-                    {sortedCategories(categories).map((category, index) => (
-                        (category.tags.length > 0 && console.log(`${category.name}:`, category.tags)),
-                        <li
-                            key={index}
-                            className={category.is_default === 1 ? "category highlighted" : "category"}
-                            onClick={toggleSelected}
-                        >
-                            <span>{category.name}</span>
-                        </li>
-                    ))}
-                </ul>
-            </section>
-            <SideBarFooter
-                setData={setData}
-                selectedCategory={selectedCategory}
-            ></SideBarFooter>
-
-        </article>
-
+                        key={index}
+                        className={category.is_default === 1 ? "category highlighted" : "category"}
+                        onClick={toggleSelected}
+                    >
+                        <span>{category.name}</span>
+                    </li>
+                ))}
+            </ul>
+        </section>
     )
 }
 

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { SideBarProps } from "../../utils/types/props";
-import ByCategories from "./filter/ByCategories";
+import SideBarVariator from "./SideBarVariator";
+import SideBarFooter from "./SideBarFooter";
+import SideBarHeader from "./SideBarHeader";
 
 
 export default function SideBar({ props: _props }: SideBarProps) {
@@ -12,14 +14,20 @@ export default function SideBar({ props: _props }: SideBarProps) {
         setFilterBy
     };
 
-    switch (filterBy) {
-        case 'categories':
-            return <ByCategories props={props} />;
-        case 'filter:tags':
-            return <div>Filter:Tags</div>;
-        case 'filter:category/tags':
-            return <div>Filters:Category/Tags</div>;
-        default:
-            return <ByCategories props={props} />;
-    }
+    const {
+        setData,
+        selectedCategory,
+    } = props;
+
+    // return <SideBarVariator props={props} />;
+    return (
+        <article className="sidebar">
+            <SideBarHeader props={props}></SideBarHeader>
+            <SideBarVariator props={props}></SideBarVariator>
+            <SideBarFooter
+                setData={setData}
+                selectedCategory={selectedCategory}
+            ></SideBarFooter>
+        </article>
+    );
 }
