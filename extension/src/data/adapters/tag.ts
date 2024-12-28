@@ -36,6 +36,24 @@ export default class Tag implements ITag {
             }
         });
     }
+
+    /**
+     * Checks if a tag exists in the database.
+     *
+     * @returns A promise that resolves to true if the tag exists, and false otherwise.
+     */
+    async existing(): Promise<ITag | null> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${this.id}`, async () => {
+            try {
+                const tag = await Operator.getRecordById<ITag>('tags', this.id);
+                return tag ? tag : null;
+            } catch (error) {
+                throw new Error(`An error occurred in Tag.exists:- ${error}, ${this.id}`);
+            }
+        });
+    }
+
     static async tagExists(name: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${name}`, async () => {
@@ -58,9 +76,10 @@ export default class Tag implements ITag {
         return lockManager.acquire(`Tag.create:${this.id}`, async () => {
             // Create a new tag record in the database if not exists
             try {
-                if (!(await this.exists()))
+                const existing = await this.existing();
+                if (!existing)
                     return await Operator.createRecord<ITag>('tags', this);
-                return this;
+                return existing;
             } catch (error) {
                 throw new Error(`An error occurred in Tag.create:- ${error}, ${this}`);
             }
@@ -138,7 +157,7 @@ export default class Tag implements ITag {
     static async getTagById(ID: string): Promise<ITag> {
         return lockManager.acquire(`Tag.getTagById:${ID}`, async () => {
             try {
-                return await Operator.getRecordByIndex<ITag>('tags', 'tags_index', ID);
+                return await Operator.getRecordById<ITag>('tags', ID);
             } catch (error) {
                 throw new Error(`An error occurred in Tag.getTagById:- ${error}, ${this}`);
             }

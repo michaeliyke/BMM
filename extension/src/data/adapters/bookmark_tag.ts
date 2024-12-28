@@ -34,6 +34,21 @@ export default class BookmarkTag implements IBookmarkTag {
             return false;
         });
     }
+
+    async existing(): Promise<IBookmarkTag|null> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [this.bookmark_id, this.tag_id];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                const existing = await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
+                return existing ? existing: null;
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${this}`);
+            }
+            return null;
+        });
+    }
+    
     static async bookmarkTagExists(bookmarkId: string, tagId: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [bookmarkId, tagId];
@@ -74,6 +89,22 @@ export default class BookmarkTag implements IBookmarkTag {
         });
     }
 
+    static async getBookmarks(tagId: string): Promise<IBookmark[]> {
+        return lockManager.acquire(`BookmarkTag.getBookmarks:${tagId}`, async () => {
+            try {
+                // Query to handle compound keys between tag_id and any other key: ["...", tagId]
+                const query = IDBKeyRange.bound(["", tagId], ["\uffff", tagId]);
+                const bookmarkTags = await BookmarkTag.getAll(query);
+                const allBookmarks = await Operator.getRecords<IBookmark>('bookmarks');
+                return allBookmarks.filter((bookmark) => {
+                    return bookmarkTags.some((bookmarkTag) => bookmarkTag.bookmark_id === bookmark.id);
+                });
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.getBookmarks:- ${error}, ${tagId}`);
+            }
+        });
+    }
+
     /**
      * Adds a tag to a bookmark and links it to a given category.
      *
@@ -90,9 +121,10 @@ export default class BookmarkTag implements IBookmarkTag {
             // Ensure bookmark exists
             try {
                 // Ensure tag does not already exist under the bookmark
-                if (!(await this.exists()))
+                const existing = await this.existing();
+                if (!(existing))
                     return Operator.createRecord<IBookmarkTag>('bookmark_tags', this);
-                return this;
+                return existing;
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.create:- ${error}, ${this}`);
             }

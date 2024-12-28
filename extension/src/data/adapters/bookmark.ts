@@ -52,6 +52,19 @@ export default class Bookmark implements IBookmark {
         });
     }
 
+async existing(): Promise<IBookmark|null> {
+        // get the calling method name
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${this.id}`, async () => {
+            try {
+                const bookmark = await Operator.getRecordById<IBookmark>('bookmarks', this.id);
+                return bookmark ? bookmark : null;
+            } catch (error) {
+                throw new Error(`An error occurred in Bookmark.bokmarkExists:- ${error}, ${this.id}`);
+            }
+        });
+    }
+
     /**
      * Creates a new bookmark.
      *
@@ -62,8 +75,9 @@ export default class Bookmark implements IBookmark {
         return lockManager.acquire(`Bookmark.create:${this.id}`, async () => {
             this.tags = []; // Do not save tags in the bookmark object
             // Create a new bookmark record in the database if not exists
-            if (await this.exists()) return this;
             try {
+                const existing = await this.existing();
+                if (existing) return existing;
                 return await Operator.createRecord<IBookmark>('bookmarks', this);
             } catch (error) {
                 throw new Error(`An error occurred in Bookmark.create:- ${error}, ${this.id}`);

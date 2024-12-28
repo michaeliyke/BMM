@@ -1,5 +1,44 @@
 import { v4 as uuidv4 } from "uuid";
-import { IBookmark, ICategory } from "../utils/types/schemas";
+import { IBookmark, ICategory, ITag } from "../utils/types/schemas";
+
+const tags: ITag[] = [
+    {
+        id: uuidv4(),
+        name: "Google",
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+    },
+    {
+        id: uuidv4(),
+        name: "Career",
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+    },
+    {
+        id: uuidv4(),
+        name: "Certificates",
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+    },
+    {
+        id: uuidv4(),
+        name: "Grow-w-Google",
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+    },
+    {
+        id: uuidv4(),
+        name: "Googles",
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+    },
+    {
+        id: uuidv4(),
+        name: "Goo.gle",
+        updated_at: "2021-09-01",
+        created_at: "2021-09-01",
+    },
+];
 
 const bookmarks: IBookmark[] = [
     {
@@ -9,7 +48,7 @@ const bookmarks: IBookmark[] = [
         url: "https://grow.google/certificates/",
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(4, 6),
     },
     {
         id: uuidv4(),
@@ -18,7 +57,7 @@ const bookmarks: IBookmark[] = [
         url: "https://grow.google/certificates/",
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(0, 2),
     },
     {
         id: uuidv4(),
@@ -27,7 +66,7 @@ const bookmarks: IBookmark[] = [
         url: "https://grow.google/certificates/",
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(-3),
     },
     {
         id: uuidv4(),
@@ -48,7 +87,7 @@ const categories: ICategory[] = [
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(0, 2),
     },
     {
         id: uuidv4(),
@@ -57,7 +96,7 @@ const categories: ICategory[] = [
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(2, 4),
     },
     {
         id: uuidv4(),
@@ -75,7 +114,7 @@ const categories: ICategory[] = [
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(4, 6),
     },
 
     {
@@ -94,7 +133,7 @@ const categories: ICategory[] = [
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(0, 2),
     },
     {
         id: uuidv4(),
@@ -112,7 +151,7 @@ const categories: ICategory[] = [
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(2, 4),
     },
     {
         id: uuidv4(),
@@ -130,7 +169,7 @@ const categories: ICategory[] = [
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(4, 6),
     },
     {
         id: uuidv4(),
@@ -148,7 +187,7 @@ const categories: ICategory[] = [
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(0, 2),
     },
     {
         id: uuidv4(),
@@ -166,7 +205,7 @@ const categories: ICategory[] = [
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(2, 4),
     },
     {
         id: uuidv4(),
@@ -175,7 +214,7 @@ const categories: ICategory[] = [
         bookmarks: bookmarks,
         updated_at: "2021-09-01",
         created_at: "2021-09-01",
-        tags: [],
+        tags: tags.slice(4, 6),
     },
 
 ];

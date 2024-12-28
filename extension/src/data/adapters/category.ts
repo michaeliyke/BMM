@@ -48,6 +48,19 @@ export default class Category implements ICategory {
         });
     }
 
+ /**
+     * Checks if a category exists in the database.
+     *
+     * @returns A promise that resolves to `true` if the category exists, otherwise `false`.
+     */
+    async existing(): Promise<ICategory|null> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${this.id}`, async () => {
+            const existing = await Operator.getRecordById<ICategory>('categories', this.id)
+            return existing ? existing : null;
+        });
+    }
+
     static async categoryExists(name: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${name}`, async () => {
@@ -86,9 +99,10 @@ export default class Category implements ICategory {
             this.bookmarks = []; // Do not save bookmarks in the category object
             // Only proceed if the category does not already exist
             try {
-                if (!await this.exists())
+                const existing = await this.existing();
+                if (!existing)
                     return Operator.createRecord<ICategory>('categories', this);
-                return this;
+                return existing;
             } catch (error) {
                 throw new Error(`An error occurred in Category.create:- ${error}, ${JSON.stringify(this)}`);
             }

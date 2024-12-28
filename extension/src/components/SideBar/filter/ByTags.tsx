@@ -5,7 +5,6 @@ import {
     toggleSelectedClass,
     toggleHighlightedClass,
     resetSelections,
-    sortedCategories,
 } from "../../../utils/common";
 
 import {
@@ -23,6 +22,8 @@ export default function ByTags({ props }: SideBarProps) {
         setSelectedCategory,
         setBookmarkToShow,
     } = props;
+
+    const tags = categories.flatMap((category) => category.tags);
 
 
     function toggleSelected(event: React.MouseEvent<HTMLLIElement>) {
@@ -66,15 +67,14 @@ export default function ByTags({ props }: SideBarProps) {
                 <li
                     className="category all selected"
                     onClick={restoreDefaultSection}
-                ><span>All Categories</span></li>
-                {sortedCategories(categories).map((category, index) => (
-                    (category.tags.length > 0 && console.log(`${category.name}:`, category.tags)),
+                ><span>All Tags</span></li>
+                {tags.map((tag, index) => (
                     <li
                         key={index}
-                        className={category.is_default === 1 ? "category highlighted" : "category"}
+                        className="category"
                         onClick={toggleSelected}
                     >
-                        <span>{category.name}</span>
+                        <span>{tag.name}</span>
                     </li>
                 ))}
             </ul>

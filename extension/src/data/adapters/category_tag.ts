@@ -1,6 +1,7 @@
 import { LockManager } from "../../utils/locker";
 import { ICategory, ICategoryTag, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
+import Category from "./category";
 import Tag from "./tag";
 import { v4 as uuid4 } from 'uuid';
 
@@ -31,12 +32,41 @@ export default class CategoryTag implements ICategoryTag {
         });
     }
 
+    async existing(): Promise<ICategoryTag | null> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [this.category_id, this.tag_id];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                const existing = await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query)
+                return existing ? existing : null;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${this}`);
+            }
+        });
+    }
+
     static async getAll(query?: IDBKeyRange): Promise<ICategoryTag[]> {
         return lockManager.acquire(`CategoryTag.getAll:${query}`, async () => {
             try {
                 return Operator.getRecordsByIndex<ICategoryTag>('category_tags', 'category_tags_index', query);
             } catch (error) {
                 throw new Error(`An error occurred in CategoryTag.getAll:- ${error}, ${query}`);
+            }
+        });
+    }
+
+    static async getCategories(tagId: string): Promise<ICategory[]> {
+        return lockManager.acquire(`CategoryTag.getCategories:${tagId}`, async () => {
+            try {
+                const categories = await Category.getCategories();
+                const categoryTags = await CategoryTag.getAll();
+                const filteredIds = categoryTags
+                    .filter((categoryTag) => categoryTag.tag_id === tagId)
+                    .map((categoryTag) => categoryTag.category_id);
+
+                return categories.filter((category) => filteredIds.includes(category.id));
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryTag.getCategories:- ${error}, ${tagId}`);
             }
         });
     }
@@ -182,9 +212,10 @@ export default class CategoryTag implements ICategoryTag {
             // Ensure category exists
             try {
                 // Ensure tag doesn't already exist under the category
-                if (!(await this.exists()))
+                const existing = await this.existing();
+                if (!(existing))
                     return await Operator.createRecord<ICategoryTag>('category_tags', this);
-                return this;
+                return existing;
             } catch (error) {
                 throw new Error(`An error occurred in CategoryTag.create:- ${error}, ${this}`);
             }

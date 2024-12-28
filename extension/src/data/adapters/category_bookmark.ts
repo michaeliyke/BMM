@@ -31,6 +31,19 @@ export default class CategoryBookmark implements ICategoryBookmark {
         });
     }
 
+    async existing(): Promise<ICategoryBookmark | null> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [this.category_id, this.bookmark_id];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                const existing = await Operator.getRecordByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query)
+                return existing ? existing : null;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
+            }
+        });
+    }
+
     static async getAll(query?: IDBKeyRange): Promise<ICategoryBookmark[]> {
         return lockManager.acquire(`CategoryBookmark.getAll:${query}`, async () => {
             try {
@@ -96,9 +109,8 @@ export default class CategoryBookmark implements ICategoryBookmark {
                 }).create();
 
                 // Create the bookmark if not exists
-                if (!(bookmark.exists()))
-                    return bookmark.create();
-                return bookmark;
+                const existing = await bookmark.existing();
+                return existing ? existing : bookmark.create();
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.createBookmark:- ${error}, ${bookmark}`);
             }
@@ -117,9 +129,10 @@ export default class CategoryBookmark implements ICategoryBookmark {
         return lockManager.acquire(`CategoryBookmark.create:${query}`, async () => {
             try {
                 // Ensure the bookmark doesn't already exist in the category
-                if (!(await this.exists()))
+                const existing = await this.existing();
+                if (!(existing))
                     return Operator.createRecord('category_bookmarks', this);
-                return this;
+                return existing
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.create:- ${error}, ${this.id}`);
             }

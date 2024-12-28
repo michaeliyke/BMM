@@ -69,7 +69,6 @@ export default function ByCategories({ props }: SideBarProps) {
                     onClick={restoreDefaultSection}
                 ><span>All Categories</span></li>
                 {sortedCategories(categories).map((category, index) => (
-                    (category.tags.length > 0 && console.log(`${category.name}:`, category.tags)),
                     <li
                         key={index}
                         className={category.is_default === 1 ? "category highlighted" : "category"}
