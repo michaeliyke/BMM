@@ -46,7 +46,7 @@ export default class Tag implements ITag {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
-                const tag = await Operator.getRecordById<ITag>('tags', this.id);
+                const tag = await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.name);
                 return tag ? tag : null;
             } catch (error) {
                 throw new Error(`An error occurred in Tag.exists:- ${error}, ${this.id}`);

@@ -48,15 +48,15 @@ export default class Category implements ICategory {
         });
     }
 
- /**
-     * Checks if a category exists in the database.
-     *
-     * @returns A promise that resolves to `true` if the category exists, otherwise `false`.
-     */
-    async existing(): Promise<ICategory|null> {
+    /**
+        * Checks if a category exists in the database.
+        *
+        * @returns A promise that resolves to `true` if the category exists, otherwise `false`.
+        */
+    async existing(): Promise<ICategory | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
-            const existing = await Operator.getRecordById<ICategory>('categories', this.id)
+            const existing = await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.name);
             return existing ? existing : null;
         });
     }
