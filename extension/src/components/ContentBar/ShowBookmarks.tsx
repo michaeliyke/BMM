@@ -23,7 +23,7 @@ export default function ShowBookmarks(props: BookmarksDisplayProps) {
         });
     }
 
-    console.log(selectedTag);
+    // console.log(selectedTag);
 
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
