@@ -44,12 +44,12 @@ export default function ByCategoryTags({ props }: SideBarProps) {
         setBookmarkToShow(null);
         // If the default category is already selected
         if (selectedCategory?.name === defaultCategory?.name) {
-            addClass(target, 'selected');
+            addClass(target, ['selected']);
             if (target.nextElementSibling)
-                removeClass(target.nextElementSibling, 'selected');
+                removeClass(target.nextElementSibling, ['selected']);
             return
         }
-        removeClass(target, 'selected');
+        removeClass(target, ['selected']);
         resetSelections();
         setDefaultCategoryText(defaultCategory?.name);
     }

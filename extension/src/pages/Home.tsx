@@ -2,7 +2,7 @@ import Header from '../components/HeaderBar/Header'
 import SideBar from '../components/SideBar/SideBar'
 import ContentBar from '../components/ContentBar/ContentBar'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { IBookmark, ICategory } from '../utils/types/schemas'
+import { IBookmark, ICategory, ITag } from '../utils/types/schemas'
 import { update } from '../utils/crud'
 
 type IHomeProps = {
@@ -26,6 +26,11 @@ export default function Home(props: IHomeProps) {
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
     const [defaultCategory, setDefaultCategory] = useState<ICategory>(_defaultCategory);
     const [bookmarkToShow, setBookmarkToShow] = useState<IBookmark | null>(null);
+    const [selectedTag, setSelectedTag] = useState<ITag | null>(null);
+    const [grouping, setGrouping] = useState(
+        (selectedCategory || defaultCategory).name +
+        (selectedTag ? ` # ${selectedTag.name}` : '')
+    );
 
     // Update a single category of the category list identified by its name
     function updateCategory(updatedCategory: ICategory) {
@@ -47,6 +52,7 @@ export default function Home(props: IHomeProps) {
                 setData={setData}
                 categories={data}
                 defaultCategory={defaultCategory}
+                grouping={grouping}
             >
             </Header>
             <section>
@@ -60,6 +66,9 @@ export default function Home(props: IHomeProps) {
                         bookmarkToShow,
                         setBookmarkToShow,
                         updateCategory,
+                        selectedTag,
+                        setSelectedTag,
+                        setGrouping,
                     }}
                 >
                 </SideBar>

@@ -8,7 +8,6 @@ import {
 } from "../../../utils/common";
 
 import {
-    addClass,
     removeClass,
     setDefaultCategoryText,
 } from "../../../utils/domHelpers";
@@ -18,8 +17,9 @@ export default function ByTags({ props }: SideBarProps) {
     const {
         defaultCategory,
         categories,
-        selectedCategory,
-        setSelectedCategory,
+        setSelectedTag,
+        selectedTag,
+        setGrouping,
         setBookmarkToShow,
     } = props;
 
@@ -28,50 +28,49 @@ export default function ByTags({ props }: SideBarProps) {
 
     function toggleSelected(event: React.MouseEvent<HTMLLIElement>) {
         const target = event.currentTarget;
-        const category = categories.find((cat) => cat.name === target.textContent);
-        if (category) {
-            setSelectedCategory(category);
-            setBookmarkToShow(null);
+        const tag = tags.find((cat) => cat.name === target.textContent);
+        if (tag) {
+            if (setSelectedTag)
+                setSelectedTag(tag);
+            setBookmarkToShow(null); /* Allow this later */
             // Update the category text in the header
-            setDefaultCategoryText(category.name);
-            toggleSelectedClass(target);
-            toggleHighlightedClass(target);
+            toggleSelectedClass(target, "tag");
+            toggleHighlightedClass(target, "tag");
         }
+        if (defaultCategory && setGrouping)
+            setGrouping(defaultCategory.name + (tag ? ` # ${tag.name}` : ''));
     }
 
     // Brings the selection and highlighting to the default state
     function restoreDefaultSection(e: React.MouseEvent<HTMLLIElement>) {
         const target = e.currentTarget;
-        setSelectedCategory(null);
+        if (setSelectedTag)
+            setSelectedTag(null);
         setBookmarkToShow(null);
         // If the default category is already selected
-        if (selectedCategory?.name === defaultCategory?.name) {
-            addClass(target, 'selected');
-            if (target.nextElementSibling)
-                removeClass(target.nextElementSibling, 'selected');
-            return
-        }
-        removeClass(target, 'selected');
-        resetSelections();
-        setDefaultCategoryText(defaultCategory?.name);
+        removeClass(target, ['selected']);
+        resetSelections("tag");
+        setDefaultCategoryText(defaultCategory?.name); /* TODO: change this */
+        if (defaultCategory && setGrouping)
+            setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
     }
 
     useEffect(() => {
         // Set the default category text in the header
-        setDefaultCategoryText(defaultCategory?.name);
+        setDefaultCategoryText(defaultCategory?.name); /* TODO: change this */
     }, [defaultCategory]);
 
     return (
         <section className="filtered-list">
             <ul className="categories">
                 <li
-                    className="category all selected"
+                    className="tag all selected"
                     onClick={restoreDefaultSection}
                 ><span>All Tags</span></li>
                 {tags.map((tag, index) => (
                     <li
                         key={index}
-                        className="category"
+                        className="tag"
                         onClick={toggleSelected}
                     >
                         <span>{tag.name}</span>

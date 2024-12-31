@@ -1,6 +1,6 @@
 // Types store for component props
 import { Dispatch, SetStateAction } from "react";
-import { IBookmark, ICategory } from "./schemas";
+import { IBookmark, ICategory, ITag } from "./schemas";
 export type ContentBarProps = {
     data: ICategory[];
     updateCategory?: (category: ICategory) => void;
@@ -27,6 +27,9 @@ export type SideBarProps = {
         setBookmarkToShow: (bookmark: IBookmark | null) => void;
         filterBy?: string;
         setFilterBy?: Dispatch<SetStateAction<string>>;
+        selectedTag?: ITag | null;
+        setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
+        setGrouping?: Dispatch<SetStateAction<string>>;
     };
 };
 
@@ -37,3 +40,15 @@ export type SideBarHeaderProps = {
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
     defaultCategory: ICategory;
 };
+
+export type HeaderProps = {
+    selectedCategory: ICategory | null;
+    categories: ICategory[];
+    // setData takes in fn, a function that takes in the old state (ICategory[])
+    // and returns the new state (ICategory[])
+    // setData itself returns void
+    setData: (fn: (categories: ICategory[]) => ICategory[]) => void;
+    defaultCategory: ICategory;
+    grouping: string;
+};
+

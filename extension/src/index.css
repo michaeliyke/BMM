@@ -259,6 +259,24 @@ main>section>article.content {
     border-color: rgba(15, 98, 126, 0);
 }
 
+.sidebar li.tag.selected {
+    border-right: none;
+    border-top: none;
+    border-left: none;
+    border-bottom-color: rgba(255, 255, 0, 0.9);
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: unset;
+    border-top-right-radius: unset;
+    border-top-left-radius: unset;
+    font-weight: bolder;
+}
+
+.sidebar li.tag.highlighted {
+    background-color: rgba(15, 98, 126, 0.2);
+    font-weight: bolder;
+    border-color: rgba(15, 98, 126, 0);
+}
+
 .sidebar>section>ul>li>span {
     text-align: left;
     display: block;

@@ -7,17 +7,13 @@ export function setDefaultCategoryText(categoryText: string) {
 }
 
 // Add a class to the target element if not already present
-export function addClass(target: Element, classToAdd: string) {
-    if (!target.className.includes(classToAdd)) {
-        target.className += ` ${classToAdd}`;
-    }
+export function addClass(target: Element, classNames: string[]) {
+    target.classList.add(...classNames);
 }
 
 // Remove a class from the target element
-export function removeClass(target: Element, classToRemove: string) {
-    const classNames = target.className.split(' ');
-    const filtered = classNames.filter((name) => name !== classToRemove);
-    target.className = filtered.join(' ');
+export function removeClass(target: Element, classNames: string[]) {
+    target.classList.remove(...classNames);
 }
 
 export function getFuncName1(func: CallableFunction): string {

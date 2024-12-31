@@ -2,23 +2,21 @@ import { useState } from "react"
 import { IBookmark, ICategory } from "../../utils/types/schemas";
 import { v4 as uuid4 } from 'uuid';
 import CategoryBookmark from "../../data/adapters/category_bookmark";
-
-type HeaderProps = {
-    selectedCategory: ICategory | null;
-    categories: ICategory[];
-    // setData takes in fn, a function that takes in the old state (ICategory[])
-    // and returns the new state (ICategory[])
-    // setData itself returns void
-    setData: (fn: (categories: ICategory[]) => ICategory[]) => void;
-    defaultCategory: ICategory;
-};
+import { HeaderProps } from "../../utils/types/props";
+import Bookmark from "../../data/adapters/bookmark";
+import Category from "../../data/adapters/category";
 
 
 export default function Header(props: HeaderProps) {
     const [url, setUrl] = useState(location.href);
     const [title, setTitle] = useState('');
 
-    const { selectedCategory, setData, defaultCategory } = props;
+    const {
+        selectedCategory,
+        setData,
+        defaultCategory,
+        grouping,
+    } = props;
 
 
 
@@ -38,7 +36,7 @@ export default function Header(props: HeaderProps) {
             tags: [],
         };
 
-        CategoryBookmark.createBookmark(newBookmark, _selectedCategory)
+        CategoryBookmark.createBookmark(new Bookmark(newBookmark), new Category(_selectedCategory))
             .then(() => {
 
                 setUrl(location.href);
@@ -111,7 +109,11 @@ export default function Header(props: HeaderProps) {
                     </div>
                     <div className="form-control">
                         <div className="div-as-label">CATEGORY (current)</div>
-                        <div className="select wrapper"><span className="current-category">DEFAULT</span></div>
+                        <div className="select wrapper">
+                            <span className="current-category">
+                                {grouping}
+                            </span>
+                        </div>
                     </div>
                     <div className="form-control">
                         <button type="button" onClick={createBookmark}>Create</button>
