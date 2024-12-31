@@ -7,6 +7,7 @@ export default function BookmarksDisplay(props: BookmarksDisplayProps) {
         categories,
         bookmarkToShow,
         setBookmarkToShow,
+        selectedTag,
     } = props;
 
     // We will show all bookmarks if:
@@ -24,6 +25,7 @@ export default function BookmarksDisplay(props: BookmarksDisplayProps) {
             categories={categories}
             bookmarkToShow={bookmarkToShow}
             setBookmarkToShow={setBookmarkToShow}
+            selectedTag={selectedTag}
         />;
     return <>{whatToShow}</>;
 }

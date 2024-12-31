@@ -8,12 +8,22 @@ export default function ShowBookmarks(props: BookmarksDisplayProps) {
     const {
         categories,
         setBookmarkToShow,
+        selectedTag,
     } = props;
 
-    const bookmarks: IBookmark[] = [];
+    let bookmarks: IBookmark[] = [];
     for (const category of categories) {
         bookmarks.push(...category.bookmarks);
     }
+
+    // Filter out bookmarks that include the selected tag
+    if (selectedTag) {
+        bookmarks = bookmarks.filter((bookmark) => {
+            return bookmark.tags.some((tag) => tag.name === selectedTag.name);
+        });
+    }
+
+    console.log(selectedTag);
 
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">

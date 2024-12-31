@@ -7,12 +7,15 @@ export type ContentBarProps = {
     selectedCategory: ICategory | null;
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    selectedTag?: ITag | null;
+    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
 };
 
 export type BookmarksDisplayProps = {
     categories: ICategory[];
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    selectedTag?: ITag | null;
 };
 
 export type SideBarProps = {

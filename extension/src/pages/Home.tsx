@@ -78,6 +78,8 @@ export default function Home(props: IHomeProps) {
                     data={data}
                     bookmarkToShow={bookmarkToShow}
                     setBookmarkToShow={setBookmarkToShow}
+                    selectedTag={selectedTag}
+                    setSelectedTag={setSelectedTag}
                 >
                 </ContentBar>
             </section>

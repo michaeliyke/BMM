@@ -9,6 +9,7 @@ export default function ContentBar(props: ContentBarProps) {
         selectedCategory,
         bookmarkToShow,
         setBookmarkToShow,
+        selectedTag,
     } = props;
 
     const filteredCategories = selectedCategory ? data.filter((cat) => cat.id === selectedCategory.id) : data;
@@ -28,6 +29,7 @@ export default function ContentBar(props: ContentBarProps) {
                 categories={filteredCategories}
                 bookmarkToShow={bookmarkToShow}
                 setBookmarkToShow={setBookmarkToShow}
+                selectedTag={selectedTag}
             />
             <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
         </article>
