@@ -16,6 +16,11 @@ export function removeClass(target: Element, classNames: string[]) {
     target.classList.remove(...classNames);
 }
 
+// Check has class
+export function hasClass(target: Element, className: string) {
+    return target.classList.contains(className);
+}
+
 export function getFuncName1(func: CallableFunction): string {
     const skipNames = ['Anonymous', 'async', 'RetryManager.withRetries'];
     const error = new Error();

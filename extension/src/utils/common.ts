@@ -11,39 +11,43 @@ export function sortedBookmarks(bookmarks: IBookmark[]): IBookmark[] {
     return copy;
 }
 
+/**
+ * Prepends a dot to the given class name if it does not already start with one.
+ *
+ * @param className - The class name to be processed.
+ * @returns The class name with a dot prepended if it did not already start with one, or the original class name if it did.
+ */
+export function dotIt(className: string): string {
+    if (!className) return '';
+    return className[0] === '.' ? className : `.${className}`;
+}
+
 // Remove class selected from all categories and add it target
 export function toggleSelectedClass(target: HTMLLIElement, type?: string) {
-    const matches = document.querySelectorAll(type || '.category');
+    const matches = document.querySelectorAll(dotIt(type || 'category'));
     matches.forEach((match) => {
-        if (match.classList.contains('selected') && match !== target) {
-            removeClass(match, ['selected']);
-        }
+        removeClass(match, ['selected']);
     });
-
-    if (!target.classList.contains('selected')) {
-        addClass(target, ['selected']);
-    }
+    console.log(matches);
+    addClass(target, ['selected']);
 }
+
 // Remove class highlighted from all categories and add it target
 export function toggleHighlightedClass(target: HTMLLIElement, type?: string) {
-    const matches = document.querySelectorAll(type || '.category');
+    const matches = document.querySelectorAll(dotIt(type || 'category'));
     matches.forEach((match) => {
-        if (match.classList.contains('highlighted') && match !== target) {
-            removeClass(match, ['highlighted']);
-        }
+        removeClass(match, ['highlighted']);
     });
-
-    if (!target.classList.contains('highlighted')) {
-        addClass(target, ['highlighted']);
-    }
+    addClass(target, ['highlighted']);
 }
 
 // Reset selected and highlighted categories, .all will be selected, and categories[0] will be highlighted
 export function resetSelections(type?: string) {
-    const matches = document.querySelectorAll(type || '.category');
+    const matches = document.querySelectorAll(dotIt(type || 'category'));
     matches.forEach((match) => {
         removeClass(match, ['selected', 'highlighted']);
     });
+    if (matches.length === 0) return;
     addClass(matches[0], ['selected']);
     addClass(type === "category" ? matches[1] : matches[0], ['highlighted']);
 }
