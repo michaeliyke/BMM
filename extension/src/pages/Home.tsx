@@ -53,6 +53,7 @@ export default function Home(props: IHomeProps) {
                 categories={data}
                 defaultCategory={defaultCategory}
                 grouping={grouping}
+                selectedTag={selectedTag}
             >
             </Header>
             <section>

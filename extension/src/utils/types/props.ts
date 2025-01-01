@@ -53,5 +53,6 @@ export type HeaderProps = {
     setData: (fn: (categories: ICategory[]) => ICategory[]) => void;
     defaultCategory: ICategory;
     grouping: string;
+    selectedTag?: ITag | null;
 };
 

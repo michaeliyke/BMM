@@ -5,6 +5,8 @@ import CategoryBookmark from "../../data/adapters/category_bookmark";
 import { HeaderProps } from "../../utils/types/props";
 import Bookmark from "../../data/adapters/bookmark";
 import Category from "../../data/adapters/category";
+import CategoryTag from "../../data/adapters/category_tag";
+import Tag from "../../data/adapters/tag";
 
 
 export default function Header(props: HeaderProps) {
@@ -16,6 +18,7 @@ export default function Header(props: HeaderProps) {
         setData,
         defaultCategory,
         grouping,
+        selectedTag,
     } = props;
 
 
@@ -25,6 +28,8 @@ export default function Header(props: HeaderProps) {
         if (!url || !title) return;
 
         if (!_selectedCategory) return;
+
+        /* If selectedTag is set, it must be a tag under the selected category */
 
         const newBookmark: IBookmark = {
             id: uuid4(),
@@ -36,12 +41,46 @@ export default function Header(props: HeaderProps) {
             tags: [],
         };
 
+        const bookmark = new Bookmark(newBookmark);
+        const category = new Category(_selectedCategory);
+
+        // selectedTag and selectedCategory are set under CategoryTag filtering
+        if (selectedTag && selectedCategory) {
+            console.log('selectedCategory', selectedCategory);
+            const tag = new Tag(selectedTag);
+            newBookmark.tags = [selectedTag];
+
+            CategoryTag.createBookmark(bookmark, category, tag)
+                .then(() => {
+                    setUrl(location.href);
+                    setTitle('');
+                    setData((state: ICategory[]) => {
+                        const newState = [...state]; // shallow copy of the state array
+
+                        const index = newState.findIndex((x) => x.id === _selectedCategory.id);
+                        if (index === -1) return state; // Safety check: if not found, return the current state
+
+                        const updatedCategory = {
+                            ...newState[index], // shallow copy of the category object
+                            bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
+                        };
+
+                        newState[index] = updatedCategory; // Replace the category with the updated one
+                        return newState; // Return the new state
+                    });
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+            return;
+        }
+
+
         CategoryBookmark.createBookmark(new Bookmark(newBookmark), new Category(_selectedCategory))
             .then(() => {
 
                 setUrl(location.href);
                 setTitle('');
-                // setData(create(newBookmark, _selectedCategory));
                 setData((state: ICategory[]) => {
                     const newState = [...state]; // shallow copy of the state array
 

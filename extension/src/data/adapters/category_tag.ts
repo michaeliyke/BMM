@@ -1,7 +1,9 @@
 import { LockManager } from "../../utils/locker";
 import { ICategory, ICategoryTag, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
+import Bookmark from "./bookmark";
 import Category from "./category";
+import CategoryBookmark from "./category_bookmark";
 import Tag from "./tag";
 import { v4 as uuid4 } from 'uuid';
 
@@ -18,6 +20,42 @@ export default class CategoryTag implements ICategoryTag {
         this.tag_id = categoryTag.tag_id;
     }
 
+    static async createBookmark(bookmark: Bookmark, category: Category, tag: Tag): Promise<Bookmark> {
+        return lockManager.acquire(`CategoryTag.createBookmark:${bookmark.id}`, async () => {
+            try {
+                // Ensure category exists
+                if (!(await category.exists()))
+                    throw new Error(`CategoryTag.createBookmark:- Category not found: ${category}`);
+                // Enusre tag exists
+                if (!(await tag.exists()))
+                    throw new Error(`CategoryTag.createBookmark:- Tag not found: ${tag}`);
+                // Ensure tag exists under the category
+                if (!(await CategoryTag.categoryTagExists(category.id, tag.id)))
+                    throw new Error(`CategoryTag.createBookmark:- Tag not found under category: ${tag.name}, ${category.name}`);
+                // Create bookmark
+                await bookmark.create();
+                // Create category_bookmark
+                const categoryBookmark = new CategoryBookmark({
+                    id: "",
+                    category_id: category.id,
+                    bookmark_id: bookmark.id,
+                });
+                await categoryBookmark.create();
+
+                // Create bookmark_tag
+                const bookmarkTag = new CategoryTag({
+                    id: "",
+                    category_id: category.id,
+                    tag_id: tag.id,
+                });
+                await bookmarkTag.create();
+
+                return bookmark;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryTag.createBookmark:- ${error}, ${bookmark}`);
+            }
+        });
+    }
     async exists(): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.category_id, this.tag_id];
