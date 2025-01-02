@@ -1,19 +1,10 @@
-import { useState } from "react";
 import { SideBarProps } from "../../utils/types/props";
 import SideBarVariator from "./SideBarVariator";
 import SideBarFooter from "./SideBarFooter";
 import SideBarHeader from "./SideBarHeader";
 
 
-export default function SideBar({ props: _props }: SideBarProps) {
-    const [filterBy, setFilterBy] = useState('categories');
-
-    const props = {
-        ..._props,
-        filterBy,
-        setFilterBy
-    };
-
+export default function SideBar({ props }: SideBarProps) {
     const {
         setData,
         selectedCategory,

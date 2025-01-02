@@ -31,6 +31,8 @@ export default function Home(props: IHomeProps) {
         (selectedCategory || defaultCategory).name +
         (selectedTag ? ` # ${selectedTag.name}` : '')
     );
+    const [filterBy, setFilterBy] = useState('categories');
+
 
     // Update a single category of the category list identified by its name
     function updateCategory(updatedCategory: ICategory) {
@@ -54,6 +56,7 @@ export default function Home(props: IHomeProps) {
                 defaultCategory={defaultCategory}
                 grouping={grouping}
                 selectedTag={selectedTag}
+                filterBy={filterBy}
             >
             </Header>
             <section>
@@ -70,6 +73,8 @@ export default function Home(props: IHomeProps) {
                         selectedTag,
                         setSelectedTag,
                         setGrouping,
+                        filterBy,
+                        setFilterBy,
                     }}
                 >
                 </SideBar>

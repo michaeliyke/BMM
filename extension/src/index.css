@@ -228,13 +228,8 @@ main>section>article.content {
 }
 
 .sidebar>section>ul>li {
-    padding: 10px;
     cursor: pointer;
-    background-color: #50aae8;
-    margin-top: 5px;
     list-style: none;
-    border: 0.16em solid rgba(255, 255, 255, 0.7);
-    border-radius: 10px;
     font-weight: 400;
     width: 100%;
     display: block;
@@ -242,21 +237,13 @@ main>section>article.content {
 }
 
 .sidebar li.category.selected {
-    border-right: none;
-    border-top: none;
-    border-left: none;
-    border-bottom-color: rgba(255, 255, 0, 0.9);
-    border-bottom-left-radius: unset;
-    border-bottom-right-radius: unset;
-    border-top-right-radius: unset;
-    border-top-left-radius: unset;
     font-weight: bolder;
+    border-top: 0.16em solid rgba(255, 255, 0, 0.9);
 }
 
 .sidebar li.category.highlighted {
     background-color: rgba(15, 98, 126, 0.2);
     font-weight: bolder;
-    border-color: rgba(15, 98, 126, 0);
 }
 
 .sidebar li.tag.selected {

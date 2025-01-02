@@ -54,5 +54,6 @@ export type HeaderProps = {
     defaultCategory: ICategory;
     grouping: string;
     selectedTag?: ITag | null;
+    filterBy: string;
 };
 
