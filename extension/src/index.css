@@ -50,7 +50,6 @@ main>header {
     position: fixed;
     z-index: 1000;
     background-color: white;
-    color: rgba(255, 255, 255, 0.8);
     padding: 0;
 }
 
@@ -94,6 +93,7 @@ main>header>article:first-of-type {
 
 .project-tagline {
     font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .logo-caption {
@@ -157,8 +157,8 @@ main>section {
 main>section>.sidebar {
     /* background-color: #f4f4f4; */
     /* background-color: #9bcbf5; */
-    background-color: #88cdea;
-    color: #FFFFFF;
+    /* background-color: #88cdea; */
+    /* color: #FFFFFF; */
     width: var(--sidebar-width);
     display: flex;
     flex-direction: column;
@@ -273,21 +273,15 @@ main>section>article.content {
 
 .sidebar>header select {
     padding: 7px 10px;
-    /* width: 106%; */
-    border: 0.16em solid rgba(255, 255, 255, 0.7);
     border-radius: 10px;
-    background-color: #50aae8;
-    background-color: #007bff;
-    color: rgba(255, 255, 255, 0.4);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    font-weight: bold;
     appearance: none;
     cursor: pointer;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cpath fill='%23FFF' d='M0 0h10L5 6z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 12px;
+    outline: none;
 }
 
 .sidebar>header select::after {
@@ -303,12 +297,6 @@ main>section>article.content {
     transform: translateY(-100%);
     pointer-events: none;
 }
-
-.sidebar>header select>option {
-    background-color: #50aae8;
-    color: white;
-}
-
 
 .sidebar>header>form {
     display: inline-block;
@@ -408,11 +396,7 @@ main>header form button:hover {
 label,
 .div-as-label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
     font-size: 14px;
-    color: black;
-    color: #6cafd4;
 }
 
 .form-control input {

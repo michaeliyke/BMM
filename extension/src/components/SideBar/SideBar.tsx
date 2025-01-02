@@ -12,7 +12,7 @@ export default function SideBar({ props }: SideBarProps) {
 
     // return <SideBarVariator props={props} />;
     return (
-        <article className="sidebar">
+        <article className="sidebar bg-gray-50">
             <SideBarHeader props={props}></SideBarHeader>
             <SideBarVariator props={props}></SideBarVariator>
             <SideBarFooter
