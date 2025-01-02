@@ -128,34 +128,72 @@ export default function Header(props: HeaderProps) {
                     </figure>
                 </section>
             </article>
-            <article className="form-container">
+            <article className="form-container p-4">
                 <form>
-                    <div className="form-control">
-                        <label htmlFor="url">URL</label>
-                        <input type="text"
+                    {/* URL Input */}
+                    <div className="form-control relative">
+                        <input
+                            type="text"
                             id="url"
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
-                            placeholder="" />
+                            placeholder=" "
+                            className="peer block w-full px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                        />
+                        <label
+                            htmlFor="url"
+                            className="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-100 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
+                        >
+                            URL
+                        </label>
+
+
                     </div>
-                    <div className="form-control">
-                        <label htmlFor="title">TITLE</label>
-                        <input type="text"
+
+                    {/* Title Input */}
+                    <div className="form-control relative mt-4">
+                        <input
+                            type="text"
                             id="title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            placeholder="" />
+                            placeholder=" "
+                            className="peer block w-full px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                        />
+                        <label
+                            htmlFor="title"
+                            className="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-100 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
+                        >
+                            TITLE
+                        </label>
                     </div>
-                    <div className="form-control">
-                        <div className="div-as-label">CATEGORY (current)</div>
-                        <div className="select wrapper">
-                            <span className="current-category">
-                                {grouping}
-                            </span>
-                        </div>
+
+                    <div className="form-control relative mt-4">
+                        <input
+                            type="text"
+                            id="grouping"
+                            value={grouping}
+                            placeholder=" "
+                            disabled
+                            className="peer block w-full px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                        />
+                        <label
+                            htmlFor="grouping"
+                            className="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-100 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
+                        >
+                            Category(current)
+                        </label>
                     </div>
-                    <div className="form-control">
-                        <button type="button" onClick={createBookmark}>Create</button>
+
+                    {/* Submit Button */}
+                    <div className="form-control mt-4">
+                        <button
+                            type="button"
+                            onClick={createBookmark}
+                            className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        >
+                            Create
+                        </button>
                     </div>
                 </form>
             </article>

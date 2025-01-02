@@ -350,7 +350,6 @@ main>header form>div:last-of-type {
 main>header form input {
     padding: 7px 11px;
     width: 100%;
-    border: none;
     border-radius: 10px;
     color: rgba(255, 255, 255, 0.8);
     background-color: #6bbee7;
@@ -396,11 +395,6 @@ main>header form button:hover {
 label,
 .div-as-label {
     display: block;
-    font-size: 14px;
-}
-
-.form-control input {
-    font-size: 14px;
 }
 
 .form-control input::placeholder {
@@ -409,9 +403,7 @@ label,
 
 .form-control input:active,
 .form-control input:focus {
-    background-color: #0f627e;
     outline: none;
-    color: rgba(255, 255, 255, 1);
 }
 
 .add-buttons {
