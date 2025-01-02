@@ -11,7 +11,7 @@ import Tag from "../../data/adapters/tag";
 
 export default function Header(props: HeaderProps) {
     const [url, setUrl] = useState(location.href);
-    const [title, setTitle] = useState('');
+    const [title, setTitle] = useState(document.title);
 
     const {
         selectedCategory,
@@ -53,7 +53,7 @@ export default function Header(props: HeaderProps) {
             CategoryTag.createBookmark(bookmark, category, tag)
                 .then(() => {
                     setUrl(location.href);
-                    setTitle('');
+                    setTitle(document.title);
                     setData((state: ICategory[]) => {
                         const newState = [...state]; // shallow copy of the state array
 
@@ -80,7 +80,7 @@ export default function Header(props: HeaderProps) {
             .then(() => {
 
                 setUrl(location.href);
-                setTitle('');
+                setTitle(document.title);
                 setData((state: ICategory[]) => {
                     const newState = [...state]; // shallow copy of the state array
 
@@ -128,7 +128,7 @@ export default function Header(props: HeaderProps) {
                     </figure>
                 </section>
             </article>
-            <article className="form-container p-4">
+            <article className="form-container mt-4">
                 <form>
                     {/* URL Input */}
                     <div className="form-control relative">
@@ -138,7 +138,7 @@ export default function Header(props: HeaderProps) {
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             placeholder=" "
-                            className="peer block w-full px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                            className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                         />
                         <label
                             htmlFor="url"
@@ -151,14 +151,14 @@ export default function Header(props: HeaderProps) {
                     </div>
 
                     {/* Title Input */}
-                    <div className="form-control relative mt-4">
+                    <div className="form-control relative">
                         <input
                             type="text"
                             id="title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder=" "
-                            className="peer block w-full px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                            className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                         />
                         <label
                             htmlFor="title"
@@ -168,29 +168,29 @@ export default function Header(props: HeaderProps) {
                         </label>
                     </div>
 
-                    <div className="form-control relative mt-4">
+                    <div className="form-control relative">
                         <input
                             type="text"
                             id="grouping"
                             value={grouping}
                             placeholder=" "
                             disabled
-                            className="peer block w-full px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                            className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                         />
                         <label
                             htmlFor="grouping"
                             className="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-100 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
                         >
-                            Category(current)
+                            CATEGORY(current)
                         </label>
                     </div>
 
                     {/* Submit Button */}
-                    <div className="form-control mt-4">
+                    <div className="form-control">
                         <button
                             type="button"
                             onClick={createBookmark}
-                            className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                         >
                             Create
                         </button>

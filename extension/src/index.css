@@ -309,7 +309,6 @@ main>section>article.content {
 
 /* FORM STYLING */
 .form-container {
-    background-color: white;
     padding-left: 7px;
 }
 
@@ -333,18 +332,23 @@ main>header form>div {
     padding: 5px;
     margin-bottom: 0;
     padding-bottom: 0;
+    line-height: 1;
 }
 
-header form>div:nth-of-type(3) {
-    margin-right: 15px;
-}
 
 main>header form>div:last-of-type {
     margin-left: auto;
+    flex-grow: 0;
+    flex-basis: 100%;
+    max-width: none;
+    padding: unset;
+    text-align: right;
+    margin-top: -1.2em;
     display: flex;
+    align-items: center;
     justify-content: flex-end;
-    margin-top: -20px;
-    margin-right: 15px;
+    margin-right: 10px;
+    font-size: 12px;
 }
 
 main>header form input {
