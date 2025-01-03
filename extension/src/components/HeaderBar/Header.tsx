@@ -168,15 +168,14 @@ export default function Header(props: HeaderProps) {
                         </label>
                     </div>
 
-                    <div className="form-control relative">
-                        <input
-                            type="text"
-                            id="grouping"
-                            value={grouping}
-                            placeholder=" "
-                            disabled
-                            className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
-                        />
+                    <div className="form-control relative"><input
+                        type="text"
+                        id="grouping"
+                        value={grouping}
+                        placeholder=" "
+                        disabled
+                        className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                    />
                         <label
                             htmlFor="grouping"
                             className="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-100 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"

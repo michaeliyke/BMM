@@ -33,6 +33,12 @@ export default function Home(props: IHomeProps) {
     );
     const [filterBy, setFilterBy] = useState('categories');
 
+    console.log({
+        grouping,
+        filterBy,
+        selectedTag,
+        selectedCategory,
+    });
 
     // Update a single category of the category list identified by its name
     function updateCategory(updatedCategory: ICategory) {
