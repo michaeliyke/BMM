@@ -23,7 +23,7 @@
     --max-height: 535px;
     --max-width: 800px;
     --header-height: 153px;
-    --body-hight: calc(var(--max-height) - var(--header-height));
+    --body-height: calc(var(--max-height));
     --sidebar-width: 30%;
     --content-bar-width: 70%;
 }
@@ -32,12 +32,12 @@ body {
     margin: 0 auto;
     padding: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #ecf3fd;
     width: var(--max-width);
     max-width: var(--max-width);
     height: var(--max-height);
     max-height: var(--max-height);
     font-family: Arial, sans-serif;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 /*
@@ -147,18 +147,14 @@ main>header>article:first-of-type {
 
 main>section {
     display: flex;
-    padding-top: var(--header-height);
+    padding-top: calc(var(--header-height) - 8px);
     /* Push down for fixed header */
-    height: var(--max-height);
+    height: var(--body-height);
     overflow: hidden;
 }
 
 /* Left sidebar */
 main>section>.sidebar {
-    /* background-color: #f4f4f4; */
-    /* background-color: #9bcbf5; */
-    /* background-color: #88cdea; */
-    /* color: #FFFFFF; */
     width: var(--sidebar-width);
     display: flex;
     flex-direction: column;
@@ -170,7 +166,6 @@ main>section>article.content {
     width: var(--content-bar-width);
     display: flex;
     flex-direction: column;
-    background-color: #eaeaea;
 }
 
 /* Fixed header and footer */
@@ -303,7 +298,6 @@ main>section>article.content {
     position: relative;
     width: 100%;
     margin-left: 15px;
-    margin-top: 20px;
 }
 
 

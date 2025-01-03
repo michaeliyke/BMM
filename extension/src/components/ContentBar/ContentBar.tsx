@@ -16,7 +16,7 @@ export default function ContentBar(props: ContentBarProps) {
 
     return (
         <article className="content">
-            <header className="flex justify-between items-center mt-4 p-4 bg-gray-100 border-b border-gray-200">
+            <header className="flex justify-between items-center p-2 bg-gray-100 border-b border-gray-200">
                 {bookmarkToShow &&
                     <GoBackButton
                         categories={filteredCategories}
