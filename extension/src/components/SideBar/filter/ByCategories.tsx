@@ -13,6 +13,8 @@ import {
     removeClass,
     setDefaultCategoryText,
 } from "../../../utils/domHelpers";
+import { ICategory } from "../../../utils/types/schemas";
+import { FiChevronRight } from "react-icons/fi";
 
 
 export default function ByCategories({ props }: SideBarProps) {
@@ -25,17 +27,13 @@ export default function ByCategories({ props }: SideBarProps) {
     } = props;
 
 
-    function toggleSelected(event: React.MouseEvent<HTMLLIElement>) {
-        const target = event.currentTarget;
-        const category = categories.find((cat) => cat.name === target.textContent);
-        if (category) {
-            setSelectedCategory(category);
-            setBookmarkToShow(null);
-            // Update the category text in the header
-            setDefaultCategoryText(category.name);
-            toggleSelectedClass(target);
-            toggleHighlightedClass(target);
-        }
+    function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
+        setSelectedCategory(category);
+        setBookmarkToShow(null);
+        // Update the category text in the header
+        setDefaultCategoryText(category.name);
+        toggleSelectedClass(event.currentTarget, "category");
+        toggleHighlightedClass(event.currentTarget, "category");
     }
 
     // Brings the selection and highlighting to the default state
@@ -62,18 +60,23 @@ export default function ByCategories({ props }: SideBarProps) {
 
 
     return (
-        <section className="filtered-list">
+        <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
             <ul className="categories">
                 <li
-                    className="category all selected"
+                    className="category flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 cursor-pointer hover:bg-blue-600"
                     onClick={restoreDefaultSection}
-                ><span>All Categories</span></li>
+                >
+                    <FiChevronRight className="mr-2 text-lg" />
+                    <span>All Categories</span>
+                </li>
                 {sortedCategories(categories).map((category, index) => (
                     <li
                         key={index}
-                        className={category.is_default === 1 ? "category highlighted" : "category"}
-                        onClick={toggleSelected}
+                        className={`category flex items-center px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-100 ${category.is_default === 1 ? 'bg-gray-200' : ''
+                            }`}
+                        onClick={(e) => toggleSelected(category, e)}
                     >
+                        <FiChevronRight className="mr-2 text-lg text-blue-500" />
                         <span>{category.name}</span>
                     </li>
                 ))}
