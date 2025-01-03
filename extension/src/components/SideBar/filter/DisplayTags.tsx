@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SideBarProps } from "../../../utils/types/props";
 
 import {
@@ -13,6 +13,7 @@ import {
     removeClass,
     setDefaultCategoryText,
 } from "../../../utils/domHelpers";
+import { FiChevronRight, FiHash } from "react-icons/fi";
 
 
 function DisplayAllTags({ props }: SideBarProps) {
@@ -92,6 +93,15 @@ function DisplayCategoryTags({ props }: SideBarProps) {
         setBookmarkToShow,
     } = props;
 
+    const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean }>({});
+
+    function toggleExpand(categoryId: string) {
+        setExpandedCategories((prev) => ({
+            ...prev,
+            [categoryId]: !prev[categoryId],
+        }));
+    }
+
 
     function toggleSelected(event: React.MouseEvent<HTMLLIElement>) {
         const target = event.currentTarget;
@@ -130,23 +140,36 @@ function DisplayCategoryTags({ props }: SideBarProps) {
 
 
     return (
-        <section className="filtered-list">
+        <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
             <ul className="categories">
                 <li
-                    className="category all selected"
+                    className="category flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 cursor-pointer hover:bg-blue-600"
                     onClick={restoreDefaultSection}
-                ><span>All Categories</span></li>
+                >
+                    <FiChevronRight className="mr-2 text-lg" />
+                    <span>All Categories</span>
+                </li>
                 {sortedCategories(categories).map((category, index) => (
-                    <li
-                        key={index}
-                        className={category.is_default === 1 ? "category highlighted" : "category"}
-                        onClick={toggleSelected}
-                    >
-                        <span>{category.name}</span>
-                        {category.tags.length > 0 && (
-                            <ul className="tags">
-                                {category.tags.map((tag, index) => (
-                                    <li key={index} className="tag">
+                    <li key={index} className="category">
+                        <div
+                            className={`flex items-center px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-100 ${category.is_default === 1 ? 'bg-gray-200' : ''
+                                }`}
+                            onClick={() => toggleExpand(category.id)}
+                        >
+                            <FiChevronRight
+                                className={`mr-2 text-lg text-blue-500 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''
+                                    }`}
+                            />
+                            <span>{category.name}</span>
+                        </div>
+                        {expandedCategories[category.id] && category.tags.length > 0 && (
+                            <ul className="tags ml-8 mt-2 space-y-1">
+                                {category.tags.map((tag, tagIndex) => (
+                                    <li
+                                        key={tagIndex}
+                                        className="tag flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer"
+                                    >
+                                        <FiHash className="mr-2 text-lg text-gray-500" />
                                         <span>{tag.name}</span>
                                     </li>
                                 ))}
