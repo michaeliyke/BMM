@@ -14,6 +14,7 @@ import {
     setDefaultCategoryText,
 } from "../../../utils/domHelpers";
 import { FiChevronRight, FiHash } from "react-icons/fi";
+import { ITag } from "../../../utils/types/schemas";
 
 
 function DisplayAllTags({ props }: SideBarProps) {
@@ -29,9 +30,8 @@ function DisplayAllTags({ props }: SideBarProps) {
     const tags = categories.flatMap((category) => category.tags);
 
 
-    function toggleSelected(event: React.MouseEvent<HTMLLIElement>) {
+    function toggleSelected(tag: ITag, event: React.MouseEvent<HTMLLIElement>) {
         const target = event.currentTarget;
-        const tag = tags.find((cat) => cat.name === target.textContent);
         if (tag) {
             if (setSelectedTag)
                 setSelectedTag(tag);
@@ -64,18 +64,22 @@ function DisplayAllTags({ props }: SideBarProps) {
     }, [defaultCategory]);
 
     return (
-        <section className="filtered-list">
+        <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
             <ul className="categories">
                 <li
-                    className="tag all selected"
+                    className="tag flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 cursor-pointer hover:bg-blue-600"
                     onClick={restoreDefaultSection}
-                ><span>All Tags</span></li>
+                >
+                    <FiHash className="mr-2 text-lg" />
+                    <span>All Tags</span>
+                </li>
                 {tags.map((tag, index) => (
                     <li
                         key={index}
-                        className="tag"
-                        onClick={toggleSelected}
+                        className="tag flex items-center px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-100"
+                        onClick={(event) => toggleSelected(tag, event)}
                     >
+                        <FiHash className="mr-2 text-lg text-blue-500" />
                         <span>{tag.name}</span>
                     </li>
                 ))}
