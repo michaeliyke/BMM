@@ -37,28 +37,36 @@ export function toggleSelectedClass(target: HTMLLIElement, type?: string) {
 
 // Remove class highlighted from all categories and add it target
 export function toggleHighlightedClass(target: HTMLLIElement, type?: string) {
-    const matches = document.querySelectorAll(dotIt(type || 'category'));
+    const formattedType = dotIt(type || 'category');
+    const matches = document.querySelectorAll(formattedType);
+
     matches.forEach((match) => {
         if (match.classList.contains('highlighted') && match !== target) {
             removeClass(match, ['highlighted']);
         }
     });
-
-    if (!target.classList.contains('highlighted')) {
-        addClass(target, ['highlighted']);
-    }
+    addClass(target, ['highlighted']);
 }
 
 // Reset selected and highlighted categories, .all will be selected, and categories[0] will be highlighted
 export function resetSelections(type?: string) {
     const formattedType = dotIt(type || 'category');
     const matches = document.querySelectorAll(formattedType);
-    matches.forEach((match) => {
+    if (matches.length === 0)
+        return;
+
+    matches.forEach((match) => {  /* Remove current selections */
         removeClass(match, ['selected', 'highlighted']);
     });
-    if (matches.length === 0) return;
-    addClass(matches[0], ['selected']);
-    addClass(formattedType === ".category" ? matches[1] : matches[0], ['highlighted']);
+
+    if (formattedType === ".category") { /* Select the All Categories and highlight default category */
+        addClass(matches[0], ['selected']);
+        addClass(matches[1], ['highlighted']);
+        return;
+    }
+
+    /* Highlight All tags */
+    addClass(matches[0], ['highlighted']);
 }
 
 

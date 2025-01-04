@@ -32,50 +32,48 @@ function DisplayAllTags({ props }: SideBarProps) {
 
     function toggleSelected(tag: ITag, event: React.MouseEvent<HTMLLIElement>) {
         const target = event.currentTarget;
-        if (tag) {
-            if (setSelectedTag)
-                setSelectedTag(tag);
-            setBookmarkToShow(null); /* Allow this later */
-            // Update the category text in the header
-            toggleSelectedClass(target, "tag");
-            toggleHighlightedClass(target, "tag");
-        }
+        if (setSelectedTag)
+            setSelectedTag(tag);
+        setBookmarkToShow(null); /* Allow this later */
+        // Update the category text in the header
+        toggleHighlightedClass(target, "tag");
         if (defaultCategory && setGrouping)
             setGrouping(defaultCategory.name + (tag ? ` # ${tag.name}` : ''));
     }
 
     // Brings the selection and highlighting to the default state
-    function restoreDefaultSection(e: React.MouseEvent<HTMLLIElement>) {
-        const target = e.currentTarget;
+    function restoreDefaultSection() {
         if (setSelectedTag)
             setSelectedTag(null);
         setBookmarkToShow(null);
         // If the default category is already selected
-        removeClass(target, ['selected']);
         resetSelections("tag");
-        setDefaultCategoryText(defaultCategory?.name); /* TODO: change this */
         if (defaultCategory && setGrouping)
             setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
     }
 
     useEffect(() => {
-        // Set the default category text in the header
-        setDefaultCategoryText(defaultCategory?.name); /* TODO: change this */
-    }, [defaultCategory]);
+        if (setGrouping)
+            setGrouping(defaultCategory?.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+    }, [setGrouping, defaultCategory.name, selectedTag]);
 
     return (
         <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
             <ul className="categories">
                 <li
-                    className="tag flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 cursor-pointer hover:bg-blue-600"
+                    data-tag="all"
+                    data-id="all"
+                    className="tag flex items-center px-4 py-2 text-sm font-medium highlighted cursor-pointer hover:bg-gray-100"
                     onClick={restoreDefaultSection}
                 >
-                    <FiHash className="mr-2 text-lg" />
+                    <FiHash className="mr-2 text-lg text-blue-500" />
                     <span>All Tags</span>
                 </li>
                 {tags.map((tag, index) => (
                     <li
                         key={index}
+                        data-tag={tag.name}
+                        data-id={tag.id}
                         className="tag flex items-center px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-100"
                         onClick={(event) => toggleSelected(tag, event)}
                     >
@@ -187,9 +185,6 @@ function DisplayCategoryTags({ props }: SideBarProps) {
 }
 
 export default function DisplayTags({ props }: SideBarProps) {
-
-    console.log(props.filterBy);
-
     if (props.filterBy === "filter:category/tags")
         return <DisplayCategoryTags props={props} />
     if (props.filterBy === "filter:tags")
