@@ -8,9 +8,6 @@ import {
     sortedCategories,
 } from "../../../utils/common";
 
-import {
-    setDefaultCategoryText,
-} from "../../../utils/domHelpers";
 import { ICategory } from "../../../utils/types/schemas";
 import { FiChevronRight } from "react-icons/fi";
 
@@ -45,8 +42,9 @@ export default function ByCategories({ props }: SideBarProps) {
 
     useEffect(() => {
         // Set the default category text in the header
-        setDefaultCategoryText(defaultCategory?.name);
-    }, [defaultCategory]);
+        if (setGrouping)
+            setGrouping(defaultCategory?.name);
+    }, [defaultCategory.name, setGrouping]);
 
 
     return (
