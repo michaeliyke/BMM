@@ -23,7 +23,7 @@ export function dotIt(className: string): string {
 }
 
 // Remove class selected from all categories and add it target
-export function toggleSelectedClass(target: HTMLLIElement, type?: string) {
+export function toggleSelectedClass(target: HTMLElement, type?: string) {
     const matches = document.querySelectorAll(dotIt(type || 'category'));
     matches.forEach((match) => {
         if (match.classList.contains('selected') && match !== target) {
@@ -36,7 +36,7 @@ export function toggleSelectedClass(target: HTMLLIElement, type?: string) {
 }
 
 // Remove class highlighted from all categories and add it target
-export function toggleHighlightedClass(target: HTMLLIElement, type?: string) {
+export function toggleHighlightedClass(target: HTMLElement, type?: string) {
     const formattedType = dotIt(type || 'category');
     const matches = document.querySelectorAll(formattedType);
 

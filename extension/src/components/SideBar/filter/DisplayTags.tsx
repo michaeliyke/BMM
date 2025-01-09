@@ -93,6 +93,9 @@ function DisplayCategoryTags({ props }: SideBarProps) {
         selectedCategory,
         setSelectedCategory,
         setBookmarkToShow,
+        setGrouping,
+        selectedTag,
+        setSelectedTag,
     } = props;
 
     const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean }>({});
@@ -104,22 +107,36 @@ function DisplayCategoryTags({ props }: SideBarProps) {
         }));
     }
 
+    function toggleSelectedTag(tag: ITag, event: React.MouseEvent<HTMLElement>) {
+        const target = event.currentTarget;
+        if (setSelectedTag)
+            setSelectedTag(tag);
+        setBookmarkToShow(null); /* Allow this later */
+        // Update the category text in the header
+        toggleHighlightedClass(target, "tag");
+        if (selectedCategory && setGrouping)
+            setGrouping(selectedCategory.name + (tag ? ` # ${tag.name}` : ''));
+    }
 
-    function toggleSelected(event: React.MouseEvent<HTMLLIElement>) {
+
+    function toggleSelected(event: React.MouseEvent<HTMLElement>) {
         const target = event.currentTarget;
         const category = categories.find((cat) => cat.name === target.textContent);
         if (category) {
             setSelectedCategory(category);
             setBookmarkToShow(null);
+            if (setSelectedTag)
+                setSelectedTag(null);
             // Update the category text in the header
-            setDefaultCategoryText(category.name);
+            if (setGrouping)
+                setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
             toggleSelectedClass(target);
             toggleHighlightedClass(target);
         }
     }
 
     // Brings the selection and highlighting to the default state
-    function restoreDefaultSection(e: React.MouseEvent<HTMLLIElement>) {
+    function restoreDefaultSection(e: React.MouseEvent<HTMLElement>) {
         const target = e.currentTarget;
         setSelectedCategory(null);
         setBookmarkToShow(null);
@@ -138,25 +155,43 @@ function DisplayCategoryTags({ props }: SideBarProps) {
     useEffect(() => {
         // Set the default category text in the header
         setDefaultCategoryText(defaultCategory?.name);
-    }, [defaultCategory]);
+        const category = selectedCategory || defaultCategory;
+        if (setGrouping)
+            setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+    }, [defaultCategory, setGrouping, selectedTag, selectedCategory]);
 
 
     return (
         <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
             <ul className="categories">
                 <li
-                    className="category flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 cursor-pointer hover:bg-blue-600"
+                    className="category flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 cursor-pointer hover:bg-blue-600 selected"
+                    data-category="All Categories"
+                    data-id="all"
+                    data-default="0"
                     onClick={restoreDefaultSection}
                 >
-                    <FiChevronRight className="mr-2 text-lg" />
+                    <FiChevronRight className="mr-2 text-lg text-black" />
                     <span>All Categories</span>
                 </li>
                 {sortedCategories(categories).map((category, index) => (
-                    <li key={index} className="category">
+                    <li
+                        key={index}
+                        className=""
+                        data-category={category.name}
+                        data-id={category.id}
+                        data-default={category.is_default}
+                    >
                         <div
-                            className={`flex items-center px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-100 ${category.is_default === 1 ? 'bg-gray-200' : ''
+                            className={`category flex items-center px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-100 ${category.is_default === 1 ? 'highlighted' : ''
                                 }`}
-                            onClick={() => toggleExpand(category.id)}
+                            onClick={((e) => {
+                                toggleExpand(category.id);
+                                if (category.is_default === 1)
+                                    restoreDefaultSection(e);
+                                else
+                                    toggleSelected(e);
+                            })}
                         >
                             <FiChevronRight
                                 className={`mr-2 text-lg text-blue-500 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''
@@ -170,6 +205,7 @@ function DisplayCategoryTags({ props }: SideBarProps) {
                                     <li
                                         key={tagIndex}
                                         className="tag flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer"
+                                        onClick={(event) => toggleSelectedTag(tag, event)}
                                     >
                                         <FiHash className="mr-2 text-lg text-gray-500" />
                                         <span>{tag.name}</span>
