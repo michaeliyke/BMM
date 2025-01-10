@@ -10,18 +10,18 @@ import Tag from "../../data/adapters/tag";
 
 
 export default function Header(props: HeaderProps) {
-    const [url, setUrl] = useState(location.href);
-    const [title, setTitle] = useState(document.title);
-
     const {
         selectedCategory,
         setData,
         defaultCategory,
         grouping,
         selectedTag,
+        filterBy,
     } = props;
 
-
+    const [url, setUrl] = useState(location.href);
+    const [title, setTitle] = useState(document.title);
+    const disableButton = !url || !title || filterBy === 'filter:tags';
 
     function createBookmark() {
         const _selectedCategory = selectedCategory || defaultCategory;
@@ -135,14 +135,14 @@ export default function Header(props: HeaderProps) {
                         <input
                             type="text"
                             id="url"
-                            value={url}
+                            value={filterBy === 'filter:tags' ? '' : url}
                             onChange={(e) => setUrl(e.target.value)}
                             placeholder=" "
-                            className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                            className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                         />
                         <label
                             htmlFor="url"
-                            className="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-100 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
+                            className="absolute text-sm text-gray-600 duration-200 transform -translate-y-4 scale-75 tracking-widest top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
                         >
                             URL
                         </label>
@@ -155,41 +155,49 @@ export default function Header(props: HeaderProps) {
                         <input
                             type="text"
                             id="title"
-                            value={title}
+                            value={filterBy === 'filter:tags' ? '' : title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder=" "
-                            className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                            className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                         />
                         <label
                             htmlFor="title"
-                            className="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-100 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
+                            className="absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
                         >
                             TITLE
                         </label>
                     </div>
 
+                    {/* Grouping Input */}
                     <div className="form-control relative"><input
                         type="text"
                         id="grouping"
-                        value={grouping}
+                        value={filterBy === 'filter:tags' ? '' : grouping}
                         placeholder=" "
                         disabled
-                        className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-900 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                        className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                     />
                         <label
                             htmlFor="grouping"
-                            className="absolute text-sm text-gray-500 duration-200 transform -translate-y-4 scale-100 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
+                            className="absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
                         >
-                            CATEGORY(current)
+                            CURRENT CATEGORY
                         </label>
                     </div>
 
                     {/* Submit Button */}
                     <div className="form-control">
                         <button
+                            disabled={disableButton}
                             type="button"
                             onClick={createBookmark}
-                            className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            className={`
+                                 py-2 px-4 rounded-lg tracking-
+                                ${disableButton
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300'
+                                }
+                            `}
                         >
                             Create
                         </button>
