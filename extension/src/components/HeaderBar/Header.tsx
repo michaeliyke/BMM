@@ -21,7 +21,10 @@ export default function Header(props: HeaderProps) {
 
     const [url, setUrl] = useState(location.href);
     const [title, setTitle] = useState(document.title);
-    const disableButton = !url || !title || filterBy === 'filter:tags';
+    const isButtonDisabled = !url || !title || filterBy === 'filter:tags';
+
+    // if (selectedCategory === defaultCategory && selectedTag)
+    // disableButton = true;
 
     function createBookmark() {
         const _selectedCategory = selectedCategory || defaultCategory;
@@ -188,12 +191,12 @@ export default function Header(props: HeaderProps) {
                     {/* Submit Button */}
                     <div className="form-control">
                         <button
-                            disabled={disableButton}
+                            disabled={isButtonDisabled}
                             type="button"
                             onClick={createBookmark}
                             className={`
                                  py-2 px-4 rounded-lg tracking-
-                                ${disableButton
+                                ${isButtonDisabled
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                     : 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300'
                                 }

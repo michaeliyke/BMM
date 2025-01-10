@@ -143,6 +143,8 @@ function DisplayCategoryTags({ props }: SideBarProps) {
         const target = e.currentTarget;
         setSelectedCategory(null);
         setBookmarkToShow(null);
+        if (setSelectedTag)
+            setSelectedTag(null);
         // If the default category is already selected
         if (selectedCategory?.name === defaultCategory?.name) {
             addClass(target, ['selected']);
