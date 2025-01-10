@@ -98,8 +98,8 @@ export default class CategoryBookmark implements ICategoryBookmark {
                 if (!(await category.exists()))
                     throw new Error(`CategoryBookmark.createBookmark:- Category not found: ${category.id}`);
 
-                // Ensure the bookmark doesn't already exist in the category
-                if (!(await CategoryBookmark.categoryBookmarkExists(category.id, bookmark.id)))
+                // If the bookmark already exists under the category, throw an error
+                if (await CategoryBookmark.categoryBookmarkExists(category.id, bookmark.id))
                     throw new Error(`CategoryBookmark.createBookmark:- index already exists: ${query}`);
 
                 await new CategoryBookmark({
@@ -110,7 +110,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
 
                 // Create the bookmark if not exists
                 const existing = await bookmark.existing();
-                return existing ? existing : bookmark.create();
+                return existing ? existing : await bookmark.create();
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.createBookmark:- ${error}, ${bookmark}`);
             }
