@@ -14,7 +14,7 @@ import {
     setDefaultCategoryText,
 } from "../../../utils/domHelpers";
 import { FiChevronRight, FiHash } from "react-icons/fi";
-import { ITag } from "../../../utils/types/schemas";
+import { ICategory, ITag } from "../../../utils/types/schemas";
 
 
 function DisplayAllTags({ props }: SideBarProps) {
@@ -100,11 +100,14 @@ function DisplayCategoryTags({ props }: SideBarProps) {
 
     const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean }>({});
 
-    function toggleExpand(categoryId: string) {
-        setExpandedCategories((prev) => ({
-            ...prev,
-            [categoryId]: !prev[categoryId],
-        }));
+    function toggleExpand(category: ICategory, event: React.MouseEvent<HTMLElement>) {
+        const target = event.currentTarget;
+        if (target.classList.contains("highlighted"))
+            target.classList.add("highlighted"); /* Dummy code, won't do anything */
+        setExpandedCategories((prev) => {
+            const temp = { ...prev, [category.id]: !prev[category.id] };
+            return temp;
+        });
     }
 
     function toggleSelectedTag(tag: ITag, event: React.MouseEvent<HTMLElement>) {
@@ -165,13 +168,13 @@ function DisplayCategoryTags({ props }: SideBarProps) {
         <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
             <ul className="categories">
                 <li
-                    className="category flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 cursor-pointer hover:bg-blue-600 selected"
+                    className="category flex items-center px-4 py-2 text-sm font-medium cursor-pointer selected"
                     data-category="All Categories"
                     data-id="all"
                     data-default="0"
                     onClick={restoreDefaultSection}
                 >
-                    <FiChevronRight className="mr-2 text-lg text-black" />
+                    <FiChevronRight className="mr-2 text-lg text-gray" />
                     <span>All Categories</span>
                 </li>
                 {sortedCategories(categories).map((category, index) => (
@@ -186,7 +189,7 @@ function DisplayCategoryTags({ props }: SideBarProps) {
                             className={`category flex items-center px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-100 ${category.is_default === 1 ? 'highlighted' : ''
                                 }`}
                             onClick={((e) => {
-                                toggleExpand(category.id);
+                                toggleExpand(category, e);
                                 if (category.is_default === 1)
                                     restoreDefaultSection(e);
                                 else
@@ -207,7 +210,7 @@ function DisplayCategoryTags({ props }: SideBarProps) {
                                         className="tag flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer"
                                         onClick={(event) => toggleSelectedTag(tag, event)}
                                     >
-                                        <FiHash className="mr-2 text-lg text-gray-500" />
+                                        <FiHash className="mr-2 text-xs text-gray-500" />
                                         <span>{tag.name}</span>
                                     </li>
                                 ))}

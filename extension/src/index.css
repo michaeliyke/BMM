@@ -237,34 +237,19 @@ main>section>article.content {
 }
 
 .sidebar .category.selected {
-    font-weight: bolder;
-    /* box-shadow: 0 2px 5px rgba(59, 130, 246, 0.3); */
-    /* background-image: linear-gradient(to right, rgba(59, 130, 246, 0.8), transparent); */
-    /* border-left: 3px solid transparent; */
-    border-left: 4px solid rgba(59, 130, 246, 0.7);
+    background-image: linear-gradient(to right, rgba(59, 130, 246, 0.4), transparent);
+    background-repeat: no-repeat;
+    background-color: rgba(59, 130, 246, 0.1);
+    border-left: 4px solid rgba(59, 130, 246, 0.4);
 }
 
 .sidebar .category.highlighted {
-    background-color: rgba(15, 98, 126, 0.2);
-    font-weight: bolder;
-}
-
-.sidebar .tag.selected {
-    border-right: none;
-    border-top: none;
-    border-left: none;
-    border-bottom-color: rgba(255, 255, 0, 0.9);
-    border-bottom-left-radius: unset;
-    border-bottom-right-radius: unset;
-    border-top-right-radius: unset;
-    border-top-left-radius: unset;
-    font-weight: bolder;
+    border-left: 4px solid rgba(59, 130, 246, 0.4);
+    background-color: rgba(15, 98, 126, 0.1);
 }
 
 .sidebar .tag.highlighted {
-    background-color: rgba(15, 98, 126, 0.2);
-    font-weight: bolder;
-    border-color: rgba(15, 98, 126, 0);
+    background-color: rgba(15, 98, 126, 0.1);
 }
 
 .sidebar>section>ul>li>span {
