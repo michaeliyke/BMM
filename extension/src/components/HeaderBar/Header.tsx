@@ -23,14 +23,11 @@ export default function Header(props: HeaderProps) {
     const [title, setTitle] = useState(document.title);
     const isButtonDisabled = !url || !title || filterBy === 'filter:tags';
 
-    // if (selectedCategory === defaultCategory && selectedTag)
-    // disableButton = true;
-
     function createBookmark() {
-        const _selectedCategory = selectedCategory || defaultCategory;
+        const resolvedCategory = selectedCategory || defaultCategory;
         if (!url || !title) return;
 
-        if (!_selectedCategory) return;
+        if (!resolvedCategory) return;
 
         /* If selectedTag is set, it must be a tag under the selected category */
 
@@ -45,22 +42,21 @@ export default function Header(props: HeaderProps) {
         };
 
         const bookmark = new Bookmark(newBookmark);
-        const category = new Category(_selectedCategory);
+        const category = new Category(resolvedCategory);
 
         // selectedTag and selectedCategory are set under CategoryTag filtering
-        if (selectedTag && selectedCategory) {
-            console.log('selectedCategory', selectedCategory);
+        if (selectedTag && resolvedCategory) {
             const tag = new Tag(selectedTag);
             newBookmark.tags = [selectedTag];
 
             CategoryTag.createBookmark(bookmark, category, tag)
                 .then(() => {
-                    setUrl(location.href);
-                    setTitle(document.title);
+                    setUrl('');
+                    setTitle('');
                     setData((state: ICategory[]) => {
                         const newState = [...state]; // shallow copy of the state array
 
-                        const index = newState.findIndex((x) => x.id === _selectedCategory.id);
+                        const index = newState.findIndex((x) => x.id === resolvedCategory.id);
                         if (index === -1) return state; // Safety check: if not found, return the current state
 
                         const updatedCategory = {
@@ -78,8 +74,15 @@ export default function Header(props: HeaderProps) {
             return;
         }
 
+        // Here no tag is selected, so we create a bookmark under the selected category
+        if (selectedTag) {
+            console.error('Unexpected selectedTag');
+            // console.log('_selectedCategory: ', _selectedCategory);
+            // console.log('selectedCategory: ', selectedCategory);
+            return;
+        }
 
-        CategoryBookmark.createBookmark(new Bookmark(newBookmark), new Category(_selectedCategory))
+        CategoryBookmark.createBookmark(new Bookmark(newBookmark), new Category(resolvedCategory))
             .then(() => {
 
                 setUrl(location.href);
@@ -87,7 +90,7 @@ export default function Header(props: HeaderProps) {
                 setData((state: ICategory[]) => {
                     const newState = [...state]; // shallow copy of the state array
 
-                    const index = newState.findIndex((x) => x.id === _selectedCategory.id);
+                    const index = newState.findIndex((x) => x.id === resolvedCategory.id);
                     if (index === -1) return state; // Safety check: if not found, return the current state
 
                     const updatedCategory = {
