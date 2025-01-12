@@ -2,9 +2,9 @@ import { BookmarksDisplayProps } from "../../utils/types/props";
 import BookmarkDetails from "./BookmarkDetails";
 import ShowBookmarks from "./ShowBookmarks";
 
-export default function BookmarksDisplay(props: BookmarksDisplayProps) {
+export default function ContentBody(props: BookmarksDisplayProps) {
     const {
-        categories,
+        filteredCategories,
         bookmarkToShow,
         setBookmarkToShow,
         selectedTag,
@@ -17,12 +17,12 @@ export default function BookmarksDisplay(props: BookmarksDisplayProps) {
 
     const whatToShow = bookmarkToShow ?
         <BookmarkDetails
-            categories={categories}
+            filteredCategories={filteredCategories}
             bookmarkToShow={bookmarkToShow}
             setBookmarkToShow={setBookmarkToShow}
         /> :
         <ShowBookmarks
-            categories={categories}
+            filteredCategories={filteredCategories}
             bookmarkToShow={bookmarkToShow}
             setBookmarkToShow={setBookmarkToShow}
             selectedTag={selectedTag}

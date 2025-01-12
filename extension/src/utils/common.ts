@@ -87,3 +87,40 @@ export function sortedCategories(data: ICategory[]): ICategory[] {
 
     return copy;
 }
+
+/**
+ * Perform a weighted search on an array of bookmarks.
+ * @param query - The search term entered by the user.
+ * @param bookmarks - Array of IBookmark objects to search within.
+ * @returns A sorted array of bookmarks ranked by relevance.
+ */
+export function weightedSearch(query: string, bookmarks: IBookmark[]): IBookmark[] {
+    if (!query.trim()) return bookmarks; // Return all if query is empty.
+
+    // Normalize query to lowercase for case-insensitive matching.
+    const lowerQuery = query.toLowerCase();
+
+    // Define weights for fields.
+    const weights = {
+        title: 3,
+        description: 2,
+        url: 1,
+    };
+
+    return bookmarks
+        .map((bookmark) => {
+            // Compute scores for each field based on matching.
+            const titleScore = bookmark.title.toLowerCase().includes(lowerQuery) ? weights.title : 0;
+            const descriptionScore = bookmark.description.toLowerCase().includes(lowerQuery) ? weights.description : 0;
+            const urlScore = bookmark.url.toLowerCase().includes(lowerQuery) ? weights.url : 0;
+
+            // Calculate total score.
+            const totalScore = titleScore + descriptionScore + urlScore;
+
+            return { bookmark, totalScore };
+        })
+        .filter((result) => result.totalScore > 0) // Exclude bookmarks with no matches.
+        .sort((a, b) => b.totalScore - a.totalScore) // Sort by relevance (highest score first).
+        .map((result) => result.bookmark); // Return sorted bookmarks.
+}
+

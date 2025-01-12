@@ -6,13 +6,13 @@ import { IBookmark } from "../../utils/types/schemas";
 
 export default function ShowBookmarks(props: BookmarksDisplayProps) {
     const {
-        categories,
+        filteredCategories,
         setBookmarkToShow,
         selectedTag,
     } = props;
 
     let bookmarks: IBookmark[] = [];
-    for (const category of categories) {
+    for (const category of filteredCategories) {
         bookmarks.push(...category.bookmarks);
     }
 

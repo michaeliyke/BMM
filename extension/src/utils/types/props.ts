@@ -10,9 +10,19 @@ export type ContentBarProps = {
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
 };
+export type ContentHeaderProps = {
+    filteredCategories: ICategory[];
+    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
+    updateCategory?: (category: ICategory) => void;
+    selectedCategory: ICategory | null;
+    bookmarkToShow: IBookmark | null;
+    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    selectedTag?: ITag | null;
+    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
+};
 
 export type BookmarksDisplayProps = {
-    categories: ICategory[];
+    filteredCategories: ICategory[];
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
     selectedTag?: ITag | null;
