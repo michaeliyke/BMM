@@ -1,9 +1,10 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ContentBarProps } from "../../utils/types/props";
-import { ICategory } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import ContentBody from "./BookmarksDisplay";
 import ContentHeader from "./ContentHeader";
+import { getBookmarks } from "../../utils/common";
 
 export default function ContentBar(props: ContentBarProps) {
     const {
@@ -14,10 +15,19 @@ export default function ContentBar(props: ContentBarProps) {
         selectedTag,
     } = props;
 
-    const categoryFilterResults = selectedCategory
-        ? data.filter((cat) => cat.id === selectedCategory.id)
-        : data;
-    const [filteredCategories, setFilteredCategories] = useState<ICategory[]>(categoryFilterResults);
+    const sel = selectedCategory;
+    const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
+    const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
+
+    useEffect(() => {
+        /* CAUTION: the calls below is likely to cause infinite rendering */
+        const x = sel ? data.filter((cat) => cat.id === sel.id) : data;
+        setFilteredCategories(x);
+        setBookmarks(getBookmarks(x));
+    }, [selectedCategory, data, sel]);
+
+    // console.log("Filtered Categories: ", data, filteredCategories);
+    // console.log("Filtered Bookmarks: ", data, bookmarks);
 
     return (
         <article className="content mt-0">
@@ -27,6 +37,8 @@ export default function ContentBar(props: ContentBarProps) {
                 bookmarkToShow={bookmarkToShow}
                 setBookmarkToShow={setBookmarkToShow}
                 setFilteredCategories={setFilteredCategories}
+                bookmarks={bookmarks}
+                setBookmarks={setBookmarks}
             />
 
             <ContentBody
@@ -34,6 +46,8 @@ export default function ContentBar(props: ContentBarProps) {
                 bookmarkToShow={bookmarkToShow}
                 setBookmarkToShow={setBookmarkToShow}
                 selectedTag={selectedTag}
+                bookmarks={bookmarks}
+                setBookmarks={setBookmarks}
             />
             <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
         </article>

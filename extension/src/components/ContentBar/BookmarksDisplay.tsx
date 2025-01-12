@@ -8,24 +8,25 @@ export default function ContentBody(props: BookmarksDisplayProps) {
         bookmarkToShow,
         setBookmarkToShow,
         selectedTag,
+        bookmarks,
+        setBookmarks,
     } = props;
-
-    // We will show all bookmarks if:
-    //  showAll is true
-    //  bookmarkToShow is null
-    // selectedCategory changes
 
     const whatToShow = bookmarkToShow ?
         <BookmarkDetails
             filteredCategories={filteredCategories}
             bookmarkToShow={bookmarkToShow}
             setBookmarkToShow={setBookmarkToShow}
+            bookmarks={bookmarks}
+            setBookmarks={setBookmarks}
         /> :
         <ShowBookmarks
             filteredCategories={filteredCategories}
             bookmarkToShow={bookmarkToShow}
             setBookmarkToShow={setBookmarkToShow}
             selectedTag={selectedTag}
+            bookmarks={bookmarks}
+            setBookmarks={setBookmarks}
         />;
     return <>{whatToShow}</>;
 }

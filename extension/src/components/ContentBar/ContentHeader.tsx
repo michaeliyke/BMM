@@ -1,13 +1,23 @@
 import { ContentHeaderProps } from "../../utils/types/props";
 import { FaArrowLeft } from "react-icons/fa";
 import { BookmarksDisplayProps } from "../../utils/types/props";
+import {
+    Dispatch,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
+import { getBookmarks, weightedSearch } from "../../utils/common";
+import { debounce, DebouncedFunc } from "lodash-es"
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 
 function GoBackButton(props: BookmarksDisplayProps) {
     const { setBookmarkToShow } = props;
-    const handleGoBack = () => {
-        console.log("Go Back button clicked");
+    function handleGoBack() {
         setBookmarkToShow(null);
-    };
+    }
 
     return (
         <button
@@ -20,7 +30,42 @@ function GoBackButton(props: BookmarksDisplayProps) {
     );
 }
 
-function SearchWidget() {
+type SearchWidgetProps = {
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+    filteredCategories: ICategory[];
+    bookmarkToShow: IBookmark | null;
+    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+}
+
+function SearchWidget(props: SearchWidgetProps) {
+    const [query, setQuery] = useState("");
+    const { setBookmarks, filteredCategories } = props;
+
+    const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
+
+    const debouncedSearch = useCallback((query: string, bookmarks: IBookmark[], setBookmarks: Dispatch<SetStateAction<IBookmark[]>>) => {
+        if (!debouncedSearchRef.current) {
+            debouncedSearchRef.current = debounce((q: string) => {
+                setBookmarks(weightedSearch(q, bookmarks));
+                debouncedSearchRef.current = null;
+            }, 300);
+        }
+        debouncedSearchRef.current(query);
+    }, []);
+
+    function searchHandler(event: React.ChangeEvent<HTMLInputElement>) {
+        const query = event.target.value;
+        setQuery(query);
+        debouncedSearch(query, getBookmarks(filteredCategories), setBookmarks);
+    }
+
+    useEffect(() => {
+        return () => {
+            debouncedSearchRef.current?.cancel();
+        }
+    }, [debouncedSearchRef]);
+
     return (
         <form
             role="search"
@@ -33,6 +78,8 @@ function SearchWidget() {
             <input
                 type="search"
                 id="search-input"
+                value={query}
+                onChange={searchHandler}
                 placeholder="Search bookmarks..."
                 className="w-full p-1.5 text-sm text-gray-700 bg-gray-50 border border-gray-300 rounded-full focus:ring-1 focus:ring-blue-400 focus:border-blue-400 placeholder-gray-400 transition"
                 aria-describedby="search-description"
@@ -68,6 +115,8 @@ export default function ContentHeader(props: ContentHeaderProps) {
         filteredCategories,
         bookmarkToShow,
         setBookmarkToShow,
+        bookmarks,
+        setBookmarks,
     } = props;
 
     return (
@@ -78,9 +127,17 @@ export default function ContentHeader(props: ContentHeaderProps) {
                         filteredCategories={filteredCategories}
                         bookmarkToShow={bookmarkToShow}
                         setBookmarkToShow={setBookmarkToShow}
+                        bookmarks={bookmarks}
+                        setBookmarks={setBookmarks}
                     />
                 </nav>
-            ) : (<SearchWidget></SearchWidget>)}
+            ) : <SearchWidget
+                filteredCategories={filteredCategories}
+                bookmarkToShow={bookmarkToShow}
+                setBookmarkToShow={setBookmarkToShow}
+                bookmarks={bookmarks}
+                setBookmarks={setBookmarks}
+            />}
         </header>
     );
 }

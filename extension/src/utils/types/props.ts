@@ -1,6 +1,7 @@
 // Types store for component props
 import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory, ITag } from "./schemas";
+
 export type ContentBarProps = {
     data: ICategory[];
     updateCategory?: (category: ICategory) => void;
@@ -10,7 +11,10 @@ export type ContentBarProps = {
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
 };
+
 export type ContentHeaderProps = {
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     filteredCategories: ICategory[];
     setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
@@ -22,6 +26,8 @@ export type ContentHeaderProps = {
 };
 
 export type BookmarksDisplayProps = {
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     filteredCategories: ICategory[];
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;

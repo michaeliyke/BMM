@@ -2,23 +2,19 @@ import moment from "moment";
 import { BookmarksDisplayProps } from "../../utils/types/props";
 import { MdOutlineArchive, MdOutlineEdit, MdOutlineDelete, MdOutlineStar } from "react-icons/md";
 import { sortedBookmarks } from "../../utils/common";
-import { IBookmark } from "../../utils/types/schemas";
 
 export default function ShowBookmarks(props: BookmarksDisplayProps) {
     const {
-        filteredCategories,
         setBookmarkToShow,
         selectedTag,
+        bookmarks,
     } = props;
 
-    let bookmarks: IBookmark[] = [];
-    for (const category of filteredCategories) {
-        bookmarks.push(...category.bookmarks);
-    }
+    let filteredBookmarks = bookmarks;
 
     // Filter out bookmarks that include the selected tag
     if (selectedTag) {
-        bookmarks = bookmarks.filter((bookmark) => {
+        filteredBookmarks = bookmarks.filter((bookmark) => {
             return bookmark.tags.some((tag) => tag.name === selectedTag.name);
         });
     }
@@ -27,7 +23,7 @@ export default function ShowBookmarks(props: BookmarksDisplayProps) {
 
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
-            {sortedBookmarks(bookmarks).map((bookmark, index) => (
+            {sortedBookmarks(filteredBookmarks).map((bookmark, index) => (
                 <article
                     key={index}
                     className="relative px-5 py-2 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"
