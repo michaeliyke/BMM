@@ -1,14 +1,10 @@
 import Header from '../components/HeaderBar/Header'
 import SideBar from '../components/SideBar/SideBar'
 import ContentBar from '../components/ContentBar/ContentBar'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IBookmark, ICategory, ITag } from '../utils/types/schemas'
 import { update } from '../utils/crud'
-
-type IHomeProps = {
-    data: ICategory[];
-    setData: Dispatch<SetStateAction<ICategory[]>>;
-}
+import { IHomeProps } from '../utils/types/props'
 
 const _defaultCategory = {
     id: 'dummy-id',
@@ -32,13 +28,8 @@ export default function Home(props: IHomeProps) {
         (selectedTag ? ` # ${selectedTag.name}` : '')
     );
     const [filterBy, setFilterBy] = useState('categories');
-
-    // console.log({
-    //     grouping,
-    //     filterBy,
-    //     selectedTag,
-    //     selectedCategory,
-    // });
+    const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
+    const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
 
     // Update a single category of the category list identified by its name
     function updateCategory(updatedCategory: ICategory) {
@@ -64,8 +55,8 @@ export default function Home(props: IHomeProps) {
                 setGrouping={setGrouping}
                 selectedTag={selectedTag}
                 filterBy={filterBy}
-            >
-            </Header>
+            />
+
             <section>
                 <SideBar
                     props={{
@@ -83,8 +74,8 @@ export default function Home(props: IHomeProps) {
                         filterBy,
                         setFilterBy,
                     }}
-                >
-                </SideBar>
+                />
+
                 <ContentBar
                     updateCategory={updateCategory}
                     selectedCategory={selectedCategory}
@@ -93,8 +84,11 @@ export default function Home(props: IHomeProps) {
                     setBookmarkToShow={setBookmarkToShow}
                     selectedTag={selectedTag}
                     setSelectedTag={setSelectedTag}
-                >
-                </ContentBar>
+                    bookmarks={bookmarks}
+                    setBookmarks={setBookmarks}
+                    filteredCategories={filteredCategories}
+                    setFilteredCategories={setFilteredCategories}
+                />
             </section>
         </>
     )

@@ -2,6 +2,12 @@
 import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory, ITag } from "./schemas";
 
+
+export type IHomeProps = {
+    data: ICategory[];
+    setData: Dispatch<SetStateAction<ICategory[]>>;
+}
+
 export type ContentBarProps = {
     data: ICategory[];
     updateCategory?: (category: ICategory) => void;
@@ -10,6 +16,10 @@ export type ContentBarProps = {
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+    filteredCategories: ICategory[];
+    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
 };
 
 export type ContentHeaderProps = {

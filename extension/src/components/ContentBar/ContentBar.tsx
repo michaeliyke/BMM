@@ -1,7 +1,6 @@
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ContentBarProps } from "../../utils/types/props";
-import { IBookmark, ICategory } from "../../utils/types/schemas";
 import ContentBody from "./BookmarksDisplay";
 import ContentHeader from "./ContentHeader";
 import { getBookmarks } from "../../utils/common";
@@ -13,18 +12,20 @@ export default function ContentBar(props: ContentBarProps) {
         bookmarkToShow,
         setBookmarkToShow,
         selectedTag,
+        bookmarks,
+        setBookmarks,
+        setFilteredCategories,
+        filteredCategories
     } = props;
 
     const sel = selectedCategory;
-    const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
-    const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
 
     useEffect(() => {
         /* CAUTION: the calls below is likely to cause infinite rendering */
         const x = sel ? data.filter((cat) => cat.id === sel.id) : data;
         setFilteredCategories(x);
         setBookmarks(getBookmarks(x));
-    }, [selectedCategory, data, sel]);
+    }, [selectedCategory, data, sel, setFilteredCategories, setBookmarks]);
 
     // console.log("Filtered Categories: ", data, filteredCategories);
     // console.log("Filtered Bookmarks: ", data, bookmarks);
