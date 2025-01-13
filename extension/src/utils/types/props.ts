@@ -20,9 +20,13 @@ export type ContentBarProps = {
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     filteredCategories: ICategory[];
     setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
+    query: string;
+    setQuery: Dispatch<SetStateAction<string>>;
 };
 
 export type ContentHeaderProps = {
+    query: string;
+    setQuery: Dispatch<SetStateAction<string>>;
     bookmarks: IBookmark[];
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     filteredCategories: ICategory[];
@@ -46,6 +50,10 @@ export type BookmarksDisplayProps = {
 
 export type SideBarProps = {
     props: {
+        bookmarks: IBookmark[];
+        setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+        filteredCategories: ICategory[];
+        setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
         categories: ICategory[];
         setData: Dispatch<SetStateAction<ICategory[]>>;
         updateCategory?: (category: ICategory) => void;
@@ -59,11 +67,19 @@ export type SideBarProps = {
         selectedTag?: ITag | null;
         setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
         setGrouping?: Dispatch<SetStateAction<string>>;
+        query: string;
+        setQuery: Dispatch<SetStateAction<string>>;
     };
 };
 
 
 export type SideBarHeaderProps = {
+    query: string;
+    setQuery: Dispatch<SetStateAction<string>>;
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+    filteredCategories: ICategory[];
+    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
     categories: ICategory[];
     selectedCategory: ICategory | null;
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;

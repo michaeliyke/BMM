@@ -15,7 +15,9 @@ export default function ContentBar(props: ContentBarProps) {
         bookmarks,
         setBookmarks,
         setFilteredCategories,
-        filteredCategories
+        filteredCategories,
+        query,
+        setQuery,
     } = props;
 
     const sel = selectedCategory;
@@ -40,6 +42,8 @@ export default function ContentBar(props: ContentBarProps) {
                 setFilteredCategories={setFilteredCategories}
                 bookmarks={bookmarks}
                 setBookmarks={setBookmarks}
+                query={query}
+                setQuery={setQuery}
             />
 
             <ContentBody

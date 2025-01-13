@@ -30,6 +30,7 @@ export default function Home(props: IHomeProps) {
     const [filterBy, setFilterBy] = useState('categories');
     const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
     const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
+    const [query, setQuery] = useState("");
 
     // Update a single category of the category list identified by its name
     function updateCategory(updatedCategory: ICategory) {
@@ -73,6 +74,12 @@ export default function Home(props: IHomeProps) {
                         setGrouping,
                         filterBy,
                         setFilterBy,
+                        bookmarks,
+                        setBookmarks,
+                        filteredCategories,
+                        setFilteredCategories,
+                        query,
+                        setQuery,
                     }}
                 />
 
@@ -88,6 +95,8 @@ export default function Home(props: IHomeProps) {
                     setBookmarks={setBookmarks}
                     filteredCategories={filteredCategories}
                     setFilteredCategories={setFilteredCategories}
+                    query={query}
+                    setQuery={setQuery}
                 />
             </section>
         </>

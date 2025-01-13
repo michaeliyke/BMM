@@ -7,7 +7,6 @@ import {
     useCallback,
     useEffect,
     useRef,
-    useState,
 } from "react";
 import { getBookmarks, weightedSearch } from "../../utils/common";
 import { debounce, DebouncedFunc } from "lodash-es"
@@ -36,11 +35,12 @@ type SearchWidgetProps = {
     filteredCategories: ICategory[];
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    query: string;
+    setQuery: Dispatch<SetStateAction<string>>;
 }
 
 function SearchWidget(props: SearchWidgetProps) {
-    const [query, setQuery] = useState("");
-    const { setBookmarks, filteredCategories } = props;
+    const { setBookmarks, filteredCategories, query, setQuery } = props;
 
     const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 
@@ -117,6 +117,8 @@ export default function ContentHeader(props: ContentHeaderProps) {
         setBookmarkToShow,
         bookmarks,
         setBookmarks,
+        query,
+        setQuery,
     } = props;
 
     return (
@@ -137,6 +139,8 @@ export default function ContentHeader(props: ContentHeaderProps) {
                 setBookmarkToShow={setBookmarkToShow}
                 bookmarks={bookmarks}
                 setBookmarks={setBookmarks}
+                query={query}
+                setQuery={setQuery}
             />}
         </header>
     );

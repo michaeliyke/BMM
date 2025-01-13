@@ -13,12 +13,14 @@ export default function SideBar({ props }: SideBarProps) {
     // return <SideBarVariator props={props} />;
     return (
         <article className="sidebar bg-gray-50">
-            <SideBarHeader props={props}></SideBarHeader>
-            <SideBarVariator props={props}></SideBarVariator>
+            <SideBarHeader props={props} />
+
+            <SideBarVariator props={props} />
+
             <SideBarFooter
                 setData={setData}
                 selectedCategory={selectedCategory}
-            ></SideBarFooter>
+            />
         </article>
     );
 }

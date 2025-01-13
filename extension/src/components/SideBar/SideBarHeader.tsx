@@ -1,12 +1,22 @@
 import { ChangeEvent } from "react";
 import { SideBarProps } from "../../utils/types/props";
+import { getBookmarks } from "../../utils/common";
 
 export default function SideBarHeader({ props }: SideBarProps) {
-    const { filterBy, setFilterBy } = props;
+    const {
+        filterBy,
+        setFilterBy,
+        setBookmarks,
+        filteredCategories,
+        setQuery,
+    } = props;
 
     function handleFilterSelection(event: ChangeEvent<HTMLSelectElement>) {
-        if (setFilterBy)
+        if (setFilterBy) {
             setFilterBy(event.target.value);
+            setBookmarks(getBookmarks(filteredCategories));
+            setQuery("");
+        }
     }
 
     return (
