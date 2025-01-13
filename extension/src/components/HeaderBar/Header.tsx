@@ -181,6 +181,7 @@ export default function Header(props: HeaderProps) {
                         value={filterBy === 'filter:tags' ? '' : grouping}
                         placeholder=" "
                         disabled
+                        title="Choose filters as needed from the sidebar"
                         className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                     />
                         <label

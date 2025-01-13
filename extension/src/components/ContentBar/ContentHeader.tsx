@@ -91,18 +91,15 @@ function SearchWidget(props: SearchWidgetProps) {
                 value={query}
                 onChange={searchHandler}
                 placeholder="Search bookmarks..."
-                className="w-full p-1.5 text-sm text-gray-700 bg-gray-50 border border-gray-300 rounded-full focus:ring-1 focus:ring-blue-400 focus:border-blue-400 placeholder-gray-400 transition"
+                className="w-full p-1.5 pr-10 pl-4 text-sm text-gray-700 bg-white border border-gray-300 rounded-full focus:ring-1 focus:outline-none focus:border-blue-400 placeholder-gray-400 shadow-sm focus:shadow-inner transition"
                 aria-describedby="search-description"
             />
-            <span
-                id="search-description"
-                className="sr-only"
-            >
+            <span id="search-description" className="sr-only">
                 Enter keywords to filter the list of bookmarks.
             </span>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="absolute top-1/2 left-3 w-4 h-4 text-gray-500 transform -translate-y-1/2"
+                className="absolute top-11 right-2 w-7 h-7 text-gray-300 transform -translate-y-1/2 rotate-[10deg]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -112,7 +109,7 @@ function SearchWidget(props: SearchWidgetProps) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M21 21l-4.35-4.35M15 11a4 4 0 11-8 0 4 4 0 018 0z"
+                    d="M3 21l4.35-4.35M15 11a4 4 0 11-8 0 4 4 0 018 0z"
                 />
             </svg>
         </form>
