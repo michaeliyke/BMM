@@ -1,4 +1,4 @@
-import { ContentHeaderProps } from "../../utils/types/props";
+import { ContentHeaderProps, SearchWidgetProps } from "../../utils/types/props";
 import { FaArrowLeft } from "react-icons/fa";
 import { BookmarksDisplayProps } from "../../utils/types/props";
 import {
@@ -10,7 +10,7 @@ import {
 } from "react";
 import { getBookmarks, weightedSearch } from "../../utils/common";
 import { debounce, DebouncedFunc } from "lodash-es"
-import { IBookmark, ICategory } from "../../utils/types/schemas";
+import { IBookmark } from "../../utils/types/schemas";
 
 function GoBackButton(props: BookmarksDisplayProps) {
     const { setBookmarkToShow } = props;
@@ -29,18 +29,15 @@ function GoBackButton(props: BookmarksDisplayProps) {
     );
 }
 
-type SearchWidgetProps = {
-    bookmarks: IBookmark[];
-    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-    filteredCategories: ICategory[];
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
-    query: string;
-    setQuery: Dispatch<SetStateAction<string>>;
-}
 
 function SearchWidget(props: SearchWidgetProps) {
-    const { setBookmarks, filteredCategories, query, setQuery } = props;
+    const {
+        setBookmarks,
+        filteredCategories,
+        query,
+        setQuery,
+        grouping,
+    } = props;
 
     const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 
@@ -69,9 +66,22 @@ function SearchWidget(props: SearchWidgetProps) {
     return (
         <form
             role="search"
-            className="relative max-w-xs w-full"
+            className="relative max-w-xs w-full space-y-1"
             aria-label="Search bookmarks"
         >
+            {/* Filter Indicator Text */}
+            <p
+                id="search-description"
+                className="text-xs text-gray-600 italic p-2 pb-0.5 fat-text"
+            >
+                {
+                    grouping ?
+                        `FILTER: ${grouping.toUpperCase()}`
+                        : "Narrow down your search - filter by categories and tags."
+                }
+                {/* Select the tags and categories to filter */}
+            </p>
+            {/* Search Input */}
             <label htmlFor="search-input" className="sr-only">
                 Search bookmarks
             </label>
@@ -119,6 +129,7 @@ export default function ContentHeader(props: ContentHeaderProps) {
         setBookmarks,
         query,
         setQuery,
+        grouping,
     } = props;
 
     return (
@@ -141,6 +152,7 @@ export default function ContentHeader(props: ContentHeaderProps) {
                 setBookmarks={setBookmarks}
                 query={query}
                 setQuery={setQuery}
+                grouping={grouping}
             />}
         </header>
     );

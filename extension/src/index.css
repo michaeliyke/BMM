@@ -453,3 +453,18 @@ label,
     background-position: right 10px center;
     background-size: 10px;
 }
+
+.fat-text_ {
+    -webkit-text-stroke: .23px #888;
+    color: #888;
+}
+
+
+.fat-text{
+    color: #777; /* Base text color */
+    text-shadow:
+        0.35px 0 0.5px #777,  /* Right, slightly blurred */
+        -0.35px 0 0.5px #777, /* Left, slightly blurred */
+        0 0.35px 0.5px #777,  /* Bottom, slightly blurred */
+        0 -0.35px 0.5px #777; /* Top, slightly blurred */
+}

@@ -22,7 +22,19 @@ export type ContentBarProps = {
     setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
     query: string;
     setQuery: Dispatch<SetStateAction<string>>;
+    grouping: string;
 };
+
+export type SearchWidgetProps = {
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+    filteredCategories: ICategory[];
+    bookmarkToShow: IBookmark | null;
+    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    query: string;
+    setQuery: Dispatch<SetStateAction<string>>;
+    grouping: string;
+}
 
 export type ContentHeaderProps = {
     query: string;
@@ -37,6 +49,7 @@ export type ContentHeaderProps = {
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
+    grouping: string;
 };
 
 export type BookmarksDisplayProps = {

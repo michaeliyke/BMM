@@ -97,6 +97,7 @@ export default function Home(props: IHomeProps) {
                     setFilteredCategories={setFilteredCategories}
                     query={query}
                     setQuery={setQuery}
+                    grouping={grouping}
                 />
             </section>
         </>
