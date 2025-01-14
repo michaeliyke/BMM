@@ -14,6 +14,10 @@ config
 logging
 *.test
 test*
+temp*
+*.temp
+tmp*
+*.tmp
 extension/templates/_index_.html
 extension/css/_style_.css
 

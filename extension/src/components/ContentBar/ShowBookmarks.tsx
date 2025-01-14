@@ -31,7 +31,14 @@ export default function ShowBookmarks(props: BookmarksDisplayProps) {
                     {/* Header: Title, Timestamp, and Action Icons */}
                     <header className="flex justify-between items-center">
                         <h2 className="text-sm font-semibold text-gray-900 truncate">
-                            {bookmark.title}
+                            {/* {bookmark.title} */}
+                            <button
+                                onClick={() => setBookmarkToShow(bookmark)}
+                                className="text-sm text-gray-700 line-clamp-2 mt-1 hover:underline"
+                                title="View bookmark details"
+                            >
+                                {bookmark.title}
+                            </button>
                         </h2>
                         <div className="flex items-center space-x-5">
                             {/* Action Buttons */}
