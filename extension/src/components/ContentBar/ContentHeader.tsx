@@ -12,6 +12,15 @@ import { getBookmarks, weightedSearch } from "../../utils/common";
 import { debounce, DebouncedFunc } from "lodash-es"
 import { IBookmark } from "../../utils/types/schemas";
 
+/**
+ * GoBackButton component renders a button that allows users to navigate back
+ * to the previous view by setting the bookmark to show to null.
+ *
+ * @param {BookmarksDisplayProps} props - The properties passed to the component.
+ * @param {Function} props.setBookmarkToShow - Function to set the bookmark to show.
+ *
+ * @returns {JSX.Element} A button element that triggers the go back action.
+ */
 function GoBackButton(props: BookmarksDisplayProps) {
     const { setBookmarkToShow } = props;
     function handleGoBack() {
@@ -30,6 +39,29 @@ function GoBackButton(props: BookmarksDisplayProps) {
 }
 
 
+/**
+ * SearchWidget component allows users to search and filter bookmarks.
+ *
+ * @param {SearchWidgetProps} props - The properties for the SearchWidget component.
+ * @param {Dispatch<SetStateAction<IBookmark[]>>} props.setBookmarks - Function to update the list of bookmarks.
+ * @param {string[]} props.filteredCategories - The categories to filter the bookmarks.
+ * @param {string} props.query - The current search query.
+ * @param {Dispatch<SetStateAction<string>>} props.setQuery - Function to update the search query.
+ * @param {string} [props.grouping] - Optional grouping filter for the search.
+ *
+ * @returns {JSX.Element} The rendered SearchWidget component.
+ *
+ * @component
+ *
+ * @example
+ * <SearchWidget
+ *   setBookmarks={setBookmarks}
+ *   filteredCategories={filteredCategories}
+ *   query={query}
+ *   setQuery={setQuery}
+ *   grouping={grouping}
+ * />
+ */
 function SearchWidget(props: SearchWidgetProps) {
     const {
         setBookmarks,
@@ -117,6 +149,22 @@ function SearchWidget(props: SearchWidgetProps) {
 }
 
 
+/**
+ * ContentHeader component renders a header section that conditionally displays
+ * either a GoBackButton or a SearchWidget based on the presence of a bookmark to show.
+ *
+ * @param {ContentHeaderProps} props - The properties passed to the component.
+ * @param {Array} props.filteredCategories - The list of filtered categories.
+ * @param {boolean} props.bookmarkToShow - Flag indicating if a bookmark is to be shown.
+ * @param {Function} props.setBookmarkToShow - Function to set the bookmark to show.
+ * @param {Array} props.bookmarks - The list of bookmarks.
+ * @param {Function} props.setBookmarks - Function to set the bookmarks.
+ * @param {string} props.query - The search query string.
+ * @param {Function} props.setQuery - Function to set the search query.
+ * @param {string} props.grouping - The grouping criteria for the bookmarks.
+ *
+ * @returns {JSX.Element} The rendered ContentHeader component.
+ */
 export default function ContentHeader(props: ContentHeaderProps) {
     const {
         filteredCategories,

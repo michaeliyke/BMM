@@ -1,9 +1,31 @@
+/**
+ * BookmarkList component displays a list of bookmarks filtered by a category or a tag or both
+ * Each bookmark displays its title, URL, description, and action buttons
+ *
+ * @param {BookmarksDisplayProps} props - The properties for the BookmarkList component.
+ * @param {function} props.setBookmarkToShow - Function to set the bookmark to show in detail view.
+ * @param {object} props.selectedTag - The tag selected for filtering bookmarks.
+ * @param {Array} props.bookmarks - The list of bookmarks to display.
+ *
+ * @returns {JSX.Element} The rendered BookmarkList component.
+ */
 import moment from "moment";
 import { BookmarksDisplayProps } from "../../utils/types/props";
 import { MdOutlineArchive, MdOutlineEdit, MdOutlineDelete, MdOutlineStar } from "react-icons/md";
 import { sortedBookmarks } from "../../utils/common";
 
-export default function ShowBookmarks(props: BookmarksDisplayProps) {
+/**
+ * BookmarkList component displays a list of bookmarks filtered by a selected tag.
+ * Each bookmark can be viewed, edited, archived, or deleted.
+ *
+ * @param {BookmarksDisplayProps} props - The properties for the BookmarkList component.
+ * @param {Function} props.setBookmarkToShow - Function to set the bookmark to show in detail.
+ * @param {Tag} props.selectedTag - The selected tag to filter bookmarks.
+ * @param {Array<Bookmark>} props.bookmarks - The list of bookmarks to display.
+ *
+ * @returns {JSX.Element} The rendered BookmarkList component.
+ */
+export default function BookmarkList(props: BookmarksDisplayProps) {
     const {
         setBookmarkToShow,
         selectedTag,
