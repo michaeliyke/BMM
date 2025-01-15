@@ -1,10 +1,13 @@
-import { FaClock, FaCommentDots, FaStar } from "react-icons/fa";
+import { FaClock, FaCommentDots, FaRegStar } from "react-icons/fa";
 import { BookmarksDisplayProps } from "../../utils/types/props";
 import moment from "moment";
 import { useState } from "react";
 import { IBookmark } from "../../utils/types/schemas";
 import { BookmarkEditForm } from "./BookmarkEditForm";
-import { AiOutlineEdit as Edit } from 'react-icons/ai';
+import { AiOutlineEdit } from 'react-icons/ai';
+import { BsTrash } from 'react-icons/bs';
+import { MdOutlineArchive } from "react-icons/md";
+
 /**
  * BookmarkView component displays the details of a selected bookmark.
  * It allows users to view and edit the bookmark information.
@@ -28,16 +31,30 @@ export default function BookmarkView(props: BookmarksDisplayProps) {
     const { bookmarkToShow: bookmark } = props;
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
+    /**
+     * Handles the edit action by setting the editing state to true.
+     * This function is typically called when the user initiates an edit operation.
+     */
     function handleEdit() {
         setIsEditing(true);
     }
 
+    /**
+     * Handles the update of bookmark details.
+     *
+     * @param {IBookmark} updatedDetails - The updated details of the bookmark.
+     * @returns {void}
+     */
     function handleUpdate(updatedDetails: IBookmark) {
         console.log("Updated details:", updatedDetails);
         // Add logic to update the bookmark details in the data source
         setIsEditing(false);
     }
 
+    /**
+     * Handles the cancel action by setting the editing state to false.
+     * This function is typically called when the user cancels an edit operation.
+     */
     function handleCancel() {
         setIsEditing(false);
     }
@@ -84,18 +101,42 @@ export default function BookmarkView(props: BookmarksDisplayProps) {
                             <FaClock className="text-gray-400" aria-hidden="true" />
                             <span>Updated {moment(bookmark.updated_at).fromNow()}</span>
                         </div>
-                        <div className="flex items-center space-x-1">
-                            <FaStar className="text-yellow-500" aria-hidden="true" />
-                            <span>Favorite</span>
-                        </div>
+                        <button
+                            type="button"
+                            className="flex items-center space-x-1 text-blue-500 hover:underline"
+                            aria-label="Archive bookmark"
+                            title="Archive bookmark"
+                        >
+                            <MdOutlineArchive className="text-gray-500" aria-hidden="true" />
+                            <span>Archive</span>
+                        </button>
                         <button
                             type="button"
                             onClick={handleEdit}
                             className="flex items-center space-x-1 text-blue-500 hover:underline"
                             aria-label="Edit bookmark"
+                            title="Edit bookmark"
                         >
-                            <Edit className="text-gray-500" aria-hidden="true" />
+                            <AiOutlineEdit className="text-gray-500" aria-hidden="true" />
                             <span>Edit</span>
+                        </button>
+                        <button
+                            type="button"
+                            className="flex items-center space-x-1 text-blue-500 hover:underline"
+                            aria-label="Delete bookmark"
+                            title="Delete bookmark"
+                        >
+                            <BsTrash className="text-gray-500" aria-hidden="true" />
+                            <span>Delete</span>
+                        </button>
+                        <button
+                            type="button"
+                            className="flex items-center space-x-1 text-blue-500 hover:underline"
+                            aria-label="Favorite bookmark"
+                            title="Toggle favorite"
+                        >
+                            <FaRegStar className="text-gray-500" aria-hidden="true" />
+                            <span>Favorite</span>
                         </button>
                     </aside>
 

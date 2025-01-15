@@ -11,8 +11,11 @@
  */
 import moment from "moment";
 import { BookmarksDisplayProps } from "../../utils/types/props";
-import { MdOutlineArchive, MdOutlineEdit, MdOutlineDelete, MdOutlineStar } from "react-icons/md";
+import { MdOutlineArchive } from "react-icons/md";
+import { AiOutlineEdit } from 'react-icons/ai';
+import { BsTrash } from 'react-icons/bs';
 import { sortedBookmarks } from "../../utils/common";
+import { FaRegStar } from "react-icons/fa";
 
 /**
  * BookmarkList component displays a list of bookmarks filtered by a selected tag.
@@ -65,23 +68,27 @@ export default function BookmarkList(props: BookmarksDisplayProps) {
                         <div className="flex items-center space-x-5">
                             {/* Action Buttons */}
                             <div className="flex space-x-3 opacity-0 group-hover:opacity-100 transition duration-300">
+
                                 <button
                                     className="text-gray-500 hover:text-blue-600 transition duration-200"
                                     aria-label="Archive"
+                                    title="Archive"
                                 >
                                     <MdOutlineArchive size={20} />
                                 </button>
                                 <button
                                     className="text-gray-500 hover:text-green-600 transition duration-200"
                                     aria-label="Edit"
+                                    title="Edit"
                                 >
-                                    <MdOutlineEdit size={20} />
+                                    <AiOutlineEdit size={20} />
                                 </button>
                                 <button
                                     className="text-gray-500 hover:text-red-600 transition duration-200"
                                     aria-label="Delete"
+                                    title="Delete"
                                 >
-                                    <MdOutlineDelete size={20} />
+                                    <BsTrash size={20} />
                                 </button>
                             </div>
                             {/* Timestamp */}
@@ -118,13 +125,13 @@ export default function BookmarkList(props: BookmarksDisplayProps) {
 
 
                     {/* Favorite Button */}
-                    <aside className="absolute right-4 top-1/2 transform -translate-y-1/3">
+                    <aside className="absolute right-4 top-2/3 transform -translate-y-2/3">
                         <button
                             className="text-gray-300 hover:text-gray-600 transition duration-200"
                             aria-label="Favorite"
                             title="Favorite"
                         >
-                            <MdOutlineStar size={24} />
+                            <FaRegStar size={20} />
                         </button>
                     </aside>
                 </article>

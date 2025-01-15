@@ -33,6 +33,14 @@ export function BookmarkEditForm({ bookmark, onUpdate, onCancel }: BookmarkEditF
     const [url, setUrl] = useState<string>(bookmark.url);
     const [description, setDescription] = useState<string>(bookmark.description);
 
+    /**
+     * Handles the form submission event.
+     * Prevents the default form submission behavior and calls the onUpdate function
+     * with the provided title, url, and description, along with default values for id,
+     * created_at, updated_at, and tags.
+     *
+     * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
+     */
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         onUpdate({
