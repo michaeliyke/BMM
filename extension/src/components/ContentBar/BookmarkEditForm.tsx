@@ -1,5 +1,22 @@
 import { useState } from "react";
-import { BookmarkEditFormProps } from "./BookmarkView";
+import { IBookmark } from "../../utils/types/schemas";
+
+
+/**
+ * Props for the BookmarkEditForm component.
+ *
+ * @interface BookmarkEditFormProps
+ *
+ * @property {IBookmark} bookmark - The bookmark object that is being edited.
+ * @property {(updatedDetails: IBookmark) => void} onUpdate - Callback function to handle the update of bookmark details.
+ * @property {() => void} onCancel - Callback function to handle the cancellation of the edit operation.
+ */
+
+export interface BookmarkEditFormProps {
+    bookmark: IBookmark;
+    onUpdate: (updatedDetails: IBookmark) => void;
+    onCancel: () => void;
+}
 
 /**
  * BookmarkEditForm component allows users to edit the details of a bookmark.

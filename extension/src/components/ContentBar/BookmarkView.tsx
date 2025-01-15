@@ -1,25 +1,10 @@
-import { FaClock, FaCommentDots, FaEdit, FaStar } from "react-icons/fa";
+import { FaClock, FaCommentDots, FaStar } from "react-icons/fa";
 import { BookmarksDisplayProps } from "../../utils/types/props";
 import moment from "moment";
 import { useState } from "react";
 import { IBookmark } from "../../utils/types/schemas";
 import { BookmarkEditForm } from "./BookmarkEditForm";
-
-/**
- * Props for the BookmarkEditForm component.
- *
- * @interface BookmarkEditFormProps
- *
- * @property {IBookmark} bookmark - The bookmark object that is being edited.
- * @property {(updatedDetails: IBookmark) => void} onUpdate - Callback function to handle the update of bookmark details.
- * @property {() => void} onCancel - Callback function to handle the cancellation of the edit operation.
- */
-export interface BookmarkEditFormProps {
-    bookmark: IBookmark;
-    onUpdate: (updatedDetails: IBookmark) => void;
-    onCancel: () => void;
-}
-
+import { AiOutlineEdit as Edit } from 'react-icons/ai';
 /**
  * BookmarkView component displays the details of a selected bookmark.
  * It allows users to view and edit the bookmark information.
@@ -62,13 +47,12 @@ export default function BookmarkView(props: BookmarksDisplayProps) {
     }
 
     return (
-        isEditing
-            ? <BookmarkEditForm
+        isEditing ?
+            <BookmarkEditForm
                 bookmark={bookmark}
                 onUpdate={handleUpdate}
                 onCancel={handleCancel}
-            />
-            :
+            /> :
             <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
                 <article
                     className="max-w-4xl p-6 bg-white shadow-lg rounded-lg border border-gray-200"
@@ -110,7 +94,7 @@ export default function BookmarkView(props: BookmarksDisplayProps) {
                             className="flex items-center space-x-1 text-blue-500 hover:underline"
                             aria-label="Edit bookmark"
                         >
-                            <FaEdit className="text-gray-500" aria-hidden="true" />
+                            <Edit className="text-gray-500" aria-hidden="true" />
                             <span>Edit</span>
                         </button>
                     </aside>
