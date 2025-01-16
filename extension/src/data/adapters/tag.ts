@@ -98,7 +98,7 @@ export default class Tag implements ITag {
                 throw new Error(`Tag.update:- Tag not found: ${this}`);
             }
             try {
-                await Operator.updateRecord<ITag>('tags', this, this.id);
+                await Operator.updateRecord<ITag>('tags', this);
             } catch (error) {
                 throw new Error(`An error occurred in Tag.update:- ${error}, ${this}`);
             }

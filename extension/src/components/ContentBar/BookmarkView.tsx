@@ -1,18 +1,29 @@
 import { FaClock, FaCommentDots, FaRegStar } from "react-icons/fa";
-import { BookmarksDisplayProps } from "../../utils/types/props";
 import moment from "moment";
-import { useState } from "react";
-import { IBookmark } from "../../utils/types/schemas";
+import { Dispatch, SetStateAction, useState } from "react";
 import { BookmarkEditForm } from "./BookmarkEditForm";
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
 import { MdOutlineArchive } from "react-icons/md";
+import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+
+type BookmarkViewProps = {
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+    filteredCategories: ICategory[];
+    bookmarkToShow: IBookmark | null;
+    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    selectedTag?: ITag | null;
+    data: ICategory[];
+    setData: Dispatch<SetStateAction<ICategory[]>>;
+};
+
 
 /**
  * BookmarkView component displays the details of a selected bookmark.
  * It allows users to view and edit the bookmark information.
  *
- * @param {BookmarksDisplayProps} props - The properties for the BookmarkView component.
+ * @param {BookmarkViewProps} props - The properties for the BookmarkView component.
  * @param {IBookmark} props.bookmarkToShow - The bookmark object to display.
  *
  * @returns {JSX.Element} The rendered BookmarkView component.
@@ -27,7 +38,7 @@ import { MdOutlineArchive } from "react-icons/md";
  * };
  * return <BookmarkView bookmarkToShow={bookmark} />;
  */
-export default function BookmarkView(props: BookmarksDisplayProps) {
+export default function BookmarkView(props: BookmarkViewProps) {
     const { bookmarkToShow: bookmark } = props;
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -35,29 +46,10 @@ export default function BookmarkView(props: BookmarksDisplayProps) {
      * Handles the edit action by setting the editing state to true.
      * This function is typically called when the user initiates an edit operation.
      */
-    function handleEdit() {
+    function initiateEditing() {
         setIsEditing(true);
     }
 
-    /**
-     * Handles the update of bookmark details.
-     *
-     * @param {IBookmark} updatedDetails - The updated details of the bookmark.
-     * @returns {void}
-     */
-    function handleUpdate(updatedDetails: IBookmark) {
-        console.log("Updated details:", updatedDetails);
-        // Add logic to update the bookmark details in the data source
-        setIsEditing(false);
-    }
-
-    /**
-     * Handles the cancel action by setting the editing state to false.
-     * This function is typically called when the user cancels an edit operation.
-     */
-    function handleCancel() {
-        setIsEditing(false);
-    }
 
     if (!bookmark) {
         return <p>No bookmark selected</p>;
@@ -67,8 +59,10 @@ export default function BookmarkView(props: BookmarksDisplayProps) {
         isEditing ?
             <BookmarkEditForm
                 bookmark={bookmark}
-                onUpdate={handleUpdate}
-                onCancel={handleCancel}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+                data={props.data}
+                setData={props.setData}
             /> :
             <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
                 <article
@@ -112,7 +106,7 @@ export default function BookmarkView(props: BookmarksDisplayProps) {
                         </button>
                         <button
                             type="button"
-                            onClick={handleEdit}
+                            onClick={initiateEditing}
                             className="flex items-center space-x-1 text-blue-500 hover:underline"
                             aria-label="Edit bookmark"
                             title="Edit bookmark"

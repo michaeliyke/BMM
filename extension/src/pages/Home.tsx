@@ -1,10 +1,15 @@
 import Header from '../components/HeaderBar/Header'
 import SideBar from '../components/SideBar/SideBar'
 import ContentBar from '../components/ContentBar/ContentBar'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { IBookmark, ICategory, ITag } from '../utils/types/schemas'
 import { update } from '../utils/crud'
-import { IHomeProps } from '../utils/types/props'
+
+
+export type IHomeProps = {
+    data: ICategory[];
+    setData: Dispatch<SetStateAction<ICategory[]>>;
+}
 
 const _defaultCategory = {
     id: 'dummy-id',
@@ -87,6 +92,7 @@ export default function Home(props: IHomeProps) {
                     updateCategory={updateCategory}
                     selectedCategory={selectedCategory}
                     data={data}
+                    setData={setData}
                     bookmarkToShow={bookmarkToShow}
                     setBookmarkToShow={setBookmarkToShow}
                     selectedTag={selectedTag}

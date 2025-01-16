@@ -1,6 +1,19 @@
-import { BookmarksDisplayProps } from "../../utils/types/props";
 import BookmarkView from "./BookmarkView";
 import BookmarkList from "./BookmarkList";
+import { Dispatch, SetStateAction } from "react";
+import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+
+type BookmarksDisplayProps = {
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+    filteredCategories: ICategory[];
+    bookmarkToShow: IBookmark | null;
+    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    selectedTag?: ITag | null;
+    data: ICategory[];
+    setData: Dispatch<SetStateAction<ICategory[]>>;
+};
+
 
 /**
  * The `ContentBody` component is responsible for rendering either the `BookmarkView` or `BookmarkList`
@@ -24,6 +37,8 @@ export default function ContentBody(props: BookmarksDisplayProps) {
         selectedTag,
         bookmarks,
         setBookmarks,
+        data,
+        setData,
     } = props;
 
     return bookmarkToShow ?
@@ -33,6 +48,8 @@ export default function ContentBody(props: BookmarksDisplayProps) {
             setBookmarkToShow={setBookmarkToShow}
             bookmarks={bookmarks}
             setBookmarks={setBookmarks}
+            data={data}
+            setData={setData}
         /> :
         <BookmarkList
             filteredCategories={filteredCategories}
@@ -41,5 +58,7 @@ export default function ContentBody(props: BookmarksDisplayProps) {
             selectedTag={selectedTag}
             bookmarks={bookmarks}
             setBookmarks={setBookmarks}
+            data={data}
+            setData={setData}
         />;
 }

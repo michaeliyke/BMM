@@ -223,7 +223,7 @@ export default class CategoryTag implements ICategoryTag {
                     throw new Error(`Tag with id ${tagId} not found under category with id ${fromCategoryId} `);
 
                 const updated = { ...categoryTag, category_id: toCategoryId };
-                await Operator.updateRecord<ICategoryTag>('category_tags', updated, categoryTag.id);
+                await Operator.updateRecord<ICategoryTag>('category_tags', updated);
             } catch (error) {
                 throw new Error(`An error occurred in CategoryTag.moveCategoryTag:- ${error}, ${this}`);
             }

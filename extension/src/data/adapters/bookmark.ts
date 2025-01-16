@@ -52,7 +52,7 @@ export default class Bookmark implements IBookmark {
         });
     }
 
-async existing(): Promise<IBookmark|null> {
+    async existing(): Promise<IBookmark | null> {
         // get the calling method name
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
@@ -97,7 +97,7 @@ async existing(): Promise<IBookmark|null> {
             if (!(await this.exists()))
                 throw new Error(`Bookmark.update: Bookmark does not exist: ${this}`);
             try {
-                await Operator.updateRecord<IBookmark>('bookmarks', this, this.id);
+                await Operator.updateRecord<IBookmark>('bookmarks', this);
             } catch (error) {
                 throw new Error(`An error occurred in Bookmark.update:- ${error}, ${this.id}`);
             }

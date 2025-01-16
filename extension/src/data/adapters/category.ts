@@ -120,7 +120,7 @@ export default class Category implements ICategory {
                 if (await this.exists()) {
                     this.tags = []; // Do not save tags in the category object
                     this.bookmarks = []; // Do not save bookmarks in the category object
-                    await Operator.updateRecord<ICategory>('categories', this, this.id);
+                    await Operator.updateRecord<ICategory>('categories', this);
                 }
             } catch (error) {
                 throw new Error(`An error occurred in Category.update:- ${error}, ${this}`);
@@ -200,14 +200,14 @@ export default class Category implements ICategory {
                 const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
                 for (const categoryBookmark of categoryBookmarks) {
                     const updated = { ...categoryBookmark, category_id: defaultCategory.id };
-                    await Operator.updateRecord<ICategoryBookmark>('category_bookmarks', updated, categoryBookmark.id);
+                    await Operator.updateRecord<ICategoryBookmark>('category_bookmarks', updated);
                 }
 
                 // Migrate all its tags to the default category
                 const categoryTags = await Operator.getRecordsByIndex<ICategoryTag>('category_tags', 'category_tags_index', query);
                 for (const categoryTag of categoryTags) {
                     const updated = { ...categoryTag, category_id: defaultCategory.id };
-                    await Operator.updateRecord<ICategoryTag>('category_tags', updated, categoryTag.id);
+                    await Operator.updateRecord<ICategoryTag>('category_tags', updated);
                 }
 
                 // Delete the category itself

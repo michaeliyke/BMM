@@ -191,13 +191,13 @@ export const Operator = {
      * @param key The key path defined while creating the store e.g id
      * @returns Promise that reolves to no value
      */
-    async updateRecord<T>(storeName: string, data: T, key?: string): Promise<void> {
+    async updateRecord<T>(storeName: string, data: T): Promise<void> {
         return queueManager.enqueue(async () => {
             const db = await this.initializeDatabase();
             return new Promise((resolve, reject) => {
                 const tx = db.transaction(storeName, "readwrite");
                 const store = tx.objectStore(storeName);
-                const request = store.put(data, key);
+                const request = store.put(data);
                 request.onerror = () => reject(request.error);
                 request.onsuccess = () => resolve();
             });

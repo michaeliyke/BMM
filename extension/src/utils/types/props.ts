@@ -3,28 +3,6 @@ import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory, ITag } from "./schemas";
 
 
-export type IHomeProps = {
-    data: ICategory[];
-    setData: Dispatch<SetStateAction<ICategory[]>>;
-}
-
-export type ContentBarProps = {
-    data: ICategory[];
-    updateCategory?: (category: ICategory) => void;
-    selectedCategory: ICategory | null;
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
-    selectedTag?: ITag | null;
-    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
-    bookmarks: IBookmark[];
-    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-    filteredCategories: ICategory[];
-    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
-    query: string;
-    setQuery: Dispatch<SetStateAction<string>>;
-    grouping: string;
-};
-
 export type SearchWidgetProps = {
     bookmarks: IBookmark[];
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
@@ -52,14 +30,6 @@ export type ContentHeaderProps = {
     grouping: string;
 };
 
-export type BookmarksDisplayProps = {
-    bookmarks: IBookmark[];
-    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-    filteredCategories: ICategory[];
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
-    selectedTag?: ITag | null;
-};
 
 export type SideBarProps = {
     props: {

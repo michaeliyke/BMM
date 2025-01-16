@@ -1,21 +1,14 @@
-import { useState } from "react";
-import { IBookmark } from "../../utils/types/schemas";
+import { Dispatch, SetStateAction, useState } from "react";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
+import Bookmark from "../../data/adapters/bookmark";
 
-
-/**
- * Props for the BookmarkEditForm component.
- *
- * @interface BookmarkEditFormProps
- *
- * @property {IBookmark} bookmark - The bookmark object that is being edited.
- * @property {(updatedDetails: IBookmark) => void} onUpdate - Callback function to handle the update of bookmark details.
- * @property {() => void} onCancel - Callback function to handle the cancellation of the edit operation.
- */
 
 export interface BookmarkEditFormProps {
     bookmark: IBookmark;
-    onUpdate: (updatedDetails: IBookmark) => void;
-    onCancel: () => void;
+    isEditing: boolean;
+    setIsEditing: Dispatch<SetStateAction<boolean>>;
+    data: ICategory[];
+    setData: Dispatch<SetStateAction<ICategory[]>>;
 }
 
 /**
@@ -28,28 +21,54 @@ export interface BookmarkEditFormProps {
  *
  * @returns {JSX.Element} The BookmarkEditForm component.
  */
-export function BookmarkEditForm({ bookmark, onUpdate, onCancel }: BookmarkEditFormProps) {
+export function BookmarkEditForm(props: BookmarkEditFormProps) {
+    const { bookmark, setIsEditing, setData } = props;
     const [title, setTitle] = useState<string>(bookmark.title);
     const [url, setUrl] = useState<string>(bookmark.url);
     const [description, setDescription] = useState<string>(bookmark.description);
 
+
     /**
-     * Handles the form submission event.
-     * Prevents the default form submission behavior and calls the onUpdate function
-     * with the provided title, url, and description, along with default values for id,
-     * created_at, updated_at, and tags.
+     * Handles the update of bookmark details.
      *
-     * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
+     * @param {IBookmark} updatedDetails - The updated details of the bookmark.
+     * @returns {void}
      */
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    function applyUpdate(e: React.FormEvent) {
         e.preventDefault();
-        onUpdate({
-            title, url, description,
-            id: "",
-            created_at: "",
-            updated_at: "",
-            tags: []
-        });
+        const modification = { ...bookmark, title, url, description };
+
+        (new Bookmark(modification)).update().then(() => {
+            setData((state: ICategory[]) => {
+                const newState = [...state]; // shallow copy of the state array
+
+                const categoryIndex = newState.findIndex((c) => { // If any returns true
+                    return c.bookmarks.some((b) => b.id === bookmark.id);
+                });
+
+                if (categoryIndex === -1) return state; // Safety checks
+
+                const bookmarkIndex = newState[categoryIndex].bookmarks.findIndex((b) => b.id === bookmark.id);
+                if (bookmarkIndex === -1) return state; // Safety checks
+
+                newState[categoryIndex].bookmarks[bookmarkIndex] = modification;
+                // console.log("Bookmark updated successfully", modification);
+                setIsEditing(false);
+                return newState; // Return the new state
+            });
+
+        })
+            .catch((error) => {
+                console.error("Error updating bookmark", error);
+            });
+    }
+
+    /**
+     * Handles the cancel action by setting the editing state to false.
+     * This function is typically called when the user cancels an edit operation.
+     */
+    function cancelUpdate() {
+        setIsEditing(false);
     }
 
     return (
@@ -65,7 +84,7 @@ export function BookmarkEditForm({ bookmark, onUpdate, onCancel }: BookmarkEditF
                     >
                         Edit Bookmark
                     </h2>
-                    <form onSubmit={handleSubmit} className="space-y-5 bg-gray-50 p-5 rounded-md border border-gray-300">
+                    <form onSubmit={applyUpdate} className="space-y-5 bg-gray-50 p-5 rounded-md border border-gray-300">
                         <fieldset>
                             <legend className="block text-sm font-medium text-gray-700 mb-2">
                                 Title
@@ -108,7 +127,7 @@ export function BookmarkEditForm({ bookmark, onUpdate, onCancel }: BookmarkEditF
                         <div className="flex justify-end gap-4">
                             <button
                                 type="button"
-                                onClick={onCancel}
+                                onClick={cancelUpdate}
                                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
                             >
                                 Cancel

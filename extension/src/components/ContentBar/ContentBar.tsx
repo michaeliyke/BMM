@@ -1,9 +1,27 @@
 
-import { useEffect } from "react";
-import { ContentBarProps } from "../../utils/types/props";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import ContentBody from "./ContentBody";
 import ContentHeader from "./ContentHeader";
 import { getBookmarks } from "../../utils/common";
+import { ICategory, IBookmark, ITag } from "../../utils/types/schemas";
+
+type ContentBarProps = {
+    data: ICategory[];
+    setData: Dispatch<SetStateAction<ICategory[]>>;
+    updateCategory?: (category: ICategory) => void;
+    selectedCategory: ICategory | null;
+    bookmarkToShow: IBookmark | null;
+    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    selectedTag?: ITag | null;
+    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+    filteredCategories: ICategory[];
+    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
+    query: string;
+    setQuery: Dispatch<SetStateAction<string>>;
+    grouping: string;
+};
 
 /**
  * ContentBar component is responsible for rendering the content section of the application.
@@ -45,6 +63,7 @@ import { getBookmarks } from "../../utils/common";
 export default function ContentBar(props: ContentBarProps) {
     const {
         data,
+        setData,
         selectedCategory,
         bookmarkToShow,
         setBookmarkToShow,
@@ -92,6 +111,8 @@ export default function ContentBar(props: ContentBarProps) {
                 selectedTag={selectedTag}
                 bookmarks={bookmarks}
                 setBookmarks={setBookmarks}
+                data={data}
+                setData={setData}
             />
             <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
         </article>

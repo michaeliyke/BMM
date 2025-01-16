@@ -35,20 +35,20 @@ export default class BookmarkTag implements IBookmarkTag {
         });
     }
 
-    async existing(): Promise<IBookmarkTag|null> {
+    async existing(): Promise<IBookmarkTag | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.bookmark_id, this.tag_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
                 const existing = await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
-                return existing ? existing: null;
+                return existing ? existing : null;
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${this}`);
             }
             return null;
         });
     }
-    
+
     static async bookmarkTagExists(bookmarkId: string, tagId: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [bookmarkId, tagId];
@@ -167,7 +167,7 @@ export default class BookmarkTag implements IBookmarkTag {
                     throw new Error(`BookmarkTag.moveBookmarkTag:- Tag (${tagId}) not found under fromBookmark (${fromBookmarkId}): ${this}`);
 
                 const updated = { ...bookmarkTag, bookmark_id: toBookmarkId };
-                await Operator.updateRecord<IBookmarkTag>('bookmark_tags', updated, bookmarkTag.id);
+                await Operator.updateRecord<IBookmarkTag>('bookmark_tags', updated);
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.moveBookmarkTag:- ${error}, ${this}`);
             }
