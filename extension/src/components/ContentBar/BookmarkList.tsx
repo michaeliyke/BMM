@@ -15,8 +15,10 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
 import { sortedBookmarks } from "../../utils/common";
 import { FaRegStar } from "react-icons/fa";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { DeleteDialog } from "./dialogs/DeleteDialog";
+import { ArchiveDialog } from "./dialogs/ArchiveDialog";
 
 type BookmarkListProps = {
     bookmarks: IBookmark[];
@@ -28,7 +30,6 @@ type BookmarkListProps = {
     data: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
 };
-
 
 /**
  * BookmarkList component displays a list of bookmarks filtered by a selected tag.
@@ -48,6 +49,17 @@ export default function BookmarkList(props: BookmarkListProps) {
         bookmarks,
     } = props;
 
+    const [isDeletePopupOpen, setDeletePopupOpen] = useState(false);
+    const [isArchivePopupOpen, setArchivePopupOpen] = useState(false);
+
+    const handleDelete = () => {
+        setDeletePopupOpen(true);
+    };
+
+    const handleArchive = () => {
+        setArchivePopupOpen(true);
+    };
+
     let filteredBookmarks = bookmarks;
 
     // Filter out bookmarks that include the selected tag
@@ -66,10 +78,8 @@ export default function BookmarkList(props: BookmarkListProps) {
                     key={index}
                     className="relative px-5 py-2 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"
                 >
-                    {/* Header: Title, Timestamp, and Action Icons */}
-                    <header className="flex justify-between items-center">
+                    <div className="flex justify-between items-center">
                         <h2 className="text-sm font-semibold text-gray-900 truncate">
-                            {/* {bookmark.title} */}
                             <button
                                 onClick={() => setBookmarkToShow(bookmark)}
                                 className="text-sm text-gray-700 line-clamp-2 mt-1 hover:underline"
@@ -78,11 +88,10 @@ export default function BookmarkList(props: BookmarkListProps) {
                                 {bookmark.title}
                             </button>
                         </h2>
-                        <div className="flex items-center space-x-5">
-                            {/* Action Buttons */}
-                            <div className="flex space-x-3 opacity-0 group-hover:opacity-100 transition duration-300">
-
+                        <nav className="flex items-center space-x-5">
+                            <menu className="flex space-x-3 opacity-0 group-hover:opacity-100 transition duration-300">
                                 <button
+                                    onClick={handleArchive}
                                     className="text-gray-500 hover:text-blue-600 transition duration-200"
                                     aria-label="Archive"
                                     title="Archive"
@@ -97,26 +106,24 @@ export default function BookmarkList(props: BookmarkListProps) {
                                     <AiOutlineEdit size={20} />
                                 </button>
                                 <button
+                                    onClick={handleDelete}
                                     className="text-gray-500 hover:text-red-600 transition duration-200"
                                     aria-label="Delete"
                                     title="Delete"
                                 >
                                     <BsTrash size={20} />
                                 </button>
-                            </div>
-                            {/* Timestamp */}
+                            </menu>
                             <time
                                 className="text-sm text-gray-400"
                                 dateTime={moment(bookmark.updated_at).toISOString()}
                             >
                                 {moment(bookmark.updated_at).fromNow()}
                             </time>
-                        </div>
-                    </header>
+                        </nav>
+                    </div>
 
-                    {/* Main Content: Bookmark Details */}
                     <section className="mt-1 max-w-md">
-                        {/* URL styled as a link */}
                         <a
                             href={bookmark.url}
                             target="_blank"
@@ -126,7 +133,6 @@ export default function BookmarkList(props: BookmarkListProps) {
                         >
                             {bookmark.url}
                         </a>
-                        {/* Description styled as a clickable button */}
                         <button
                             onClick={() => setBookmarkToShow(bookmark)}
                             className="text-sm text-gray-700 line-clamp-2 mt-1 hover:underline"
@@ -136,8 +142,6 @@ export default function BookmarkList(props: BookmarkListProps) {
                         </button>
                     </section>
 
-
-                    {/* Favorite Button */}
                     <aside className="absolute right-4 top-2/3 transform -translate-y-2/3">
                         <button
                             className="text-gray-300 hover:text-gray-600 transition duration-200"
@@ -147,8 +151,25 @@ export default function BookmarkList(props: BookmarkListProps) {
                             <FaRegStar size={20} />
                         </button>
                     </aside>
+
                 </article>
             ))}
+            <DeleteDialog
+                isOpen={isDeletePopupOpen}
+                onConfirm={() => {
+                    setDeletePopupOpen(false);
+                    console.log('Bookmark deleted!');
+                }}
+                onCancel={() => setDeletePopupOpen(false)}
+            />
+            <ArchiveDialog
+                isOpen={isArchivePopupOpen}
+                onConfirm={() => {
+                    setArchivePopupOpen(false);
+                    console.log('Bookmark archived!');
+                }}
+                onCancel={() => setArchivePopupOpen(false)}
+            />
         </section>
     );
 }
