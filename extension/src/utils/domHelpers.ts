@@ -1,4 +1,9 @@
 
+/**
+ * Sets the text content of the element with the class 'current-category' to the provided category text.
+ *
+ * @param categoryText - The text to set as the content of the element with the class 'current-category'.
+ */
 export function setDefaultCategoryText(categoryText: string) {
     const element = document.querySelector('.current-category');
     if (element) {
@@ -6,21 +11,45 @@ export function setDefaultCategoryText(categoryText: string) {
     }
 }
 
-// Add a class to the target element if not already present
+/**
+ * Adds one or more class names to the specified target element.
+ *
+ * @param target - The DOM element to which the class names will be added.
+ * @param classNames - An array of class names to add to the target element.
+ */
 export function addClass(target: Element, classNames: string[]) {
     target.classList.add(...classNames);
 }
 
-// Remove a class from the target element
+/**
+ * Removes one or more class names from the specified target element.
+ *
+ * @param target - The DOM element from which the class names will be removed.
+ * @param classNames - An array of class names to be removed from the target element.
+ */
 export function removeClass(target: Element, classNames: string[]) {
     target.classList.remove(...classNames);
 }
 
-// Check has class
+/**
+ * Checks if the target element has the specified class.
+ *
+ * @param target - The DOM element to check.
+ * @param className - The class name to look for.
+ * @returns `true` if the target element has the specified class, otherwise `false`.
+ */
 export function hasClass(target: Element, className: string) {
     return target.classList.contains(className);
 }
 
+/**
+ * Retrieves the name of a provided function or the nearest named caller from the stack trace.
+ *
+ * @param func - The function whose name is to be retrieved.
+ * @returns The name of the provided function if it has one and is not in the skip list,
+ *          otherwise the name of the nearest named caller from the stack trace that is not in the skip list.
+ *          If no valid name is found, returns "Top".
+ */
 export function getFuncName1(func: CallableFunction): string {
     const skipNames = ['Anonymous', 'async', 'RetryManager.withRetries'];
     const error = new Error();
@@ -46,6 +75,15 @@ export function getFuncName1(func: CallableFunction): string {
     return "Top";
 }
 
+/**
+ * Retrieves the name of the function that called `getFuncName`.
+ *
+ * This function throws and catches an error to access the stack trace,
+ * then parses the stack trace to extract the name of the function that
+ * called `getFuncName`.
+ *
+ * @returns {string | null} The name of the calling function, or `null` if the name cannot be determined.
+ */
 export function getFuncName() {
     try {
         throw new Error();

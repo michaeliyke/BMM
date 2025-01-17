@@ -27,6 +27,27 @@ const DataContext = createContext<IDataContext>(fallbackData);
 
 
 
+/**
+ * DataProvider component that fetches and provides data context to its children components.
+ *
+ * @param {DataProviderProps} props - The properties for the DataProvider component.
+ * @param {React.ReactNode} props.children - The child components that will have access to the data context.
+ *
+ * @returns {JSX.Element} The DataContext.Provider component with the context data.
+ *
+ * @remarks
+ * This component uses the `useState` and `useEffect` hooks to manage and fetch data.
+ * It initializes the data state with an empty array and the default category state with a fallback value.
+ * The `fetchData` function is called inside a `useEffect` hook to fetch data asynchronously and update the state.
+ * The context data includes the default category, a function to set the default category, the data array, and a function to set the data array.
+ *
+ * @example
+ * ```tsx
+ * <DataProvider>
+ *   <YourComponent />
+ * </DataProvider>
+ * ```
+ */
 function DataProvider({ children }: DataProviderProps) {
     const [data, setData] = useState<ICategory[]>([]);
     const [defaultCategory, setDefaultCategory] = useState<ICategory>(fallbackData.defaultCategory);

@@ -1,6 +1,15 @@
 import { v4 as uuidv4 } from "uuid";
 import { IBookmark, ICategory, ITag } from "../utils/types/schemas";
 
+/**
+ * An array of tag objects, each representing a tag with a unique identifier, name, and timestamps for creation and last update.
+ *
+ * @type {ITag[]}
+ * @property {string} id - The unique identifier for the tag, generated using uuidv4.
+ * @property {string} name - The name of the tag.
+ * @property {string} updated_at - The timestamp indicating when the tag was last updated.
+ * @property {string} created_at - The timestamp indicating when the tag was created.
+ */
 const tags: ITag[] = [
     {
         id: uuidv4(),
@@ -40,6 +49,18 @@ const tags: ITag[] = [
     },
 ];
 
+/**
+ * An array of bookmark objects, each representing a bookmarked resource.
+ *
+ * Each bookmark object contains the following properties:
+ * - `id`: A unique identifier for the bookmark, generated using `uuidv4()`.
+ * - `title`: The title of the bookmarked resource.
+ * - `description`: A brief description of the bookmarked resource.
+ * - `url`: The URL of the bookmarked resource.
+ * - `updated_at`: The date when the bookmark was last updated, in the format "YYYY-MM-DD".
+ * - `created_at`: The date when the bookmark was created, in the format "YYYY-MM-DD".
+ * - `tags`: An array of tags associated with the bookmark, which can be a subset of the `tags` array.
+ */
 const bookmarks: IBookmark[] = [
     {
         id: uuidv4(),
@@ -79,6 +100,19 @@ const bookmarks: IBookmark[] = [
     },
 ];
 
+/**
+ * An array of category objects, each representing a category with its associated properties.
+ *
+ * @type {ICategory[]}
+ *
+ * @property {string} id - A unique identifier for the category, generated using `uuidv4()`.
+ * @property {number} is_default - Indicates whether the category is the default category (1 for true, 0 for false).
+ * @property {string} name - The name of the category.
+ * @property {IBookmark[]} bookmarks - An array of bookmarks associated with the category.
+ * @property {string} updated_at - The date when the category was last updated, in the format "YYYY-MM-DD".
+ * @property {string} created_at - The date when the category was created, in the format "YYYY-MM-DD".
+ * @property {ITag[]} tags - An array of tags associated with the category, sliced from the `tags` array.
+ */
 const categories: ICategory[] = [
     {
         id: uuidv4(),

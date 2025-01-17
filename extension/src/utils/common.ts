@@ -22,7 +22,14 @@ export function dotIt(className: string): string {
     return className[0] === '.' ? className : `.${className}`;
 }
 
-// Remove class selected from all categories and add it target
+/**
+ * Toggles the 'selected' class on the target element and ensures that no other elements
+ * of the same type have the 'selected' class.
+ *
+ * @param {HTMLElement} target - The target element to toggle the 'selected' class on.
+ * @param {string} [type] - An optional string to specify the type of elements to query.
+ *                          If not provided, defaults to 'category'.
+ */
 export function toggleSelectedClass(target: HTMLElement, type?: string) {
     const matches = document.querySelectorAll(dotIt(type || 'category'));
     matches.forEach((match) => {
@@ -35,7 +42,12 @@ export function toggleSelectedClass(target: HTMLElement, type?: string) {
     }
 }
 
-// Remove class highlighted from all categories and add it target
+/**
+ * Toggles the 'highlighted' class on the target element and removes it from other elements of the same type.
+ *
+ * @param {HTMLElement} target - The target element to toggle the 'highlighted' class on.
+ * @param {string} [type] - The type of elements to query and remove the 'highlighted' class from. Defaults to 'category'.
+ */
 export function toggleHighlightedClass(target: HTMLElement, type?: string) {
     const formattedType = dotIt(type || 'category');
     const matches = document.querySelectorAll(formattedType);
@@ -48,7 +60,22 @@ export function toggleHighlightedClass(target: HTMLElement, type?: string) {
     addClass(target, ['highlighted']);
 }
 
-// Reset selected and highlighted categories, .all will be selected, and categories[0] will be highlighted
+/**
+ * Resets the selections based on the provided type.
+ *
+ * @param {string} [type] - The type of selection to reset. Defaults to 'category' if not provided.
+ *
+ * The function performs the following actions:
+ * 1. Formats the type using the `dotIt` function.
+ * 2. Selects all elements matching the formatted type.
+ * 3. If no matches are found, the function returns early.
+ * 4. Removes the 'selected' and 'highlighted' classes from all matched elements.
+ * 5. If the formatted type is ".category":
+ *    - Adds the 'selected' class to the first matched element.
+ *    - Adds the 'highlighted' class to the second matched element.
+ * 6. If the formatted type is not ".category":
+ *    - Adds the 'highlighted' class to the first matched element.
+ */
 export function resetSelections(type?: string) {
     const formattedType = dotIt(type || 'category');
     const matches = document.querySelectorAll(formattedType);
@@ -70,6 +97,33 @@ export function resetSelections(type?: string) {
 }
 
 
+/**
+ * Sorts an array of categories alphabetically by their name and ensures that the default category
+ * (identified by `is_default` property) is placed at the front of the array.
+ *
+ * @param data - An array of categories to be sorted.
+ * @returns A new array of categories sorted alphabetically by name with the default category at the front.
+ *
+ * @remarks
+ * This function creates a deep copy of the input array to avoid mutating the original data.
+ *
+ * @example
+ * ```typescript
+ * const categories = [
+ *   { name: 'Beverages', is_default: 0 },
+ *   { name: 'Snacks', is_default: 1 },
+ *   { name: 'Dairy', is_default: 0 }
+ * ];
+ * const sorted = sortedCategories(categories);
+ * console.log(sorted);
+ * // Output:
+ * // [
+ * //   { name: 'Snacks', is_default: 1 },
+ * //   { name: 'Beverages', is_default: 0 },
+ * //   { name: 'Dairy', is_default: 0 }
+ * // ]
+ * ```
+ */
 export function sortedCategories(data: ICategory[]): ICategory[] {
     // Deep copy the original data to avoid mutation
     const copy: ICategory[] = JSON.parse(JSON.stringify(data));
@@ -122,6 +176,12 @@ export function weightedSearch(query: string, bookmarks: IBookmark[]): IBookmark
         .map((result) => result.bookmark); // Return sorted bookmarks.
 }
 
+/**
+ * Retrieves all bookmarks from the provided categories.
+ *
+ * @param categories - An array of category objects, each containing an array of bookmarks.
+ * @returns An array of bookmarks extracted from the provided categories.
+ */
 export function getBookmarks(categories: ICategory[]): IBookmark[] {
     return categories.flatMap((category) => category.bookmarks);
 }

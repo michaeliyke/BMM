@@ -8,6 +8,11 @@ import CategoryTag from "./adapters/category_tag";
 import { ICategory } from "../utils/types/schemas";
 
 export default {
+    /**
+     * Retrieves all categories.
+     *
+     * @returns {Promise<ICategory[]>} A promise that resolves to an array of ICategory objects.
+     */
     async getAll(): Promise<ICategory[]> {
         return Category.getAll();
     },
