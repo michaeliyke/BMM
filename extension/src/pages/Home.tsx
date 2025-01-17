@@ -22,6 +22,23 @@ const _defaultCategory = {
 };
 
 
+/**
+ * The `Home` component is the main page of the application. It manages the state and interactions
+ * for displaying and filtering categories, bookmarks, and tags. It also handles the default category
+ * and updates to categories.
+ *
+ * @param {IHomeProps} props - The properties passed to the component.
+ * @param {ICategory[]} props.data - The list of categories.
+ * @param {React.Dispatch<React.SetStateAction<ICategory[]>>} props.setData - The function to update the list of categories.
+ *
+ * @returns {JSX.Element} The rendered Home component.
+ *
+ * @component
+ * @example
+ * return (
+ *   <Home data={data} setData={setData} />
+ * )
+ */
 export default function Home(props: IHomeProps) {
     const { data, setData } = props;
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);

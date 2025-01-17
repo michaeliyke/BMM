@@ -1,14 +1,41 @@
 import { useState } from "react"
-import { IBookmark, ICategory } from "../../utils/types/schemas";
+import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import { v4 as uuid4 } from 'uuid';
 import CategoryBookmark from "../../data/adapters/category_bookmark";
-import { HeaderProps } from "../../utils/types/props";
 import Bookmark from "../../data/adapters/bookmark";
 import Category from "../../data/adapters/category";
 import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
+import { Dispatch, SetStateAction } from "react";
+
+type HeaderProps = {
+    selectedCategory: ICategory | null;
+    categories: ICategory[];
+    // setData takes in fn, a function that takes in the old state (ICategory[])
+    // and returns the new state (ICategory[])
+    // setData itself returns void
+    setData: (fn: (categories: ICategory[]) => ICategory[]) => void;
+    defaultCategory: ICategory;
+    grouping: string;
+    setGrouping?: Dispatch<SetStateAction<string>>;
+    selectedTag?: ITag | null;
+    filterBy: string;
+};
 
 
+/**
+ * Header component for the Bookmark Manager application.
+ *
+ * @param {HeaderProps} props - The properties passed to the Header component.
+ * @param {ICategory | null} props.selectedCategory - The currently selected category.
+ * @param {Function} props.setData - Function to update the state data.
+ * @param {ICategory} props.defaultCategory - The default category to use if no category is selected.
+ * @param {string} props.grouping - The current grouping criteria.
+ * @param {string | null} props.selectedTag - The currently selected tag.
+ * @param {string} props.filterBy - The current filter criteria.
+ *
+ * @returns {JSX.Element} The rendered Header component.
+ */
 export default function Header(props: HeaderProps) {
     const {
         selectedCategory,

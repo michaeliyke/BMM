@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { SideBarProps } from "../../../utils/types/props";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 import {
     toggleSelectedClass,
@@ -8,11 +7,56 @@ import {
     sortedCategories,
 } from "../../../utils/common";
 
-import { ICategory } from "../../../utils/types/schemas";
+import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
 import { FiChevronRight } from "react-icons/fi";
 
+type BCProps = {
+    props: {
+        bookmarks: IBookmark[];
+        setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+        filteredCategories: ICategory[];
+        setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
+        categories: ICategory[];
+        setData: Dispatch<SetStateAction<ICategory[]>>;
+        updateCategory?: (category: ICategory) => void;
+        selectedCategory: ICategory | null;
+        setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
+        defaultCategory: ICategory;
+        bookmarkToShow: IBookmark | null;
+        setBookmarkToShow: (bookmark: IBookmark | null) => void;
+        filterBy?: string;
+        setFilterBy?: Dispatch<SetStateAction<string>>;
+        selectedTag?: ITag | null;
+        setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
+        setGrouping?: Dispatch<SetStateAction<string>>;
+        query: string;
+        setQuery: Dispatch<SetStateAction<string>>;
+    };
+};
 
-export default function ByCategories({ props }: SideBarProps) {
+/**
+ * Component for displaying and selecting categories in a sidebar.
+ *
+ * @component
+ * @param {BCProps} props - The properties passed to the component.
+ * @param {ICategory} props.defaultCategory - The default category to be selected.
+ * @param {ICategory[]} props.categories - The list of categories to display.
+ * @param {Function} props.setSelectedCategory - Function to set the selected category.
+ * @param {Function} props.setBookmarkToShow - Function to set the bookmark to show.
+ * @param {Function} props.setGrouping - Function to set the grouping text in the header.
+ *
+ * @returns {JSX.Element} The rendered component.
+ *
+ * @example
+ * <ByCategories
+ *   defaultCategory={defaultCategory}
+ *   categories={categories}
+ *   setSelectedCategory={setSelectedCategory}
+ *   setBookmarkToShow={setBookmarkToShow}
+ *   setGrouping={setGrouping}
+ * />
+ */
+export default function ByCategories({ props }: BCProps) {
     const {
         defaultCategory,
         categories,
