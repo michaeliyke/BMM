@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import ByCategories from "./filter/ByCategories";
-import ByCategoryTags from "./filter/ByCategoryTags";
-import ByTags from "./filter/ByTags";
+import { ByCategoryTags } from "./filter/ByCategoryTags";
+import { ByTags } from "./filter/ByTags";
 
 type SBSProps = {
     props: {
