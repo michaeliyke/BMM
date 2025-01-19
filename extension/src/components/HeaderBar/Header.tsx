@@ -46,9 +46,16 @@ export default function Header(props: HeaderProps) {
         filterBy,
     } = props;
 
-    const [url, setUrl] = useState(location.href);
-    const [title, setTitle] = useState(document.title);
-    const isButtonDisabled = !url || !title || filterBy === 'filter:tags';
+    let isButtonDisabled =
+        filterBy === 'filter:archived' ||
+        filterBy === 'filter:deleted' ||
+        filterBy === 'filter:tags';
+
+    const [url, setUrl] = useState(isButtonDisabled ? '' : location.href);
+    const [title, setTitle] = useState(isButtonDisabled ? '' : document.title);
+    isButtonDisabled = isButtonDisabled || !url || !title;
+
+    console.log('isButtonDisabled: ', isButtonDisabled);
 
     function createBookmark() {
         const resolvedCategory = selectedCategory || defaultCategory;
@@ -163,20 +170,21 @@ export default function Header(props: HeaderProps) {
                 </section>
             </article>
             <article className="form-container mt-4">
-                <form>
+                <form title={isButtonDisabled ? 'Form is disabled in this view' : ''}>
                     {/* URL Input */}
                     <div className="form-control relative">
                         <input
                             type="text"
                             id="url"
-                            value={filterBy === 'filter:tags' ? '' : url}
+                            disabled={isButtonDisabled}
+                            value={isButtonDisabled ? '' : url}
                             onChange={(e) => setUrl(e.target.value)}
                             placeholder=" "
                             className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                         />
                         <label
                             htmlFor="url"
-                            className="absolute text-sm text-gray-600 duration-200 transform -translate-y-4 scale-75 tracking-widest top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
+                            className={(isButtonDisabled ? 'off-cursor' : '') + " absolute text-sm text-gray-600 duration-200 transform -translate-y-4 scale-75 tracking-widest top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"}
                         >
                             URL
                         </label>
@@ -189,14 +197,15 @@ export default function Header(props: HeaderProps) {
                         <input
                             type="text"
                             id="title"
-                            value={filterBy === 'filter:tags' ? '' : title}
+                            disabled={isButtonDisabled}
+                            value={isButtonDisabled ? '' : title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder=" "
                             className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                         />
                         <label
                             htmlFor="title"
-                            className="absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
+                            className={(isButtonDisabled ? 'off-cursor' : '') + " absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"}
                         >
                             TITLE
                         </label>
@@ -206,15 +215,15 @@ export default function Header(props: HeaderProps) {
                     <div className="form-control relative"><input
                         type="text"
                         id="grouping"
-                        value={filterBy === 'filter:tags' ? '' : grouping}
+                        value={isButtonDisabled ? '' : grouping}
                         placeholder=" "
                         disabled
-                        title="Choose filters as needed from the sidebar"
-                        className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
+                        title="Select categories from the sidebar"
+                        className={(isButtonDisabled ? '' : 'grouping-on') + ' peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm'}
                     />
                         <label
                             htmlFor="grouping"
-                            className="absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"
+                            className={(isButtonDisabled ? 'off-cursor' : '') + " absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"}
                         >
                             CURRENT CATEGORY
                         </label>
