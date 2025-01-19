@@ -1,4 +1,4 @@
-import SideBarVariator from "./SideBarVariator";
+import SideBarSwitcher from "./SideBarSwitcher";
 import SideBarFooter from "./SideBarFooter";
 import SideBarHeader from "./SideBarHeader";
 import { Dispatch, SetStateAction } from "react";
@@ -48,7 +48,7 @@ export default function SideBar({ props }: SideBarProps) {
         <article className="sidebar bg-gray-50">
             <SideBarHeader props={props} />
 
-            <SideBarVariator props={props} />
+            <SideBarSwitcher props={props} />
 
             <SideBarFooter
                 setData={setData}

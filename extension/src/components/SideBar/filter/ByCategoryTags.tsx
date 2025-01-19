@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
-import DisplayTags from "./DisplayTags";
+import { DisplayCategoryTags } from "./DisplayCategoryTags";
 
 type BCTProps = {
     props: {
@@ -33,6 +33,6 @@ type BCTProps = {
  * @returns {JSX.Element} The rendered DisplayTags component with the given props.
  */
 export default function ByCategoryTags({ props }: BCTProps) {
-    return <DisplayTags props={props} />
+    return <DisplayCategoryTags props={props} />
 }
 

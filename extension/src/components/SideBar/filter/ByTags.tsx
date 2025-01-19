@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
-import DisplayTags from "./DisplayTags";
+import { DisplayAllTags } from "./DisplayAllTags";
 
 type BTProps = {
     props: {
@@ -34,6 +34,6 @@ type BTProps = {
  * @returns {JSX.Element} The rendered `DisplayTags` component.
  */
 export default function ByTags({ props }: BTProps) {
-    return <DisplayTags props={props} />
+    return <DisplayAllTags props={props} />
 }
 

@@ -4,7 +4,7 @@ import ByCategories from "./filter/ByCategories";
 import ByCategoryTags from "./filter/ByCategoryTags";
 import ByTags from "./filter/ByTags";
 
-type SBVProps = {
+type SBSProps = {
     props: {
         bookmarks: IBookmark[];
         setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
@@ -33,7 +33,7 @@ type SBVProps = {
  * A component that renders different sidebar variations based on the filter type provided in the props.
  *
  * @component
- * @param {SBVProps} props - The properties object containing the filter type and other necessary data.
+ * @param {SBSProps} props - The properties object containing the filter type and other necessary data.
  * @returns {JSX.Element} The corresponding sidebar variation component.
  *
  * @example
@@ -47,7 +47,7 @@ type SBVProps = {
  * - 'filter:category/tags': Renders the `ByCategoryTags` component.
  * - Any other value defaults to rendering the `ByCategories` component.
  */
-export default function SideBarVariator({ props }: SBVProps) {
+export default function SideBarSwitcher({ props }: SBSProps) {
     switch (props.filterBy) {
         case 'categories':
             return <ByCategories props={props} />;
