@@ -40,6 +40,7 @@ export interface IBookmark {
     created_at: string;
     updated_at: string;
     tags: ITag[];
+    archived: number; // 0 or 1
 };
 
 

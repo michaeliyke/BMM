@@ -183,5 +183,17 @@ export function weightedSearch(query: string, bookmarks: IBookmark[]): IBookmark
  * @returns An array of bookmarks extracted from the provided categories.
  */
 export function getBookmarks(categories: ICategory[]): IBookmark[] {
-    return categories.flatMap((category) => category.bookmarks);
+    return categories.flatMap((category) => category.bookmarks)
+        .filter((bookmark) => bookmark.archived !== 1);
+}
+
+/**
+ * Filters out archived bookmarks from a list of categories.
+ *
+ * @param categories - An array of category objects, each containing a list of bookmarks.
+ * @returns An array of bookmarks that are marked as archived.
+ */
+export function filterArchived(categories: ICategory[]): IBookmark[] {
+    return categories.flatMap((category) => category.bookmarks)
+        .filter((bookmark) => bookmark.archived === 1);
 }

@@ -17,6 +17,8 @@ type ContentHeaderProps = {
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     grouping: string;
+    filterBy: string;
+    setFilterBy: Dispatch<SetStateAction<string>>;
 };
 
 /**

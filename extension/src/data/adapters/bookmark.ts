@@ -14,6 +14,7 @@ export default class Bookmark implements IBookmark {
     created_at: string;
     updated_at: string;
     tags: ITag[];
+    archived: number;
 
     constructor(bookmark: IBookmark) {
         this.id = bookmark.id || uuid4();
@@ -23,6 +24,7 @@ export default class Bookmark implements IBookmark {
         this.created_at = (new Date()).toISOString();
         this.updated_at = this.created_at;
         this.tags = bookmark.tags;
+        this.archived = bookmark.archived || 0;
     }
 
     static async bookmarkExists(ID: string): Promise<boolean> {
@@ -152,6 +154,17 @@ export default class Bookmark implements IBookmark {
                 throw new Error(`An error occurred in Bookmark.getBookmarkById:- ${error}, ${ID}`);
             }
         });
+    }
+
+    /**
+     * Archives the current bookmark by setting its `archived` property to 1
+     * and then updating the bookmark in the database.
+     *
+     * @returns {Promise<void>} A promise that resolves when the bookmark has been archived.
+     */
+    async archive(): Promise<void> {
+        this.archived = 1;
+        await this.update();
     }
 
 }

@@ -49,16 +49,19 @@ export default function BookmarkList(props: BookmarkListProps) {
         bookmarks,
     } = props;
 
-    const [isDeletePopupOpen, setDeletePopupOpen] = useState(false);
-    const [isArchivePopupOpen, setArchivePopupOpen] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
+    const [archivedBookmarkIndex, setArchivedBookmarkIndex] = useState<number>(-1);
 
     const handleDelete = () => {
-        setDeletePopupOpen(true);
+        setDeleteDialogOpen(true);
     };
 
-    const handleArchive = () => {
-        setArchivePopupOpen(true);
+    function handleArchive(index: number) {
+        setArchivedBookmarkIndex(index);
+        setArchiveDialogOpen(true);
     };
+
 
     let filteredBookmarks = bookmarks;
 
@@ -69,11 +72,13 @@ export default function BookmarkList(props: BookmarkListProps) {
         });
     }
 
+    filteredBookmarks = sortedBookmarks(filteredBookmarks);
+
     // console.log(selectedTag);
 
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
-            {sortedBookmarks(filteredBookmarks).map((bookmark, index) => (
+            {filteredBookmarks.map((bookmark, index) => (
                 <article
                     key={index}
                     className="relative px-5 py-2 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"
@@ -91,7 +96,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                         <nav className="flex items-center space-x-5">
                             <menu className="flex space-x-3 opacity-0 group-hover:opacity-100 transition duration-300">
                                 <button
-                                    onClick={handleArchive}
+                                    onClick={() => handleArchive(index)}
                                     className="text-gray-500 hover:text-blue-600 transition duration-200"
                                     aria-label="Archive"
                                     title="Archive"
@@ -151,25 +156,25 @@ export default function BookmarkList(props: BookmarkListProps) {
                             <FaRegStar size={20} />
                         </button>
                     </aside>
-
                 </article>
             ))}
             <DeleteDialog
-                isOpen={isDeletePopupOpen}
+                isOpen={deleteDialogOpen}
                 onConfirm={() => {
-                    setDeletePopupOpen(false);
+                    setDeleteDialogOpen(false);
                     console.log('Bookmark deleted!');
                 }}
-                onCancel={() => setDeletePopupOpen(false)}
+                onCancel={() => setDeleteDialogOpen(false)}
             />
             <ArchiveDialog
-                isOpen={isArchivePopupOpen}
-                onConfirm={() => {
-                    setArchivePopupOpen(false);
-                    console.log('Bookmark archived!');
-                }}
-                onCancel={() => setArchivePopupOpen(false)}
+                data={props.data}
+                setData={props.setData}
+                bookmark={filteredBookmarks[archivedBookmarkIndex]}
+                archiveDialogOpen={archiveDialogOpen}
+                setArchiveDialogOpen={setArchiveDialogOpen}
+                setArchivedBookmarkIndex={setArchivedBookmarkIndex}
             />
+
         </section>
     );
 }

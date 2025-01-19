@@ -69,8 +69,10 @@ export default function SideBarHeader({ props }: SideBarHeaderProps) {
                         onChange={handleFilterSelection}
                     >
                         <option value="categories" className="current">Categories</option>
-                        <option value="filter:tags">Filter:Tags</option>
-                        <option value="filter:category/tags">Filters:Category/Tags</option>
+                        <option value="filter:tags">Filter : Tags</option>
+                        <option value="filter:category/tags">Filter : Category / Tags</option>
+                        <option value="filter:archived">Filter : Archived</option>
+                        <option value="filter:deleted">Filter : Deleted</option>
                     </select>
                 </label>
             </form>

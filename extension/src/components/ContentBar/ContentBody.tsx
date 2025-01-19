@@ -1,7 +1,8 @@
 import BookmarkView from "./BookmarkView";
-import BookmarkList from "./BookmarkList";
 import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import ListArchived from "./ListArchived";
+import BookmarkList from "./BookmarkList";
 
 type BookmarksDisplayProps = {
     bookmarks: IBookmark[];
@@ -12,6 +13,8 @@ type BookmarksDisplayProps = {
     selectedTag?: ITag | null;
     data: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
+    filterBy: string;
+    setFilterBy: Dispatch<SetStateAction<string>>;
 };
 
 
@@ -39,10 +42,11 @@ export default function ContentBody(props: BookmarksDisplayProps) {
         setBookmarks,
         data,
         setData,
+        filterBy,
     } = props;
 
-    return bookmarkToShow ?
-        <BookmarkView
+    if (bookmarkToShow) {
+        return <BookmarkView
             filteredCategories={filteredCategories}
             bookmarkToShow={bookmarkToShow}
             setBookmarkToShow={setBookmarkToShow}
@@ -50,8 +54,11 @@ export default function ContentBody(props: BookmarksDisplayProps) {
             setBookmarks={setBookmarks}
             data={data}
             setData={setData}
-        /> :
-        <BookmarkList
+        />
+    }
+
+    if (filterBy === 'filter:archived') {
+        return <ListArchived
             filteredCategories={filteredCategories}
             bookmarkToShow={bookmarkToShow}
             setBookmarkToShow={setBookmarkToShow}
@@ -61,4 +68,20 @@ export default function ContentBody(props: BookmarksDisplayProps) {
             data={data}
             setData={setData}
         />;
+    }
+
+    if (filterBy === 'filter:deleted') {
+        console.log('filterBy', filterBy);
+    }
+
+    return <BookmarkList
+        filteredCategories={filteredCategories}
+        bookmarkToShow={bookmarkToShow}
+        setBookmarkToShow={setBookmarkToShow}
+        selectedTag={selectedTag}
+        bookmarks={bookmarks}
+        setBookmarks={setBookmarks}
+        data={data}
+        setData={setData}
+    />;
 }

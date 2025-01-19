@@ -1,7 +1,7 @@
 import Header from '../components/HeaderBar/Header'
 import SideBar from '../components/SideBar/SideBar'
 import ContentBar from '../components/ContentBar/ContentBar'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { IBookmark, ICategory, ITag } from '../utils/types/schemas'
 import { update } from '../utils/crud'
 
@@ -51,8 +51,19 @@ export default function Home(props: IHomeProps) {
     );
     const [filterBy, setFilterBy] = useState('categories');
     const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
-    const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
+    const [bookmarks, setBookmarksRaw] = useState<IBookmark[]>([]);
     const [query, setQuery] = useState("");
+
+    // Wrapper function to for setBookmarks: filter out archived bookmarks
+    const setBookmarks = useCallback((bookmarks: SetStateAction<IBookmark[]>): void => {
+        setBookmarksRaw((prev) => {
+            return (bookmarks instanceof Function ? bookmarks(prev) : bookmarks)
+                .filter((bookmark) => bookmark.archived !== 1);
+        });
+    }, []);
+
+
+
 
     // Update a single category of the category list identified by its name
     function updateCategory(updatedCategory: ICategory) {
@@ -106,6 +117,8 @@ export default function Home(props: IHomeProps) {
                 />
 
                 <ContentBar
+                    filterBy={filterBy}
+                    setFilterBy={setFilterBy}
                     updateCategory={updateCategory}
                     selectedCategory={selectedCategory}
                     data={data}

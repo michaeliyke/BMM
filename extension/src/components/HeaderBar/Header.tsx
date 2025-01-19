@@ -66,6 +66,7 @@ export default function Header(props: HeaderProps) {
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             tags: [],
+            archived: 0,
         };
 
         const bookmark = new Bookmark(newBookmark);

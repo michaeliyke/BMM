@@ -21,6 +21,8 @@ type ContentBarProps = {
     query: string;
     setQuery: Dispatch<SetStateAction<string>>;
     grouping: string;
+    filterBy: string;
+    setFilterBy: Dispatch<SetStateAction<string>>;
 };
 
 /**
@@ -102,6 +104,8 @@ export default function ContentBar(props: ContentBarProps) {
                 query={query}
                 setQuery={setQuery}
                 grouping={grouping}
+                filterBy={props.filterBy}
+                setFilterBy={props.setFilterBy}
             />
 
             <ContentBody
@@ -113,6 +117,8 @@ export default function ContentBar(props: ContentBarProps) {
                 setBookmarks={setBookmarks}
                 data={data}
                 setData={setData}
+                filterBy={props.filterBy}
+                setFilterBy={props.setFilterBy}
             />
             <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
         </article>
