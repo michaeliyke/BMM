@@ -21,7 +21,7 @@ export const Operator = {
      */
     async initializeDatabase(): Promise<IDBDatabase> {
         return new Promise((resolve, reject) => {
-            const request = indexedDB.open("bmm", 1.1);
+            const request = indexedDB.open("bmm", 1.2);
             const unique = { unique: true };
 
             // compound keys
@@ -54,9 +54,9 @@ export const Operator = {
                 if (!db.objectStoreNames.contains("users"))
                     db.createObjectStore("users", { keyPath: "id" });
 
-                // // archived table: uniqueness NOT needed
-                // if (!db.objectStoreNames.contains("archived"))
-                //     db.createObjectStore("archived", { keyPath: "id" });
+                // bookmark_bin table: uniqueness NOT needed
+                if (!db.objectStoreNames.contains("bookmark_bin"))
+                    db.createObjectStore("bookmark_bin", { keyPath: "id" });
 
                 /* RELATIONSHIP TABLES */
 

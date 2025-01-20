@@ -27,6 +27,13 @@ export default class Bookmark implements IBookmark {
         this.archived = bookmark.archived || 0;
     }
 
+    /**
+     * Checks if a bookmark with the given ID exists in the database.
+     *
+     * @param ID - The unique identifier of the bookmark to check.
+     * @returns A promise that resolves to `true` if the bookmark exists, otherwise `false`.
+     * @throws An error if there is an issue accessing the database or performing the check.
+     */
     static async bookmarkExists(ID: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${ID}`, async () => {
@@ -40,6 +47,15 @@ export default class Bookmark implements IBookmark {
         });
     }
 
+    /**
+     * Checks if a bookmark exists in the database.
+     *
+     * This method acquires a lock based on the calling method name and the bookmark ID
+     * to ensure that the existence check is performed atomically.
+     *
+     * @returns {Promise<boolean>} A promise that resolves to `true` if the bookmark exists, otherwise `false`.
+     * @throws {Error} Throws an error if there is an issue during the existence check.
+     */
     async exists(): Promise<boolean> {
         // get the calling method name
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
@@ -54,6 +70,13 @@ export default class Bookmark implements IBookmark {
         });
     }
 
+    /**
+     * Checks if a bookmark with the current instance's ID exists in the database.
+     *
+     * @returns {Promise<IBookmark | null>} A promise that resolves to the bookmark if it exists, or null if it does not.
+     *
+     * @throws {Error} Throws an error if there is an issue retrieving the bookmark.
+     */
     async existing(): Promise<IBookmark | null> {
         // get the calling method name
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];

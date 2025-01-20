@@ -193,6 +193,17 @@ export default class CategoryBookmark implements ICategoryBookmark {
         this.bookmark_id = categoryBookmark.bookmark_id;
     }
 
+    /**
+     * Creates a bookmark under a specified category.
+     *
+     * @param bookmark - The bookmark to be created.
+     * @param category - The category under which the bookmark will be created.
+     * @returns A promise that resolves to the created bookmark.
+     *
+     * @throws Will throw an error if the category does not exist.
+     * @throws Will throw an error if the bookmark already exists under the category.
+     * @throws Will throw an error if any other error occurs during the creation process.
+     */
     static async createBookmark(bookmark: Bookmark, category: Category): Promise<IBookmark> {
         return lockManager.acquire(`CategoryBookmark.createBookmark:${bookmark.id}`, async () => {
             const query = [category.id, bookmark.id];

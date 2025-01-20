@@ -61,6 +61,12 @@ export default class Category implements ICategory {
         });
     }
 
+    /**
+     * Checks if a category with the given name exists.
+     *
+     * @param name - The name of the category to check.
+     * @returns A promise that resolves to `true` if the category exists, otherwise `false`.
+     */
     static async categoryExists(name: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${name}`, async () => {
@@ -70,6 +76,16 @@ export default class Category implements ICategory {
         });
     }
 
+    /**
+     * Fetches all categories along with their associated bookmarks and tags.
+     *
+     * This method retrieves all categories from the database, and for each category,
+     * it fetches the associated tags and bookmarks. For each bookmark, it also fetches
+     * the associated tags and attaches them to the bookmark.
+     *
+     * @returns {Promise<ICategory[]>} A promise that resolves to an array of categories,
+     * each containing their associated bookmarks and tags.
+     */
     static async getAll(): Promise<ICategory[]> {
         // TODO: Modify to fetch all categories, its bookmarks and tags and their refs
         return lockManager.acquire('Category.getAll', async () => {
@@ -159,6 +175,17 @@ export default class Category implements ICategory {
         });
     }
 
+    /**
+     * Retrieves a category by its name.
+     *
+     * This method acquires a lock to ensure that the retrieval operation is thread-safe.
+     * It uses the `Operator.getRecordByIndex` method to fetch the category record from the 'categories' store
+     * using the 'categories_index' index.
+     *
+     * @param name - The name of the category to retrieve.
+     * @returns A promise that resolves to the category object.
+     * @throws An error if the retrieval operation fails.
+     */
     static async getCategoryByName(name: string): Promise<ICategory> {
         return lockManager.acquire(`Category.getCategoryById:${name}`, async () => {
             try {

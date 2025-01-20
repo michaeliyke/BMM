@@ -54,6 +54,13 @@ export default class Tag implements ITag {
         });
     }
 
+    /**
+     * Checks if a tag with the given name exists.
+     *
+     * @param name - The name of the tag to check for existence.
+     * @returns A promise that resolves to `true` if the tag exists, otherwise `false`.
+     * @throws An error if there is an issue during the check.
+     */
     static async tagExists(name: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${name}`, async () => {

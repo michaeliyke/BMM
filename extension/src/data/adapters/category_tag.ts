@@ -20,6 +20,15 @@ export default class CategoryTag implements ICategoryTag {
         this.tag_id = categoryTag.tag_id;
     }
 
+    /**
+     * Creates a bookmark and associates it with a category and a tag.
+     *
+     * @param {Bookmark} bookmark - The bookmark to be created.
+     * @param {Category} category - The category to associate with the bookmark.
+     * @param {Tag} tag - The tag to associate with the bookmark.
+     * @returns {Promise<Bookmark>} - A promise that resolves to the created bookmark.
+     * @throws {Error} - Throws an error if the category or tag does not exist, or if the tag is not found under the category.
+     */
     static async createBookmark(bookmark: Bookmark, category: Category, tag: Tag): Promise<Bookmark> {
         return lockManager.acquire(`CategoryTag.createBookmark:${bookmark.id}`, async () => {
             try {
@@ -56,6 +65,17 @@ export default class CategoryTag implements ICategoryTag {
             }
         });
     }
+
+    /**
+     * Checks if a category tag exists in the database.
+     *
+     * This method constructs a unique lock key using the caller's name and the category and tag IDs.
+     * It then attempts to acquire the lock and check for the existence of the category tag in the database.
+     *
+     * @returns {Promise<boolean>} A promise that resolves to `true` if the category tag exists, otherwise `false`.
+     *
+     * @throws {Error} Throws an error if there is an issue querying the database or acquiring the lock.
+     */
     async exists(): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.category_id, this.tag_id];
@@ -70,6 +90,13 @@ export default class CategoryTag implements ICategoryTag {
         });
     }
 
+    /**
+     * Checks for the existence of a category tag record in the database.
+     *
+     * @returns {Promise<ICategoryTag | null>} A promise that resolves to the existing category tag record if found, or null if not found.
+     *
+     * @throws {Error} Throws an error if there is an issue querying the database.
+     */
     async existing(): Promise<ICategoryTag | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.category_id, this.tag_id];
@@ -83,6 +110,13 @@ export default class CategoryTag implements ICategoryTag {
         });
     }
 
+    /**
+     * Retrieves all category tags from the database, optionally filtered by a query.
+     *
+     * @param query - An optional IDBKeyRange to filter the results.
+     * @returns A promise that resolves to an array of ICategoryTag objects.
+     * @throws An error if the retrieval process fails.
+     */
     static async getAll(query?: IDBKeyRange): Promise<ICategoryTag[]> {
         return lockManager.acquire(`CategoryTag.getAll:${query}`, async () => {
             try {
@@ -93,6 +127,18 @@ export default class CategoryTag implements ICategoryTag {
         });
     }
 
+    /**
+     * Retrieves the categories associated with a specific tag.
+     *
+     * This method acquires a lock to ensure that the operation is thread-safe.
+     * It fetches all categories and category tags, filters the category tags
+     * by the provided tag ID, and then returns the categories that match the
+     * filtered category IDs.
+     *
+     * @param tagId - The ID of the tag for which to retrieve associated categories.
+     * @returns A promise that resolves to an array of categories associated with the specified tag.
+     * @throws An error if the operation fails.
+     */
     static async getCategories(tagId: string): Promise<ICategory[]> {
         return lockManager.acquire(`CategoryTag.getCategories:${tagId}`, async () => {
             try {
@@ -109,6 +155,17 @@ export default class CategoryTag implements ICategoryTag {
         });
     }
 
+    /**
+     * Retrieves the tags associated with a given category.
+     *
+     * This method acquires a lock to ensure that the retrieval process is thread-safe.
+     * It queries the database for tags associated with the specified category ID and
+     * filters the tags to return only those that are linked to the category.
+     *
+     * @param {string} categoryId - The ID of the category for which to retrieve tags.
+     * @returns {Promise<ITag[]>} A promise that resolves to an array of tags associated with the category.
+     * @throws {Error} If an error occurs during the retrieval process.
+     */
     static async getTags(categoryId: string): Promise<ITag[]> {
         return lockManager.acquire(`CategoryTag.getTags:${categoryId}`, async () => {
             try {
@@ -122,34 +179,6 @@ export default class CategoryTag implements ICategoryTag {
             } catch (error) {
                 throw new Error(`An error occurred in CategoryTag.getTags:- ${error}, ${categoryId}`);
             }
-        });
-    }
-
-    async categoryTagExists_(categoryId: string, tagId: string): Promise<boolean> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        const query = [categoryId, tagId];
-        return lockManager.acquire(`${callerName}:${query}`, async () => {
-            try {
-                if (await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query))
-                    return true;
-            } catch (error) {
-                throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${query}`);
-            }
-            return false;
-        });
-    }
-
-    static async categoryTagExists(categoryId: string, tagId: string): Promise<boolean> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        const query = [categoryId, tagId];
-        return lockManager.acquire(`${callerName}:${query}`, async () => {
-            try {
-                if (await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query))
-                    return true;
-            } catch (error) {
-                throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${query}`);
-            }
-            return false;
         });
     }
 
@@ -257,6 +286,28 @@ export default class CategoryTag implements ICategoryTag {
             } catch (error) {
                 throw new Error(`An error occurred in CategoryTag.create:- ${error}, ${this}`);
             }
+        });
+    }
+
+    /**
+     * Checks if a category tag exists.
+     *
+     * @param categoryId - The ID of the category.
+     * @param tagId - The ID of the tag.
+     * @returns A promise that resolves to a boolean indicating whether the category tag exists.
+     * @throws An error if the operation fails.
+     */
+    static async categoryTagExists(categoryId: string, tagId: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [categoryId, tagId];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query))
+                    return true;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${query}`);
+            }
+            return false;
         });
     }
 }
