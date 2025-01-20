@@ -1,11 +1,21 @@
 import moment from "moment";
 import { IDeletedBookmark } from "../../utils/types/schemas";
+import BookmarkBin from "../../data/adapters/bookmark_bin";
+import { useEffect, useState } from "react";
 
 export default function ListDeleted() {
-    const bookmarks: IDeletedBookmark[] = [];
+    const [deletedBookmarks, setDeletedBookmarks] = useState<IDeletedBookmark[]>([]);
+
+    useEffect(() => {
+        BookmarkBin.getDeletedBookmarks().then((_deletedBookmarks: IDeletedBookmark[]) => {
+            console.log(_deletedBookmarks);
+            setDeletedBookmarks(_deletedBookmarks);
+        });
+    }, []);
+
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
-            {bookmarks.map((bookmark, index) => (
+            {deletedBookmarks.map((bookmark, index) => (
                 <article
                     key={index}
                     className="relative px-5 py-2 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"

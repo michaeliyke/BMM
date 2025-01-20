@@ -51,14 +51,15 @@ export default function BookmarkList(props: BookmarkListProps) {
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
-    const [archivedBookmarkIndex, setArchivedBookmarkIndex] = useState<number>(-1);
+    const [activeBookmarkIndex, setActiveBookmarkIndex] = useState<number>(-1);
 
-    const handleDelete = () => {
+    const handleDelete = (index: number) => {
+        setActiveBookmarkIndex(index);
         setDeleteDialogOpen(true);
     };
 
     function handleArchive(index: number) {
-        setArchivedBookmarkIndex(index);
+        setActiveBookmarkIndex(index);
         setArchiveDialogOpen(true);
     };
 
@@ -111,7 +112,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                                     <AiOutlineEdit size={20} />
                                 </button>
                                 <button
-                                    onClick={handleDelete}
+                                    onClick={() => handleDelete(index)}
                                     className="text-gray-500 hover:text-red-600 transition duration-200"
                                     aria-label="Delete"
                                     title="Delete"
@@ -158,21 +159,21 @@ export default function BookmarkList(props: BookmarkListProps) {
                     </aside>
                 </article>
             ))}
-            <DeleteDialog
-                isOpen={deleteDialogOpen}
-                onConfirm={() => {
-                    setDeleteDialogOpen(false);
-                    console.log('Bookmark deleted!');
-                }}
-                onCancel={() => setDeleteDialogOpen(false)}
-            />
             <ArchiveDialog
                 data={props.data}
                 setData={props.setData}
-                bookmark={filteredBookmarks[archivedBookmarkIndex]}
+                bookmark={filteredBookmarks[activeBookmarkIndex]}
                 archiveDialogOpen={archiveDialogOpen}
                 setArchiveDialogOpen={setArchiveDialogOpen}
-                setArchivedBookmarkIndex={setArchivedBookmarkIndex}
+                setActiveBookmarkIndex={setActiveBookmarkIndex}
+            />
+            <DeleteDialog
+                data={props.data}
+                setData={props.setData}
+                bookmark={filteredBookmarks[activeBookmarkIndex]}
+                deleteDialogOpen={deleteDialogOpen}
+                setDeleteDialogOpen={setDeleteDialogOpen}
+                setActiveBookmarkIndex={setActiveBookmarkIndex}
             />
 
         </section>

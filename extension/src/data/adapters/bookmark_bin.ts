@@ -230,7 +230,7 @@ export default class BookmarkBin {
      * @returns {Promise<IDeletedBookmark[]>} A promise that resolves to an array of deleted bookmarks.
      * @throws {Error} Throws an error if the operation fails.
      */
-    static async getAllDeleted(): Promise<IDeletedBookmark[]> {
+    static async getDeletedBookmarks(): Promise<IDeletedBookmark[]> {
         return lockManager.acquire('BookmarkBin.getAllDeleted', async () => {
             try {
                 return await Operator.getRecords<IDeletedBookmark>('bookmark_bin');

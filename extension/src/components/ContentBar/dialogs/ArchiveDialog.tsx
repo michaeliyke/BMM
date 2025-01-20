@@ -8,7 +8,7 @@ type ArchiveDialogProps = {
     setData: Dispatch<SetStateAction<ICategory[]>>;
     archiveDialogOpen: boolean;
     setArchiveDialogOpen: Dispatch<SetStateAction<boolean>>;
-    setArchivedBookmarkIndex: Dispatch<SetStateAction<number>>;
+    setActiveBookmarkIndex: Dispatch<SetStateAction<number>>;
 };
 
 /**
@@ -27,16 +27,30 @@ export function ArchiveDialog(props: ArchiveDialogProps) {
         setData,
         archiveDialogOpen,
         setArchiveDialogOpen,
-        setArchivedBookmarkIndex,
+        setActiveBookmarkIndex,
     } = props;
     if (!archiveDialogOpen)
         return null;
 
     function handleCancel() {
         setArchiveDialogOpen(false);
-        setArchivedBookmarkIndex(-1);
+        setActiveBookmarkIndex(-1);
     }
 
+    /**
+     * Handles the archiving of a bookmark. This function updates the bookmark's
+     * archived status to 1, updates the state with the new data, and closes the
+     * archive dialog.
+     *
+     * @function
+     * @returns {void}
+     *
+     * @example
+     * // Example usage:
+     * archiveHandler();
+     *
+     * @throws {Error} If the archiving process fails.
+     */
     function archiveHandler() {
         (new Bookmark(bookmark)).archive()
             .then(() => {
@@ -53,7 +67,7 @@ export function ArchiveDialog(props: ArchiveDialogProps) {
             })
             .finally(() => {
                 setArchiveDialogOpen(false);
-                setArchivedBookmarkIndex(-1);
+                setActiveBookmarkIndex(-1);
             });
     }
 
