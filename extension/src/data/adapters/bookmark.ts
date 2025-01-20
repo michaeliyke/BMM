@@ -4,7 +4,7 @@ import { IBookmark, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 import { v4 as uuid4 } from 'uuid';
 
-const lockManager = new LockManager();
+export const lockManager = new LockManager();
 
 export default class Bookmark implements IBookmark {
     id: string;

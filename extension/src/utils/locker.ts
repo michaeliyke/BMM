@@ -194,3 +194,5 @@ export class QueueManager {
         }
     }
 }
+
+export const lockManager = new LockManager();

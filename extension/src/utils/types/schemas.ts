@@ -73,3 +73,17 @@ export interface IDataContext {
     data: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
 }
+
+export interface IDeletedBookmark {
+    created_at: string;
+    updated_at: string;
+    deleted_at: string;
+    tag_ids: string;
+    category_ids: string;
+    note_ids: string;
+    id: string;
+    bookmark_id: string;
+    title: string;
+    url: string;
+    description: string;
+}
