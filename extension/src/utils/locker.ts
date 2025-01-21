@@ -19,7 +19,7 @@ import { getFuncName } from "./domHelpers";
  * const result = await lockManager.acquire('unique-task-id', myTask);
  * ```
  */
-export class LockManager {
+class LockManager {
     private locks: Map<string, Promise<unknown>> = new Map();
 
     /**
@@ -92,7 +92,7 @@ async function retry(attempt: number, retryCount: number, delayMs: number, error
 /**
  * A utility class that provides a mechanism to execute an asynchronous task with retries.
  */
-export class RetryManager {
+class RetryManager {
     /**
      * Executes a given asynchronous task with a specified number of retries and delay between retries.
      *
@@ -142,7 +142,7 @@ export class RetryManager {
  * });
  * ```
  */
-export class QueueManager {
+class QueueManager {
     /**
      * A queue of functions that return a Promise<void>.
      * These functions are executed sequentially to ensure that only one function
@@ -196,3 +196,5 @@ export class QueueManager {
 }
 
 export const lockManager = new LockManager();
+export const queueManager = new QueueManager();
+export const retryManager = RetryManager;

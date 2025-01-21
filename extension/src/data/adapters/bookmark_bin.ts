@@ -188,13 +188,18 @@ export default class BookmarkBin {
                     tags: [],
                     archived: 0
                 });
-                if (!await bookmark.exists())
+                if (!await bookmark.exists()) {
+                    console.log("Here we are")
                     throw new Error(`Bookmark not found:- ${bookmark.id}`);
-                if (await this.exists()) // if it exists in bookmark_bin, do nothing
+                }
+                if (await this.exists()) { // if it exists in bookmark_bin, do nothing
+                    console.warn(`Bookmark already exists in bin:- ${this.id}`);
                     return;
+                }
                 // TODO: store bookmark note ids - BookmarkNotes
                 this.tag_ids = (await BookmarkTag.deleteTagLinks(bookmark.id)).join(',');
                 this.category_ids = (await CategoryBookmark.deleteCategoryLinks(bookmark.id)).join(',');
+
                 // call saveToBin to properly save it in bookmark_bin
                 await Operator.createRecord<IDeletedBookmark>('bookmark_bin', this);
                 await Operator.deleteRecord('bookmarks', this.bookmark_id); // remove the bookmark itself

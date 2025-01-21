@@ -67,6 +67,7 @@ export function DeleteDialog(props: DeleteDialogProps) {
 
         bookmarkBin.moveToBin()
             .then(() => {
+                console.log(".then()")
                 const updatedData = data.map((category) => {
                     const updatedBookmarks = category.bookmarks.filter((b) => b.id !== bookmark.id);
                     return { ...category, bookmarks: updatedBookmarks };
@@ -77,6 +78,7 @@ export function DeleteDialog(props: DeleteDialogProps) {
                 console.error(error);
             })
             .finally(() => {
+                console.log(".finally()")
                 setActiveBookmarkIndex(-1);
                 setDeleteDialogOpen(false);
             });

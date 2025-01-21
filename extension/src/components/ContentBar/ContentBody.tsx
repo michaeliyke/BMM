@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import ListArchived from "./ListArchived";
 import BookmarkList from "./BookmarkList";
+import ListDeleted from "./ListDeleted";
 
 type BookmarksDisplayProps = {
     bookmarks: IBookmark[];
@@ -71,7 +72,7 @@ export default function ContentBody(props: BookmarksDisplayProps) {
     }
 
     if (filterBy === 'filter:deleted') {
-        console.log('filterBy', filterBy);
+        return <ListDeleted />;
     }
 
     return <BookmarkList

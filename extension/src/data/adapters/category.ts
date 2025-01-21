@@ -1,4 +1,4 @@
-import { LockManager } from "../../utils/locker";
+import { lockManager } from "../../utils/locker";
 import {
     IBookmark,
     ICategory,
@@ -11,8 +11,6 @@ import BookmarkTag from "./bookmark_tag";
 import CategoryBookmark from "./category_bookmark";
 import CategoryTag from "./category_tag";
 import { v4 as uuid4 } from 'uuid';
-
-const lockManager = new LockManager();
 
 export default class Category implements ICategory {
 

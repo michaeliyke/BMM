@@ -1,10 +1,9 @@
 
-import { LockManager } from "../../utils/locker";
+import { lockManager } from "../../utils/locker";
 import { IBookmark, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 import { v4 as uuid4 } from 'uuid';
 
-export const lockManager = new LockManager();
 
 export default class Bookmark implements IBookmark {
     id: string;

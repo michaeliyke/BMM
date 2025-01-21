@@ -1,4 +1,4 @@
-import { LockManager } from "../../utils/locker";
+import { lockManager } from "../../utils/locker";
 import { ICategory, ICategoryTag, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 import Bookmark from "./bookmark";
@@ -7,7 +7,7 @@ import CategoryBookmark from "./category_bookmark";
 import Tag from "./tag";
 import { v4 as uuid4 } from 'uuid';
 
-const lockManager = new LockManager();
+// const lockManager = new LockManager();
 
 export default class CategoryTag implements ICategoryTag {
     id: string;

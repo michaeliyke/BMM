@@ -8,7 +8,6 @@ export default function ListDeleted() {
 
     useEffect(() => {
         BookmarkBin.getDeletedBookmarks().then((_deletedBookmarks: IDeletedBookmark[]) => {
-            console.log(_deletedBookmarks);
             setDeletedBookmarks(_deletedBookmarks);
         });
     }, []);

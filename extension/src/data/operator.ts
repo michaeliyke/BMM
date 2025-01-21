@@ -1,7 +1,5 @@
-import { QueueManager } from "../utils/locker";
+import { queueManager } from "../utils/locker";
 import { ICategory } from "../utils/types/schemas";
-
-const queueManager = new QueueManager();
 
 export const Operator = {
     /**
@@ -21,7 +19,7 @@ export const Operator = {
      */
     async initializeDatabase(): Promise<IDBDatabase> {
         return new Promise((resolve, reject) => {
-            const request = indexedDB.open("bmm", 1.2);
+            const request = indexedDB.open("bmm", 1);
             const unique = { unique: true };
 
             // compound keys

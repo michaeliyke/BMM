@@ -55,7 +55,6 @@ export default function Header(props: HeaderProps) {
     const [title, setTitle] = useState(isButtonDisabled ? '' : document.title);
     isButtonDisabled = isButtonDisabled || !url || !title;
 
-    console.log('isButtonDisabled: ', isButtonDisabled);
 
     function createBookmark() {
         const resolvedCategory = selectedCategory || defaultCategory;
