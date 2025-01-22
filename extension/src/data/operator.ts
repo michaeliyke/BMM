@@ -315,7 +315,40 @@ export const Operator = {
             const store = tx.objectStore(storeName);
             const index = store.index(indexName);
             const request = index.openCursor(query);
-            await this.iterateCursor(request, (cursor) => cursor.delete());
+            // Handle the cursor's success event here
+            request.onsuccess = (event) => {
+                const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+                if (cursor) {
+                    // cursor.delete();
+                    console.log(cursor.value)
+                    cursor.continue();
+                }
+            };
+
+            // Handle the cursor's error event here
+            request.onerror = (event) => {
+                const cursor = event.target as IDBRequest<IDBCursorWithValue>;
+                console.error(`Cursor request failed: ${storeName} where ${indexName} matches ${query}`);
+                console.error('Cursor error: ', cursor.error);
+            };
+
+            // Handle the transaction's complete event here
+            tx.oncomplete = () => {
+                console.log(`Deletion complete: ${storeName} where ${indexName} matches ${query}`);
+            };
+
+            // Handle the transaction's error event here
+            tx.onerror = (event) => {
+                const cursor = event.target as IDBTransaction;
+                console.error('Transaction error: ', cursor.error);
+            };
+
+            // Handle the transaction's abort event here
+            tx.onabort = (event) => {
+                const cursor = event.target as IDBTransaction;
+                console.error('Transaction aborted: ', cursor.error);
+            };
+            console.groupEnd();
         });
     },
 };

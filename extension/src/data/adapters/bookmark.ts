@@ -60,8 +60,9 @@ export default class Bookmark implements IBookmark {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
-                if (await Operator.getRecordById<IBookmark>('bookmarks', this.id))
+                if (await Operator.getRecordById<IBookmark>('bookmarks', this.id)) {
                     return true;
+                }
                 return false;
             } catch (error) {
                 throw new Error(`An error occurred in Bookmark.bokmarkExists:- ${error}, ${this.id}`);

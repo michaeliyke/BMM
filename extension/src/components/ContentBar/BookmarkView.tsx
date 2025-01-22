@@ -54,6 +54,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
     if (!bookmark) {
         return <p>No bookmark selected</p>;
     }
+    // console.log(JSON.stringify(bookmark));
 
     return (
         isEditing ?
