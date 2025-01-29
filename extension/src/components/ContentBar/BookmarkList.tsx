@@ -13,7 +13,7 @@ import moment from "moment";
 import { MdOutlineArchive } from "react-icons/md";
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
-import { sortedBookmarks } from "../../utils/common";
+import { getBookmarkCategories, sortedBookmarks } from "../../utils/common";
 import { FaRegStar } from "react-icons/fa";
 import { Dispatch, SetStateAction, useState } from "react";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
@@ -47,6 +47,7 @@ export default function BookmarkList(props: BookmarkListProps) {
         setBookmarkToShow,
         selectedTag,
         bookmarks,
+        data,
     } = props;
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -76,6 +77,8 @@ export default function BookmarkList(props: BookmarkListProps) {
     filteredBookmarks = sortedBookmarks(filteredBookmarks);
 
     // console.log(selectedTag);
+    const dummyCategrories = ['Category 1', 'Category 2', 'Category 3', 'Category 4', 'Category 5'];
+    const dummyTags = ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5'];
 
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
@@ -84,16 +87,33 @@ export default function BookmarkList(props: BookmarkListProps) {
                     key={index}
                     className="relative px-5 py-2 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"
                 >
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-sm font-semibold text-gray-900 truncate">
-                            <button
-                                onClick={() => setBookmarkToShow(bookmark)}
-                                className="text-sm text-gray-700 line-clamp-2 mt-1 hover:underline"
-                                title="View bookmark details"
+                    <header className="flex justify-between items-center">
+                        <div className="flex items-center space-x-4">
+                            <h2 className="text-sm font-semibold text-gray-900 truncate">
+                                <button
+                                    onClick={() => setBookmarkToShow(bookmark)}
+                                    className="text-sm text-gray-700 line-clamp-2 mt-1 hover:underline"
+                                    title="View bookmark details"
+                                >
+                                    {bookmark.title}
+                                </button>
+                            </h2>
+                            {/* Categories Dropdown */}
+                            <select
+                                className="text-xs bg-gray-100 border border-gray-300 rounded-md py-0.5 px-2 text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
+                                defaultValue=""
+                                title="Categories"
                             >
-                                {bookmark.title}
-                            </button>
-                        </h2>
+                                <option value="" disabled>
+                                    Categories
+                                </option>
+                                {getBookmarkCategories(bookmark, data).map((category) => (
+                                    <option key={category.id} value={category.name}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <nav className="flex items-center space-x-5">
                             <menu className="flex space-x-3 opacity-0 group-hover:opacity-100 transition duration-300">
                                 <button
@@ -127,7 +147,8 @@ export default function BookmarkList(props: BookmarkListProps) {
                                 {moment(bookmark.updated_at).fromNow()}
                             </time>
                         </nav>
-                    </div>
+                    </header>
+
 
                     <section className="mt-1 max-w-md">
                         <a
@@ -157,6 +178,19 @@ export default function BookmarkList(props: BookmarkListProps) {
                             <FaRegStar size={20} />
                         </button>
                     </aside>
+
+                    {/* Tags Section */}
+                    <footer className="mt-2 flex flex-wrap gap-2">
+                        {bookmark.tags.map((tag) => (
+                            <span
+                                key={tag.id}
+                                className="flex items-center text-xs text-gray-500 bg-gray-100 py-0.5 px-2 rounded-full"
+                            >
+                                <span className="text-gray-400 mr-1">#</span>
+                                {tag.name}
+                            </span>
+                        ))}
+                    </footer>
                 </article>
             ))}
             <ArchiveDialog
@@ -175,8 +209,8 @@ export default function BookmarkList(props: BookmarkListProps) {
                 setDeleteDialogOpen={setDeleteDialogOpen}
                 setActiveBookmarkIndex={setActiveBookmarkIndex}
             />
-
         </section>
+
     );
 }
 

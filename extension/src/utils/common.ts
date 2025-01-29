@@ -188,6 +188,21 @@ export function getBookmarks(categories: ICategory[]): IBookmark[] {
 }
 
 /**
+ * Retrieves the categories that contain the specified bookmark.
+ *
+ * @param bookmark - The bookmark to find categories for.
+ * @param categories - The list of categories to search within.
+ * @returns An array of categories that contain the specified bookmark.
+ */
+export function getBookmarkCategories(bookmark: IBookmark, categories: ICategory[]): ICategory[] {
+    return categories.filter((category) => {
+        // Exclude default category from search
+        if (category.is_default === 1) return false;
+        return category.bookmarks.some((b) => b.id === bookmark.id);
+    });
+}
+
+/**
  * Filters out archived bookmarks from a list of categories.
  *
  * @param categories - An array of category objects, each containing a list of bookmarks.
