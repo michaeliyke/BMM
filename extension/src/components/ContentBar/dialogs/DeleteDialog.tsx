@@ -71,8 +71,8 @@ export function DeleteDialog(props: DeleteDialogProps) {
                     const updatedBookmarks = category.bookmarks.filter((b) => b.id !== bookmark.id);
                     return { ...category, bookmarks: updatedBookmarks };
                 });
-                // setData(updatedData);
-                console.groupCollapsed("Bookmark moved to bin successfully.", updatedData[0].name);
+                setData(updatedData);
+                console.log("Bookmark moved to bin successfully.");
             })
             .catch((error) => {
                 console.error(error);

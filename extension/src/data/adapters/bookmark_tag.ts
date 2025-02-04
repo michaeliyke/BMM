@@ -1,3 +1,4 @@
+import { filterBy } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import {
     IBookmark,
@@ -328,10 +329,12 @@ export default class BookmarkTag implements IBookmarkTag {
     static async deleteTagLinks(bookmarkId: string): Promise<string[]> {
         return lockManager.acquire(`BookmarkTag.deleteTagLinks:${bookmarkId}`, async () => {
             try {
-                const query = IDBKeyRange.bound([bookmarkId, ""], [bookmarkId, "\uffff"]);
-                const bookmarkTags = await BookmarkTag.getAll(query);
-                // await Operator.deleteRecordsByIndex('bookmark_tags', 'bookmark_tags_index', query);
-                return bookmarkTags.map(({ tag_id }) => tag_id);
+                const bookmarkTags = await Operator.getRecords<IBookmarkTag>('bookmark_tags');
+                const filtered = filterBy(bookmarkTags, (bookmarkTag) => bookmarkTag.bookmark_id === bookmarkId);
+                for (const bookmarkTag of filtered) {
+                    await Operator.deleteRecord('bookmark_tags', bookmarkTag.id);
+                }
+                return filtered.map(({ tag_id }) => tag_id);
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.deleteTagLinks:- ${error}, ${bookmarkId}`);
             }

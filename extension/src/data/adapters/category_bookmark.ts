@@ -1,10 +1,9 @@
+import { filterBy } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import {
     IBookmark,
-    IBookmarkTag,
     ICategory,
     ICategoryBookmark,
-    ITag,
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 import Bookmark from "./bookmark";
@@ -68,12 +67,12 @@ export default class CategoryBookmark implements ICategoryBookmark {
      * @returns {Promise<ICategoryBookmark[]>} A promise that resolves to an array of category bookmarks.
      * @throws {Error} If an error occurs while retrieving the category bookmarks.
      */
-    static async getAll(query?: IDBKeyRange): Promise<ICategoryBookmark[]> {
-        return lockManager.acquire(`CategoryBookmark.getAll:${query}`, async () => {
+    static async getAll(): Promise<ICategoryBookmark[]> {
+        return lockManager.acquire(`CategoryBookmark.getAll`, async () => {
             try {
-                return Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
+                return Operator.getRecords<ICategoryBookmark>('category_bookmarks');
             } catch (error) {
-                throw new Error(`An error occurred in CategoryBookmark.getAll:- ${error}, ${query}`);
+                throw new Error(`An error occurred in CategoryBookmark.getAll:- ${error}`);
             }
         });
     }
@@ -88,12 +87,15 @@ export default class CategoryBookmark implements ICategoryBookmark {
     static async getBookmarks(categoryId: string): Promise<IBookmark[]> {
         return lockManager.acquire(`CategoryBookmark.getBookmarks:${categoryId}`, async () => {
             try {
-                // Query to handle compound keys between category_id and any other key: [categoryId, "..."]
-                const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
-                const categoryBookmarks = await CategoryBookmark.getAll(query);
+                const categoryBookmarks = await Operator.getRecords<ICategoryBookmark>('category_bookmarks');
+                const selected = filterBy(categoryBookmarks, ({ category_id }) => {
+                    return category_id === categoryId;
+                });
+
                 const allBookmarks = await Bookmark.getBookmarks();
-                return allBookmarks.filter((bookmark) => {
-                    return categoryBookmarks.some((cateBookmark) => cateBookmark.bookmark_id === bookmark.id);
+                return allBookmarks.filter(({ id: bookmarkId }) => {
+                    // if this very bookmark is in selected, return true
+                    return selected.some(({ bookmark_id }) => bookmark_id === bookmarkId);
                 });
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.getBookmarks:- ${error}, ${categoryId}`);
@@ -114,13 +116,14 @@ export default class CategoryBookmark implements ICategoryBookmark {
     static async getCategories(bookmarkId: string): Promise<ICategory[]> {
         return lockManager.acquire(`CategoryBookmark.getCategories:${bookmarkId}`, async () => {
             try {
-                // const query = IDBKeyRange.bound(["", bookmarkId], ["\uffff", bookmarkId]);
                 const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index');
-                console.log(categoryBookmarks);
-                const promises = categoryBookmarks.map(async ({ category_id }) => {
+                const selected = filterBy(categoryBookmarks, ({ bookmark_id }) => {
+                    return bookmark_id === bookmarkId;
+                });
+                const categoryPromises = selected.map(async ({ category_id }) => {
                     return await Operator.getRecordById<ICategory>('categories', category_id);
                 });
-                return await Promise.all(promises);
+                return await Promise.all(categoryPromises);
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.getCategories:- ${error}, ${bookmarkId}`);
             }
@@ -137,9 +140,8 @@ export default class CategoryBookmark implements ICategoryBookmark {
     static async getCategoryIds(bookmarkId: string): Promise<string[]> {
         return lockManager.acquire(`CategoryBookmark.getCategoryIds:${bookmarkId}`, async () => {
             try {
-                const query = IDBKeyRange.bound(["", bookmarkId], ["\uffff", bookmarkId]);
-                const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
-                return categoryBookmarks.map(({ category_id }) => category_id);
+                const categories = await CategoryBookmark.getCategories(bookmarkId);
+                return categories.map((category) => category.id);
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.getCategoryIds:- ${error}, ${bookmarkId}`);
             }
@@ -156,9 +158,8 @@ export default class CategoryBookmark implements ICategoryBookmark {
     static async getBookmarkIds(categoryId: string): Promise<string[]> {
         return lockManager.acquire(`CategoryBookmark.getBookmarkIds:${categoryId}`, async () => {
             try {
-                const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
-                const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
-                return categoryBookmarks.map(({ bookmark_id }) => bookmark_id);
+                const bookmarks = await CategoryBookmark.getBookmarks(categoryId);
+                return bookmarks.map((bookmark) => bookmark.id);
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.getBookmarkIds:- ${error}, ${categoryId}`);
             }
@@ -254,51 +255,6 @@ export default class CategoryBookmark implements ICategoryBookmark {
     }
 
     /**
-     * Retrieves all bookmarks associated with a given category ID.
-     *
-     * @param {string} categoryId - The ID of the category to retrieve bookmarks for.
-     * @returns {Promise<IBookmark[]>} A promise that resolves to an array of bookmarks linked to the specified category.
-     *
-     * @remarks
-     * This method performs the following steps:
-     * 1. Retrieves all category_bookmarks linked to the specified category ID.
-     * 2. For each category_bookmark, retrieves the corresponding bookmark.
-     * 3. For each bookmark, retrieves and adds all associated tags to the bookmark object.
-     *
-     * @example
-     * ```typescript
-     * const bookmarks = await getCategoryBookmarks('category123');
-     * console.log(bookmarks);
-     * ```
-     */
-    static async getCategoryBookmarks(categoryId: string): Promise<IBookmark[]> {
-        return lockManager.acquire(`CategoryBookmark.getCategoryBookmarks:${categoryId}`, async () => {
-            // Get all category_bookmarks linked to the category
-            try {
-                const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
-                const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
-
-                // Save all the bookmark promses in a variable
-                const promises = categoryBookmarks.map(async ({ bookmark_id }) => {
-                    const bookmark = await Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', bookmark_id);
-
-                    // Get all tags linked to the bookmark and add them to the bookmark object
-                    const query = IDBKeyRange.bound([bookmark_id, ""], [bookmark_id, "\uffff"]);
-                    const bookmarkTags = await Operator.getRecordsByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
-                    for (const { tag_id } of bookmarkTags) {
-                        bookmark.tags = await Operator.getRecordsByIndex<ITag>('tags', 'tags_index', tag_id);
-                    }
-                    return bookmark;
-                });
-
-                return await Promise.all(promises);
-            } catch (error) {
-                throw new Error(`An error occurred in CategoryBookmark.getCategoryBookmarks:- ${error}, ${this}`);
-            }
-        });
-    }
-
-    /**
      * Deletes category links associated with a given bookmark ID.
      *
      * This method acquires a lock to ensure that the deletion process is thread-safe.
@@ -312,10 +268,14 @@ export default class CategoryBookmark implements ICategoryBookmark {
     static async deleteCategoryLinks(bookmarkId: string): Promise<string[]> {
         return lockManager.acquire(`CategoryBookmark.deleteCategoryLinks:${bookmarkId}`, async () => {
             try {
-                const query = IDBKeyRange.bound(["", bookmarkId], ["\uffff", bookmarkId]);
-                const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
-                await Operator.deleteRecordsByIndex('category_bookmarks', 'category_bookmarks_index', query);
-                return categoryBookmarks.map(({ category_id }) => category_id);
+                const categoryBookmarks = await Operator.getRecords<ICategoryBookmark>('category_bookmarks');
+                const selected = filterBy(categoryBookmarks, ({ bookmark_id }) => {
+                    return bookmark_id === bookmarkId;
+                });
+                for (const categoryBookmark of selected) {
+                    await Operator.deleteRecord('category_bookmarks', categoryBookmark.id);
+                }
+                return selected.map(({ category_id }) => category_id);
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.deleteCategoryLinks:- ${error}, ${bookmarkId}`);
             }
@@ -332,10 +292,14 @@ export default class CategoryBookmark implements ICategoryBookmark {
     static async deleteBookmarkLinks(categoryId: string): Promise<string[]> {
         return lockManager.acquire(`CategoryBookmark.deleteBookmarkLinks:${categoryId}`, async () => {
             try {
-                const query = IDBKeyRange.bound([categoryId, ""], [categoryId, "\uffff"]);
-                const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
-                await Operator.deleteRecordsByIndex('category_bookmarks', 'category_bookmarks_index', query);
-                return categoryBookmarks.map(({ bookmark_id }) => bookmark_id);
+                const categoryBookmarks = await Operator.getRecords<ICategoryBookmark>('category_bookmarks');
+                const selected = filterBy(categoryBookmarks, ({ category_id }) => {
+                    return category_id === categoryId;
+                });
+                for (const categoryBookmark of selected) {
+                    await Operator.deleteRecord('category_bookmarks', categoryBookmark.id);
+                }
+                return selected.map(({ bookmark_id }) => bookmark_id);
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.deleteBookmarkLinks:- ${error}, ${categoryId}`);
             }
@@ -343,3 +307,4 @@ export default class CategoryBookmark implements ICategoryBookmark {
     }
 
 }
+

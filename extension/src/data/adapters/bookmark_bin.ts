@@ -195,16 +195,24 @@ export default class BookmarkBin {
                     console.warn(`Bookmark already exists in bin:- ${this.id}`);
                     return;
                 }
-                this.tag_ids = (await BookmarkTag.deleteTagLinks(bookmark.id)).join(',');
-                // console.log('tags:', this.tag_ids);
-                const categories = await CategoryBookmark.getCategories(bookmark.id);
-                console.log('categories:', categories);
+                const tag_ids = await BookmarkTag.deleteTagLinks(bookmark.id);
+                this.tag_ids = tag_ids.join(',');
                 // TODO: store bookmark note ids - BookmarkNotes
-                // this.category_ids = (await CategoryBookmark.deleteCategoryLinks(bookmark.id)).join(',');
+                const category_ids = await CategoryBookmark.deleteCategoryLinks(bookmark.id);
+                this.category_ids = category_ids.join(',');
 
-                // call saveToBin to properly save it in bookmark_bin
-                // await Operator.createRecord<IDeletedBookmark>('bookmark_bin', this);
-                // await Operator.deleteRecord('bookmarks', this.bookmark_id); // remove the bookmark itself
+                // Use try catch to continue even if the bookmark already exists in bin
+                try {
+                    await Operator.createRecord<IDeletedBookmark>('bookmark_bin', this);
+                } catch (error) {
+                    if (error instanceof DOMException && error.name === "ConstraintError") {
+                        console.log('Bookmark already exists in bin:- ', this.id);
+                    } else {
+                        throw error;
+                    }
+                }
+                // Last of all, delete the bookmark itself
+                await Operator.deleteRecord('bookmarks', this.bookmark_id);
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkBin.moveToBin:- ${error}`);
             }

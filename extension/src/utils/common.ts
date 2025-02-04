@@ -212,3 +212,15 @@ export function filterArchived(categories: ICategory[]): IBookmark[] {
     return categories.flatMap((category) => category.bookmarks)
         .filter((bookmark) => bookmark.archived === 1);
 }
+
+
+/**
+ * Filters an array of items based on a predicate function.
+ *
+ * @param items - The array of items to filter.
+ * @param predicate - The predicate function used to filter the items.
+ * @returns An array of items that satisfy the predicate.
+ */
+export function filterBy<T>(items: T[], predicate: (item: T) => boolean): T[] {
+    return items.filter(predicate);
+}
