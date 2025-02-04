@@ -8,6 +8,7 @@ import {
 import { Operator } from "../operator";
 import Bookmark from "./bookmark";
 import Category from "./category";
+import { v4 as uuid4 } from 'uuid';
 
 // const lockManager = new LockManager();
 
@@ -220,7 +221,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
                 await new CategoryBookmark({
                     category_id: category.id,
                     bookmark_id: bookmark.id,
-                    id: "",
+                    id: uuid4(),
                 }).create();
 
                 // Create the bookmark if not exists
