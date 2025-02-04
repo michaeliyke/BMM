@@ -44,13 +44,13 @@ export default class BookmarkBin {
     description: string;
 
     constructor(bookmark: IDeletedBookmark) {
-        this.created_at = bookmark.created_at;
-        this.updated_at = bookmark.updated_at;
-        this.deleted_at = bookmark.deleted_at;
+        this.created_at = bookmark.created_at; /* (new Date()).toISOString(); */
+        this.updated_at = bookmark.updated_at; /* (new Date()).toISOString(); */
+        this.deleted_at = bookmark.deleted_at; /* (new Date()).toISOString(); */
         this.tag_ids = bookmark.tag_ids;
         this.category_ids = bookmark.category_ids;
         this.note_ids = bookmark.note_ids;
-        this.id = bookmark.id;
+        this.id = bookmark.id; // uuid4()
         this.bookmark_id = bookmark.bookmark_id;
         this.title = bookmark.title;
         this.url = bookmark.url;
@@ -195,9 +195,8 @@ export default class BookmarkBin {
                     console.warn(`Bookmark already exists in bin:- ${this.id}`);
                     return;
                 }
-                // this.tag_ids = (await BookmarkTag.deleteTagLinks(bookmark.id)).join(',');
-                const tags = await BookmarkTag.getTags(bookmark.id);
-                console.log('tags:', tags);
+                this.tag_ids = (await BookmarkTag.deleteTagLinks(bookmark.id)).join(',');
+                // console.log('tags:', this.tag_ids);
                 const categories = await CategoryBookmark.getCategories(bookmark.id);
                 console.log('categories:', categories);
                 // TODO: store bookmark note ids - BookmarkNotes

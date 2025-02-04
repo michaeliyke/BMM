@@ -9,7 +9,6 @@ import {
 import { Operator } from "../operator";
 import Bookmark from "./bookmark";
 import Category from "./category";
-import { v4 as uuid4 } from 'uuid';
 
 // const lockManager = new LockManager();
 
@@ -115,8 +114,9 @@ export default class CategoryBookmark implements ICategoryBookmark {
     static async getCategories(bookmarkId: string): Promise<ICategory[]> {
         return lockManager.acquire(`CategoryBookmark.getCategories:${bookmarkId}`, async () => {
             try {
-                const query = IDBKeyRange.bound([bookmarkId, ""], [bookmarkId, "\uffff"]);
-                const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
+                // const query = IDBKeyRange.bound(["", bookmarkId], ["\uffff", bookmarkId]);
+                const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index');
+                console.log(categoryBookmarks);
                 const promises = categoryBookmarks.map(async ({ category_id }) => {
                     return await Operator.getRecordById<ICategory>('categories', category_id);
                 });
@@ -188,7 +188,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
     }
 
     constructor(categoryBookmark: ICategoryBookmark) {
-        this.id = categoryBookmark.id || uuid4();
+        this.id = categoryBookmark.id; /* uuid4() */
         this.category_id = categoryBookmark.category_id;
         this.bookmark_id = categoryBookmark.bookmark_id;
     }

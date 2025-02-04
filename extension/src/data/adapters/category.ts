@@ -10,7 +10,6 @@ import { Operator } from "../operator";
 import BookmarkTag from "./bookmark_tag";
 import CategoryBookmark from "./category_bookmark";
 import CategoryTag from "./category_tag";
-import { v4 as uuid4 } from 'uuid';
 
 export default class Category implements ICategory {
 
@@ -23,11 +22,11 @@ export default class Category implements ICategory {
     tags: ITag[];
 
     constructor(category: ICategory) {
-        this.id = category.id || uuid4();
+        this.id = category.id; /* uuid4() */
         this.name = category.name;
         this.is_default = category.is_default;
-        this.created_at = (new Date()).toISOString();
-        this.updated_at = this.created_at;
+        this.created_at = category.created_at; /* (new Date()).toISOString() */
+        this.updated_at = category.updated_at; /* (new Date()).toISOString() */
         this.bookmarks = category.bookmarks;
         this.tags = category.tags;
     }

@@ -2,7 +2,6 @@
 import { lockManager } from "../../utils/locker";
 import { IBookmark, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
-import { v4 as uuid4 } from 'uuid';
 
 
 export default class Bookmark implements IBookmark {
@@ -16,12 +15,12 @@ export default class Bookmark implements IBookmark {
     archived: number;
 
     constructor(bookmark: IBookmark) {
-        this.id = bookmark.id || uuid4();
+        this.id = bookmark.id; /* uuid4() */
         this.title = bookmark.title;
         this.url = bookmark.url;
         this.description = bookmark.description;
-        this.created_at = (new Date()).toISOString();
-        this.updated_at = this.created_at;
+        this.created_at = bookmark.created_at; /* (new Date()).toISOString(); */
+        this.updated_at = bookmark.updated_at; /* (new Date()).toISOString(); */
         this.tags = bookmark.tags;
         this.archived = bookmark.archived || 0;
     }

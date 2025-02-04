@@ -12,14 +12,14 @@ export default class User implements IUser {
     updated_at: string;
 
     constructor(user: IUser) {
-        this.id = user.id;
+        this.id = user.id; /* uuid4(); */
         this.username = user.username;
         this.password = user.password;
         this.email = user.email;
         this.first_name = user.first_name;
         this.last_name = user.last_name;
-        this.created_at = user.created_at;
-        this.updated_at = user.updated_at;
+        this.created_at = user.created_at; /* new Date().toISOString(); */
+        this.updated_at = user.updated_at; /* new Date().toISOString(); */
     }
 
     /**

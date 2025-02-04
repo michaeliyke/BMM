@@ -6,7 +6,6 @@ import {
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 import Tag from "./tag";
-import { v4 as uuid4 } from 'uuid';
 
 export default class BookmarkTag implements IBookmarkTag {
     id: string;
@@ -14,7 +13,7 @@ export default class BookmarkTag implements IBookmarkTag {
     tag_id: string;
 
     constructor(bookmarkTag: IBookmarkTag) {
-        this.id = bookmarkTag.id || uuid4();
+        this.id = bookmarkTag.id; // uuid4();
         this.bookmark_id = bookmarkTag.bookmark_id;
         this.tag_id = bookmarkTag.tag_id;
     }
@@ -331,7 +330,7 @@ export default class BookmarkTag implements IBookmarkTag {
             try {
                 const query = IDBKeyRange.bound([bookmarkId, ""], [bookmarkId, "\uffff"]);
                 const bookmarkTags = await BookmarkTag.getAll(query);
-                await Operator.deleteRecordsByIndex('bookmark_tags', 'bookmark_tags_index', query);
+                // await Operator.deleteRecordsByIndex('bookmark_tags', 'bookmark_tags_index', query);
                 return bookmarkTags.map(({ tag_id }) => tag_id);
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.deleteTagLinks:- ${error}, ${bookmarkId}`);

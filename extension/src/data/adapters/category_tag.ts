@@ -5,7 +5,6 @@ import Bookmark from "./bookmark";
 import Category from "./category";
 import CategoryBookmark from "./category_bookmark";
 import Tag from "./tag";
-import { v4 as uuid4 } from 'uuid';
 
 // const lockManager = new LockManager();
 
@@ -15,7 +14,7 @@ export default class CategoryTag implements ICategoryTag {
     tag_id: string;
 
     constructor(categoryTag: ICategoryTag) {
-        this.id = categoryTag.id || uuid4();
+        this.id = categoryTag.id; /* uuid4(); */
         this.category_id = categoryTag.category_id;
         this.tag_id = categoryTag.tag_id;
     }

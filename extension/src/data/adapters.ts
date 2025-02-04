@@ -6,7 +6,7 @@ import BookmarkTag from "./adapters/bookmark_tag";
 import CategoryBookmark from "./adapters/category_bookmark";
 import CategoryTag from "./adapters/category_tag";
 import { ICategory } from "../utils/types/schemas";
-
+import { v4 as uuid4 } from "uuid";
 export default {
     /**
      * Retrieves all categories.
@@ -29,38 +29,58 @@ export default {
      */
     async loadInitialData(data: ICategory[]): Promise<void> {
         for (const category of data) {
+            /* TODO: There must be a clear way to avoid data corruption */
             // Save the category
-            await new Category(category).create();
+            const cat = new Category(category);
+            if (!await cat.exists())
+                await cat.create();
             // save category-tags relationship
             for (const tag of category.tags) {
-                await new Tag(tag).create(); // Save the tag
+                const tg = new Tag(tag);
+                if (!await tg.exists())
+                    await tg.create();
                 // Save category-tag
-                await new CategoryTag({
-                    id: "",
+                const catTg = new CategoryTag({
+                    id: uuid4(),
                     category_id: category.id,
                     tag_id: tag.id,
-                }).create();
+                });
+
+                if (!await catTg.exists())
+                    await catTg.create();
             }
 
             // Save bookmarks, category-bookmarks, and bookmark-tags relationships
             for (const bookmark of category.bookmarks) {
-                await new Bookmark(bookmark).create(); // Save bookmark
+                const book = new Bookmark(bookmark);
+                if (!await book.exists())
+                    await book.create();
                 // Save category-bookmark
-                await new CategoryBookmark({
-                    id: "",
+                const cateBook = new CategoryBookmark({
+                    id: uuid4(),
                     category_id: category.id,
                     bookmark_id: bookmark.id,
-                }).create();
+                });
+
+                if (!await cateBook.exists())
+                    await cateBook.create();
 
                 // save bookmark-tags relationship
                 for (const tag of bookmark.tags) {
-                    await new Tag(tag).create(); // Save the tag if not exists
-                    // Save bookmark-tag
-                    await new BookmarkTag({
-                        id: "",
+                    const tg = new Tag(tag);
+
+                    if (!await tg.exists())
+                        await tg.create();
+
+                    // Save bookmark-tag association
+                    const bookTg = new BookmarkTag({
+                        id: uuid4(),
                         bookmark_id: bookmark.id,
                         tag_id: tag.id,
-                    }).create();
+                    });
+
+                    if (!await bookTg.exists())
+                        await bookTg.create();
                 }
             }
         }

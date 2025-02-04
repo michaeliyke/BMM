@@ -1,7 +1,6 @@
 import { lockManager } from "../../utils/locker";
 import { ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
-import { v4 as uuid4 } from 'uuid';
 
 export default class Tag implements ITag {
 
@@ -11,10 +10,10 @@ export default class Tag implements ITag {
     updated_at: string;
 
     constructor(tag: ITag) {
-        this.id = tag.id || uuid4();
+        this.id = tag.id; /* uuid4(); */
         this.name = tag.name;
-        this.created_at = (new Date()).toISOString();
-        this.updated_at = this.created_at;
+        this.created_at = tag.created_at; /* (new Date()).toISOString(); */
+        this.updated_at = tag.updated_at; /* (new Date()).toISOString(); */
     }
 
     /**
