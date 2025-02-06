@@ -56,10 +56,19 @@ export default function Home(props: IHomeProps) {
 
     // Wrapper function to for setBookmarks: filter out archived bookmarks
     const setBookmarks = useCallback((bookmarks: SetStateAction<IBookmark[]>): void => {
+        // Use a map to ensure that the bookmarks are unique
         setBookmarksRaw((prev) => {
+            const uniqueBookmarks = new Map<string, IBookmark>();
             return (bookmarks instanceof Function ? bookmarks(prev) : bookmarks)
-                .filter((bookmark) => bookmark.archived !== 1);
+                .filter((bookmark) => {
+                    if (bookmark.archived === 1 || uniqueBookmarks.has(bookmark.id)) {
+                        return false;
+                    }
+                    uniqueBookmarks.set(bookmark.id, bookmark);
+                    return true;
+                });
         });
+
     }, []);
 
 

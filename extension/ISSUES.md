@@ -16,6 +16,12 @@
 ## Issue 2: Reloading page creates more category bookmarks
 
 - **Description**: Reloading the page creates more category bookmarks in the database.
--- **Details**: CategoryBookmarks and its index, CategoryTags and its index, BookmarkTags, all get corruped on reload.
+- **Details**: CategoryBookmarks and its index, CategoryTags and its index, BookmarkTags, all get corruped on reload.
 - **Status**: FIXED
+- **Priority**: High
+
+## Issue 3: Deleting a bookmarks causes stale data
+
+- **Description**: Deleting a bookmark causes stale data in the database.
+- **Status**: DEBUGGING
 - **Priority**: High
