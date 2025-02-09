@@ -33,17 +33,15 @@ export default class BookmarkTag implements IBookmarkTag {
      * This method attempts to acquire a lock based on the caller's name and the bookmark tag query.
      * It then checks if a record exists in the 'bookmark_tags' table using the provided bookmark ID and tag ID.
      *
-     * @returns {Promise<boolean>} - A promise that resolves to `true` if the bookmark tag exists, otherwise `false`.
+     * @returns {Promise<IBookmarkTag | null>} - A promise that resolves to the existing bookmark tag if found, otherwise null.
      * @throws {Error} - Throws an error if an issue occurs during the database query or lock acquisition.
      */
-    async exists(): Promise<boolean> {
+    async exists(): Promise<IBookmarkTag | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.bookmark_id, this.tag_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                if (await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query))
-                    return true;
-                return false;
+                return await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${this}`);
             }
@@ -55,65 +53,20 @@ export default class BookmarkTag implements IBookmarkTag {
      *
      * @param bookmarkId - The ID of the bookmark to check.
      * @param tagId - The ID of the tag to check.
-     *
-     * @returns {Promise<boolean>} A promise that resolves to the existing bookmark tag if found, otherwise null.
-     *
-     * @throws {Error} Throws an error if there is an issue querying the database.
-     */
-    static async exists(bookmarkId: string, tagId: string): Promise<boolean> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        const query = [bookmarkId, tagId];
-        return lockManager.acquire(`${callerName}:${query}`, async () => {
-            try {
-                if (await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query))
-                    return true;
-                return false;
-            } catch (error) {
-                throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${query}`);
-            }
-        });
-    }
-
-    /**
-     * Checks if a bookmark tag already exists in the database.
      *
      * @returns {Promise<IBookmarkTag | null>} A promise that resolves to the existing bookmark tag if found, otherwise null.
      *
      * @throws {Error} Throws an error if there is an issue querying the database.
      */
-    async existing(): Promise<IBookmarkTag | null> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        const query = [this.bookmark_id, this.tag_id];
-        return lockManager.acquire(`${callerName}:${query}`, async () => {
-            try {
-                const existing = await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
-                return existing ? existing : null;
-            } catch (error) {
-                throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${this}`);
-            }
-        });
-    }
-
-    /**
-     * Checks if a bookmark tag already exists in the database.
-     * @param bookmarkId - The ID of the bookmark to check.
-     * @param tagId - The ID of the tag to check.
-     *
-     * @returns {Promise<boolean>} A promise that resolves to the existing bookmark tag if found, otherwise null.
-     *
-     * @throws {Error} Throws an error if there is an issue querying the database.
-     */
-    static async bookmarkTagExists(bookmarkId: string, tagId: string): Promise<boolean> {
+    static async exists(bookmarkId: string, tagId: string): Promise<IBookmarkTag | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [bookmarkId, tagId];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                if (!await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query))
-                    return true;
+                return await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${query}`);
             }
-            return false;
         });
     }
 
@@ -236,7 +189,7 @@ export default class BookmarkTag implements IBookmarkTag {
             // Ensure bookmark exists
             try {
                 // Ensure tag does not already exist under the bookmark
-                const existing = await this.existing();
+                const existing = await this.exists();
                 if (!(existing))
                     return Operator.createRecord<IBookmarkTag>('bookmark_tags', this);
                 return existing;

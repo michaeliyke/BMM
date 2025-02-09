@@ -38,27 +38,12 @@ export default class Category implements ICategory {
     /**
      * Checks if a category exists in the database.
      *
-     * @returns A promise that resolves to `true` if the category exists, otherwise `false`.
+     * @returns A promise that resolves to the category object if it exists, otherwise `null`.
      */
-    async exists(): Promise<boolean> {
+    async exists(): Promise<ICategory | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
-            if (await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.name))
-                return true;
-            return false;
-        });
-    }
-
-    /**
-        * Checks if a category exists in the database.
-        *
-        * @returns A promise that resolves to `true` if the category exists, otherwise `false`.
-        */
-    async existing(): Promise<ICategory | null> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        return lockManager.acquire(`${callerName}:${this.id}`, async () => {
-            const existing = await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.name);
-            return existing ? existing : null;
+            return await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.name);
         });
     }
 
@@ -66,14 +51,12 @@ export default class Category implements ICategory {
      * Checks if a category with the given name exists.
      *
      * @param name - The name of the category to check.
-     * @returns A promise that resolves to `true` if the category exists, otherwise `false`.
+     * @returns A promise that resolves to the category object if it exists, otherwise `null`.
      */
-    static async categoryExists(name: string): Promise<boolean> {
+    static async exists(name: string): Promise<ICategory | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${name}`, async () => {
-            if (await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', name))
-                return true;
-            return false;
+            return await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', name);
         });
     }
 
@@ -116,7 +99,7 @@ export default class Category implements ICategory {
             this.bookmarks = []; // Do not save bookmarks in the category object
             // Only proceed if the category does not already exist
             try {
-                const existing = await this.existing();
+                const existing = await this.exists();
                 if (!existing)
                     return Operator.createRecord<ICategory>('categories', this);
                 return existing;

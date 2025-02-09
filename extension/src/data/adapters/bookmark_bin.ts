@@ -1,10 +1,10 @@
+import { isEmpty } from "../../utils/common";
+import { lockManager } from "../../utils/locker";
 import { IBookmark, IBookmarkTag, ICategoryBookmark, IDeletedBookmark } from "../../utils/types/schemas";
 import { Operator } from "../operator";
-import { lockManager } from "../../utils/locker";
 import Bookmark from "./bookmark";
 import BookmarkTag from "./bookmark_tag";
 import CategoryBookmark from "./category_bookmark";
-import { isEmpty } from "../../utils/common";
 
 
 /**
@@ -270,18 +270,16 @@ export default class BookmarkBin {
     /**
      * Checks if a bookmark exists in the bookmark bin.
      *
-     * @returns {Promise<boolean>} A promise that resolves to `true` if the bookmark exists, otherwise `false`.
+     * @returns {Promise<IDeletedBookmark | null>} A promise that resolves to the deleted bookmark record if it exists.
      *
      * @throws {Error} Throws an error if there is an issue checking the existence of the bookmark.
      */
-    async exists(): Promise<boolean> {
+    async exists(): Promise<IDeletedBookmark | null> {
         // get the calling method name
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
-                if (await Operator.getRecordById<IDeletedBookmark>('bookmark_bin', this.id))
-                    return true;
-                return false;
+                return await Operator.getRecordById<IDeletedBookmark>('bookmark_bin', this.id);
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkBin.exists:- ${error}, ${this.id}`);
             }

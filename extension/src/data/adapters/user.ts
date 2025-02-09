@@ -32,14 +32,12 @@ export default class User implements IUser {
      * This method attempts to retrieve a user record by its ID from the 'users' table.
      * If a record is found, it returns `true`, otherwise it returns `false`.
      *
-     * @returns {Promise<boolean>} A promise that resolves to `true` if the user exists, otherwise `false`.
+     * @returns {Promise<IUser|null>} A promise that resolves to the user object if it exists, otherwise `null`.
      * @throws {Error} Throws an error if there is an issue with the database operation.
      */
-    async exists(): Promise<boolean> {
+    async exists(): Promise<IUser | null> {
         try {
-            if (await Operator.getRecordById<IUser>('users', this.id))
-                return true;
-            return false;
+            return await Operator.getRecordById<IUser>('users', this.id) || null;
         } catch (error) {
             throw new Error(`An error occurred in User.exists:- ${error}, ${this}`);
         }

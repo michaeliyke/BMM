@@ -25,32 +25,13 @@ export default class Tag implements ITag {
     /**
      * Checks if a tag exists in the database.
      *
-     * @returns A promise that resolves to true if the tag exists, and false otherwise.
+     * @returns A promise that resolves to the tag object if it exists, otherwise null.
      */
-    async exists(): Promise<boolean> {
+    async exists(): Promise<ITag | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
-                if (await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.name))
-                    return true;
-                return false;
-            } catch (error) {
-                throw new Error(`An error occurred in Tag.exists:- ${error}, ${this.id}`);
-            }
-        });
-    }
-
-    /**
-     * Checks if a tag exists in the database.
-     *
-     * @returns A promise that resolves to true if the tag exists, and false otherwise.
-     */
-    async existing(): Promise<ITag | null> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        return lockManager.acquire(`${callerName}:${this.id}`, async () => {
-            try {
-                const tag = await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.name);
-                return tag ? tag : null;
+                return await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.name);
             } catch (error) {
                 throw new Error(`An error occurred in Tag.exists:- ${error}, ${this.id}`);
             }
@@ -61,16 +42,14 @@ export default class Tag implements ITag {
      * Checks if a tag with the given name exists.
      *
      * @param name - The name of the tag to check for existence.
-     * @returns A promise that resolves to `true` if the tag exists, otherwise `false`.
+     * @returns A promise that resolves to the tag object if it exists, otherwise null.
      * @throws An error if there is an issue during the check.
      */
-    static async exists(name: string): Promise<boolean> {
+    static async exists(name: string): Promise<ITag | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${name}`, async () => {
             try {
-                if (await Operator.getRecordByIndex<ITag>('tags', 'tags_index', name))
-                    return true;
-                return false;
+                return await Operator.getRecordByIndex<ITag>('tags', 'tags_index', name);
             } catch (error) {
                 throw new Error(`An error occurred in Tag.exists:- ${error}, ${name}`);
             }
@@ -86,7 +65,7 @@ export default class Tag implements ITag {
         return lockManager.acquire(`Tag.create:${this.id}`, async () => {
             // Create a new tag record in the database if not exists
             try {
-                const existing = await this.existing();
+                const existing = await this.exists();
                 if (!existing)
                     return await Operator.createRecord<ITag>('tags', this);
                 return existing;

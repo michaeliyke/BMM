@@ -1,3 +1,4 @@
+import { v4 as uuid4 } from 'uuid';
 import { filterBy, isEmpty } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import {
@@ -8,7 +9,6 @@ import {
 import { Operator } from "../operator";
 import Bookmark from "./bookmark";
 import Category from "./category";
-import { v4 as uuid4 } from 'uuid';
 
 // const lockManager = new LockManager();
 
@@ -24,20 +24,18 @@ export default class CategoryBookmark implements ICategoryBookmark {
      * of the instance and attempts to acquire a lock based on the caller's name and the query.
      * It then checks if a record exists in the 'category_bookmarks' table using the specified index.
      *
-     * @returns {Promise<boolean>} A promise that resolves to `true` if the category bookmark exists, otherwise `false`.
+     * @returns {Promise<ICategoryBookmark | null>} A promise that resolves to the existing category bookmark if found, or null if not found.
      * @throws {Error} Throws an error if an issue occurs during the database query.
      */
-    async exists(): Promise<boolean> {
+    async exists(): Promise<ICategoryBookmark | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.category_id, this.bookmark_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
-                    return true;
+                return await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query);
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
             }
-            return false;
         });
     }
 
@@ -45,36 +43,14 @@ export default class CategoryBookmark implements ICategoryBookmark {
      * Checks if a category bookmark exists in the database.
      * @param category_id
      * @param bookmark_id
-     * @returns
+     * @returns {Promise<ICategoryBookmark | null>} A promise that resolves to the existing category bookmark if found, or null if not found.
      */
-    static async exists(category_id: string, bookmark_id: string): Promise<boolean> {
+    static async exists(category_id: string, bookmark_id: string): Promise<ICategoryBookmark | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [category_id, bookmark_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
-                    return true;
-            } catch (error) {
-                throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
-            }
-            return false;
-        });
-    }
-
-    /**
-     * Checks if a category bookmark already exists in the database.
-     *
-     * @returns {Promise<ICategoryBookmark | null>} A promise that resolves to the existing category bookmark if found, or null if not found.
-     *
-     * @throws {Error} Throws an error if there is an issue querying the database.
-     */
-    async existing(): Promise<ICategoryBookmark | null> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        const query = [this.category_id, this.bookmark_id];
-        return lockManager.acquire(`${callerName}:${query}`, async () => {
-            try {
-                const existing = await Operator.getRecordByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query)
-                return existing ? existing : null;
+                return await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query);
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
             }
@@ -187,28 +163,6 @@ export default class CategoryBookmark implements ICategoryBookmark {
         });
     }
 
-    /**
-     * Checks if a bookmark exists within a specific category.
-     *
-     * @param categoryId - The ID of the category to check.
-     * @param bookmarkId - The ID of the bookmark to check.
-     * @returns A promise that resolves to a boolean indicating whether the bookmark exists in the category.
-     * @throws Will throw an error if there is an issue accessing the database.
-     */
-    static async categoryBookmarkExists(categoryId: string, bookmarkId: string): Promise<boolean> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        const query = [categoryId, bookmarkId];
-        return lockManager.acquire(`${callerName}:${query}`, async () => {
-            try {
-                if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
-                    return true;
-            } catch (error) {
-                throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${query}`);
-            }
-            return false;
-        });
-    }
-
     constructor(categoryBookmark: ICategoryBookmark) {
         this.id = categoryBookmark.id; /* uuid4() */
         this.category_id = categoryBookmark.category_id;
@@ -240,7 +194,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
                     throw new Error(`CategoryBookmark.createBookmark:- Category not found: ${category.id}`);
 
                 // If the bookmark already exists under the category, throw an error
-                if (await CategoryBookmark.categoryBookmarkExists(category.id, bookmark.id))
+                if (await CategoryBookmark.exists(category.id, bookmark.id))
                     throw new Error(`CategoryBookmark.createBookmark:- index already exists: ${query}`);
 
                 await new CategoryBookmark({
@@ -250,7 +204,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
                 }).create();
 
                 // Create the bookmark if not exists
-                const existing = await bookmark.existing();
+                const existing = await bookmark.exists();
                 return existing ? existing : await bookmark.create();
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.createBookmark:- ${error}, ${bookmark}`);
@@ -270,7 +224,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
         return lockManager.acquire(`CategoryBookmark.create:${query}`, async () => {
             try {
                 // Ensure the bookmark doesn't already exist in the category
-                const existing = await this.existing();
+                const existing = await this.exists();
                 if (!(existing))
                     return Operator.createRecord('category_bookmarks', this);
                 return existing
