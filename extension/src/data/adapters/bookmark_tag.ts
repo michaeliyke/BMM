@@ -393,10 +393,10 @@ export default class BookmarkTag implements IBookmarkTag {
                 if (category && !await CategoryBookmark.exists(category.id, bookmark.id)) // must exist
                     throw new Error(`Bookmark not found under category: ${bookmark.id}`);
 
-                if (await tag.exists()) // Ensure tag does not exists
-                    throw new Error(`Tag already exists: ${tag.id}`);
-
-                await tag.create(); // create tag
+                if (!await tag.exists()) // create tag if not exists
+                    await tag.create(); // allows to add existing tag
+                else
+                    console.log(`Tag already exists: ${tag.id}`);
 
                 // Create a bookmark tag instance
                 const bookmarkTag = new BookmarkTag({

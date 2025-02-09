@@ -1,11 +1,12 @@
-import { FaClock, FaCommentDots, FaRegStar } from "react-icons/fa";
 import moment from "moment";
 import { Dispatch, SetStateAction, useState } from "react";
-import { BookmarkEditForm } from "./BookmarkEditForm";
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
+import { FaClock, FaCommentDots, FaRegStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { BookmarkEditForm } from "./BookmarkEditForm";
+import BookmarkItemFooter from "./BookmarkItemFooter";
 
 type BookmarkViewProps = {
     bookmarks: IBookmark[];
@@ -158,6 +159,13 @@ export default function BookmarkView(props: BookmarkViewProps) {
                             <span>Notes</span>
                         </h2>
                     </section>
+                    <hr className="my-3" />
+                    <BookmarkItemFooter
+                        bookmark={bookmark}
+                        selectedCategory={null}
+                        setBookmarks={props.setBookmarks}
+                        bookmarks={props.bookmarks}
+                    />
                 </article>
             </section>
     );
