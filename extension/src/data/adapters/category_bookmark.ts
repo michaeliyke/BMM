@@ -1,4 +1,4 @@
-import { filterBy } from "../../utils/common";
+import { filterBy, isEmpty } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import {
     IBookmark,
@@ -30,6 +30,26 @@ export default class CategoryBookmark implements ICategoryBookmark {
     async exists(): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         const query = [this.category_id, this.bookmark_id];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
+                    return true;
+            } catch (error) {
+                throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Checks if a category bookmark exists in the database.
+     * @param category_id
+     * @param bookmark_id
+     * @returns
+     */
+    static async exists(category_id: string, bookmark_id: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [category_id, bookmark_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
                 if (await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query))
@@ -193,6 +213,11 @@ export default class CategoryBookmark implements ICategoryBookmark {
         this.id = categoryBookmark.id; /* uuid4() */
         this.category_id = categoryBookmark.category_id;
         this.bookmark_id = categoryBookmark.bookmark_id;
+
+        const prop = isEmpty(['id', 'category_id', 'bookmark_id'], categoryBookmark);
+        if (prop) {
+            throw new Error(`CategoryBookmark constructor:- required field: ${prop}`);
+        }
     }
 
     /**

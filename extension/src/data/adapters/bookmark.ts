@@ -1,4 +1,5 @@
 
+import { isEmpty } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import { IBookmark, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
@@ -22,7 +23,11 @@ export default class Bookmark implements IBookmark {
         this.created_at = bookmark.created_at; /* (new Date()).toISOString(); */
         this.updated_at = bookmark.updated_at; /* (new Date()).toISOString(); */
         this.tags = bookmark.tags;
-        this.archived = bookmark.archived || 0;
+        this.archived = bookmark.archived;
+
+        const prop = isEmpty([
+            'id', 'url', 'created_at', 'updated_at', 'archived'], bookmark);
+        if (prop) throw new Error(`Bookmark.constructor: require field: '${prop}'`);
     }
 
     /**

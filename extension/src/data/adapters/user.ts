@@ -1,3 +1,4 @@
+import { isEmpty } from "../../utils/common";
 import { IUser } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 
@@ -20,6 +21,9 @@ export default class User implements IUser {
         this.last_name = user.last_name;
         this.created_at = user.created_at; /* new Date().toISOString(); */
         this.updated_at = user.updated_at; /* new Date().toISOString(); */
+
+        const empty = isEmpty(['id', 'password', 'email', 'created_at', 'updated_at'], user);
+        if (empty) throw new Error(`User.constructor:- Required field: ${empty}`);
     }
 
     /**

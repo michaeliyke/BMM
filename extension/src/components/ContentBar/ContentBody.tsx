@@ -16,6 +16,7 @@ type BookmarksDisplayProps = {
     setData: Dispatch<SetStateAction<ICategory[]>>;
     filterBy: string;
     setFilterBy: Dispatch<SetStateAction<string>>;
+    selectedCategory: ICategory | null;
 };
 
 
@@ -44,6 +45,7 @@ export default function ContentBody(props: BookmarksDisplayProps) {
         data,
         setData,
         filterBy,
+        selectedCategory,
     } = props;
 
     if (bookmarkToShow) {
@@ -84,5 +86,6 @@ export default function ContentBody(props: BookmarksDisplayProps) {
         setBookmarks={setBookmarks}
         data={data}
         setData={setData}
+        selectedCategory={selectedCategory}
     />;
 }

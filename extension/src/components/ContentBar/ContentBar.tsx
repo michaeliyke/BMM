@@ -119,6 +119,7 @@ export default function ContentBar(props: ContentBarProps) {
                 setData={setData}
                 filterBy={props.filterBy}
                 setFilterBy={props.setFilterBy}
+                selectedCategory={selectedCategory}
             />
             <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
         </article>

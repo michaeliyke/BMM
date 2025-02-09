@@ -1,3 +1,4 @@
+import { isEmpty } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import {
     IBookmark,
@@ -29,6 +30,9 @@ export default class Category implements ICategory {
         this.updated_at = category.updated_at; /* (new Date()).toISOString() */
         this.bookmarks = category.bookmarks;
         this.tags = category.tags;
+
+        const empty = isEmpty(['id', 'name', 'is_default', 'created_at', 'updated_at'], category);
+        if (empty) throw new Error(`Category.constructor: required field: ${empty}`);
     }
 
     /**

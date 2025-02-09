@@ -1,3 +1,4 @@
+import { isEmpty } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import { ICategory, ICategoryTag, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
@@ -17,6 +18,9 @@ export default class CategoryTag implements ICategoryTag {
         this.id = categoryTag.id; /* uuid4(); */
         this.category_id = categoryTag.category_id;
         this.tag_id = categoryTag.tag_id;
+
+        const empty = isEmpty(['id', 'category_id', 'tag_id'], categoryTag);
+        if (empty) throw new Error(`CategoryTag.constructor:- required field: ${empty}`);
     }
 
     /**

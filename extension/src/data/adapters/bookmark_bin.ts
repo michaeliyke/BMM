@@ -4,6 +4,7 @@ import { lockManager } from "../../utils/locker";
 import Bookmark from "./bookmark";
 import BookmarkTag from "./bookmark_tag";
 import CategoryBookmark from "./category_bookmark";
+import { isEmpty } from "../../utils/common";
 
 
 /**
@@ -55,7 +56,18 @@ export default class BookmarkBin {
         this.title = bookmark.title;
         this.url = bookmark.url;
         this.description = bookmark.description;
+
+        const prop = isEmpty([
+            'created_at', 'updated_at', 'deleted_at', 'tag_ids',
+            'category_ids', 'note_ids', 'id', 'bookmark_id', 'url'
+        ], bookmark);
+
+        if (prop) {
+            throw new Error(`BookmarkBin.constructor:- required field: ${prop}`);
+        }
     }
+
+
 
     async #restoreNotes(): Promise<void> { }
 

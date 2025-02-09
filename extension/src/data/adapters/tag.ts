@@ -1,3 +1,4 @@
+import { isEmpty } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import { ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
@@ -14,6 +15,11 @@ export default class Tag implements ITag {
         this.name = tag.name;
         this.created_at = tag.created_at; /* (new Date()).toISOString(); */
         this.updated_at = tag.updated_at; /* (new Date()).toISOString(); */
+
+        const empty = isEmpty(['id', 'name', 'created_at', 'updated_at'], tag);
+        if (empty) {
+            throw new Error(`Tag.constructor:- required field: ${empty}`);
+        }
     }
 
     /**
@@ -58,7 +64,7 @@ export default class Tag implements ITag {
      * @returns A promise that resolves to `true` if the tag exists, otherwise `false`.
      * @throws An error if there is an issue during the check.
      */
-    static async tagExists(name: string): Promise<boolean> {
+    static async exists(name: string): Promise<boolean> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${name}`, async () => {
             try {

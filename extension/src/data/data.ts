@@ -12,37 +12,37 @@ import { IBookmark, ICategory, ITag } from "../utils/types/schemas";
 const tags: ITag[] = [
     {
         id: '0',
-        name: "Google",
+        name: "Coals",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
     },
     {
         id: '1',
-        name: "Career",
+        name: "Scamble",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
     },
     {
         id: '2',
-        name: "Certificates",
+        name: "Steam",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
     },
     {
         id: '3',
-        name: "Grow-w-Google",
+        name: "Hots",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
     },
     {
         id: '4',
-        name: "Googles",
+        name: "Muses",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
     },
     {
         id: '5',
-        name: "Goo.gle",
+        name: "Rants",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
     },

@@ -2,11 +2,11 @@ import Bookmark from "./adapters/bookmark";
 import Category from "./adapters/category";
 import Tag from "./adapters/tag";
 // import User from "./adapters/user";
+import { v4 as uuid4 } from "uuid";
+import { ICategory } from "../utils/types/schemas";
 import BookmarkTag from "./adapters/bookmark_tag";
 import CategoryBookmark from "./adapters/category_bookmark";
 import CategoryTag from "./adapters/category_tag";
-import { ICategory } from "../utils/types/schemas";
-import { v4 as uuid4 } from "uuid";
 export default {
     /**
      * Retrieves all categories.
@@ -52,7 +52,7 @@ export default {
 
             // Save bookmarks, category-bookmarks, and bookmark-tags relationships
             for (const bookmark of category.bookmarks) {
-                const book = new Bookmark(bookmark);
+                const book = new Bookmark({ ...bookmark, archived: 0 });
                 if (!await book.exists())
                     await book.create();
                 // Save category-bookmark

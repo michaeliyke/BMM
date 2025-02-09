@@ -1,6 +1,6 @@
 import moment from "moment";
+import { addClass, removeClass } from "./domHelpers";
 import { IBookmark, ICategory } from "./types/schemas";
-import { removeClass, addClass } from "./domHelpers";
 
 
 export function sortedBookmarks(bookmarks: IBookmark[]): IBookmark[] {
@@ -223,4 +223,19 @@ export function filterArchived(categories: ICategory[]): IBookmark[] {
  */
 export function filterBy<T>(items: T[], predicate: (item: T) => boolean): T[] {
     return items.filter(predicate);
+}
+
+/**
+ * Checks if any of the specified properties in the given object are empty.
+ *
+ * @param props - An array of property names to check in the object.
+ * @param obj - The object to check for empty properties.
+ * @returns The name of the first empty property found, or `false` if all properties are non-empty.
+ */
+export function isEmpty<T extends object>(props: (keyof T)[], obj: T): false | (keyof T) {
+    for (const prop of props) {
+        const value = prop in obj ? String(obj[prop]).trim() : '';
+        if (!value) return prop;
+    }
+    return false;
 }

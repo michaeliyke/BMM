@@ -1,4 +1,5 @@
-import { filterBy } from "../../utils/common";
+import { v4 as uuid4 } from "uuid";
+import { filterBy, isEmpty } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import {
     IBookmark,
@@ -6,6 +7,10 @@ import {
     ITag,
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
+import Bookmark from "./bookmark";
+import Category from "./category";
+import CategoryBookmark from "./category_bookmark";
+import CategoryTag from "./category_tag";
 import Tag from "./tag";
 
 export default class BookmarkTag implements IBookmarkTag {
@@ -17,6 +22,9 @@ export default class BookmarkTag implements IBookmarkTag {
         this.id = bookmarkTag.id; // uuid4();
         this.bookmark_id = bookmarkTag.bookmark_id;
         this.tag_id = bookmarkTag.tag_id;
+        const prop = isEmpty(['id', 'bookmark_id', 'tag_id'], bookmarkTag);
+        if (prop)
+            throw new Error(`BookmarkTag.constructor: require field: '${prop}'`);
     }
 
     /**
@@ -33,12 +41,36 @@ export default class BookmarkTag implements IBookmarkTag {
         const query = [this.bookmark_id, this.tag_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                if (!await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query))
+                if (await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query))
                     return true;
+                return false;
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${this}`);
             }
-            return false;
+        });
+    }
+
+    /**
+     * Checks if a bookmark tag already exists in the database.
+     *
+     * @param bookmarkId - The ID of the bookmark to check.
+     * @param tagId - The ID of the tag to check.
+     *
+     * @returns {Promise<boolean>} A promise that resolves to the existing bookmark tag if found, otherwise null.
+     *
+     * @throws {Error} Throws an error if there is an issue querying the database.
+     */
+    static async exists(bookmarkId: string, tagId: string): Promise<boolean> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        const query = [bookmarkId, tagId];
+        return lockManager.acquire(`${callerName}:${query}`, async () => {
+            try {
+                if (await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query))
+                    return true;
+                return false;
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${query}`);
+            }
         });
     }
 
@@ -59,7 +91,6 @@ export default class BookmarkTag implements IBookmarkTag {
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${this}`);
             }
-            return null;
         });
     }
 
@@ -341,4 +372,110 @@ export default class BookmarkTag implements IBookmarkTag {
         });
     }
 
+
+    /**
+     * Creates a new bookmark tag for a bookmark under a category.
+     * If no category is selected, tag is added to the bookmark only.
+     * @param tag - The tag to be created.
+     * @param bookmark - The bookmark to be tagged.
+     * @param category - The category under which the bookmark is tagged.
+     * @returns A promise that resolves when the bookmark tag has been successfully created.
+     */
+    static async createCategoryBookmarkTag(tag: Tag, bookmark: Bookmark, category: Category | null) {
+        return lockManager.acquire(`BookmarkTag.createCategoryBookmarkTag:${tag.id}:${bookmark.id}:${category?.id}`, async () => {
+            try {
+                if (category && !await category.exists()) // Ensure category exists
+                    throw new Error(`Category not found: ${category.id}`);
+
+                if (!await bookmark.exists()) // Ensure bookmark exists
+                    throw new Error(`Bookmark not found: ${bookmark.id}`);
+
+                if (category && !await CategoryBookmark.exists(category.id, bookmark.id)) // must exist
+                    throw new Error(`Bookmark not found under category: ${bookmark.id}`);
+
+                if (await tag.exists()) // Ensure tag does not exists
+                    throw new Error(`Tag already exists: ${tag.id}`);
+
+                await tag.create(); // create tag
+
+                // Create a bookmark tag instance
+                const bookmarkTag = new BookmarkTag({
+                    id: uuid4(),
+                    bookmark_id: bookmark.id,
+                    tag_id: tag.id,
+
+                });
+
+                if (await bookmarkTag.exists()) // Ensure bookmark tag does not exist
+                    throw new Error(`BookmarkTag already exists: ${bookmarkTag.id}`);
+
+                await bookmarkTag.create(); // create bookmark tag
+
+                if (category) {
+                    const categoryTag = new CategoryTag({  // category tag instance
+                        id: uuid4(),
+                        category_id: category.id,
+                        tag_id: tag.id,
+                    });
+
+                    if (await categoryTag.exists()) // Ensure category tag does not exist
+                        throw new Error(`CategoryTag already exists: ${categoryTag.id}`);
+
+                    await categoryTag.create(); // create category tag
+                }
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.createCategoryBookmarkTag:- ${error}, ${tag}, ${bookmark}, ${category}`);
+            }
+        });
+    }
+
+    /**
+     * Adds an existing tag to a bookmark under a category.
+     * If no category is selected, the tag is added the bookmark only.
+     * @param tag - The tag to be added.
+     * @param bookmark - The bookmark to be tagged.
+     * @param category - The category under which the bookmark is tagged.
+     * @returns A promise that resolves when the tag has been successfully added.
+     */
+    static async addCategoryBookmarkTag(tag: Tag, bookmark: Bookmark, category: Category | null) {
+        return lockManager.acquire(`BookmarkTag.addCategoryBookmarkTag:${tag.id}:${bookmark.id}:${category?.id}`, async () => {
+            try {
+                if (category && !await category.exists()) // Ensure category exists
+                    throw new Error(`Category not found: ${category.id}`);
+
+                if (!await bookmark.exists()) // Ensure bookmark exists
+                    throw new Error(`Bookmark not found: ${bookmark.id}`);
+
+                if (category && !await CategoryBookmark.exists(category.id, bookmark.id)) // must exist
+                    throw new Error(`Bookmark not found under category: ${bookmark.id}`);
+
+                if (!await tag.exists()) // Ensure tag exists
+                    throw new Error(`Tag not found: ${tag.id}`);
+
+                const bookmarkTag = new BookmarkTag({
+                    id: uuid4(),
+                    bookmark_id: bookmark.id,
+                    tag_id: tag.id,
+                });
+
+                if (await bookmarkTag.exists()) // Ensure bookmark tag does not exist
+                    throw new Error(`BookmarkTag already exists: ${bookmarkTag.id}`);
+
+                await bookmarkTag.create(); // create bookmark tag
+
+                if (category) {
+                    const categoryTag = new CategoryTag({  // category tag instance
+                        id: uuid4(),
+                        category_id: category.id,
+                        tag_id: tag.id,
+                    });
+
+                    if (!await categoryTag.exists()) // Tag may already exist under category
+                        await categoryTag.create(); // create category tag
+                }
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.addCategoryBookmarkTag:- ${error}, ${tag}, ${bookmark}, ${category}`);
+            }
+        });
+    }
 }

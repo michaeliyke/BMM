@@ -19,6 +19,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import { DeleteDialog } from "./dialogs/DeleteDialog";
 import { ArchiveDialog } from "./dialogs/ArchiveDialog";
+import BookmarkItemFooter from "./BookmarkItemFooter";
 
 type BookmarkListProps = {
     bookmarks: IBookmark[];
@@ -29,6 +30,7 @@ type BookmarkListProps = {
     selectedTag?: ITag | null;
     data: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
+    selectedCategory: ICategory | null;
 };
 
 /**
@@ -48,6 +50,7 @@ export default function BookmarkList(props: BookmarkListProps) {
         selectedTag,
         bookmarks,
         data,
+        selectedCategory,
     } = props;
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -77,8 +80,7 @@ export default function BookmarkList(props: BookmarkListProps) {
     filteredBookmarks = sortedBookmarks(filteredBookmarks);
 
     // console.log(selectedTag);
-    const dummyCategrories = ['Category 1', 'Category 2', 'Category 3', 'Category 4', 'Category 5'];
-    const dummyTags = ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5'];
+    // const dummyTags = ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5'];
 
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
@@ -180,17 +182,13 @@ export default function BookmarkList(props: BookmarkListProps) {
                     </aside>
 
                     {/* Tags Section */}
-                    <footer className="mt-2 flex flex-wrap gap-2">
-                        {bookmark.tags.map((tag) => (
-                            <span
-                                key={tag.id}
-                                className="flex items-center text-xs text-gray-500 bg-gray-100 py-0.5 px-2 rounded-full"
-                            >
-                                <span className="text-gray-400 mr-1">#</span>
-                                {tag.name}
-                            </span>
-                        ))}
-                    </footer>
+                    <hr className="mt-3" />
+                    <BookmarkItemFooter
+                        bookmark={bookmark}
+                        selectedCategory={selectedCategory}
+                        setBookmarks={props.setBookmarks}
+                        bookmarks={props.bookmarks}
+                    />
                 </article>
             ))}
             <ArchiveDialog
@@ -213,4 +211,5 @@ export default function BookmarkList(props: BookmarkListProps) {
 
     );
 }
+
 
