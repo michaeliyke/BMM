@@ -1,9 +1,9 @@
 
 import { Dispatch, SetStateAction, useEffect } from "react";
+import { getBookmarks } from "../../utils/common";
+import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import ContentBody from "./ContentBody";
 import ContentHeader from "./ContentHeader";
-import { getBookmarks } from "../../utils/common";
-import { ICategory, IBookmark, ITag } from "../../utils/types/schemas";
 
 type ContentBarProps = {
     data: ICategory[];
@@ -11,7 +11,7 @@ type ContentBarProps = {
     updateCategory?: (category: ICategory) => void;
     selectedCategory: ICategory | null;
     bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    setBookmarkToShow: Dispatch<SetStateAction<IBookmark | null>>;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     bookmarks: IBookmark[];

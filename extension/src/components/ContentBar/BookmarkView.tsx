@@ -13,7 +13,7 @@ type BookmarkViewProps = {
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     filteredCategories: ICategory[];
     bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    setBookmarkToShow: Dispatch<SetStateAction<IBookmark | null>>;
     selectedTag?: ITag | null;
     data: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
@@ -162,6 +162,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
                     <hr className="my-3" />
                     <BookmarkItemFooter
                         bookmark={bookmark}
+                        setBookmark={props.setBookmarkToShow}
                         selectedCategory={null}
                         setBookmarks={props.setBookmarks}
                         bookmarks={props.bookmarks}

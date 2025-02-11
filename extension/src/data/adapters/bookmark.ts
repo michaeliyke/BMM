@@ -27,7 +27,7 @@ export default class Bookmark implements IBookmark {
 
         const prop = isEmpty([
             'id', 'url', 'created_at', 'updated_at', 'archived'], bookmark);
-        if (prop) throw new Error(`Bookmark.constructor: require field: '${prop}'`);
+        if (prop) throw new Error(`Bookmark.constructor: required field: '${prop}'`);
     }
 
     /**

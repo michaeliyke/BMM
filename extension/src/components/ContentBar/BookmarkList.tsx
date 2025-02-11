@@ -10,23 +10,23 @@
  * @returns {JSX.Element} The rendered BookmarkList component.
  */
 import moment from "moment";
-import { MdOutlineArchive } from "react-icons/md";
+import { Dispatch, SetStateAction, useState } from "react";
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
-import { getBookmarkCategories, sortedBookmarks } from "../../utils/common";
 import { FaRegStar } from "react-icons/fa";
-import { Dispatch, SetStateAction, useState } from "react";
+import { MdOutlineArchive } from "react-icons/md";
+import { getBookmarkCategories, sortedBookmarks } from "../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
-import { DeleteDialog } from "./dialogs/DeleteDialog";
-import { ArchiveDialog } from "./dialogs/ArchiveDialog";
 import BookmarkItemFooter from "./BookmarkItemFooter";
+import { ArchiveDialog } from "./dialogs/ArchiveDialog";
+import { DeleteDialog } from "./dialogs/DeleteDialog";
 
 type BookmarkListProps = {
     bookmarks: IBookmark[];
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     filteredCategories: ICategory[];
     bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    setBookmarkToShow: Dispatch<SetStateAction<IBookmark | null>>;
     selectedTag?: ITag | null;
     data: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
@@ -78,9 +78,6 @@ export default function BookmarkList(props: BookmarkListProps) {
     }
 
     filteredBookmarks = sortedBookmarks(filteredBookmarks);
-
-    // console.log(selectedTag);
-    // const dummyTags = ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5'];
 
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
@@ -185,6 +182,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                     <hr className="mt-3" />
                     <BookmarkItemFooter
                         bookmark={bookmark}
+                        setBookmark={setBookmarkToShow}
                         selectedCategory={selectedCategory}
                         setBookmarks={props.setBookmarks}
                         bookmarks={props.bookmarks}

@@ -23,5 +23,17 @@
 ## Issue 3: Deleting a bookmarks causes stale data
 
 - **Description**: Deleting a bookmark causes stale data in the database.
-- **Status**: DEBUGGING
+- **Status**: FIXED
 - **Priority**: High
+
+## Issue 4: Proposed visual changes
+
+- **Description**: Replace the word Description with Bookmark title in the view. Remove the title from header and give the actual URL a little glory there. The description will be tinier as well as the actions.
+- **Status**: PROPOSAL
+- **Priority**: Low
+
+## Issue 5: Tag creation in Bookmark view not updating the view
+
+- **Description**: Creating a tag in the Bookmark view does not update the view.
+- **Status**: IN-PROGRESS
+- **Priority** High

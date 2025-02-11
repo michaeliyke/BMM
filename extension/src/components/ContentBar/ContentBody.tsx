@@ -1,8 +1,8 @@
-import BookmarkView from "./BookmarkView";
 import { Dispatch, SetStateAction } from "react";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
-import ListArchived from "./ListArchived";
 import BookmarkList from "./BookmarkList";
+import BookmarkView from "./BookmarkView";
+import ListArchived from "./ListArchived";
 import ListDeleted from "./ListDeleted";
 
 type BookmarksDisplayProps = {
@@ -10,7 +10,7 @@ type BookmarksDisplayProps = {
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     filteredCategories: ICategory[];
     bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    setBookmarkToShow: Dispatch<SetStateAction<IBookmark | null>>;
     selectedTag?: ITag | null;
     data: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;

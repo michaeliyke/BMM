@@ -9,6 +9,7 @@ import Tag from "../../data/adapters/tag";
 import { IBookmark, ICategory } from "../../utils/types/schemas";
 type FooterProps = {
     bookmark: IBookmark;
+    setBookmark: Dispatch<SetStateAction<IBookmark | null>>;
     bookmarks: IBookmark[];
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     selectedCategory: ICategory | null;
@@ -28,7 +29,7 @@ type FooterProps = {
  * @returns {JSX.Element} The rendered Footer component.
  */
 export default function BookmarkItemFooter(props: FooterProps) {
-    const { bookmark, selectedCategory, setBookmarks } = props;
+    const { bookmark, selectedCategory, setBookmarks, setBookmark } = props;
     const [showTagInput, setShowTagInput] = useState(false);
     const [newTag, setNewTag] = useState("");
 
@@ -48,10 +49,12 @@ export default function BookmarkItemFooter(props: FooterProps) {
                 setBookmarks((prevBookmarks) => {
                     const updatedBookmarks = prevBookmarks.map((b) => {
                         if (b.id === bookmark.id) {
-                            return {
+                            const modifiedBookmark = {
                                 ...b,
                                 tags: [...b.tags, tag],
                             };
+                            setBookmark(modifiedBookmark);
+                            return modifiedBookmark;
                         }
                         return b;
                     });
