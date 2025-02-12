@@ -57,7 +57,20 @@ export default function BookmarkView(props: BookmarkViewProps) {
     if (!bookmark) {
         return <p>No bookmark selected</p>;
     }
-    // console.log(JSON.stringify(bookmark));
+
+    const categories = [
+        'Category 1',
+        'Category 2',
+        'Category 3',
+        'Category 4',
+        'Category 5',
+        'Category 6',
+        'Category 7',
+        'Category 8',
+        'Category 9',
+        'Category 10',
+
+    ]
 
     return (
         isEditing ?
@@ -74,7 +87,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
                     aria-labelledby="bookmark-title"
                 >
                     {/* Header */}
-                    <header className="mb-4 flex flex-col">
+                    <header className="mb-4 flex flex-col bg-slate-200">
                         <a
                             href={bookmark.url}
                             target="_blank"
@@ -83,99 +96,150 @@ export default function BookmarkView(props: BookmarkViewProps) {
                         >
                             {bookmark.url}
                         </a>
-                        <div className="flex space-x-4 mt-2">
-                            <button
-                                type="button"
-                                className="px-2 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-t-md hover:bg-gray-100"
-                            >
-                                Details
-                            </button>
-                            <button
-                                type="button"
-                                className="px-2 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-t-md hover:bg-gray-100"
-                            >
-                                Categories
-                            </button>
+                        <div className="flex justify-between mt-2">
+                            <div className="flex space-x-3">
+                                <button
+                                    type="button"
+                                    className={`px-2 py-1 text-xs font-medium text-gray-700 bg-white border-gray-300 rounded-t-md hover:bg-white ${showDetails ? 'underline' : ''} underline-offset-8`}
+                                    onClick={() => setShowDetails(true)}
+                                >
+                                    Details
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`px-2 py-1 text-xs font-medium text-gray-700 bg-white bor_der border-gray-300 rounded-t-md hover:bg-white ${!showDetails ? 'underline' : ''} underline-offset-8`}
+                                    onClick={() => setShowDetails(false)}
+                                >
+                                    Categories
+                                </button>
+                            </div>
+                            <aside className="flex items-center space-x-2 text-gray-500 text-sm">
+                                <button
+                                    type="button"
+                                    onClick={initiateEditing}
+                                    className="flex items-center space-x-1 text-blue-500 hover:underline"
+                                    aria-label="Edit bookmark"
+                                    title="Edit bookmark"
+                                >
+                                    <AiOutlineEdit className="text-gray-500" aria-hidden="true" />
+                                    <span>Edit</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="flex items-center space-x-1 text-blue-500 hover:underline"
+                                    aria-label="Delete bookmark"
+                                    title="Delete bookmark"
+                                >
+                                    <BsTrash className="text-gray-500" aria-hidden="true" />
+                                    <span>Delete</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="flex items-center space-x-1 text-blue-500 hover:underline"
+                                    aria-label="Favorite bookmark"
+                                    title="Toggle favorite"
+                                >
+                                    <FaRegStar className="text-gray-500" aria-hidden="true" />
+                                    <span>Fav</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="flex items-center space-x-1 text-blue-500 hover:underline"
+                                    aria-label="Archive bookmark"
+                                    title="Archive bookmark"
+                                >
+                                    <MdOutlineArchive className="text-gray-500" aria-hidden="true" />
+                                    <span>Archive</span>
+                                </button>
+                                <time dateTime={bookmark.updated_at} className="flex items-center space-x-1">
+                                    <FaClock className="text-gray-400" aria-hidden="true" />
+                                    <span>{moment(bookmark.updated_at).fromNow()}</span>
+                                </time>
+                            </aside>
                         </div>
                     </header>
+                    {showDetails ? (
+                        <>
+                            {/* Description */}
+                            <section className="mb-6" aria-labelledby="description-heading">
+                                <h2
+                                    id="description-heading"
+                                    className="text-lg font-semibold text-gray-700 mb-2"
+                                >
+                                    {bookmark.title}
+                                </h2>
+                                <p className="text-gray-700 leading-relaxed">
+                                    {bookmark.description}
+                                </p>
+                            </section>
 
-                    {/* Metadata */}
-                    <aside className="flex items-center space-x-4 text-gray-500 text-sm mb-6">
-                        <div className="flex items-center space-x-1">
-                            <FaClock className="text-gray-400" aria-hidden="true" />
-                            <span>Updated {moment(bookmark.updated_at).fromNow()}</span>
-                        </div>
-                        <button
-                            type="button"
-                            className="flex items-center space-x-1 text-blue-500 hover:underline"
-                            aria-label="Archive bookmark"
-                            title="Archive bookmark"
-                        >
-                            <MdOutlineArchive className="text-gray-500" aria-hidden="true" />
-                            {/* <span>Archive</span> */}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={initiateEditing}
-                            className="flex items-center space-x-1 text-blue-500 hover:underline"
-                            aria-label="Edit bookmark"
-                            title="Edit bookmark"
-                        >
-                            <AiOutlineEdit className="text-gray-500" aria-hidden="true" />
-                            {/* <span>Edit</span> */}
-                        </button>
-                        <button
-                            type="button"
-                            className="flex items-center space-x-1 text-blue-500 hover:underline"
-                            aria-label="Delete bookmark"
-                            title="Delete bookmark"
-                        >
-                            <BsTrash className="text-gray-500" aria-hidden="true" />
-                            {/* <span>Delete</span> */}
-                        </button>
-                        <button
-                            type="button"
-                            className="flex items-center space-x-1 text-blue-500 hover:underline"
-                            aria-label="Favorite bookmark"
-                            title="Toggle favorite"
-                        >
-                            <FaRegStar className="text-gray-500" aria-hidden="true" />
-                            {/* <span>Favorite</span> */}
-                        </button>
-                    </aside>
-
-                    {/* Description */}
-                    <section className="mb-6" aria-labelledby="description-heading">
-                        <h2
-                            id="description-heading"
-                            className="text-lg font-semibold text-gray-700 mb-2"
-                        >
-                            {bookmark.title}
-                        </h2>
-                        <p className="text-gray-700 leading-relaxed">
-                            {bookmark.description}
-                        </p>
-                    </section>
-
-                    {/* Notes/Comments Section */}
-                    <section aria-labelledby="notes-heading">
-                        <h2
-                            id="notes-heading"
-                            className="text-lg font-semibold text-gray-700 mb-4 flex items-center space-x-2"
-                        >
-                            <FaCommentDots className="text-blue-500" aria-hidden="true" />
-                            <span>Notes</span>
-                        </h2>
-                    </section>
-                    <hr className="my-3" />
-                    <BookmarkItemFooter
-                        bookmark={bookmark}
-                        setBookmark={props.setBookmarkToShow}
-                        selectedCategory={null}
-                        setBookmarks={props.setBookmarks}
-                        bookmarks={props.bookmarks}
-                    />
+                            {/* Notes/Comments Section */}
+                            <section aria-labelledby="notes-heading">
+                                <h2
+                                    id="notes-heading"
+                                    className="text-lg font-semibold text-gray-700 mb-4 flex items-center space-x-2"
+                                >
+                                    <FaCommentDots className="text-blue-500" aria-hidden="true" />
+                                    <span>Notes</span>
+                                </h2>
+                            </section>
+                            <hr className="my-3" />
+                            <BookmarkItemFooter
+                                bookmark={bookmark}
+                                setBookmark={props.setBookmarkToShow}
+                                selectedCategory={null}
+                                setBookmarks={props.setBookmarks}
+                                bookmarks={props.bookmarks}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <section aria-labelledby="create-category-heading" className="w-60 mx-auto p-4 bg-white shadow-md rounded-md border border-gray-200">
+                                <h2
+                                    id="create-category-heading"
+                                    className="text-md font-semibold text-sm text-gray-400 mb-2 text-center"
+                                >
+                                    Create a New Category
+                                </h2>
+                                <form className="flex flex-col space-y-2">
+                                    <label htmlFor="category-name" className="text-xs text-gray-700">
+                                        Category Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="category-name"
+                                        name="category-name"
+                                        className="px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 text-xs text-gray-500"
+                                        placeholder="Enter category name"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-xs self-center"
+                                        onClick={() => console.log('Create category button clicked')}
+                                    >
+                                        Create
+                                    </button>
+                                </form>
+                            </section>
+                            <hr className="my-3" />
+                            <section aria-labelledby="categories-heading">
+                                <h2
+                                    id="categories-heading"
+                                    className="text-lg font-semibold text-gray-700 mb-4 flex items-center space-x-2"
+                                >
+                                    Categories
+                                </h2>
+                                <ul className="flex flex-wrap gap-2">
+                                    {categories.map((category, index) => (
+                                        <li key={index} className="px-2 py-1 bg-gray-100 rounded-md text-xs text-gray-500">
+                                            {category}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </section>
+                        </>
+                    )}
                 </article>
-            </section>
+            </section >
     );
 }
