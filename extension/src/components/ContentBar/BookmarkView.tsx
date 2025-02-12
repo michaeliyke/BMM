@@ -17,6 +17,8 @@ type BookmarkViewProps = {
     selectedTag?: ITag | null;
     data: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
+    showDetails: boolean;
+    setShowDetails: Dispatch<SetStateAction<boolean>>;
 };
 
 
@@ -40,7 +42,7 @@ type BookmarkViewProps = {
  * return <BookmarkView bookmarkToShow={bookmark} />;
  */
 export default function BookmarkView(props: BookmarkViewProps) {
-    const { bookmarkToShow: bookmark } = props;
+    const { bookmarkToShow: bookmark, showDetails, setShowDetails } = props;
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     /**
@@ -68,27 +70,33 @@ export default function BookmarkView(props: BookmarkViewProps) {
             /> :
             <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
                 <article
-                    className="max-w-4xl p-6 bg-white shadow-lg rounded-lg border border-gray-200"
+                    className="max-w-4xl p-6 pt-2 bg-white shadow-lg rounded-lg border border-gray-200"
                     aria-labelledby="bookmark-title"
                 >
                     {/* Header */}
-                    <header className="mb-4">
-                        <h1
-                            id="bookmark-title"
-                            className="text-2xl font-bold text-gray-800"
+                    <header className="mb-4 flex flex-col">
+                        <a
+                            href={bookmark.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-900 py-2 bg-white hover:underline text-sm w-full text-center"
                         >
-                            {bookmark.title}
-                        </h1>
-                        <p>
-                            <a
-                                href={bookmark.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-500 hover:underline text-sm mt-1 inline-block"
+                            {bookmark.url}
+                        </a>
+                        <div className="flex space-x-4 mt-2">
+                            <button
+                                type="button"
+                                className="px-2 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-t-md hover:bg-gray-100"
                             >
-                                {bookmark.url}
-                            </a>
-                        </p>
+                                Details
+                            </button>
+                            <button
+                                type="button"
+                                className="px-2 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-t-md hover:bg-gray-100"
+                            >
+                                Categories
+                            </button>
+                        </div>
                     </header>
 
                     {/* Metadata */}
@@ -104,7 +112,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
                             title="Archive bookmark"
                         >
                             <MdOutlineArchive className="text-gray-500" aria-hidden="true" />
-                            <span>Archive</span>
+                            {/* <span>Archive</span> */}
                         </button>
                         <button
                             type="button"
@@ -114,7 +122,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
                             title="Edit bookmark"
                         >
                             <AiOutlineEdit className="text-gray-500" aria-hidden="true" />
-                            <span>Edit</span>
+                            {/* <span>Edit</span> */}
                         </button>
                         <button
                             type="button"
@@ -123,7 +131,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
                             title="Delete bookmark"
                         >
                             <BsTrash className="text-gray-500" aria-hidden="true" />
-                            <span>Delete</span>
+                            {/* <span>Delete</span> */}
                         </button>
                         <button
                             type="button"
@@ -132,7 +140,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
                             title="Toggle favorite"
                         >
                             <FaRegStar className="text-gray-500" aria-hidden="true" />
-                            <span>Favorite</span>
+                            {/* <span>Favorite</span> */}
                         </button>
                     </aside>
 
@@ -142,7 +150,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
                             id="description-heading"
                             className="text-lg font-semibold text-gray-700 mb-2"
                         >
-                            Description
+                            {bookmark.title}
                         </h2>
                         <p className="text-gray-700 leading-relaxed">
                             {bookmark.description}

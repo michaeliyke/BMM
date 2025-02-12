@@ -50,6 +50,7 @@ const tags: ITag[] = [
 
 // Tags 1-6 named through destructred array assignment
 const [t1, t2, t3, t4, t5, t6] = tags;
+const uxDesign = [{ id: '6', name: "Design", updated_at: "2021-09-01T00:00:00.000Z", created_at: "2021-09-01T00:00:00.000Z" }, { id: '7', name: "UX", updated_at: "2021-09-01T00:00:00.000Z", created_at: "2021-09-01T00:00:00.000Z" }];
 
 /**
  * An array of bookmark objects, each representing a bookmarked resource.
@@ -142,6 +143,36 @@ const bookmarks: IBookmark[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: tags.slice(1, 3),
+        archived: 0,
+    },
+    {
+        id: '8',
+        title: "UI Patterns & Inspiration",
+        description: "Discover different design solutions used to commonly used UI components through our curated list of UI Pattern Libraries & inspiration websites.",
+        url: "https://www.uxlibrary.org/explore/ui-design/ui-patterns-and-inspiration",
+        updated_at: "2021-09-01T00:00:00.000Z",
+        created_at: "2021-09-01T00:00:00.000Z",
+        tags: uxDesign,
+        archived: 0,
+    },
+    {
+        id: '9',
+        title: "UI Patterns & Inspiration",
+        description: "Mobbin seems to be very less generous with their free plan. I need other alternatives where I can search for \"UI elements\" and get inspiration",
+        url: "https://copilot.microsoft.com/shares/cSL3TNPTKa4abaiJc86At",
+        updated_at: "2021-09-01T00:00:00.000Z",
+        created_at: "2021-09-01T00:00:00.000Z",
+        tags: uxDesign,
+        archived: 0,
+    },
+    {
+        id: '10',
+        title: "UI Patterns & Inspiration",
+        description: "A design community platform built by designers for designers. Share your work, connect with other designers, and build your portfolio. It's free and has a lot of features",
+        url: "https://layers.to/",
+        updated_at: "2021-09-01T00:00:00.000Z",
+        created_at: "2021-09-01T00:00:00.000Z",
+        tags: uxDesign,
         archived: 0,
     },
 ];

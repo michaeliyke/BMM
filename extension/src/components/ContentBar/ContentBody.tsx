@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import BookmarkList from "./BookmarkList";
 import BookmarkView from "./BookmarkView";
@@ -48,6 +48,8 @@ export default function ContentBody(props: BookmarksDisplayProps) {
         selectedCategory,
     } = props;
 
+    const [showDetails, setShowDetails] = useState<boolean>(true);
+
     if (bookmarkToShow) {
         return <BookmarkView
             filteredCategories={filteredCategories}
@@ -57,6 +59,8 @@ export default function ContentBody(props: BookmarksDisplayProps) {
             setBookmarks={setBookmarks}
             data={data}
             setData={setData}
+            showDetails={showDetails}
+            setShowDetails={setShowDetails}
         />
     }
 
