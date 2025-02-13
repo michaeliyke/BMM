@@ -231,8 +231,21 @@ export default function BookmarkView(props: BookmarkViewProps) {
                                 </h2>
                                 <ul className="flex flex-wrap gap-2">
                                     {categories.map((category, index) => (
-                                        <li key={index} className="px-2 py-1 bg-gray-100 rounded-md text-xs text-gray-500">
+                                        <li key={index} className="relative group px-2 py-1 bg-gray-100 rounded-md text-xs text-gray-500">
                                             {category}
+                                            <button
+                                                type="button"
+                                                className="absolute top-0 right-0 hidden group-hover:block bg-red-500 text-white rounded-full px-1 py-0.5 text-xs"
+                                                onClick={() => {
+                                                    if (window.confirm(`Are you sure you want to remove ${category}?`)) {
+                                                        console.log(`Removed category: ${category}`);
+                                                    } else {
+                                                        console.log(`Cancelled removal of category: ${category}`);
+                                                    }
+                                                }}
+                                            >
+                                                x
+                                            </button>
                                         </li>
                                     ))}
                                 </ul>
