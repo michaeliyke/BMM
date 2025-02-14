@@ -15,9 +15,10 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
 import { FaRegStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
-import { getBookmarkCategories, sortedBookmarks } from "../../utils/common";
+import { sortedBookmarks } from "../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import BookmarkItemFooter from "./BookmarkItemFooter";
+import CategoryDropdown from "./CategoryDropDown";
 import { ArchiveDialog } from "./dialogs/ArchiveDialog";
 import { DeleteDialog } from "./dialogs/DeleteDialog";
 
@@ -98,7 +99,8 @@ export default function BookmarkList(props: BookmarkListProps) {
                                 </button>
                             </h2>
                             {/* Categories Dropdown */}
-                            <select
+                            <CategoryDropdown bookmark={bookmark} data={data} />
+                            {/* <select
                                 className="text-xs bg-gray-100 border border-gray-300 rounded-md py-0.5 px-2 text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
                                 defaultValue=""
                                 title="Categories"
@@ -111,7 +113,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                                         {category.name}
                                     </option>
                                 ))}
-                            </select>
+                            </select> */}
                         </div>
                         <nav className="flex items-center space-x-5">
                             <menu className="flex space-x-3 opacity-0 group-hover:opacity-100 transition duration-300">
