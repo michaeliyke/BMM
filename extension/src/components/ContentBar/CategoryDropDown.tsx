@@ -25,7 +25,7 @@ export default function CategoryDropdown({ bookmark, data }: CategoryDropdownPro
     };
 
     return (
-        <div className="relative text-sm text-gray-700" ref={dropdownRef}>
+        <div className="relative text-sm top-2 text-gray-500" ref={dropdownRef}>
             <button
                 className="flex flex-col items-center focus:outline-none"
                 onClick={() => setIsOpen(!isOpen)}
@@ -35,10 +35,10 @@ export default function CategoryDropdown({ bookmark, data }: CategoryDropdownPro
             </button>
 
             {isOpen && (
-                <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 border border-gray-200 rounded-md shadow-sm bg-white z-10">
+                <div className="absolute left-1/2 transform -translate-x-1/2 mt-0 w-48 border border-gray-200 rounded-md shadow-sm bg-white z-10">
                     {/* Small centered form */}
                     <form
-                        className="p-3 rounded-md bg-gray-50 flex flex-col gap-2"
+                        className="p-3 rounded-t-md bg-slate-100 flex flex-col gap-2"
                         onSubmit={(e) => {
                             e.preventDefault();
                             handleAddCategory();
@@ -53,9 +53,9 @@ export default function CategoryDropdown({ bookmark, data }: CategoryDropdownPro
                         />
                         <button
                             type="submit"
-                            className="text-xs bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                            className="text-xs bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition w-full"
                         >
-                            Add
+                            Add category
                         </button>
                     </form>
 
