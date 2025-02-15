@@ -45,7 +45,7 @@ export default function Header(props: HeaderProps) {
         filterBy,
     } = props;
 
-    let hideForm =
+    const hideForm =
         filterBy === 'filter:archived' ||
         filterBy === 'filter:deleted' ||
         filterBy === 'filter:tags';

@@ -81,18 +81,18 @@ export default function BookmarkList(props: BookmarkListProps) {
     filteredBookmarks = sortedBookmarks(filteredBookmarks);
 
     return (
-        <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
+        <section className="grid grid-cols-1 gap-2 bg-gray-50">
             {filteredBookmarks.map((bookmark, index) => (
                 <article
                     key={index}
-                    className="relative px-5 py-2 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"
+                    className="relative px-5 pt-0 pb-2 bg-white shadow-md rounded-lg hover:shadow-xl transition duration-300 group"
                 >
                     <header className="flex justify-between items-center">
                         <div className="flex items-center space-x-4">
                             <h2 className="text-sm font-semibold text-gray-900 truncate">
                                 <button
                                     onClick={() => setBookmarkToShow(bookmark)}
-                                    className="text-sm text-gray-700 line-clamp-2 mt-1 hover:underline"
+                                    className="text-xs text-gray-700 line-clamp-2 mt-1 hover:underline"
                                     title="View bookmark details"
                                 >
                                     {bookmark.title}
@@ -100,20 +100,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                             </h2>
                             {/* Categories Dropdown */}
                             <CategoryDropdown bookmark={bookmark} data={data} />
-                            {/* <select
-                                className="text-xs bg-gray-100 border border-gray-300 rounded-md py-0.5 px-2 text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
-                                defaultValue=""
-                                title="Categories"
-                            >
-                                <option value="" disabled>
-                                    Categories
-                                </option>
-                                {getBookmarkCategories(bookmark, data).map((category) => (
-                                    <option key={category.id} value={category.name}>
-                                        {category.name}
-                                    </option>
-                                ))}
-                            </select> */}
+
                         </div>
                         <nav className="flex items-center space-x-5">
                             <menu className="flex space-x-3 opacity-0 group-hover:opacity-100 transition duration-300">
@@ -123,14 +110,14 @@ export default function BookmarkList(props: BookmarkListProps) {
                                     aria-label="Archive"
                                     title="Archive"
                                 >
-                                    <MdOutlineArchive size={20} />
+                                    <MdOutlineArchive size={14} />
                                 </button>
                                 <button
                                     className="text-gray-500 hover:text-green-600 transition duration-200"
                                     aria-label="Edit"
                                     title="Edit"
                                 >
-                                    <AiOutlineEdit size={20} />
+                                    <AiOutlineEdit size={14} />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(index)}
@@ -138,11 +125,11 @@ export default function BookmarkList(props: BookmarkListProps) {
                                     aria-label="Delete"
                                     title="Delete"
                                 >
-                                    <BsTrash size={20} />
+                                    <BsTrash size={14} />
                                 </button>
                             </menu>
                             <time
-                                className="text-sm text-gray-400"
+                                className="text-2xs text-gray-400"
                                 dateTime={moment(bookmark.updated_at).toISOString()}
                             >
                                 {moment(bookmark.updated_at).fromNow()}
@@ -151,37 +138,30 @@ export default function BookmarkList(props: BookmarkListProps) {
                     </header>
 
 
-                    <section className="mt-1 max-w-md">
+                    <section className="-mt-1 max-w-md">
                         <a
                             href={bookmark.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-blue-500 hover:underline truncate inline"
+                            className="text-xs text-blue-500 hover:underline truncate inline"
                             title={bookmark.url}
                         >
                             {bookmark.url}
                         </a>
-                        <button
-                            onClick={() => setBookmarkToShow(bookmark)}
-                            className="text-sm text-gray-700 line-clamp-2 mt-1 hover:underline"
-                            title="View bookmark details"
-                        >
-                            {bookmark.description}
-                        </button>
                     </section>
 
-                    <aside className="absolute right-4 top-2/3 transform -translate-y-2/3">
+                    <aside className="absolute right-4 top-1/2 transform -translate-y-2/3">
                         <button
                             className="text-gray-300 hover:text-gray-600 transition duration-200"
                             aria-label="Favorite"
                             title="Favorite"
                         >
-                            <FaRegStar size={20} />
+                            <FaRegStar size={10} />
                         </button>
                     </aside>
 
                     {/* Tags Section */}
-                    <hr className="mt-3" />
+                    <hr className="mt-1" />
                     <BookmarkItemFooter
                         bookmark={bookmark}
                         setBookmark={setBookmarkToShow}

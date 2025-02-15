@@ -27,7 +27,7 @@ export default function CategoryDropdown({ bookmark, data }: CategoryDropdownPro
     return (
         <div className="relative text-sm top-2 text-gray-500" ref={dropdownRef}>
             <button
-                className="flex flex-col items-center focus:outline-none"
+                className="flex text-xs flex-col items-center focus:outline-none"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 Categories

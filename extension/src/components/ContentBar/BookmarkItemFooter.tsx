@@ -72,9 +72,9 @@ export default function BookmarkItemFooter(props: FooterProps) {
         {bookmark.tags.map((tag, tagIndex) => (
             <span
                 key={tagIndex}
-                className="flex items-center text-xs text-gray-500 italic"
+                className="flex items-center text-2xs text-gray-500 italic"
             >
-                <PiHashBold className="text-gray-400" />
+                <PiHashBold size={12} className="text-gray-400" />
                 {tag.name}
             </span>
         ))}
@@ -82,7 +82,7 @@ export default function BookmarkItemFooter(props: FooterProps) {
         {/* Add Tag Button */}
         <button
             onClick={() => setShowTagInput(!showTagInput)}
-            className="flex items-center justify-center border border-gray-400 rounded-full transition-all duration-300 ease-in-out hover:text-red-800 bg-white w-4 h-4"
+            className="flex items-center text-2xs justify-center border border-gray-400 rounded-full transition-all duration-300 ease-in-out hover:text-red-800 bg-white w-4 h-4"
             title="Create a tag"
         >
             <TiPlus size={10} />
