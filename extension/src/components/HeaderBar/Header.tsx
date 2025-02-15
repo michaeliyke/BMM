@@ -1,12 +1,11 @@
-import { useState } from "react"
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { Dispatch, SetStateAction, useState } from "react";
 import { v4 as uuid4 } from 'uuid';
-import CategoryBookmark from "../../data/adapters/category_bookmark";
 import Bookmark from "../../data/adapters/bookmark";
 import Category from "../../data/adapters/category";
+import CategoryBookmark from "../../data/adapters/category_bookmark";
 import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
-import { Dispatch, SetStateAction } from "react";
+import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 
 type HeaderProps = {
     selectedCategory: ICategory | null;
@@ -46,14 +45,14 @@ export default function Header(props: HeaderProps) {
         filterBy,
     } = props;
 
-    let isButtonDisabled =
+    let hideForm =
         filterBy === 'filter:archived' ||
         filterBy === 'filter:deleted' ||
         filterBy === 'filter:tags';
 
-    const [url, setUrl] = useState(isButtonDisabled ? '' : location.href);
-    const [title, setTitle] = useState(isButtonDisabled ? '' : document.title);
-    isButtonDisabled = isButtonDisabled || !url || !title;
+    const [url, setUrl] = useState(location.href);
+    const [title, setTitle] = useState(document.title);
+    const isButtonDisabled = !url || !title;
 
 
     function createBookmark() {
@@ -169,21 +168,20 @@ export default function Header(props: HeaderProps) {
                 </section>
             </article>
             <article className="form-container mt-4">
-                <form title={isButtonDisabled ? 'Form is disabled in this view' : ''}>
+                <form className={`form ${hideForm ? 'hidden' : ''}`}>
                     {/* URL Input */}
                     <div className="form-control relative">
                         <input
                             type="text"
                             id="url"
-                            disabled={isButtonDisabled}
-                            value={isButtonDisabled ? '' : url}
+                            value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             placeholder=" "
                             className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                         />
                         <label
                             htmlFor="url"
-                            className={(isButtonDisabled ? 'off-cursor' : '') + " absolute text-sm text-gray-600 duration-200 transform -translate-y-4 scale-75 tracking-widest top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"}
+                            className={" absolute text-sm text-gray-600 duration-200 transform -translate-y-4 scale-75 tracking-widest top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"}
                         >
                             URL
                         </label>
@@ -196,15 +194,14 @@ export default function Header(props: HeaderProps) {
                         <input
                             type="text"
                             id="title"
-                            disabled={isButtonDisabled}
-                            value={isButtonDisabled ? '' : title}
+                            value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder=" "
                             className="peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm"
                         />
                         <label
                             htmlFor="title"
-                            className={(isButtonDisabled ? 'off-cursor' : '') + " absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"}
+                            className={" absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"}
                         >
                             TITLE
                         </label>
@@ -214,15 +211,15 @@ export default function Header(props: HeaderProps) {
                     <div className="form-control relative"><input
                         type="text"
                         id="grouping"
-                        value={isButtonDisabled ? '' : grouping}
+                        value={grouping}
                         placeholder=" "
                         disabled
                         title="Select categories from the sidebar"
-                        className={(isButtonDisabled ? '' : 'grouping-on') + ' peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm'}
+                        className={' peer block w-full px-2.5 pb-2 pt-2 text-sm text-gray-400 bg-transparent border border-gray-200 rounded-lg focus:outline-none focus:ring-[0.1px] focus:ring-blue-500 focus:border-blue-200 focus:shadow-sm shadow-sm'}
                     />
                         <label
                             htmlFor="grouping"
-                            className={(isButtonDisabled ? 'off-cursor' : '') + " absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"}
+                            className={" absolute text-sm tracking-widest text-gray-600 duration-200 transform -translate-y-4 scale-75 top-2 left-2.5 origin-[0] bg-white px-1 peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-4 peer-focus:scale-75"}
                         >
                             CURRENT CATEGORY
                         </label>
