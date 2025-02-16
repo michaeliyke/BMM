@@ -95,7 +95,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                                     className="text-xs text-gray-700 line-clamp-2 mt-1 hover:underline"
                                     title="View bookmark details"
                                 >
-                                    {bookmark.title}
+                                    {bookmark.title.length > 35 ? `${bookmark.title.substring(0, 35)} ...More` : bookmark.title}
                                 </button>
                             </h2>
                             {/* Categories Dropdown */}
@@ -138,13 +138,14 @@ export default function BookmarkList(props: BookmarkListProps) {
                     </header>
 
 
-                    <section className="-mt-1 max-w-md">
+                    <section className=" max-w-md">
                         <a
                             href={bookmark.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-blue-500 hover:underline truncate inline"
                             title={bookmark.url}
+                            style={{ display: 'inline-block', maxWidth: '50ch', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                         >
                             {bookmark.url}
                         </a>
@@ -161,7 +162,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                     </aside>
 
                     {/* Tags Section */}
-                    <hr className="mt-1" />
+                    <hr className="" />
                     <BookmarkItemFooter
                         bookmark={bookmark}
                         setBookmark={setBookmarkToShow}

@@ -103,7 +103,7 @@ function DetailsTab(bookmark: IBookmark, props: BookmarkViewProps) {
         <section className="mb-6" aria-labelledby="description-heading">
             <h2
                 id="description-heading"
-                className="text-sm font-semibold text-gray-700 mb-2"
+                className="text-sm text-gray-500 text-center font-semibold mb-2"
             >
                 {bookmark.title}
             </h2>
@@ -174,7 +174,7 @@ function HeaderPart(bookmark: IBookmark, showDetails: boolean, setShowDetails: D
             rel="noopener noreferrer"
             className="text-blue-900 py-2 bg-white hover:underline text-sm w-full text-center"
         >
-            {bookmark.url}
+            {bookmark.url.length > 65 ? `${bookmark.url.substring(0, 65)}...` : bookmark.url}
         </a>
         <div className="flex justify-between mt-2">
             <div className="flex space-x-3">
