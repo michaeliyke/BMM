@@ -239,3 +239,34 @@ export function isEmpty<T extends object>(props: (keyof T)[], obj: T): false | (
     }
     return false;
 }
+
+/**
+ * Retrieves the URL of the current tab in the browser.
+ *
+ * @returns The URL of the current tab, or the current location if the URL cannot be retrieved.
+ */
+export async function getCurrentTabUrl() {
+    if (typeof chrome === 'undefined' || !chrome.tabs) return location.href;
+    try {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        return tab?.url ? tab.url : location.href;
+    } catch (error) {
+        throw new Error(`Error retrieving current tab URL: ${error}`);
+    }
+}
+
+/**
+ * Retrieves the title of the current tab in the browser.
+ *
+ * @returns The title of the current tab, or the current document title if the title cannot be retrieved.
+ */
+export async function getCurrentTabTitle() {
+    if (typeof chrome === 'undefined' || !chrome.tabs) return document.title;
+    try {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (!tab) return document.title;
+        return tab.title ? tab.title : document.title;
+    } catch (error) {
+        throw new Error(`Error retrieving current tab title: ${error}`);
+    }
+}

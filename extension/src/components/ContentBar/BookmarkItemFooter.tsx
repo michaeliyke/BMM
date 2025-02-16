@@ -82,10 +82,10 @@ export default function BookmarkItemFooter(props: FooterProps) {
         {/* Add Tag Button */}
         <button
             onClick={() => setShowTagInput(!showTagInput)}
-            className="flex items-center text-2xs justify-center border border-gray-400 rounded-full transition-all duration-300 ease-in-out hover:text-red-800 bg-white w-4 h-4"
+            className="flex items-center text-3xs justify-center border border-gray-400 rounded-full transition-all duration-300 ease-in-out hover:text-red-800 bg-white w-3 h-3"
             title="Create a tag"
         >
-            <TiPlus size={10} />
+            <TiPlus />
         </button>
 
 

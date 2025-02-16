@@ -5,6 +5,7 @@ import Category from "../../data/adapters/category";
 import CategoryBookmark from "../../data/adapters/category_bookmark";
 import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
+import { getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 
 type HeaderProps = {
@@ -53,6 +54,16 @@ export default function Header(props: HeaderProps) {
     const [url, setUrl] = useState(location.href);
     const [title, setTitle] = useState(document.title);
     const isButtonDisabled = !url || !title;
+
+    useState(() => {
+        getCurrentTabUrl()
+            .then((url) => setUrl(url))
+            .catch(console.error);
+
+        getCurrentTabTitle()
+            .then((title) => setTitle(title))
+            .catch(console.error);
+    });
 
 
     function createBookmark() {
