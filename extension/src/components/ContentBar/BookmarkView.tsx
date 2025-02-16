@@ -103,11 +103,11 @@ function DetailsTab(bookmark: IBookmark, props: BookmarkViewProps) {
         <section className="mb-6" aria-labelledby="description-heading">
             <h2
                 id="description-heading"
-                className="text-lg font-semibold text-gray-700 mb-2"
+                className="text-sm font-semibold text-gray-700 mb-2"
             >
                 {bookmark.title}
             </h2>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 text-sm/2 leading-relaxed">
                 {bookmark.description}
             </p>
         </section>
@@ -197,7 +197,7 @@ function HeaderPart(bookmark: IBookmark, showDetails: boolean, setShowDetails: D
                 <button
                     type="button"
                     onClick={initiateEditing}
-                    className="flex items-center space-x-1 text-blue-500 hover:underline"
+                    className="flex items-center space-x-1 text-xs/2 text-blue-500 hover:underline"
                     aria-label="Edit bookmark"
                     title="Edit bookmark"
                 >
@@ -206,7 +206,7 @@ function HeaderPart(bookmark: IBookmark, showDetails: boolean, setShowDetails: D
                 </button>
                 <button
                     type="button"
-                    className="flex items-center space-x-1 text-blue-500 hover:underline"
+                    className="flex items-center space-x-1 text-xs/2 text-blue-500 hover:underline"
                     aria-label="Delete bookmark"
                     title="Delete bookmark"
                 >
@@ -215,23 +215,23 @@ function HeaderPart(bookmark: IBookmark, showDetails: boolean, setShowDetails: D
                 </button>
                 <button
                     type="button"
-                    className="flex items-center space-x-1 text-blue-500 hover:underline"
+                    className="flex items-center space-x-1 text-xs/2 text-blue-500 hover:underline"
                     aria-label="Favorite bookmark"
                     title="Toggle favorite"
                 >
                     <FaRegStar className="text-gray-500" aria-hidden="true" />
-                    <span>Fav</span>
+                    <span>Favorite</span>
                 </button>
                 <button
                     type="button"
-                    className="flex items-center space-x-1 text-blue-500 hover:underline"
+                    className="flex items-center text-xs/2 space-x-1 text-blue-500 hover:underline"
                     aria-label="Archive bookmark"
                     title="Archive bookmark"
                 >
                     <MdOutlineArchive className="text-gray-500" aria-hidden="true" />
                     <span>Archive</span>
                 </button>
-                <time dateTime={bookmark.updated_at} className="flex items-center space-x-1">
+                <time dateTime={bookmark.updated_at} className="flex items-center text-xs/2 space-x-1">
                     <FaClock className="text-gray-400" aria-hidden="true" />
                     <span>{moment(bookmark.updated_at).fromNow()}</span>
                 </time>

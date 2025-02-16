@@ -11,15 +11,18 @@ export default {
         Teko: ["Teko", "sans-serif"],
       },
       fontSize: {
-        "1xs": ".75rem",
-        "2xs": ".625rem",
-        "3xs": ".5rem",
-        "4xs": ".375rem",
-        "5xs": ".25rem",
-        "6xs": ".125rem",
-        "7xs": ".0625rem",
-        "8xs": ".03125rem",
-        "9xs": ".015625rem"
+        "xs/1": ".75rem", // 12px
+        "xs/2": ".6875rem", // 11px
+        "xs/3": ".625rem", // 10px
+        "xs/4": ".5625rem", // 9px
+        "xs/5": ".25rem", // 4px
+        "xs/6": ".125rem", // 2px
+        "xs/7": ".0625rem", // 1px
+        "xs/8": ".03125rem", // 0.5px
+        "xs/9": ".015625rem", // 0.25px
+        "sm/1": ".9375rem", // 15px
+        "sm/2": ".875rem", // 14px
+        "sm/3": ".8125rem", // 13px
       },
       colors: {
         "light-blue": "#3A8DFF",

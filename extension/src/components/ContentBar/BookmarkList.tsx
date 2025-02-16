@@ -129,7 +129,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                                 </button>
                             </menu>
                             <time
-                                className="text-2xs text-gray-400"
+                                className="text-xs/2 text-gray-400"
                                 dateTime={moment(bookmark.updated_at).toISOString()}
                             >
                                 {moment(bookmark.updated_at).fromNow()}
