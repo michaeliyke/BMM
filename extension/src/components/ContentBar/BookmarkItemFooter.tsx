@@ -68,7 +68,7 @@ export default function BookmarkItemFooter(props: FooterProps) {
             });
     }
 
-    return <footer className="mt-1 flex flex-wrap gap-1.5 items-center relative">
+    return <footer className="mt-0 flex flex-wrap gap-1.5 items-center relative">
         {bookmark.tags.map((tag, tagIndex) => (
             <span
                 key={tagIndex}

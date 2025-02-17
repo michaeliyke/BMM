@@ -137,20 +137,23 @@ export default function BookmarkList(props: BookmarkListProps) {
                         </nav>
                     </header>
 
-
-                    <section className=" max-w-md">
+                    {/* The Link */}
+                    <section className="max-w-md mt-2">
                         <a
                             href={bookmark.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-blue-500 hover:underline truncate inline"
+                            className="text-xs text-blue-500 mb-0 hover:underline truncate inline"
                             title={bookmark.url}
                             style={{ display: 'inline-block', maxWidth: '50ch', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                         >
                             {bookmark.url}
                         </a>
+
+                        <hr className="-mt-1 mb-0.5" />
                     </section>
 
+                    {/* Favorite button */}
                     <aside className="absolute right-4 top-1/2 transform -translate-y-2/3">
                         <button
                             className="text-gray-300 hover:text-gray-600 transition duration-200"
@@ -162,7 +165,6 @@ export default function BookmarkList(props: BookmarkListProps) {
                     </aside>
 
                     {/* Tags Section */}
-                    <hr className="" />
                     <BookmarkItemFooter
                         bookmark={bookmark}
                         setBookmark={setBookmarkToShow}

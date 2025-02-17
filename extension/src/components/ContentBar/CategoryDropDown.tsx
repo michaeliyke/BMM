@@ -31,7 +31,9 @@ export default function CategoryDropdown({ bookmark, data }: CategoryDropdownPro
                 onClick={() => setIsOpen(!isOpen)}
             >
                 Categories
-                {isOpen ? <FiChevronUp className="text-gray-500" /> : <FiChevronDown className="text-gray-500" />}
+                {isOpen
+                    ? <FiChevronUp className="text-gray-500" size={14} />
+                    : <FiChevronDown className="text-gray-500" size={14} />}
             </button>
 
             {isOpen && (
