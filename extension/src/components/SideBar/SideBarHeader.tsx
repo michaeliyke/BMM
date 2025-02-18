@@ -71,6 +71,7 @@ export default function SideBarHeader({ props }: SideBarHeaderProps) {
                         <option value="categories" className="current">Categories</option>
                         <option value="filter:tags">Filter : Tags</option>
                         <option value="filter:category/tags">Filter : Category / Tags</option>
+                        <option value="filter:favorites">Filter : Favorites</option>
                         <option value="filter:archived">Filter : Archived</option>
                         <option value="filter:deleted">Filter : Deleted</option>
                     </select>

@@ -33,6 +33,27 @@ export default class Bookmark implements IBookmark {
     }
 
     /**
+     * Retrieves the list of favorite bookmarks.
+     *
+     * This method acquires a lock to ensure that the retrieval process is thread-safe.
+     * It fetches all bookmark records and filters out those that are not starred.
+     *
+     * @returns {Promise<IBookmark[]>} A promise that resolves to an array of favorite bookmarks.
+     * @throws {Error} Throws an error if the retrieval process fails.
+     */
+    static async getFavorites(): Promise<IBookmark[]> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:getFavorites`, async () => {
+            try {
+                const records = await Operator.getRecords<IBookmark>('bookmarks');
+                return records.filter((bookmark) => bookmark.starred === 1);
+            } catch (error) {
+                throw new Error(`An error occurred in Bookmark.getFavorites:- ${error}`);
+            }
+        });
+    }
+
+    /**
      * Toggles the 'starred' property of a given bookmark.
      *
      * This method acquires a lock based on the caller's name and the bookmark ID to ensure

@@ -4,6 +4,7 @@ import BookmarkList from "./BookmarkList";
 import BookmarkView from "./BookmarkView";
 import ListArchived from "./ListArchived";
 import ListDeleted from "./ListDeleted";
+import ListFavorites from "./ListFavorites";
 
 type BookmarksDisplayProps = {
     bookmarks: IBookmark[];
@@ -79,6 +80,10 @@ export default function ContentBody(props: BookmarksDisplayProps) {
 
     if (filterBy === 'filter:deleted') {
         return <ListDeleted />;
+    }
+
+    if (filterBy === 'filter:favorites') {
+        return <ListFavorites />;
     }
 
     return <BookmarkList
