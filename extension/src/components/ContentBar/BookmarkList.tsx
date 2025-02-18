@@ -16,6 +16,7 @@ import { BsTrash } from 'react-icons/bs';
 import { FaRegStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
 import { sortedBookmarks } from "../../utils/common";
+import ReadableDate from "../../utils/readabledate";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import BookmarkItemFooter from "./BookmarkItemFooter";
 import CategoryDropdown from "./CategoryDropDown";
@@ -132,7 +133,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                                 className="text-xs/2 text-gray-400"
                                 dateTime={moment(bookmark.updated_at).toISOString()}
                             >
-                                {moment(bookmark.updated_at).fromNow()}
+                                {ReadableDate.format(bookmark.updated_at)}
                             </time>
                         </nav>
                     </header>

@@ -25,15 +25,15 @@ export default function CategoryDropdown({ bookmark, data }: CategoryDropdownPro
     };
 
     return (
-        <div className="relative text-sm top-2 text-gray-500" ref={dropdownRef}>
+        <div className="relative text-sm text-gray-500" ref={dropdownRef}>
             <button
-                className="flex text-xs flex-col items-center focus:outline-none"
+                className="flex text-xs items-center focus:outline-none"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                Categories
+                <span className="mr-1 -ml-2">Categories</span>
                 {isOpen
-                    ? <FiChevronUp className="text-gray-500" size={14} />
-                    : <FiChevronDown className="text-gray-500" size={14} />}
+                    ? <FiChevronUp className="text-gray-500 bg-slate-200 rounded-full" size={12} />
+                    : <FiChevronDown className="text-gray-500 bg-slate-200 rounded-full" size={12} />}
             </button>
 
             {isOpen && (
