@@ -14,6 +14,7 @@ export default class Bookmark implements IBookmark {
     updated_at: string;
     tags: ITag[];
     archived: number;
+    starred?: number;
 
     constructor(bookmark: IBookmark) {
         this.id = bookmark.id; /* uuid4() */
@@ -24,10 +25,40 @@ export default class Bookmark implements IBookmark {
         this.updated_at = bookmark.updated_at; /* (new Date()).toISOString(); */
         this.tags = bookmark.tags;
         this.archived = bookmark.archived;
+        this.starred = bookmark.starred;
 
         const prop = isEmpty([
             'id', 'url', 'created_at', 'updated_at', 'archived'], bookmark);
         if (prop) throw new Error(`Bookmark.constructor: required field: '${prop}'`);
+    }
+
+    /**
+     * Toggles the 'starred' property of a given bookmark.
+     *
+     * This method acquires a lock based on the caller's name and the bookmark ID to ensure
+     * that the operation is thread-safe. It retrieves the existing bookmark record, toggles
+     * the 'starred' property (setting it to 1 if it was 0 or undefined, and to 0 if it was 1),
+     * updates the record in the database, and returns the updated bookmark.
+     *
+     * @param {IBookmark} bookmark - The bookmark object to be toggled.
+     * @returns {Promise<IBookmark>} - A promise that resolves to the updated bookmark object.
+     * @throws {Error} - Throws an error if the bookmark is not found or if any other error occurs during the operation.
+     */
+    static async toggleStarred(bookmark: IBookmark): Promise<IBookmark> {
+        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
+        return lockManager.acquire(`${callerName}:${bookmark.id}`, async () => {
+            try {
+                const existing = await Operator.getRecordById<IBookmark>('bookmarks', bookmark.id);
+                if (!existing) throw new Error(`Bookmark.toggleStarred: Bookmark not found: ${bookmark.id}`);
+                // toggle the starred property even if undefined earlier
+                existing.starred = existing.starred ? 0 : 1;
+                await Operator.updateRecord<IBookmark>('bookmarks', existing);
+                return existing;
+            } catch (error) {
+                throw new Error(`An error occurred in Bookmark.toggleStarred:- ${error}, ${bookmark.id}`);
+            }
+        }
+        );
     }
 
     /**

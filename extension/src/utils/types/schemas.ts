@@ -41,6 +41,7 @@ export interface IBookmark {
     updated_at: string;
     tags: ITag[];
     archived: number; // 0 or 1
+    starred?: number; // 0 or 1
 };
 
 
