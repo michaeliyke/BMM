@@ -203,4 +203,25 @@ export default class ReadableDate {
         const minutes = String(this.date.getMinutes()).padStart(2, '0');
         return `${hours}:${minutes}`;
     }
+
+    /**
+     * Converts the date to an ISO 8601 string representation.
+     *
+     * @returns {string} The ISO 8601 string representation of the date.
+     */
+    public toISOString(): string {
+        return this.date.toISOString();
+    }
+
+    /**
+     * Converts a given date to an ISO string.
+     *
+     * @param date - The date to be converted. It can be a Date object or a string.
+     * @returns The ISO string representation of the date.
+     */
+    public static toISOString(date: Date | string): string {
+        return date instanceof Date
+            ? date.toISOString()
+            : new ReadableDate(date).toISOString();
+    }
 }

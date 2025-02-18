@@ -30,7 +30,7 @@ export default function CategoryDropdown({ bookmark, data }: CategoryDropdownPro
                 className="flex text-xs items-center focus:outline-none"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="mr-1 -ml-2">Categories</span>
+                <span className="mr-1 -ml-2 text-gray-400">Categories</span>
                 {isOpen
                     ? <FiChevronUp className="text-gray-500 bg-slate-200 rounded-full" size={12} />
                     : <FiChevronDown className="text-gray-500 bg-slate-200 rounded-full" size={12} />}

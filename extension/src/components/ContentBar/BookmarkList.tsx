@@ -9,7 +9,6 @@
  *
  * @returns {JSX.Element} The rendered BookmarkList component.
  */
-import moment from "moment";
 import { Dispatch, SetStateAction, useState } from "react";
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
@@ -86,7 +85,7 @@ export default function BookmarkList(props: BookmarkListProps) {
             {filteredBookmarks.map((bookmark, index) => (
                 <article
                     key={index}
-                    className="relative px-5 pt-0 pb-2 bg-white shadow-md rounded-lg hover:shadow-xl transition duration-300 group"
+                    className="relative px-5 pt-1 pb-2 bg-white shadow-md rounded-lg hover:shadow-xl transition duration-300 group"
                 >
                     <header className="flex justify-between items-center">
                         <div className="flex items-center space-x-4">
@@ -131,7 +130,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                             </menu>
                             <time
                                 className="text-xs/2 text-gray-400"
-                                dateTime={moment(bookmark.updated_at).toISOString()}
+                                dateTime={ReadableDate.toISOString(bookmark.updated_at)}
                             >
                                 {ReadableDate.format(bookmark.updated_at)}
                             </time>
@@ -139,7 +138,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                     </header>
 
                     {/* The Link */}
-                    <section className="max-w-md mt-2">
+                    <section className="max-w-md mt-1.5">
                         <a
                             href={bookmark.url}
                             target="_blank"
