@@ -62,7 +62,7 @@ export default function SideBarHeader({ props }: SideBarHeaderProps) {
                 <label htmlFor="filter-options">
                     <select
                         id="filter-options"
-                        className="bg-gray-200"
+                        className="bg-white border border-gray-300 rounded-full p-1 text-xs text-gray-500 font-semibold"
                         aria-label="Filter by"
                         name="filter-options"
                         value={filterBy}
