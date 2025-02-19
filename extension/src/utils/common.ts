@@ -23,26 +23,6 @@ export function dotIt(className: string): string {
 }
 
 /**
- * Toggles the 'selected' class on the target element and ensures that no other elements
- * of the same type have the 'selected' class.
- *
- * @param {HTMLElement} target - The target element to toggle the 'selected' class on.
- * @param {string} [type] - An optional string to specify the type of elements to query.
- *                          If not provided, defaults to 'category'.
- */
-export function toggleSelectedClass(target: HTMLElement, type?: string) {
-    const matches = document.querySelectorAll(dotIt(type || 'category'));
-    matches.forEach((match) => {
-        if (match.classList.contains('selected') && match !== target) {
-            removeClass(match, ['selected']);
-        }
-    });
-    if (!target.classList.contains('selected')) {
-        addClass(target, ['selected']);
-    }
-}
-
-/**
  * Toggles the 'highlighted' class on the target element and removes it from other elements of the same type.
  *
  * @param {HTMLElement} target - The target element to toggle the 'highlighted' class on.

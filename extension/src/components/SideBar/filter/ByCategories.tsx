@@ -65,7 +65,7 @@ export default function ByCategories({ props }: BCProps) {
 
 
     function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
-        setSelectedCategory(category.is_default === 1 ? category : null); // Global state
+        setSelectedCategory(category.is_default !== 1 ? category : null); // Global state
         setBookmarkToShow(null); // Global state
         if (setGrouping) // Update the category text in the header
             setGrouping(category.name); // Global state
