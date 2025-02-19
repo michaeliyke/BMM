@@ -1,14 +1,12 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 
 import {
-    toggleSelectedClass,
-    toggleHighlightedClass,
-    resetSelections,
     sortedCategories,
+    toggleHighlightedClass
 } from "../../../utils/common";
 
+import { PiTagSimpleFill } from "react-icons/pi";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
-import { FiChevronRight } from "react-icons/fi";
 
 type BCProps = {
     props: {
@@ -67,42 +65,22 @@ export default function ByCategories({ props }: BCProps) {
 
 
     function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
-        setSelectedCategory(category);
-        setBookmarkToShow(null);
+        setSelectedCategory(category.is_default === 1 ? category : null); // Global state
+        setBookmarkToShow(null); // Global state
         if (setGrouping) // Update the category text in the header
-            setGrouping(category.name);
-        toggleSelectedClass(event.currentTarget, "category");
+            setGrouping(category.name); // Global state
         toggleHighlightedClass(event.currentTarget, "category");
-    }
-
-    // Brings the selection and highlighting to the default state
-    function restoreDefaultSection() {
-        setSelectedCategory(null);
-        setBookmarkToShow(null);
-        resetSelections();
-        if (setGrouping) // Update the category text in the header
-            setGrouping(defaultCategory?.name);
     }
 
     useEffect(() => {
         // Set the default category text in the header
         if (setGrouping)
-            setGrouping(defaultCategory?.name);
+            setGrouping(defaultCategory?.name); // Global state
     }, [defaultCategory.name, setGrouping]);
 
     return (
         <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
             <ul className="categories">
-                <li
-                    className="category flex items-center px-4 py-2 text-sm text-gray font-medium cursor-pointer hover: selected"
-                    data-category="All Categories"
-                    data-id=""
-                    data-default=""
-                    onClick={restoreDefaultSection}
-                >
-                    <FiChevronRight className="mr-2 text-lg text-gray" />
-                    <span>All Categories</span>
-                </li>
                 {sortedCategories(categories).map((category, index) => (
                     <li
                         key={index}
@@ -111,11 +89,9 @@ export default function ByCategories({ props }: BCProps) {
                         data-default={category.is_default}
                         className={`category flex items-center px-4 py-2 text-sm text-gray font-medium cursor-pointer hover:bg-gray-100 ${category.is_default === 1 ? 'highlighted' : ''
                             }`}
-                        onClick={((e) => category.is_default === 1 ?
-                            restoreDefaultSection() :
-                            toggleSelected(category, e))}
+                        onClick={((e) => toggleSelected(category, e))}
                     >
-                        <FiChevronRight className="mr-2 text-lg text-gray" />
+                        <PiTagSimpleFill className="mr-2 text-lg text-gray" />
                         <span>{category.name}</span>
                     </li>
                 ))}
