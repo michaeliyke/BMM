@@ -45,7 +45,7 @@ export default function SideBar({ props }: SideBarProps) {
 
     // return <SideBarVariator props={props} />;
     return (
-        <article className="sidebar bg-white">
+        <article className="sidebar bg-white border-t border-t-gray-200">
             <SideBarHeader props={props} />
 
             <SideBarSwitcher props={props} />
