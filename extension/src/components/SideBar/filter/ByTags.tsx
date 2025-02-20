@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { FiHash } from "react-icons/fi";
-import { toggleHighlightedClass, resetSelections } from "../../../utils/common";
+import { resetSelections, toggleHighlightedClass } from "../../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
 
 type DAPProps = {
@@ -63,15 +63,18 @@ export function ByTags({ props }: DAPProps) {
     }, [setGrouping, defaultCategory.name, selectedTag]);
 
     return (
-        <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
+        <section className="filtered-list bg-white -ml-[15px] w-64 h-full overflow-y-auto border-r border-gray-200">
+            <div className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide border-b border-gray-200">
+                Tags
+            </div>
             <ul className="categories">
                 <li
                     data-tag="all"
                     data-id="all"
-                    className="tag flex items-center px-4 py-2 text-sm font-medium highlighted cursor-pointer hover:bg-gray-100"
+                    className="tag flex items-center px-4 py-2 text-xs text-gray-700 font-medium highlighted cursor-pointer hover:bg-slate-50"
                     onClick={restoreDefaultSection}
                 >
-                    <FiHash className="mr-2 text-lg text-blue-500" />
+                    <FiHash className="text-sm text-gray-400" />
                     <span>All Tags</span>
                 </li>
                 {tags.map((tag, index) => (
@@ -79,10 +82,10 @@ export function ByTags({ props }: DAPProps) {
                         key={index}
                         data-tag={tag.name}
                         data-id={tag.id}
-                        className="tag flex items-center px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-100"
+                        className="tag flex items-center text-gray-700 px-4 py-2 text-xs font-medium cursor-pointer hover:bg-slate-50"
                         onClick={(event) => toggleSelected(tag, event)}
                     >
-                        <FiHash className="mr-2 text-lg text-blue-500" />
+                        <FiHash className="text-sm text-gray-400" />
                         <span>{tag.name}</span>
                     </li>
                 ))}
