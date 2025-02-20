@@ -70,6 +70,7 @@ export default function SideBarHeader({ props }: SideBarHeaderProps) {
 
     return (
         <header>
+            <hr className="border-t border-gray-200 my-2" />
             <form>
                 <label htmlFor="filter-options">
                     <Listbox value={filterBy} onChange={handleFilterSelection}>
@@ -101,6 +102,8 @@ export default function SideBarHeader({ props }: SideBarHeaderProps) {
 
                 </label>
             </form>
+            <hr className="border-t border-gray-200 my-2" />
+
         </header>
     );
 }

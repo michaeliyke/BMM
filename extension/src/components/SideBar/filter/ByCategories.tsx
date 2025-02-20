@@ -79,7 +79,10 @@ export default function ByCategories({ props }: BCProps) {
     }, [defaultCategory.name, setGrouping]);
 
     return (
-        <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
+        <section className="filtered-list -ml-[15px] bg-white w-64 h-full overflow-y-auto border-r border-gray-200">
+            <div className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide border-b border-gray-200">
+                Categories
+            </div>
             <ul className="categories">
                 {sortedCategories(categories).map((category, index) => (
                     <li
@@ -87,16 +90,17 @@ export default function ByCategories({ props }: BCProps) {
                         data-category={category.name}
                         data-id={category.id}
                         data-default={category.is_default}
-                        className={`category flex items-center px-4 py-2 text-sm text-gray font-medium cursor-pointer hover:bg-gray-100 ${category.is_default === 1 ? 'highlighted' : ''
+                        className={`category flex items-center px-4 py-2 text-xs text-gray-700 cursor-pointer hover:bg-slate-50 ${category.is_default === 1 ? 'highlighted' : ''
                             }`}
-                        onClick={((e) => toggleSelected(category, e))}
+                        onClick={(e) => toggleSelected(category, e)}
                     >
-                        <PiTagSimpleFill className="mr-2 text-lg text-gray" />
+                        <PiTagSimpleFill size={12} className="text-gray-400" />
                         <span>{category.name}</span>
                     </li>
                 ))}
             </ul>
         </section>
+
     )
 }
 
