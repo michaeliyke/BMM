@@ -1,4 +1,6 @@
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
+import { Dispatch, SetStateAction } from "react";
+import { FiChevronDown } from "react-icons/fi";
 import { getBookmarks } from "../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 
@@ -48,33 +50,48 @@ export default function SideBarHeader({ props }: SideBarHeaderProps) {
         setQuery,
     } = props;
 
-    function handleFilterSelection(event: ChangeEvent<HTMLSelectElement>) {
+    function handleFilterSelection(value: string) {
         if (setFilterBy) {
-            setFilterBy(event.target.value);
+            setFilterBy(value);
             setBookmarks(getBookmarks(filteredCategories));
             setQuery("");
         }
     }
 
+    const options = [
+        { value: "categories", label: "Categories" },
+        { value: "filter:tags", label: "Filter : Tags" },
+        { value: "filter:category/tags", label: "Filter : Category / Tags" },
+        { value: "filter:favorites", label: "Filter : Favorites" },
+        { value: "filter:archived", label: "Filter : Archived" },
+        { value: "filter:deleted", label: "Filter : Deleted" },
+    ];
+
+
     return (
         <header>
             <form>
                 <label htmlFor="filter-options">
-                    <select
-                        id="filter-options"
-                        className="bg-white border border-gray-300 rounded-full p-1 text-xs text-gray-500 font-semibold"
-                        aria-label="Filter by"
-                        name="filter-options"
-                        value={filterBy}
-                        onChange={handleFilterSelection}
-                    >
-                        <option value="categories" className="current">Categories</option>
-                        <option value="filter:tags">Filter : Tags</option>
-                        <option value="filter:category/tags">Filter : Category / Tags</option>
-                        <option value="filter:favorites">Filter : Favorites</option>
-                        <option value="filter:archived">Filter : Archived</option>
-                        <option value="filter:deleted">Filter : Deleted</option>
-                    </select>
+                    <Listbox value={filterBy} onChange={handleFilterSelection}>
+                        <div className="relative">
+                            <ListboxButton className="flex items-center justify-between bg-white border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 font-medium shadow-sm w-full cursor-pointer">
+                                {options.find((opt) => opt.value === filterBy)?.label || "Select"}
+                                <FiChevronDown className="w-4 h-4 ml-2" /> {/* Caret Icon */}
+                            </ListboxButton>
+
+                            <ListboxOptions className="absolute mt-2 w-full bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden z-50">
+                                {options.map((option) => (
+                                    <ListboxOption
+                                        key={option.value}
+                                        value={option.value}
+                                        className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                    >
+                                        {option.label}
+                                    </ListboxOption>
+                                ))}
+                            </ListboxOptions>
+                        </div>
+                    </Listbox>
                 </label>
             </form>
         </header>
