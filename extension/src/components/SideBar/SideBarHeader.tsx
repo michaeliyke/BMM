@@ -74,17 +74,17 @@ export default function SideBarHeader({ props }: SideBarHeaderProps) {
                 <label htmlFor="filter-options">
                     <Listbox value={filterBy} onChange={handleFilterSelection}>
                         <div className="relative">
-                            <ListboxButton className="flex items-center justify-between bg-white border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 font-medium shadow-sm w-full cursor-pointer">
+                            <ListboxButton className="flex items-center justify-between bg-white border border-gray-300 rounded-full px-4 py-2 text-xs text-gray-700 font-medium shadow-sm w-[85%] cursor-pointer">
                                 {options.find((opt) => opt.value === filterBy)?.label || "Select"}
                                 <FiChevronDown className="w-4 h-4 ml-2" /> {/* Caret Icon */}
                             </ListboxButton>
 
-                            <ListboxOptions className="absolute mt-2 w-full bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden z-50">
+                            <ListboxOptions className="absolute mt-1 min-w-[85%] bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden z-50">
                                 {options.map((option) => (
                                     <ListboxOption
                                         key={option.value}
                                         value={option.value}
-                                        className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                        className="px-4 py-0.5 text-sm text-gray-600 hover:bg-gray-100 cursor-pointer"
                                     >
                                         {option.label}
                                     </ListboxOption>
