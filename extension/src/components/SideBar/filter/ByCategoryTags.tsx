@@ -57,9 +57,7 @@ export function ByCategoryTags({ props }: DCPProps) {
     }
 
 
-    function toggleSelected(event: React.MouseEvent<HTMLElement>) {
-        const target = event.currentTarget;
-        const category = categories.find((cat) => cat.name === target.textContent);
+    function toggleSelected(category: ICategory, target: HTMLElement) {
         if (category) {
             setSelectedCategory(category.is_default !== 1 ? category : null);
             setBookmarkToShow(null);
@@ -95,15 +93,17 @@ export function ByCategoryTags({ props }: DCPProps) {
                         data-default={category.is_default}
                     >
                         <div
-                            className={`category flex items-center px-4 py-2 text-xs text-gray-700 font-medium cursor-pointer hover:bg-slate-50 ${category.is_default === 1 ? 'highlighted' : ''}`}
+                            className={`category flex items-center justify-between px-4 py-2 text-xs text-gray-700 font-medium cursor-pointer hover:bg-slate-50 ${category.is_default === 1 ? 'highlighted' : ''}`}
                             onClick={((e) => {
-                                toggleExpand(category, e);
-                                toggleSelected(e);
+                                toggleSelected(category, e.currentTarget);
+                                if (category.is_default !== 1)
+                                    toggleExpand(category, e);
                             })}
                         >
                             <span>{category.name}</span>
-                            <FiChevronRight
-                                className={`mr-2 text-lg text-blue-500 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />
+                            {category.is_default === 1
+                                ? <FiChevronRight className="text-lg text-gray-300" />
+                                : <FiChevronRight className={`text-lg text-blue-500 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />}
                         </div>
                         {expandedCategories[category.id] && category.tags.length > 0 && (
                             <ul className="tags ml-8 mt-2 space-y-1">
