@@ -69,7 +69,7 @@ export default function SideBarHeader({ props }: SideBarHeaderProps) {
 
 
     return (
-        <header>
+        <header className="mt-4 mb-3">
             <form>
                 <label htmlFor="filter-options">
                     <Listbox value={filterBy} onChange={handleFilterSelection}>

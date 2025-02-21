@@ -176,11 +176,6 @@ main>section>article.content {
     flex-shrink: 0;
 }
 
-.sidebar>header {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
 /* Scrollable middle sections */
 .content>section {
     overflow-y: auto;
