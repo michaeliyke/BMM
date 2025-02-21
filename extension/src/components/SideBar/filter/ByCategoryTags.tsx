@@ -1,7 +1,8 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { DebouncedFunc, debounce } from "lodash-es";
+import { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { FiChevronRight, FiHash, FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
-import { sortedCategories, toggleHighlightedClass } from "../../../utils/common";
+import { categoryTagsSearch, sortedCategories, toggleHighlightedClass } from "../../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
 
 type DCPProps = {
@@ -30,15 +31,21 @@ type DCPProps = {
 
 export function ByCategoryTags({ props }: DCPProps) {
     const {
-        defaultCategory, categories, selectedCategory, setSelectedCategory, setBookmarkToShow, setGrouping, selectedTag, setSelectedTag,
+        defaultCategory,
+        categories,
+        selectedCategory,
+        setSelectedCategory,
+        setBookmarkToShow,
+        setGrouping,
+        selectedTag,
+        setSelectedTag,
     } = props;
 
     const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean; }>({});
+    const [query, setQuery] = useState<string>('');
+    const [_categories, setCategories] = useState<ICategory[]>([]);
 
-    function toggleExpand(category: ICategory, event: React.MouseEvent<HTMLElement>) {
-        const target = event.currentTarget;
-        if (target.classList.contains("highlighted"))
-            target.classList.add("highlighted"); /* Dummy code, won't do anything */
+    function toggleExpand(category: ICategory) {
         setExpandedCategories((prev) => {
             const temp = { ...prev, [category.id]: !prev[category.id] };
             return temp;
@@ -71,12 +78,63 @@ export function ByCategoryTags({ props }: DCPProps) {
         }
     }
 
+
+    /**
+     * A reference to a debounced search function.
+     * This reference is used to store a debounced version of a search function
+     * that takes a string query as an argument. The debounced function will delay
+     * the execution of the search function to optimize performance and reduce the
+     * number of search requests made.
+     *
+     * @type {React.MutableRefObject<DebouncedFunc<(q: string) => void> | null>}
+     */
+    const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
+
+    /**
+     * Debounced search function to filter categories based on a query string.
+     *
+     * @param query - The search query string.
+     * @param categoryList - The list of categories to filter from.
+     * @param setCategories - The state setter function to update the filtered categories.
+     *
+     * This function uses a debounced approach to limit the frequency of search executions.
+     * It ensures that the search function is called at most once every 300 milliseconds.
+     */
+    const debouncedSearch = useCallback((query: string, categoryList: ICategory[], setCategories: Dispatch<SetStateAction<ICategory[]>>) => {
+        if (!debouncedSearchRef.current) {
+            debouncedSearchRef.current = debounce((q: string) => {
+                setCategories(categoryTagsSearch(q, categoryList));
+                debouncedSearchRef.current = null;
+            }, 300);
+        }
+        debouncedSearchRef.current(query);
+    }, []);
+
+    /**
+     * Handles the search input change event.
+     * Updates the query state and triggers a debounced search.
+     *
+     * @param {ChangeEvent<HTMLInputElement>} e - The input change event.
+     */
+    function handleSearch(e: ChangeEvent<HTMLInputElement>) {
+        const query = e.target.value;
+        setQuery(query);
+        debouncedSearch(query, categories, setCategories);
+    }
+
     useEffect(() => {
         // Set the default category text in the header
         const category = selectedCategory || defaultCategory;
         if (setGrouping) // Global state
             setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
-    }, [defaultCategory, setGrouping, selectedTag, selectedCategory]);
+
+        if (!query)
+            setCategories(categories);
+
+        return () => {
+            debouncedSearchRef.current?.cancel();
+        };
+    }, [defaultCategory, setGrouping, selectedTag, selectedCategory, categories, query]);
 
 
     return (
@@ -93,13 +151,15 @@ export function ByCategoryTags({ props }: DCPProps) {
                 <input
                     id="category-tags-search"
                     type="search"
+                    onChange={handleSearch}
+                    value={query}
                     placeholder="Search Category tags"
                     className="w-full pl-8 pr-3 py-1.5 text-xs text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-amber-100"
                     aria-label="Search category tags"
                 />
             </form>
             <ul className="categories">
-                {sortedCategories(categories).map((category, index) => (
+                {sortedCategories(_categories).map((category, index) => (
                     <li
                         key={index}
                         className=""
@@ -112,7 +172,7 @@ export function ByCategoryTags({ props }: DCPProps) {
                             onClick={((e) => {
                                 toggleSelected(category, e.currentTarget);
                                 if (category.is_default !== 1)
-                                    toggleExpand(category, e);
+                                    toggleExpand(category);
                             })}
                         >
                             <PiTagSimpleFill className="mr-2 text-gray-500" />

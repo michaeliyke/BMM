@@ -78,8 +78,27 @@ export default function ByCategories({ props }: BCProps) {
         toggleHighlightedClass(event.currentTarget, "category");
     }
 
+    /**
+     * A reference to a debounced search function.
+     * This reference is used to store a debounced version of a search function
+     * that takes a string query as an argument. The debounced function will delay
+     * the execution of the search function to optimize performance and reduce the
+     * number of search requests made.
+     *
+     * @type {React.MutableRefObject<DebouncedFunc<(q: string) => void> | null>}
+     */
     const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 
+    /**
+     * Debounced search function to filter categories based on a query string.
+     *
+     * @param query - The search query string.
+     * @param categoryList - The list of categories to filter from.
+     * @param setCategories - The state setter function to update the filtered categories.
+     *
+     * This function uses a debounced approach to limit the frequency of search executions.
+     * It ensures that the search function is called at most once every 300 milliseconds.
+     */
     const debouncedSearch = useCallback((query: string, categoryList: ICategory[], setCategories: Dispatch<SetStateAction<ICategory[]>>) => {
         if (!debouncedSearchRef.current) {
             debouncedSearchRef.current = debounce((q: string) => {
@@ -90,6 +109,12 @@ export default function ByCategories({ props }: BCProps) {
         debouncedSearchRef.current(query);
     }, []);
 
+    /**
+     * Handles the search input change event.
+     * Updates the query state and triggers a debounced search.
+     *
+     * @param {ChangeEvent<HTMLInputElement>} e - The input change event.
+     */
     function handleSearch(e: ChangeEvent<HTMLInputElement>) {
         const query = e.target.value;
         setQuery(query);
