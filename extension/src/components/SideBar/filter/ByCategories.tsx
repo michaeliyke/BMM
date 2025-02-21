@@ -1,10 +1,12 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 
 import {
+    categoriesSearch,
     sortedCategories,
     toggleHighlightedClass
 } from "../../../utils/common";
 
+import { debounce, DebouncedFunc } from "lodash-es";
 import { FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
@@ -64,6 +66,9 @@ export default function ByCategories({ props }: BCProps) {
         setGrouping,
     } = props;
 
+    const [query, setQuery] = useState<string>("");
+    const [_categories, setCategories] = useState<ICategory[]>([]);
+
 
     function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
         setSelectedCategory(category.is_default !== 1 ? category : null); // Global state
@@ -73,11 +78,35 @@ export default function ByCategories({ props }: BCProps) {
         toggleHighlightedClass(event.currentTarget, "category");
     }
 
+    const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
+
+    const debouncedSearch = useCallback((query: string, categoryList: ICategory[], setCategories: Dispatch<SetStateAction<ICategory[]>>) => {
+        if (!debouncedSearchRef.current) {
+            debouncedSearchRef.current = debounce((q: string) => {
+                setCategories(categoriesSearch(q, categoryList));
+                debouncedSearchRef.current = null;
+            }, 300);
+        }
+        debouncedSearchRef.current(query);
+    }, []);
+
+    function handleSearch(e: ChangeEvent<HTMLInputElement>) {
+        const query = e.target.value;
+        setQuery(query);
+        debouncedSearch(query, categories, setCategories);
+    }
+
     useEffect(() => {
         // Set the default category text in the header
         if (setGrouping)
             setGrouping(defaultCategory?.name); // Global state
-    }, [defaultCategory.name, setGrouping]);
+        setCategories(categories);
+
+        return () => {
+            debouncedSearchRef.current?.cancel();
+
+        };
+    }, [defaultCategory.name, setGrouping, debouncedSearchRef, categories]);
 
     return (
         <section className="filtered-list -ml-[15px] bg-white w-64 h-full overflow-y-auto border-r border-gray-200">
@@ -93,6 +122,8 @@ export default function ByCategories({ props }: BCProps) {
                 <input
                     id="category-search"
                     type="search"
+                    onChange={handleSearch}
+                    value={query}
                     placeholder="Search Categories"
                     className="w-full pl-8 pr-3 py-1.5 text-xs text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-amber-100"
                     aria-label="Search categories"
@@ -102,7 +133,7 @@ export default function ByCategories({ props }: BCProps) {
 
             {/* Categories List */}
             <ul className="categories">
-                {sortedCategories(categories).map((category, index) => (
+                {sortedCategories(_categories).map((category, index) => (
                     <li
                         key={index}
                         data-category={category.name}

@@ -1,9 +1,9 @@
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
+import ContentBar from '../components/ContentBar/ContentBar'
 import Header from '../components/HeaderBar/Header'
 import SideBar from '../components/SideBar/SideBar'
-import ContentBar from '../components/ContentBar/ContentBar'
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
-import { IBookmark, ICategory, ITag } from '../utils/types/schemas'
 import { update } from '../utils/crud'
+import { IBookmark, ICategory, ITag } from '../utils/types/schemas'
 
 
 export type IHomeProps = {
@@ -52,6 +52,7 @@ export default function Home(props: IHomeProps) {
     const [filterBy, setFilterBy] = useState('categories');
     const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
     const [bookmarks, setBookmarksRaw] = useState<IBookmark[]>([]);
+    // query: cleared in Sidebar header and, set and used in Content SearchWidget
     const [query, setQuery] = useState("");
 
     // Wrapper function to for setBookmarks: filter out archived bookmarks

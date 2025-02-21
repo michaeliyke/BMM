@@ -1,6 +1,6 @@
 import { DebouncedFunc, debounce } from "lodash-es";
-import { Dispatch, SetStateAction, useRef, useCallback, useEffect } from "react";
-import { weightedSearch, getBookmarks } from "../../../utils/common";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
+import { getBookmarks, weightedSearch } from "../../../utils/common";
 import { IBookmark, ICategory } from "../../../utils/types/schemas";
 
 type SearchWidgetProps = {

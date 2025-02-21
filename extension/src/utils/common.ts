@@ -156,6 +156,49 @@ export function weightedSearch(query: string, bookmarks: IBookmark[]): IBookmark
         .map((result) => result.bookmark); // Return sorted bookmarks.
 }
 
+export function categoryTagsSearch(query: string, categories: ICategory[]): ICategory[] {
+    if (!query.trim())
+        return categories;
+
+    const queryLower = query.toLowerCase(); // case-insensitive matching.
+
+    // Define weights for fields.
+    const weights = {
+        category: 2,
+        tag: 1,
+    };
+
+    return categories
+        .map((category) => {
+            // Compute scores for each field based on matching.
+            const categoryScore = category.name.toLowerCase().includes(queryLower) ? weights.category : 0;
+            let tagScore = 0;
+            for (const tag of category.tags) {
+                if (tag.name.toLowerCase().includes(queryLower)) {
+                    tagScore = weights.tag;
+                    break;
+                }
+            }
+
+            // Calculate total score.
+            const totalScore = categoryScore + tagScore;
+
+            return { category, totalScore };
+        })
+        .filter((result) => result.totalScore > 0) // Exclude ones with no matches.
+        .sort((a, b) => b.totalScore - a.totalScore) // Sort by relevance (highest score first).
+        .map((result) => result.category); // Return sorted bookmarks.
+}
+
+export function categoriesSearch(query: string, categories: ICategory[]): ICategory[] {
+    if (!query.trim())
+        return categories;
+
+    return categories
+        .filter((category) => category.name.toLowerCase().includes(query.toLowerCase()))
+        .sort((a, b) => a.name.localeCompare(b.name)); // Sort by name (alphabetical order).
+}
+
 /**
  * Retrieves all bookmarks from the provided categories.
  *
