@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { FiChevronRight, FiHash } from "react-icons/fi";
+import { FiChevronRight, FiHash, FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { sortedCategories, toggleHighlightedClass } from "../../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
@@ -81,9 +81,23 @@ export function ByCategoryTags({ props }: DCPProps) {
 
     return (
         <section className="filtered-list -ml-[15px]  bg-white w-64 h-full overflow-y-auto">
-            <div className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide border-b border-gray-200">
-                Categories Tags
-            </div>
+            {/* Search Bar */}
+            <label htmlFor="category-tags-search" className="sr-only">
+                Search Category Tags
+            </label>
+            <form role="search" className="relative px-4 py-3 border-b border-gray-200">
+                <FiSearch
+                    aria-hidden="true"
+                    className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-sm"
+                />
+                <input
+                    id="category-tags-search"
+                    type="search"
+                    placeholder="Search Category tags"
+                    className="w-full pl-8 pr-3 py-1.5 text-xs text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-amber-100"
+                    aria-label="Search category tags"
+                />
+            </form>
             <ul className="categories">
                 {sortedCategories(categories).map((category, index) => (
                     <li

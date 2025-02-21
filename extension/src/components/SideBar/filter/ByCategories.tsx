@@ -5,6 +5,7 @@ import {
     toggleHighlightedClass
 } from "../../../utils/common";
 
+import { FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
 
@@ -80,9 +81,26 @@ export default function ByCategories({ props }: BCProps) {
 
     return (
         <section className="filtered-list -ml-[15px] bg-white w-64 h-full overflow-y-auto border-r border-gray-200">
-            <div className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide border-b border-gray-200">
-                Categories
-            </div>
+            {/* Search Bar */}
+            <label htmlFor="category-search" className="sr-only">
+                Search Categories
+            </label>
+            <form role="search" className="relative px-4 py-3 border-b border-gray-200">
+                <FiSearch
+                    aria-hidden="true"
+                    className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-sm"
+                />
+                <input
+                    id="category-search"
+                    type="search"
+                    placeholder="Search Categories"
+                    className="w-full pl-8 pr-3 py-1.5 text-xs text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-amber-100"
+                    aria-label="Search categories"
+                />
+            </form>
+
+
+            {/* Categories List */}
             <ul className="categories">
                 {sortedCategories(categories).map((category, index) => (
                     <li
