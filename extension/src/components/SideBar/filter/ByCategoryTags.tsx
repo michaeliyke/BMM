@@ -81,7 +81,10 @@ export function ByCategoryTags({ props }: DCPProps) {
 
 
     return (
-        <section className="filtered-list bg-gray-50 w-64 h-full overflow-y-auto border-r border-gray-200">
+        <section className="filtered-list -ml-[15px]  bg-white w-64 h-full overflow-y-auto">
+            <div className="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wide border-b border-gray-200">
+                Categories Tags
+            </div>
             <ul className="categories">
                 {sortedCategories(categories).map((category, index) => (
                     <li
@@ -92,25 +95,25 @@ export function ByCategoryTags({ props }: DCPProps) {
                         data-default={category.is_default}
                     >
                         <div
-                            className={`category flex items-center px-4 py-2 text-sm font-medium cursor-pointer hover:bg-gray-100 ${category.is_default === 1 ? 'highlighted' : ''}`}
+                            className={`category flex items-center px-4 py-2 text-xs text-gray-700 font-medium cursor-pointer hover:bg-slate-50 ${category.is_default === 1 ? 'highlighted' : ''}`}
                             onClick={((e) => {
                                 toggleExpand(category, e);
                                 toggleSelected(e);
                             })}
                         >
+                            <span>{category.name}</span>
                             <FiChevronRight
                                 className={`mr-2 text-lg text-blue-500 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />
-                            <span>{category.name}</span>
                         </div>
                         {expandedCategories[category.id] && category.tags.length > 0 && (
                             <ul className="tags ml-8 mt-2 space-y-1">
                                 {category.tags.map((tag, tagIndex) => (
                                     <li
                                         key={tagIndex}
-                                        className="tag flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer"
+                                        className="tag flex items-center px-4 py-1 text-xs text-gray-500 hover:bg-slate-50 rounded-md cursor-pointer"
                                         onClick={(event) => toggleSelectedTag(tag, event)}
                                     >
-                                        <FiHash className="mr-2 text-xs text-gray-500" />
+                                        <FiHash className="mr-0.5 text-xs text-gray-400" />
                                         <span>{tag.name}</span>
                                     </li>
                                 ))}
