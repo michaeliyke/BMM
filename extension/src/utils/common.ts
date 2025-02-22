@@ -1,6 +1,6 @@
 import moment from "moment";
 import { addClass, removeClass } from "./domHelpers";
-import { IBookmark, ICategory } from "./types/schemas";
+import { IBookmark, ICategory, ITag } from "./types/schemas";
 
 
 export function sortedBookmarks(bookmarks: IBookmark[]): IBookmark[] {
@@ -292,4 +292,34 @@ export async function getCurrentTabTitle() {
     } catch (error) {
         throw new Error(`Error retrieving current tab title: ${error}`);
     }
+}
+
+
+/**
+ * Extracts and returns an array of tags from the given categories.
+ *
+ * @param categories - An array of category objects, each containing a list of tags.
+ * @returns An array of tags extracted from the provided categories.
+ */
+export function getTags(categories: ICategory[]): ITag[] {
+    return categories.flatMap((category) => category.tags)
+        .sort((a, b) => a.name.localeCompare(b.name)); // Sort by name (alphabetical order).
+}
+
+/**
+ * Filters and sorts an array of tags based on a search query.
+ *
+ * @param query - The search query string used to filter the tags.
+ * @param categories - An array of tags to be filtered and sorted.
+ * @returns An array of tags that match the search query, sorted alphabetically by name.
+ */
+export function tagsSearch(query: string, categories: ICategory[]): ICategory[] {
+    if (!query.trim())
+        return categories;
+    console.log(categories);
+    return categories
+        .filter((category) => {
+            const tags = category.tags.filter((tag) => tag.name.toLowerCase().includes(query.toLowerCase()));
+            return tags.length > 0 ? category : null;
+        });
 }

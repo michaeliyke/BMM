@@ -1,6 +1,7 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { debounce, DebouncedFunc } from "lodash-es";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { FiHash, FiSearch } from "react-icons/fi";
-import { resetSelections, toggleHighlightedClass } from "../../../utils/common";
+import { categoriesSearch, getTags, resetSelections, toggleHighlightedClass } from "../../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
 
 type DAPProps = {
@@ -26,12 +27,63 @@ type DAPProps = {
         setQuery: Dispatch<SetStateAction<string>>;
     };
 };
+
+type DSI = Dispatch<SetStateAction<ICategory[]>>;
+type CL = ICategory[];
+
 export function ByTags({ props }: DAPProps) {
     const {
         defaultCategory, categories, setSelectedTag, selectedTag, setGrouping, setBookmarkToShow,
     } = props;
 
-    const tags = categories.flatMap((category) => category.tags);
+    const [query, setQuery] = useState<string>('');
+    const [_categories, setCategories] = useState<ICategory[]>([]);
+
+    /**
+     * A reference to a debounced search function.
+     * This reference is used to store a debounced version of a search function
+     * that takes a string query as an argument. The debounced function will delay
+     * the execution of the search function to optimize performance and reduce the
+     * number of search requests made.
+     *
+     * @type {React.MutableRefObject<DebouncedFunc<(q: string) => void> | null>}
+     */
+    const debouncedFnRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
+
+    const debouncedFn = useCallback(TDebouncer, []);
+
+    /**
+     * Debounced search function to filter categories based on a query string.
+     *
+     * @param query - The search query string.
+     * @param categoryList - The list of categories to filter from.
+     * @param setCategories - The state setter function to update the filtered categories.
+     *
+     * This function uses a debounced approach to limit the frequency of search executions.
+     * It ensures that the search function is called at most once every 300 milliseconds.
+     */
+    function TDebouncer(query: string, categories: CL, setCategories: DSI) {
+        // Memoize the actual debounced function internally
+        // in order to avoid creating a new instance on every render.
+
+        function TBouncer(query: string) {
+            console.log('Searching for tags...');
+            setCategories(categoriesSearch(query, categories));
+            debouncedFnRef.current = null;
+        }
+
+        if (!debouncedFnRef.current) {
+            console.log('Creating new debounced function');
+            debouncedFnRef.current = debounce(TBouncer, 300);
+        }
+
+        debouncedFnRef.current(query);
+    }
+
+    function handleSearch(query: string) {
+        setQuery(query);
+        debouncedFn(query, categories, setCategories);
+    }
 
 
     function toggleSelected(tag: ITag, event: React.MouseEvent<HTMLLIElement>) {
@@ -60,7 +112,15 @@ export function ByTags({ props }: DAPProps) {
     useEffect(() => {
         if (setGrouping)
             setGrouping(defaultCategory?.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
-    }, [setGrouping, defaultCategory.name, selectedTag]);
+
+        if (!query)
+            setCategories(categories);
+
+        return () => {
+            debouncedFnRef.current?.cancel();
+        };
+
+    }, [setGrouping, defaultCategory.name, selectedTag, query, categories]);
 
     return (
         <section className="filtered-list bg-white -ml-[15px] w-64 h-full overflow-y-auto border-r border-gray-200">
@@ -76,6 +136,8 @@ export function ByTags({ props }: DAPProps) {
                 <input
                     id="tag-search"
                     type="search"
+                    value={query}
+                    onChange={(e) => handleSearch(e.target.value)}
                     placeholder="Search Tags"
                     className="w-full pl-8 pr-3 py-1.5 text-xs text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-amber-100"
                     aria-label="Search tags"
@@ -91,7 +153,7 @@ export function ByTags({ props }: DAPProps) {
                     <FiHash className="text-sm text-gray-400" />
                     <span>All Tags</span>
                 </li>
-                {tags.map((tag, index) => (
+                {getTags(_categories).map((tag, index) => (
                     <li
                         key={index}
                         data-tag={tag.name}

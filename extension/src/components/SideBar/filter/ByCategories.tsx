@@ -114,8 +114,9 @@ export default function ByCategories({ props }: BCProps) {
             debouncedSearchRef.current = null;
         }
 
-        if (!debouncedSearchRef.current)
+        if (!debouncedSearchRef.current) {
             debouncedSearchRef.current = debounce(bouncer, 300);
+        }
 
         debouncedSearchRef.current(query);
     }
