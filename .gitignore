@@ -26,4 +26,6 @@ extension/css/_style_2.css
 
 *_old*
 node_modules
+src/components/SideBar/filter/ByCategories_2.tsx
+ByCategories_2.tsx
 dist

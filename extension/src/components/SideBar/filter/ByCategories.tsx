@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 
 import {
     categoriesSearch,
@@ -34,6 +34,10 @@ type BCProps = {
         setQuery: Dispatch<SetStateAction<string>>;
     };
 };
+
+type DSI = Dispatch<SetStateAction<ICategory[]>>;
+type CL = ICategory[];
+
 
 /**
  * Component for displaying and selecting categories in a sidebar.
@@ -89,6 +93,8 @@ export default function ByCategories({ props }: BCProps) {
      */
     const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 
+    const debouncedSearch = useCallback(CDebouncer, []);
+
     /**
      * Debounced search function to filter categories based on a query string.
      *
@@ -99,15 +105,20 @@ export default function ByCategories({ props }: BCProps) {
      * This function uses a debounced approach to limit the frequency of search executions.
      * It ensures that the search function is called at most once every 300 milliseconds.
      */
-    const debouncedSearch = useCallback((query: string, categoryList: ICategory[], setCategories: Dispatch<SetStateAction<ICategory[]>>) => {
-        if (!debouncedSearchRef.current) {
-            debouncedSearchRef.current = debounce((q: string) => {
-                setCategories(categoriesSearch(q, categoryList));
-                debouncedSearchRef.current = null;
-            }, 300);
+    function CDebouncer(query: string, categories: CL, setCategories: DSI) {
+        // Memoize the actual debounced function internally
+        // in order to avoid creating a new instance on every render.
+
+        function bouncer(query: string) {
+            setCategories(categoriesSearch(query, categories));
+            debouncedSearchRef.current = null;
         }
+
+        if (!debouncedSearchRef.current)
+            debouncedSearchRef.current = debounce(bouncer, 300);
+
         debouncedSearchRef.current(query);
-    }, []);
+    }
 
     /**
      * Handles the search input change event.
@@ -115,8 +126,7 @@ export default function ByCategories({ props }: BCProps) {
      *
      * @param {ChangeEvent<HTMLInputElement>} e - The input change event.
      */
-    function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-        const query = e.target.value;
+    function handleSearch(query: string) {
         setQuery(query);
         debouncedSearch(query, categories, setCategories);
     }
@@ -147,7 +157,7 @@ export default function ByCategories({ props }: BCProps) {
                 <input
                     id="category-search"
                     type="search"
-                    onChange={handleSearch}
+                    onChange={(e) => handleSearch(e.target.value)}
                     value={query}
                     placeholder="Search Categories"
                     className="w-full pl-8 pr-3 py-1.5 text-xs text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-amber-100"

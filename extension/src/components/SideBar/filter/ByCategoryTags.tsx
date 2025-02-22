@@ -103,6 +103,7 @@ export function ByCategoryTags({ props }: DCPProps) {
     const debouncedSearch = useCallback((query: string, categoryList: ICategory[], setCategories: Dispatch<SetStateAction<ICategory[]>>) => {
         if (!debouncedSearchRef.current) {
             debouncedSearchRef.current = debounce((q: string) => {
+                console.log('searching');
                 setCategories(categoryTagsSearch(q, categoryList));
                 debouncedSearchRef.current = null;
             }, 300);
