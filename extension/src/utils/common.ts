@@ -302,8 +302,22 @@ export async function getCurrentTabTitle() {
  * @returns An array of tags extracted from the provided categories.
  */
 export function getTags(categories: ICategory[]): ITag[] {
-    return categories.flatMap((category) => category.tags)
-        .sort((a, b) => a.name.localeCompare(b.name)); // Sort by name (alphabetical order).
+    return fixTagDuplicates(categories.flatMap((category) => category.tags));
+}
+
+/**
+ * Removes duplicate tags from an array and sorts them by name.
+ *
+ * @param tags - An array of tags to be processed.
+ * @returns A new array of tags with duplicates removed and sorted by name.
+ */
+export function fixTagDuplicates(tags: ITag[]): ITag[] {
+    const tagNames = new Set<string>();
+    return tags.filter((tag) => {
+        if (tagNames.has(tag.name)) return false;
+        tagNames.add(tag.name);
+        return true;
+    }).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**
@@ -313,13 +327,15 @@ export function getTags(categories: ICategory[]): ITag[] {
  * @param categories - An array of tags to be filtered and sorted.
  * @returns An array of tags that match the search query, sorted alphabetically by name.
  */
-export function tagsSearch(query: string, categories: ICategory[]): ICategory[] {
+export function tagsSearch(query: string, categories: ICategory[]): ITag[] {
     if (!query.trim())
-        return categories;
-    console.log(categories);
-    return categories
-        .filter((category) => {
-            const tags = category.tags.filter((tag) => tag.name.toLowerCase().includes(query.toLowerCase()));
-            return tags.length > 0 ? category : null;
-        });
+        return fixTagDuplicates(categories.flatMap((category) => category.tags));
+
+    const tags = [];
+    for (const category of categories)
+        for (const tag of category.tags)
+            if (tag.name.toLowerCase().includes(query.toLowerCase()))
+                tags.push(tag);
+
+    return fixTagDuplicates(tags);
 }

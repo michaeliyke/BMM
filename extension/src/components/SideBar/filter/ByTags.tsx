@@ -1,7 +1,7 @@
 import { debounce, DebouncedFunc } from "lodash-es";
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { FiHash, FiSearch } from "react-icons/fi";
-import { categoriesSearch, getTags, resetSelections, toggleHighlightedClass } from "../../../utils/common";
+import { getTags, resetSelections, tagsSearch, toggleHighlightedClass } from "../../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
 
 type DAPProps = {
@@ -28,16 +28,22 @@ type DAPProps = {
     };
 };
 
-type DSI = Dispatch<SetStateAction<ICategory[]>>;
+type DSI = Dispatch<SetStateAction<ITag[]>>;
 type CL = ICategory[];
 
 export function ByTags({ props }: DAPProps) {
     const {
-        defaultCategory, categories, setSelectedTag, selectedTag, setGrouping, setBookmarkToShow,
+        defaultCategory,
+        categories,
+        setSelectedTag,
+        selectedTag,
+        setGrouping,
+        setBookmarkToShow,
     } = props;
 
     const [query, setQuery] = useState<string>('');
-    const [_categories, setCategories] = useState<ICategory[]>([]);
+    const [tags, setTags] = useState<ITag[]>([]);
+    const [hasExecuted, setHasExecuted] = useState<boolean>(false);
 
     /**
      * A reference to a debounced search function.
@@ -48,41 +54,26 @@ export function ByTags({ props }: DAPProps) {
      *
      * @type {React.MutableRefObject<DebouncedFunc<(q: string) => void> | null>}
      */
-    const debouncedFnRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
+    const searchFnRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 
-    const debouncedFn = useCallback(TDebouncer, []);
+    const search = useCallback((query: string, categories: CL, setCategories: DSI) => {
+        if (!searchFnRef.current)
+            searchFnRef.current = debounce(performSearch, 300);
 
-    /**
-     * Debounced search function to filter categories based on a query string.
-     *
-     * @param query - The search query string.
-     * @param categoryList - The list of categories to filter from.
-     * @param setCategories - The state setter function to update the filtered categories.
-     *
-     * This function uses a debounced approach to limit the frequency of search executions.
-     * It ensures that the search function is called at most once every 300 milliseconds.
-     */
-    function TDebouncer(query: string, categories: CL, setCategories: DSI) {
-        // Memoize the actual debounced function internally
-        // in order to avoid creating a new instance on every render.
+        searchFnRef.current(query);
 
-        function TBouncer(query: string) {
-            console.log('Searching for tags...');
-            setCategories(categoriesSearch(query, categories));
-            debouncedFnRef.current = null;
+        function performSearch(q: string) {
+            console.log('Searching for tags with query:', q);
+            setCategories(tagsSearch(q, categories));
+            setHasExecuted(true);
         }
 
-        if (!debouncedFnRef.current) {
-            console.log('Creating new debounced function');
-            debouncedFnRef.current = debounce(TBouncer, 300);
-        }
+    }, []);
 
-        debouncedFnRef.current(query);
-    }
 
     function handleSearch(query: string) {
         setQuery(query);
-        debouncedFn(query, categories, setCategories);
+        search(query, categories, setTags);
     }
 
 
@@ -114,13 +105,17 @@ export function ByTags({ props }: DAPProps) {
             setGrouping(defaultCategory?.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
 
         if (!query)
-            setCategories(categories);
+            setTags(getTags(categories));
 
         return () => {
-            debouncedFnRef.current?.cancel();
+            // Clean up the debounced search function after it has executed
+            if (searchFnRef.current && hasExecuted) {
+                searchFnRef.current.cancel();
+                setHasExecuted(false);
+            }
         };
 
-    }, [setGrouping, defaultCategory.name, selectedTag, query, categories]);
+    }, [setGrouping, defaultCategory.name, selectedTag, query, categories, hasExecuted]);
 
     return (
         <section className="filtered-list bg-white -ml-[15px] w-64 h-full overflow-y-auto border-r border-gray-200">
@@ -153,7 +148,7 @@ export function ByTags({ props }: DAPProps) {
                     <FiHash className="text-sm text-gray-400" />
                     <span>All Tags</span>
                 </li>
-                {getTags(_categories).map((tag, index) => (
+                {tags.map((tag, index) => (
                     <li
                         key={index}
                         data-tag={tag.name}
