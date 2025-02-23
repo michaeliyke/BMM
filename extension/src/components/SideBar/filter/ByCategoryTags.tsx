@@ -1,9 +1,12 @@
 import { DebouncedFunc, debounce } from "lodash-es";
-import { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { FiChevronRight, FiHash, FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { categoryTagsSearch, sortedCategories, toggleHighlightedClass } from "../../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
+
+type DSI = Dispatch<SetStateAction<ICategory[]>>;
+type CL = ICategory[];
 
 type DCPProps = {
     props: {
@@ -44,6 +47,7 @@ export function ByCategoryTags({ props }: DCPProps) {
     const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean; }>({});
     const [query, setQuery] = useState<string>('');
     const [_categories, setCategories] = useState<ICategory[]>([]);
+    const [hasExecuted, setHasExecuted] = useState<boolean>(false);
 
     function toggleExpand(category: ICategory) {
         setExpandedCategories((prev) => {
@@ -88,7 +92,7 @@ export function ByCategoryTags({ props }: DCPProps) {
      *
      * @type {React.MutableRefObject<DebouncedFunc<(q: string) => void> | null>}
      */
-    const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
+    const searchFnRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 
     /**
      * Debounced search function to filter categories based on a query string.
@@ -100,15 +104,17 @@ export function ByCategoryTags({ props }: DCPProps) {
      * This function uses a debounced approach to limit the frequency of search executions.
      * It ensures that the search function is called at most once every 300 milliseconds.
      */
-    const debouncedSearch = useCallback((query: string, categoryList: ICategory[], setCategories: Dispatch<SetStateAction<ICategory[]>>) => {
-        if (!debouncedSearchRef.current) {
-            debouncedSearchRef.current = debounce((q: string) => {
-                console.log('searching');
-                setCategories(categoryTagsSearch(q, categoryList));
-                debouncedSearchRef.current = null;
-            }, 300);
+    const search = useCallback((query: string, categories: CL, setCategories: DSI) => {
+        if (!searchFnRef.current)
+            searchFnRef.current = debounce(performSearch, 300);
+
+        searchFnRef.current(query);
+
+        function performSearch(q: string) {
+            console.log('Searching for tags with query:', q);
+            setCategories(categoryTagsSearch(q, categories));
+            setHasExecuted(true);
         }
-        debouncedSearchRef.current(query);
     }, []);
 
     /**
@@ -117,10 +123,9 @@ export function ByCategoryTags({ props }: DCPProps) {
      *
      * @param {ChangeEvent<HTMLInputElement>} e - The input change event.
      */
-    function handleSearch(e: ChangeEvent<HTMLInputElement>) {
-        const query = e.target.value;
+    function handleSearch(query: string) {
         setQuery(query);
-        debouncedSearch(query, categories, setCategories);
+        search(query, categories, setCategories);
     }
 
     useEffect(() => {
@@ -133,9 +138,13 @@ export function ByCategoryTags({ props }: DCPProps) {
             setCategories(categories);
 
         return () => {
-            debouncedSearchRef.current?.cancel();
+            // Cancel the debounced search function when the component unmounts.
+            if (searchFnRef.current && hasExecuted) {
+                searchFnRef.current.cancel();
+                setHasExecuted(false);
+            }
         };
-    }, [defaultCategory, setGrouping, selectedTag, selectedCategory, categories, query]);
+    }, [defaultCategory, setGrouping, selectedTag, selectedCategory, categories, query, setCategories, hasExecuted]);
 
 
     return (
@@ -152,7 +161,7 @@ export function ByCategoryTags({ props }: DCPProps) {
                 <input
                     id="category-tags-search"
                     type="search"
-                    onChange={handleSearch}
+                    onChange={(e) => handleSearch(e.currentTarget.value)}
                     value={query}
                     placeholder="Search Category tags"
                     className="w-full pl-8 pr-3 py-1.5 text-xs text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-amber-100"

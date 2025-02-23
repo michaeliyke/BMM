@@ -63,11 +63,9 @@ export function ByTags({ props }: DAPProps) {
         searchFnRef.current(query);
 
         function performSearch(q: string) {
-            console.log('Searching for tags with query:', q);
             setCategories(tagsSearch(q, categories));
             setHasExecuted(true);
         }
-
     }, []);
 
 
