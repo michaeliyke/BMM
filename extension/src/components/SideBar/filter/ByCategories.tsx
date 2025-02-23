@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 
 import {
-    categoriesSearch,
+    categoryTagsSearch,
     sortedCategories,
     toggleHighlightedClass
 } from "../../../utils/common";
@@ -72,7 +72,7 @@ export default function ByCategories({ props }: BCProps) {
 
     const [query, setQuery] = useState<string>("");
     const [_categories, setCategories] = useState<ICategory[]>([]);
-
+    const [hasExecuted, setHasExecuted] = useState<boolean>(true);
 
     function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
         setSelectedCategory(category.is_default !== 1 ? category : null); // Global state
@@ -91,35 +91,19 @@ export default function ByCategories({ props }: BCProps) {
      *
      * @type {React.MutableRefObject<DebouncedFunc<(q: string) => void> | null>}
      */
-    const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
+    const searchFnRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 
-    const debouncedSearch = useCallback(CDebouncer, []);
+    const search = useCallback((query: string, categories: CL, setCategories: DSI) => {
+        if (!searchFnRef.current)
+            searchFnRef.current = debounce(performSearch, 300);
 
-    /**
-     * Debounced search function to filter categories based on a query string.
-     *
-     * @param query - The search query string.
-     * @param categoryList - The list of categories to filter from.
-     * @param setCategories - The state setter function to update the filtered categories.
-     *
-     * This function uses a debounced approach to limit the frequency of search executions.
-     * It ensures that the search function is called at most once every 300 milliseconds.
-     */
-    function CDebouncer(query: string, categories: CL, setCategories: DSI) {
-        // Memoize the actual debounced function internally
-        // in order to avoid creating a new instance on every render.
+        searchFnRef.current(query);
 
-        function bouncer(query: string) {
-            setCategories(categoriesSearch(query, categories));
-            debouncedSearchRef.current = null;
+        function performSearch(q: string) {
+            setCategories(categoryTagsSearch(q, categories));
+            setHasExecuted(true);
         }
-
-        if (!debouncedSearchRef.current) {
-            debouncedSearchRef.current = debounce(bouncer, 300);
-        }
-
-        debouncedSearchRef.current(query);
-    }
+    }, []);
 
     /**
      * Handles the search input change event.
@@ -129,7 +113,7 @@ export default function ByCategories({ props }: BCProps) {
      */
     function handleSearch(query: string) {
         setQuery(query);
-        debouncedSearch(query, categories, setCategories);
+        search(query, categories, setCategories);
     }
 
     useEffect(() => {
@@ -139,10 +123,13 @@ export default function ByCategories({ props }: BCProps) {
         setCategories(categories);
 
         return () => {
-            debouncedSearchRef.current?.cancel();
-
+            // Cancel the debounced search function when the component unmounts.
+            if (searchFnRef.current && hasExecuted) {
+                searchFnRef.current.cancel();
+                setHasExecuted(false);
+            }
         };
-    }, [defaultCategory.name, setGrouping, debouncedSearchRef, categories]);
+    }, [defaultCategory.name, setGrouping, searchFnRef, categories, hasExecuted]);
 
     return (
         <section className="filtered-list -ml-[15px] bg-white w-64 h-full overflow-y-auto border-r border-gray-200">

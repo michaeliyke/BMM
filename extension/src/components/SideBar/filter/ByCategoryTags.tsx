@@ -111,7 +111,6 @@ export function ByCategoryTags({ props }: DCPProps) {
         searchFnRef.current(query);
 
         function performSearch(q: string) {
-            console.log('Searching for tags with query:', q);
             setCategories(categoryTagsSearch(q, categories));
             setHasExecuted(true);
         }
