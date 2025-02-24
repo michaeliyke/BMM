@@ -1,4 +1,5 @@
 mdx.tsx
+names.json
 .env
 *.env
 *.env.*

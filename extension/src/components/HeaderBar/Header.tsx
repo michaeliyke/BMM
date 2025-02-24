@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { CiImport } from "react-icons/ci";
 import { TiExport } from "react-icons/ti";
 import { v4 as uuid4 } from 'uuid';
 import Bookmark from "../../data/adapters/bookmark";
@@ -9,6 +8,7 @@ import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
 import { getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import ImportDialog from "./ImportDialog";
 
 type HeaderProps = {
     selectedCategory: ICategory | null;
@@ -240,13 +240,14 @@ export default function Header(props: HeaderProps) {
 
                     {/* Submit Button */}
                     <div className="form-control flex space-x-2">
-                        <button
+                        {/*  <button
                             type="button"
                             className="py-2 pr-2 pl-1 rounded-lg tracking-wide border border-green-700 text-green-700 focus:ring-2 focus:ring-green-50 flex items-center"
                         >
                             <CiImport className="mr-1" />
                             Import
-                        </button>
+                        </button> */}
+                        <ImportDialog />
                         <button
                             type="button"
                             className="py-2 pr-2 pl-1 rounded-lg tracking-wide border border-green-700 text-green-700 focus:ring-2 focus:ring-green-50 flex items-center"
