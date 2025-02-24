@@ -320,19 +320,11 @@ main>header form span {
 
 
 main>header form button {
-    padding: 10px 20px;
-    background-color: #6bbee7;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
     margin-top: 2em;
-    margin-bottom: 10px;
 }
 
 main>header form button:not(:disabled):hover {
-    background-color: #1C86EE;
     transform: scale(1.05);
 }
 

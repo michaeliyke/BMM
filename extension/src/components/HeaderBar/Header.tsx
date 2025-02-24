@@ -1,4 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
+import { CiImport } from "react-icons/ci";
+import { TiExport } from "react-icons/ti";
 import { v4 as uuid4 } from 'uuid';
 import Bookmark from "../../data/adapters/bookmark";
 import Category from "../../data/adapters/category";
@@ -237,22 +239,37 @@ export default function Header(props: HeaderProps) {
                     </div>
 
                     {/* Submit Button */}
-                    <div className="form-control">
+                    <div className="form-control flex space-x-2">
+                        <button
+                            type="button"
+                            className="py-2 pr-2 pl-1 rounded-lg tracking-wide border border-green-700 text-green-700 focus:ring-2 focus:ring-green-50 flex items-center"
+                        >
+                            <CiImport className="mr-1" />
+                            Import
+                        </button>
+                        <button
+                            type="button"
+                            className="py-2 pr-2 pl-1 rounded-lg tracking-wide border border-green-700 text-green-700 focus:ring-2 focus:ring-green-50 flex items-center"
+                        >
+                            <TiExport className="mr-1" />
+                            Export
+                        </button>
                         <button
                             disabled={isButtonDisabled}
                             type="button"
                             onClick={createBookmark}
                             className={`
-                                 py-2 px-4 rounded-lg tracking-
-                                ${isButtonDisabled
+            py-2 px-4 rounded-full tracking-wide
+            ${isButtonDisabled
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                     : 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-300'
                                 }
-                            `}
+        `}
                         >
                             Create
                         </button>
                     </div>
+
                 </form>
             </article>
         </header>
