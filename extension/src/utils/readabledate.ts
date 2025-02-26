@@ -188,7 +188,7 @@ export default class ReadableDate {
         const day = this.date.getDate();
         const year = this.date.getFullYear();
         const timeFormat = this.getTimeInHHMM();
-        return `${month} ${day},${year} ${timeFormat}`;
+        return `${month} ${day} ${year} ${timeFormat}`;
     }
 
     /**
