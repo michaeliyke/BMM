@@ -9,8 +9,8 @@
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "test": "vitest --coverage",
-        "test2": "jest"
+        "test_vitest": "vitest --coverage",
+        "test": "jest"
     },
     "dependencies": {
         "@headlessui/react": "^2.2.0",

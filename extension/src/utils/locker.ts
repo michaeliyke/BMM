@@ -1,6 +1,5 @@
 
 
-import { getFuncName } from "./domHelpers";
 
 /**
  * The `LockManager` class provides a mechanism to manage and synchronize tasks
@@ -69,58 +68,60 @@ class LockManager {
 }
 
 
-/**
- * Retries an asynchronous operation with exponential backoff.
- *
- * @param attempt - The current attempt number (starting from 0).
- * @param retryCount - The maximum number of retry attempts.
- * @param delayMs - The initial delay in milliseconds before retrying.
- * @param error - The error that caused the retry.
- * @returns A promise that resolves if the operation eventually succeeds, or rejects with the last error if all attempts fail.
- */
-async function retry(attempt: number, retryCount: number, delayMs: number, error: Error): Promise<void> {
-    console.log(`Attempt ${attempt + 1} failed: ${error}`);
-    if (attempt < retryCount - 1) {
-        await new Promise(resolve => setTimeout(resolve, delayMs));
-        delayMs *= 2;  // Exponential backoff like 100ms, 200ms, 400ms, 800ms, 1600ms
-    } else {
-        console.log(`Operation failed after ${retryCount} attempts`);
-        return Promise.reject(error);
-    }
-}
+type sR<T> = (result: T | Error) => boolean;
 
 /**
- * A utility class that provides a mechanism to execute an asynchronous task with retries.
+ * The `RetryManager` class provides a mechanism to retry asynchronous operations
+ * a specified number of times with a delay between retries. It allows you to
+ * customize the retry logic by providing a custom retry condition.
+ *
+ * @example
+ * ```typescript
+ * async function asyncOperation() {
+ *     // Perform some asynchronous work
+ * }
+ *
+ * retryManager.withRetries(asyncOperation, 3, 100).then(result => {
+ *     console.log('Operation completed');
+ * });
+ * ```
  */
 class RetryManager {
     /**
-     * Executes a given asynchronous task with a specified number of retries and delay between retries.
+     * Executes an asynchronous task a specified number of times with a delay between retries.
      *
      * @template T - The type of the result returned by the task.
      * @param {() => Promise<T>} task - The asynchronous task to be executed.
-     * @param {number} [retryCount=5] - The number of times to retry the task if it fails. Defaults to 5.
-     * @param {number} [delayMs=100] - The delay in milliseconds between retries. Defaults to 100ms.
-     * @returns {Promise<T>} - A promise that resolves to the result of the task if it succeeds within the given retries, or rejects with an error if all retries fail.
-     * @throws {Error} - Throws an error if the task fails after the specified number of retries.
+     * @param {number} retryCount - The number of times to retry the task.
+     * @param {number} delayMs - The delay in milliseconds between retries.
+     * @param {sR<T>} shouldRetry - A custom retry condition that determines whether to retry the task.
+     * @returns {Promise<T>} A promise that resolves with the result of the task.
      */
-    static async withRetries<T>(task: () => Promise<T>, retryCount: number = 5, delayMs: number = 100): Promise<T> {
+    static async withRetries<T>(task: () => Promise<T>, retryCount: number = 5, delayMs: number = 100, shouldRetry: sR<T> = RetryManager.shouldRetry): Promise<T> {
         for (let attempt = 0; attempt < retryCount; attempt++) {
             try {
-                // Return result if task succeeds, and retry on error.
                 const result = await task();
-                console.log(`result(${getFuncName()}):`, result);
-                if (result)
-                    return result;
-                await retry(attempt, retryCount, delayMs, new Error("Retrying..."));
-            } catch (error) {
-                if (error instanceof Error)
-                    await retry(attempt, retryCount, delayMs, error);
+                if (!shouldRetry(result)) return result;
+            } catch (error: unknown) {
+                if (!shouldRetry(error as T | Error)) throw error;
             }
+            if (attempt < retryCount - 1) await new Promise(res => setTimeout(res, delayMs));
         }
-        // This line should never be reached unless retryCount is 0 or negative
         return Promise.reject(new Error(`Operation failed after ${retryCount} attempts`));
     }
+
+    /**
+     * The default retry condition that retries the task if the result is null, undefined, or an error.
+     *
+     * @template T - The type of the result returned by the task.
+     * @param {T | Error} result - The result of the task.
+     * @returns {boolean} A boolean value indicating whether to retry the task.
+     */
+    private static shouldRetry<T>(result: T | Error): boolean {
+        return result === null || result === undefined || result instanceof Error;
+    }
 }
+
 
 /**
  * Manages a queue of asynchronous operations, ensuring that they are executed sequentially.
