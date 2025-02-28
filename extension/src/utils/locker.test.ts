@@ -1,15 +1,16 @@
+import { describe, expect, it, vi } from 'vitest';
 import { lockManager, queueManager, retryManager } from './locker';
 
 describe('LockManager', () => {
     it('should acquire a lock and execute the task', async () => {
-        const task = jest.fn().mockResolvedValue('task result');
+        const task = vi.fn().mockResolvedValue('task result');
         const result = await lockManager.acquire('test-lock', task);
         expect(result).toBe('task result');
         expect(task).toHaveBeenCalledTimes(1);
     });
 
     it('should return the result of an ongoing task if a lock is already acquired', async () => {
-        const task = jest.fn().mockResolvedValue('task result');
+        const task = vi.fn().mockResolvedValue('task result');
         lockManager.acquire('test-lock', task);
         const result = await lockManager.acquire('test-lock', task);
         expect(result).toBe('task result');
@@ -19,14 +20,14 @@ describe('LockManager', () => {
 
 describe('RetryManager', () => {
     it('should execute the task successfully without retries', async () => {
-        const task = jest.fn().mockResolvedValue('task result');
+        const task = vi.fn().mockResolvedValue('task result');
         const result = await retryManager.withRetries(task);
         expect(result).toBe('task result');
         expect(task).toHaveBeenCalledTimes(1);
     });
 
     it('should retry the task if it fails', async () => {
-        const task = jest.fn()
+        const task = vi.fn()
             .mockRejectedValueOnce(new Error('first attempt failed'))
             .mockResolvedValue('task result');
         const result = await retryManager.withRetries(task, 3, 100);
@@ -35,13 +36,13 @@ describe('RetryManager', () => {
     });
 
     it('should fail after the maximum number of retries', async () => {
-        const task = jest.fn().mockRejectedValue(new Error('task failed'));
+        const task = vi.fn().mockRejectedValue(new Error('task failed'));
         await expect(retryManager.withRetries(task, 3, 100)).rejects.toThrow('Operation failed after 3 attempts');
         expect(task).toHaveBeenCalledTimes(3);
     });
 
     it('should retry based on the custom retry condition', async () => {
-        const task = jest.fn()
+        const task = vi.fn()
             .mockResolvedValueOnce(null)
             .mockResolvedValueOnce(undefined)
             .mockRejectedValueOnce(new Error('task failed'))
@@ -58,7 +59,7 @@ describe('RetryManager', () => {
     });
 
     it('should retry based on the custom retry condition for errors', async () => {
-        const task = jest.fn()
+        const task = vi.fn()
             .mockResolvedValueOnce(new Error('task failed'))
             .mockResolvedValue('task result');
         const shouldRetry = (result: unknown) => result instanceof Error;
@@ -68,7 +69,7 @@ describe('RetryManager', () => {
     });
 
     it('should ensure delay between retries', async () => {
-        const task = jest.fn()
+        const task = vi.fn()
             .mockRejectedValueOnce(new Error('first attempt failed')) // 1st attempt fails
             .mockResolvedValue('task result'); // 2nd attempt succeeds
 
@@ -85,10 +86,10 @@ describe('RetryManager', () => {
 describe('QueueManager', () => {
     it('should enqueue and execute tasks sequentially', async () => {
         const results: string[] = [];
-        const task1 = jest.fn().mockImplementation(async () => {
+        const task1 = vi.fn().mockImplementation(async () => {
             results.push('task1');
         });
-        const task2 = jest.fn().mockImplementation(async () => {
+        const task2 = vi.fn().mockImplementation(async () => {
             results.push('task2');
         });
 
@@ -102,11 +103,11 @@ describe('QueueManager', () => {
 
     it('should handle task failures and continue with the next task', async () => {
         const results: string[] = [];
-        const task1 = jest.fn().mockImplementation(async () => {
+        const task1 = vi.fn().mockImplementation(async () => {
             results.push('task1');
         });
-        const task2 = jest.fn().mockRejectedValue(new Error('task2 failed'));
-        const task3 = jest.fn().mockImplementation(async () => {
+        const task2 = vi.fn().mockRejectedValue(new Error('task2 failed'));
+        const task3 = vi.fn().mockImplementation(async () => {
             results.push('task3');
         });
 

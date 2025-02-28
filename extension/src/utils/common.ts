@@ -339,3 +339,53 @@ export function tagsSearch(query: string, categories: ICategory[]): ITag[] {
 
     return fixTagDuplicates(tags);
 }
+
+
+/**
+ * Retrieves the name of a provided function or the nearest named caller from the stack trace.
+ *
+ * @param func - The function whose name is to be retrieved.
+ * @returns The name of the provided function if it has one and is not in the skip list,
+ *          otherwise the name of the nearest named caller from the stack trace that is not in the skip list.
+ *          If no valid name is found, returns "Top".
+ */
+export function getCallerFunctionName(func: CallableFunction): string {
+    const skipNames = ['Anonymous', 'async', 'RetryManager.withRetries'];
+    const error = new Error();
+    const stackLines = error.stack?.split("\n") || [];
+    const defaultFuncName = "Top";
+
+    // Return function's explicit name if it's valid
+    if (func.name && !skipNames.includes(func.name)) {
+        return func.name;
+    }
+
+    // Parse the stack trace to find the nearest valid named caller
+    // Skip the current function and its immediate caller in the stack trace
+    for (let i = 2; i < stackLines.length; i++) {
+        const functionNameRegex = /at\s+(\S+)\s+\(/;
+        const match = stackLines[i].match(functionNameRegex); // Extract function name
+        if (match) {
+            const callerName = match[1]; // Extracted function name
+            if (!strsIncludes(skipNames, callerName) && callerName !== 'Object.<anonymous>') {
+                return callerName; // Return first valid caller
+            }
+        }
+    }
+
+    return defaultFuncName; // Return default name if no valid caller is found
+}
+
+/**
+ * Checks if any of the provided strings include the specified query string.
+ *
+ * @param strs - An array of strings to search within.
+ * @param query - The query string to search for.
+ * @returns `true` if any of the strings include the query string, otherwise `false`.
+ */
+export function strsIncludes(strs: string[], query: string): boolean {
+    return strs.some((str) => {
+        return str.toLowerCase().includes(query.toLowerCase())
+            || query.toLowerCase().includes(str.toLowerCase());
+    });
+}
