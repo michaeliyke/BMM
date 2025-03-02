@@ -1,6 +1,8 @@
 import { queueManager } from "../utils/locker";
 import { ICategory } from "../utils/types/schemas";
 
+type CURSOR = IDBRequest<IDBCursorWithValue | null>;
+
 export const Operator = {
     /**
      * Initializes the IndexedDB database with the necessary object stores and indexes.
@@ -185,24 +187,35 @@ export const Operator = {
     },
 
     /**
-     * Retrieves records from an IndexedDB object store by a specified index.
-     *
-     * @template T - The type of the records to be retrieved.
-     * @param {string} storeName - The name of the object store to query.
-     * @param {string} indexName - The name of the index to use for the query.
-     * @param {IDBKeyRange | string} [query] - An optional query to filter the records.
-     * @returns {Promise<T[]>} A promise that resolves to an array of records of type T.
-     * @throws Will reject the promise if there is an error during the transaction or query.
-     */
+ * Retrieves records from an IndexedDB object store by a specified index using a cursor.
+ *
+ * @template T - The type of the records to be retrieved.
+ * @param {string} storeName - The name of the object store to query.
+ * @param {string} indexName - The name of the index to use for the query.
+ * @param {IDBKeyRange | string} [query] - An optional query to filter the records.
+ * @returns {Promise<T[]>} A promise that resolves to an array of records of type T.
+ * @throws Will reject the promise if there is an error during the transaction or query.
+ */
     async getRecordsByIndex<T>(storeName: string, indexName: string, query?: IDBKeyRange | string): Promise<T[]> {
         return queueManager.enqueue(async () => {
             const db = await this.initializeDatabase();
-            return await new Promise((resolve, reject) => {
+            return new Promise<T[]>((resolve, reject) => {
                 const tx = db.transaction(storeName, "readonly");
                 const store = tx.objectStore(storeName);
                 const index = store.index(indexName);
-                const request = query ? index.getAll(query) : index.getAll();
-                request.onsuccess = () => resolve(request.result);
+                const results: T[] = [];
+                const request: CURSOR = query ? index.openCursor(query) : index.openCursor();
+
+                request.onsuccess = () => {
+                    const cursor = request.result;
+                    if (cursor) {
+                        results.push(cursor.value);
+                        cursor.continue();
+                        return;
+                    }
+                    resolve(results);
+                };
+
                 request.onerror = () => reject(request.error);
             });
         });
