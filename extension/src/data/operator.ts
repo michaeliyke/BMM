@@ -80,48 +80,6 @@ export const Operator = {
     },
 
     /**
-     * Waits for the given IndexedDB transaction to complete.
-     *
-     * This function returns a promise that resolves when the transaction completes successfully,
-     * and rejects if the transaction encounters an error or is aborted.
-     *
-     * @param {IDBTransaction} tx - The IndexedDB transaction to wait for.
-     * @returns {Promise<void>} A promise that resolves when the transaction is complete, or rejects if an error occurs.
-     */
-    async waitForTransactionComplete(tx: IDBTransaction): Promise<void> {
-        return new Promise((resolve, reject) => {
-            tx.oncomplete = () => resolve();
-            tx.onerror = () => reject(tx.error);
-            tx.onabort = () => reject(tx.error);
-        });
-    },
-
-    /**
-     * Iterates over an IndexedDB cursor and processes each entry using the provided callback function.
-     *
-     * @param request - The IDBRequest object that provides the cursor.
-     * @param processCursor - A callback function that processes each cursor entry.
-     * @returns A Promise that resolves when the cursor has iterated over all entries.
-     */
-    async iterateCursor(request: IDBRequest<IDBCursorWithValue | null>,
-        processCursor: (cursor: IDBCursorWithValue) => void): Promise<void> {
-        return queueManager.enqueue(async () => {
-            return new Promise<void>((resolve, reject) => {
-                request.onsuccess = () => {
-                    const cursor = request.result;
-                    if (cursor) {
-                        processCursor(cursor);
-                        cursor.continue();
-                    } else {
-                        resolve();
-                    }
-                };
-                request.onerror = () => reject(request.error);
-            });
-        });
-    },
-
-    /**
      * Retrieves all records from the specified object store.
      *
      * @template T - The type of the records to be retrieved.
