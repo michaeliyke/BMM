@@ -4,7 +4,6 @@ import { lockManager } from "../../utils/locker";
 import { IBookmark, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 
-
 export default class Bookmark implements IBookmark {
     id: string;
     title: string;
@@ -93,7 +92,7 @@ export default class Bookmark implements IBookmark {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${ID}`, async () => {
             try {
-                return await Operator.getRecordById<IBookmark>('bookmarks', ID);
+                return await Operator.getRecordById<IBookmark>('bookmarks', ID) || null;
             } catch (error) {
                 throw new Error(`An error occurred in Bookmark.bokmarkExists:- ${error}, ${ID}`);
             }
@@ -114,7 +113,7 @@ export default class Bookmark implements IBookmark {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
-                return await Operator.getRecordById<IBookmark>('bookmarks', this.id);
+                return await Operator.getRecordById<IBookmark>('bookmarks', this.id) || null;
             } catch (error) {
                 throw new Error(`An error occurred in Bookmark.bokmarkExists:- ${error}, ${this.id}`);
             }
@@ -167,9 +166,11 @@ export default class Bookmark implements IBookmark {
      * @throws {Error} If the bookmark with the specified ID does not exist.
      */
     async delete(): Promise<void> {
-        lockManager.acquire(`Bookmark.delete:${this.id}`, async () => {
-            if (!(await this.exists()))
+        return lockManager.acquire(`Bookmark.delete:${this.id}`, async () => {
+            if (!(await this.exists())) {
                 throw new Error(`Bookmark.delete:- Bookmark not found: ${this}`);
+            }
+
             // TODO: Check & raise an error to call this.moveTags and this.moveCategories
             try {
                 await Operator.deleteRecord('bookmarks', this.id);
@@ -203,7 +204,7 @@ export default class Bookmark implements IBookmark {
     static async getBookmarkById(ID: string): Promise<IBookmark> {
         return lockManager.acquire(`Bookmark.getBookmarkById:${ID}`, async () => {
             try {
-                return await Operator.getRecordById<IBookmark>('bookmarks', ID);
+                return await Operator.getRecordById<IBookmark>('bookmarks', ID) || null;
             } catch (error) {
                 throw new Error(`An error occurred in Bookmark.getBookmarkById:- ${error}, ${ID}`);
             }
@@ -218,7 +219,7 @@ export default class Bookmark implements IBookmark {
      */
     async archive(): Promise<void> {
         this.archived = 1;
-        await this.update();
+        return await this.update();
     }
 
 }
