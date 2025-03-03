@@ -153,15 +153,35 @@ export const Operator = {
      * @param key The key path defined while creating the store e.g id
      * @returns Promise that reolves to no value
      */
-    async updateRecord<T>(storeName: string, data: T): Promise<void> {
+    async updateRecord<T extends { id: string }>(storeName: string, data: T): Promise<void> {
         return queueManager.enqueue(async () => {
             const db = await this.initializeDatabase();
-            return new Promise((resolve, reject) => {
+            return new Promise<void>((resolve, reject) => {
                 const tx = db.transaction(storeName, "readwrite");
                 const store = tx.objectStore(storeName);
-                const request = store.put(data);
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => resolve();
+                const key = data.id;
+                if (!(typeof (key) === 'string' && key)) { // key must be a non-empty string
+                    reject(new Error("Data must have a valid key (e.g., 'id')"));
+                    return;
+                }
+
+                const getRequest = store.get(key);
+
+                getRequest.onsuccess = () => {
+                    if (getRequest.result) {
+                        // Record exists, proceed with update
+                        const putRequest = store.put(data);
+                        putRequest.onsuccess = () => resolve();
+                        putRequest.onerror = () => reject(putRequest.error);
+                    } else {
+                        // Record doesn't exist, reject with an error
+                        reject(new Error(`Record with key ${key} not found in ${storeName}.`));
+                    }
+                };
+
+                getRequest.onerror = () => {
+                    reject(getRequest.error);
+                };
             });
         });
     },
@@ -269,57 +289,77 @@ export const Operator = {
         });
     },
 
+
     /**
-     * Deletes records from an IndexedDB object store based on a specified index and query.
+     * Deletes records from an IndexedDB object store by a specified index and query.
      *
      * @param storeName - The name of the object store from which to delete records.
      * @param indexName - The name of the index to use for querying records to delete.
-     * @param query - The query to match records for deletion. This can be an IDBKeyRange or an IDBValidKey.
-     * @returns A promise that resolves when the deletion operation is complete.
+     * @param query - The query to use for selecting records to delete. This can be an IDBKeyRange or an IDBValidKey.
+     * @returns A promise that resolves when the records have been deleted.
      *
-     * @throws Will throw an error if there is an issue with the deletion process.
+     * @throws Will reject the promise if there is an error during the transaction or cursor operation.
      */
     async deleteRecordsByIndex(storeName: string, indexName: string, query: IDBKeyRange | IDBValidKey): Promise<void> {
         return queueManager.enqueue(async () => {
             const db = await this.initializeDatabase();
-            const tx = db.transaction(storeName, "readwrite");
-            const store = tx.objectStore(storeName);
-            const index = store.index(indexName);
-            const request = index.openCursor(query);
-            // Handle the cursor's success event here
-            request.onsuccess = (event) => {
-                const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
-                if (cursor) {
-                    // cursor.delete();
-                    console.log(cursor.value)
-                    cursor.continue();
-                }
-            };
+            return new Promise<void>((resolve, reject) => {
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+                const index = store.index(indexName);
+                const request = index.openCursor(query);
 
-            // Handle the cursor's error event here
-            request.onerror = (event) => {
-                const cursor = event.target as IDBRequest<IDBCursorWithValue>;
-                console.error(`Cursor request failed: ${storeName} where ${indexName} matches ${query}`);
-                console.error('Cursor error: ', cursor.error);
-            };
+                request.onsuccess = (event) => {
+                    const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+                    if (cursor) {
+                        cursor.delete();
+                        cursor.continue();
+                    }
+                };
 
-            // Handle the transaction's complete event here
-            tx.oncomplete = () => {
-                console.log(`Deletion complete: ${storeName} where ${indexName} matches ${query}`);
-            };
+                request.onerror = (event) => {
+                    reject((event.target as IDBRequest<IDBCursorWithValue>).error);
+                };
 
-            // Handle the transaction's error event here
-            tx.onerror = (event) => {
-                const cursor = event.target as IDBTransaction;
-                console.error('Transaction error: ', cursor.error);
-            };
+                tx.oncomplete = () => resolve();
+                tx.onerror = (event) => reject((event.target as IDBTransaction).error);
+                tx.onabort = (event) => reject((event.target as IDBTransaction).error);
+            });
+        });
+    },
 
-            // Handle the transaction's abort event here
-            tx.onabort = (event) => {
-                const cursor = event.target as IDBTransaction;
-                console.error('Transaction aborted: ', cursor.error);
-            };
-            console.groupEnd();
+    /**
+     * Clears all data from the specified object store.
+     *
+     * @param storeName - The name of the object store to clear.
+     * @returns A promise that resolves when the store has been cleared.
+     * @throws An error if the transaction fails.
+     */
+    async clearStore(storeName: string): Promise<void> {
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return new Promise<void>((resolve, reject) => {
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+                const request = store.openCursor(); // Open a cursor to iterate
+
+                request.onsuccess = (event) => {
+                    const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
+                    if (cursor) {
+                        cursor.delete(); // Delete the current record
+                        cursor.continue(); // Move to the next record
+                        return;
+                    }
+                    resolve(); // Cursor is null, all records deleted
+                };
+
+                request.onerror = (event) => {
+                    reject((event.target as IDBRequest<IDBCursorWithValue | null>).error);
+                };
+
+                tx.onerror = (event) => reject((event.target as IDBTransaction).error);
+                tx.onabort = (event) => reject((event.target as IDBTransaction).error);
+            });
         });
     },
 };

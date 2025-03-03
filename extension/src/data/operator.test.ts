@@ -1,12 +1,17 @@
 import { IDBKeyRange, indexedDB } from "fake-indexeddb";
-
+import {
+    afterAll,
+    beforeAll,
+    beforeEach,
+    describe,
+    expect,
+    it,
+    vi
+} from "vitest";
+import { Operator } from "./operator";
 globalThis.indexedDB = indexedDB;
 
-
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { Operator } from "./operator";
-
-describe("INTEGRATED TESTS FOR DATA Operator", () => {
+describe("INTEGRATED TESTS FOR DATA Operator", async () => {
     let db: IDBDatabase;
 
     beforeAll(async () => {
@@ -179,5 +184,141 @@ describe("INTEGRATED TESTS FOR DATA Operator", () => {
         });
     });
 
+    describe("Method: Operator.getDefaultCategory()", () => {
+        it("should retrieve the default category", async () => {
+            const defaultCategory = { id: "1", name: "General", is_default: 1 };
+            await Operator.createRecord("categories", defaultCategory);
 
+            const result = await Operator.getDefaultCategory();
+            expect(result).toEqual(defaultCategory);
+            await Operator.deleteRecord("categories", "1");
+        });
+
+        it("should return undefined if no default category exists", async () => {
+            const result = await Operator.getDefaultCategory();
+            expect(result).toBeUndefined();
+        });
+    });
+
+    describe("Method: Operator.deleteRecord()", () => {
+        it("should delete a record by id", async () => {
+            const record = { id: "222", name: "Bookmark to delete" };
+            await Operator.createRecord("bookmarks", record);
+
+            await Operator.deleteRecord("bookmarks", "222");
+            const result = await Operator.getRecordById("bookmarks", "222");
+
+            expect(result).toBeUndefined();
+        });
+
+        it("should not throw if deleting a non-existent record", async () => {
+            await expect(Operator.deleteRecord("bookmarks", "non-existent-id")).resolves.not.toThrow();
+        });
+    });
+
+    describe("Method: Operator.updateRecord()", () => {
+        it("should update an existing record", async () => {
+            const record = { id: "333", name: "Old Name" };
+            await Operator.createRecord("bookmarks", record);
+
+            const updatedRecord = { id: "333", name: "New Name" };
+            await Operator.updateRecord("bookmarks", updatedRecord);
+
+            const result = await Operator.getRecordById("bookmarks", "333");
+            expect(result).toEqual(updatedRecord);
+        });
+
+        it("should throw an error if updating a non-existent record", async () => {
+            const nonExistent = { id: "99", name: "Does not exist" };
+            await expect(Operator.updateRecord("bookmarks", nonExistent)).rejects.toThrow();
+        });
+    });
+
+    describe("Method: Operator.deleteRecordsByIndex()", () => {
+        beforeEach(async () => {
+            await Operator.clearStore("tags"); // Clear the store to be used
+            // Seed data for tests
+            await Operator.createRecord("tags", { id: "1", name: "Tag A", type: "Tech" });
+            await Operator.createRecord("tags", { id: "2", name: "Tag B", type: "Tech" });
+            await Operator.createRecord("tags", { id: "3", name: "Tag C", type: "Science" });
+        });
+
+        const range = IDBKeyRange.bound("Tag A", "Tag B");
+
+        it("should delete multiple records matching an index query", async () => {
+            const beforeDelete = await Operator.getRecordsByIndex("tags", "tags_index", range);
+            expect(beforeDelete.length).toBe(2);
+
+            await Operator.deleteRecordsByIndex("tags", "tags_index", range);
+
+            const afterDelete = await Operator.getRecordsByIndex("tags", "tags_index", range);
+            expect(afterDelete).toEqual([]); // Should be empty
+        });
+
+        it("should delete a single record if only one matches", async () => {
+            await Operator.deleteRecordsByIndex("tags", "tags_index", "Tag C");
+
+            const afterDelete = await Operator.getRecordsByIndex("tags", "tags_index", "Tag C");
+            expect(afterDelete).toEqual([]); // Should be empty
+        });
+
+        it("should not delete records outside the query range", async () => {
+            await Operator.deleteRecordsByIndex("tags", "tags_index", range);
+
+            const remaining: Array<{ name: string }> = await Operator.getRecords("tags");
+            expect(remaining.length).toBe(1);
+            expect(remaining[0].name).toBe("Tag C");
+        });
+
+        it("should handle cases where no records match", async () => {
+            await expect(Operator.deleteRecordsByIndex("tags", "tags_index", "NonExistent")).resolves.not.toThrow();
+            const allRecords = await Operator.getRecords("tags");
+            expect(allRecords.length).toBe(3);
+        });
+
+        it("should delete records in a key range query", async () => {
+            const range = IDBKeyRange.bound("Tag A", "Tag C"); // Covers all records
+            await Operator.deleteRecordsByIndex("tags", "tags_index", range);
+
+            const remaining = await Operator.getRecords("tags");
+            expect(remaining).toEqual([]); // Everything deleted
+        });
+
+        it("should reject if the index does not exist", async () => {
+            await expect(Operator.deleteRecordsByIndex("tags", "non_existent_index", range)).rejects.toThrow();
+        });
+
+        it("should reject if transaction fails", async () => {
+            vi.spyOn(indexedDB, "open").mockImplementationOnce(() => {
+                throw new Error("Fake DB failure");
+            });
+
+            await expect(Operator.deleteRecordsByIndex("tags", "tags_index", range)).rejects.toThrow("Fake DB failure");
+        });
+    });
+
+    describe("Method: Operator.clearStore()", () => {
+        beforeEach(async () => {
+            await Operator.clearStore("bookmarks"); // Clear the store to be used
+            await Operator.createRecord("bookmarks", { id: "1", name: "Bookmark 1" });
+            await Operator.createRecord("bookmarks", { id: "2", name: "Bookmark 2" });
+        });
+
+        it("should clear all records from the specified store", async () => {
+            await Operator.clearStore("bookmarks");
+
+            const result = await Operator.getRecords("bookmarks");
+            expect(result).toEqual([]);
+        });
+
+        it("should not throw if the store is already empty", async () => {
+            await Operator.clearStore("bookmarks"); // Clear once
+            await expect(Operator.clearStore("bookmarks")).resolves.not.toThrow(); // Clear again
+        });
+
+        it("should reject if the store does not exist", async () => {
+            await expect(Operator.clearStore("nonexistentStore")).rejects.toThrow();
+        });
+    });
 });
+
