@@ -31,7 +31,7 @@ export default class Tag implements ITag {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
-                return await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.name);
+                return await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.name) || null;
             } catch (error) {
                 throw new Error(`An error occurred in Tag.exists:- ${error}, ${this.id}`);
             }
@@ -49,7 +49,7 @@ export default class Tag implements ITag {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${name}`, async () => {
             try {
-                return await Operator.getRecordByIndex<ITag>('tags', 'tags_index', name);
+                return await Operator.getRecordByIndex<ITag>('tags', 'tags_index', name) || null;
             } catch (error) {
                 throw new Error(`An error occurred in Tag.exists:- ${error}, ${name}`);
             }
@@ -82,8 +82,8 @@ export default class Tag implements ITag {
      * @throws {Error} Throws an error if the tag does not exist.
      */
     async update(): Promise<void> {
-        lockManager.acquire(`Tag.update:${this.id}`, async () => {
-            if (await this.exists()) {
+        return lockManager.acquire(`Tag.update:${this.id}`, async () => {
+            if (!await this.exists()) {
                 throw new Error(`Tag.update:- Tag not found: ${this}`);
             }
             try {
@@ -101,7 +101,7 @@ export default class Tag implements ITag {
      * @throws An error if the tag with the specified ID is not found.
      */
     async delete(): Promise<void> {
-        lockManager.acquire(`Tag.delete:${this.id}`, async () => {
+        return lockManager.acquire(`Tag.delete:${this.id}`, async () => {
             // Ensure tag exists
             if (!(await this.exists()))
                 throw new Error(`Tag.delete:- Tag not found: ${this}`);
@@ -146,9 +146,9 @@ export default class Tag implements ITag {
     static async getTagById(ID: string): Promise<ITag> {
         return lockManager.acquire(`Tag.getTagById:${ID}`, async () => {
             try {
-                return await Operator.getRecordById<ITag>('tags', ID);
+                return await Operator.getRecordById<ITag>('tags', ID) || null;
             } catch (error) {
-                throw new Error(`An error occurred in Tag.getTagById:- ${error}, ${this}`);
+                throw new Error(`An error occurred in Tag.getTagById:- ${error}`);
             }
         });
     }
