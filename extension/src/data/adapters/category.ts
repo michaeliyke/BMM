@@ -43,7 +43,7 @@ export default class Category implements ICategory {
     async exists(): Promise<ICategory | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
-            return await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.name);
+            return await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.name) || null;
         });
     }
 
@@ -56,7 +56,7 @@ export default class Category implements ICategory {
     static async exists(name: string): Promise<ICategory | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${name}`, async () => {
-            return await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', name);
+            return await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', name) || null;
         });
     }
 
@@ -115,15 +115,17 @@ export default class Category implements ICategory {
      * @returns A promise that resolves when the update operation is complete.
      */
     async update(): Promise<void> {
-        lockManager.acquire(`Category.update:${this.id}`, async () => {
+        await lockManager.acquire(`Category.update:${this.id}`, async () => {
+            this.tags = []; // Do not save tags in the category object
+            this.bookmarks = []; // Do not save bookmarks in the category object
             try {
-                if (await this.exists()) {
-                    this.tags = []; // Do not save tags in the category object
-                    this.bookmarks = []; // Do not save bookmarks in the category object
-                    await Operator.updateRecord<ICategory>('categories', this);
+                const existing = await this.exists();
+                if (!(existing)) {
+                    throw new Error(`Category.update: Category does not exist: ${this.id}`);
                 }
+                await Operator.updateRecord<ICategory>('categories', this);
             } catch (error) {
-                throw new Error(`An error occurred in Category.update:- ${error}, ${this}`);
+                throw new Error(`An error occurred in Category.update:- ${error}`);
             }
         });
     }
@@ -152,7 +154,7 @@ export default class Category implements ICategory {
     static async getCategoryById(ID: string): Promise<ICategory> {
         return lockManager.acquire(`Category.getCategoryById:${ID}`, async () => {
             try {
-                return Operator.getRecordById<ICategory>('categories', ID);
+                return await Operator.getRecordById<ICategory>('categories', ID) || null;
             } catch (error) {
                 throw new Error(`An error occurred in Category.getCategoryById:- ${error}, ${this}`);
             }
@@ -173,7 +175,7 @@ export default class Category implements ICategory {
     static async getCategoryByName(name: string): Promise<ICategory> {
         return lockManager.acquire(`Category.getCategoryById:${name}`, async () => {
             try {
-                return Operator.getRecordByIndex<ICategory>('categories', 'categories_index', name);
+                return await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', name) || null;
             } catch (error) {
                 throw new Error(`An error occurred in Category.getCategoryById:- ${error}, ${this}`);
             }
