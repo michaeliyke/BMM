@@ -171,10 +171,14 @@ export default class ReadableDate {
      * @returns {string} The formatted date string.
      */
     private getMonthDayFormat(): string {
-        const month = this.date.toLocaleString('en-US', { month: 'short' }); // Abbreviated month
-        const day = this.date.getDate();
-        const timeFormat = this.getTimeInHHMM();
-        return `${month} ${day} ${timeFormat}`;
+        const expected = this.date.toLocaleString('en-US', {
+            month: 'short', // Abbreviated month
+            day: '2-digit', // 2-digit day
+            hour: '2-digit', // 2-digit hour
+            minute: '2-digit', // 2-digit minute
+            hour12: false, // 24-hour format
+        }); // Get date in MMM DD HH:MM format (e.g., "Oct 01, 12:00")
+        return expected.replace(/,/g, '');
     }
 
     /**
@@ -184,11 +188,17 @@ export default class ReadableDate {
      * @returns {string} A string representing the formatted date and time.
      */
     private getMonthDayYearFormat(): string {
-        const month = this.date.toLocaleString('en-US', { month: 'short' }); // Abbreviated month
-        const day = this.date.getDate();
-        const year = this.date.getFullYear();
-        const timeFormat = this.getTimeInHHMM();
-        return `${month} ${day} ${year} ${timeFormat}`;
+        const month = this.date.toLocaleString('en-US', { month: 'short', day: '2-digit' })
+            .replace(/,/g, '');
+        const year = this.date.toLocaleString('en-US', { year: '2-digit' });
+        return `${month}, ${year}`; // "Mar 04, 24"
+    }
+
+    public getMonthDayYearTime(): string {
+        const month = this.date.toLocaleString('en-US', { month: 'short', day: '2-digit' })
+            .replace(/,/g, '');
+        const year = this.date.toLocaleString('en-US', { year: '2-digit' });
+        return `${month}, ${year} ${this.getTimeInHHMM()}`; // "Mar 04, 24 20:00"
     }
 
     /**

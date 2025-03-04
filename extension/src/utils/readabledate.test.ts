@@ -56,12 +56,10 @@ describe('ReadableDate', () => {
             const expectedDate = date.toLocaleString('en-US', {
                 month: 'short',
                 day: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false,
             }).replace(/,/g, '');
-            expect(readableDate.format()).toBe(expectedDate);
+            const year = date.toLocaleString('en-US', { year: '2-digit' });
+            expect(readableDate.format()).toBe(`${expectedDate}, ${year}`);
+            // expect(readableDate.format()).toBe(expectedDate);
         });
     });
 
