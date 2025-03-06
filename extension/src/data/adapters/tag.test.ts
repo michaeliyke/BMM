@@ -13,7 +13,7 @@ import Tag from "./tag";
 globalThis.indexedDB = indexedDB;
 globalThis.IDBKeyRange = IDBKeyRange;
 
-describe("INTEGRATED TESTS FOR Category CLASS", async () => {
+describe("INTEGRATED TESTS FOR Tag CLASS", async () => {
     let db: IDBDatabase;
 
     beforeAll(async () => {

@@ -84,7 +84,7 @@ export default class CategoryTag implements ICategoryTag {
         const query = [this.category_id, this.tag_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                return await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query);
+                return await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query) || null;
             } catch (error) {
                 throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${this}`);
             }
@@ -174,7 +174,7 @@ export default class CategoryTag implements ICategoryTag {
     async delete(): Promise<void> {
         // TODO: ...
         const query = [this.category_id, this.tag_id];
-        lockManager.acquire(`CategoryTag.delete:${query}`, async () => {
+        return lockManager.acquire(`CategoryTag.delete:${query}`, async () => {
             // Ensure tag exists
             try {
                 if (!(await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.tag_id)))
@@ -211,7 +211,7 @@ export default class CategoryTag implements ICategoryTag {
      */
     static async moveCategoryTag(tagId: string, fromCategoryId: string, toCategoryId: string): Promise<void> {
         const query = [fromCategoryId, tagId];
-        lockManager.acquire(`CategoryTag.moveCategoryTag:${query}`, async () => {
+        return lockManager.acquire(`CategoryTag.moveCategoryTag:${query}`, async () => {
             // Ensure tag exists
             try {
                 const tag = await Operator.getRecordByIndex<ITag>('tags', 'tags_index', tagId);
@@ -283,7 +283,7 @@ export default class CategoryTag implements ICategoryTag {
         const query = [categoryId, tagId];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                return await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query);
+                return await Operator.getRecordByIndex<ICategoryTag>('category_tags', 'category_tags_index', query) || null;
             } catch (error) {
                 throw new Error(`An error occurred in CategoryTag.exists:- ${error}, ${query}`);
             }
