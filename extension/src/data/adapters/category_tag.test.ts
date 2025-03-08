@@ -204,7 +204,7 @@ describe("INTEGRATED TESTS FOR Category CLASS", async () => {
         });
     });
 
-    describe("CategoryTag.exists", () => {
+    describe("Mathod: CategoryTag.exists()", () => {
         const cat1: ICategory = {
             id: "c1", name: "Work",
             is_default: 0,
@@ -271,7 +271,7 @@ describe("INTEGRATED TESTS FOR Category CLASS", async () => {
         });
     });
 
-    describe("CategoryTag.moveCategoryTag", () => {
+    describe("Mathod: CategoryTag.moveCategoryTag()", () => {
         it("should move a tag from one category to another", async () => {
             const cat1: ICategory = {
                 id: "c1",
@@ -336,7 +336,7 @@ describe("INTEGRATED TESTS FOR Category CLASS", async () => {
         });
     });
 
-    describe("CategoryTag.delete", () => {
+    describe("Mathod: CategoryTag.delete()", () => {
         it("should delete an existing category tag", async () => {
             const cat1: ICategory = {
                 id: "c1",
@@ -399,7 +399,7 @@ describe("INTEGRATED TESTS FOR Category CLASS", async () => {
         });
     });
 
-    describe("CategoryTag.createBookmark", () => {
+    describe("Mathod: CategoryTag.createBookmark()", () => {
         it("should create a bookmark when category and tag exist and are linked", async () => {
             const cat1: ICategory = {
                 id: "c1",

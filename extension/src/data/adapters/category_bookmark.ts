@@ -17,6 +17,17 @@ export default class CategoryBookmark implements ICategoryBookmark {
     category_id: string;
     bookmark_id: string;
 
+    constructor(categoryBookmark: ICategoryBookmark) {
+        this.id = categoryBookmark.id; /* uuid4() */
+        this.category_id = categoryBookmark.category_id;
+        this.bookmark_id = categoryBookmark.bookmark_id;
+
+        const prop = isEmpty(['id', 'category_id', 'bookmark_id'], categoryBookmark);
+        if (prop) {
+            throw new Error(`CategoryBookmark constructor:- required field: ${prop}`);
+        }
+    }
+
     /**
      * Checks if a category bookmark exists in the database.
      *
@@ -32,7 +43,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
         const query = [this.category_id, this.bookmark_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                return await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query);
+                return await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query) || null;
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
             }
@@ -50,7 +61,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
         const query = [category_id, bookmark_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                return await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query);
+                return await Operator.getRecordByIndex('category_bookmarks', 'category_bookmarks_index', query) || null;
             } catch (error) {
                 throw new Error(`An error occurred in CategoryBookmark.exists:- ${error}, ${this}`);
             }
@@ -161,17 +172,6 @@ export default class CategoryBookmark implements ICategoryBookmark {
                 throw new Error(`An error occurred in CategoryBookmark.getBookmarkIds:- ${error}, ${categoryId}`);
             }
         });
-    }
-
-    constructor(categoryBookmark: ICategoryBookmark) {
-        this.id = categoryBookmark.id; /* uuid4() */
-        this.category_id = categoryBookmark.category_id;
-        this.bookmark_id = categoryBookmark.bookmark_id;
-
-        const prop = isEmpty(['id', 'category_id', 'bookmark_id'], categoryBookmark);
-        if (prop) {
-            throw new Error(`CategoryBookmark constructor:- required field: ${prop}`);
-        }
     }
 
     /**
