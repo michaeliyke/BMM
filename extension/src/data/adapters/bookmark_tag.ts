@@ -41,7 +41,7 @@ export default class BookmarkTag implements IBookmarkTag {
         const query = [this.bookmark_id, this.tag_id];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                return await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
+                return await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query) || null;
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${this}`);
             }
@@ -63,7 +63,7 @@ export default class BookmarkTag implements IBookmarkTag {
         const query = [bookmarkId, tagId];
         return lockManager.acquire(`${callerName}:${query}`, async () => {
             try {
-                return await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query);
+                return await Operator.getRecordByIndex<IBookmarkTag>('bookmark_tags', 'bookmark_tags_index', query) || null;
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.exists:- ${error}, ${query}`);
             }
@@ -98,8 +98,7 @@ export default class BookmarkTag implements IBookmarkTag {
         return lockManager.acquire(`BookmarkTag.getTags:${bookmarkId}`, async () => {
             try {
                 // Query to handle compound keys between bookmark_id and any other key: [bookmarkId, "..."]
-                const query = IDBKeyRange.bound([bookmarkId, ""], [bookmarkId, "\uffff"]);
-                const bookmarkTags = await BookmarkTag.getAll(query);
+                const bookmarkTags = await BookmarkTag.getAllByBookmarkId(bookmarkId);
                 const allTags = await Tag.getTags();
                 return allTags.filter((tag) => {
                     return bookmarkTags.some((bookmarkTag) => bookmarkTag.tag_id === tag.id);
@@ -141,8 +140,7 @@ export default class BookmarkTag implements IBookmarkTag {
         return lockManager.acquire(`BookmarkTag.getBookmarksIds:${tagId}`, async () => {
             try {
                 // Query to handle compound keys between tag_id and any other key: ["...", tagId]
-                const query = IDBKeyRange.bound(["", tagId], ["\uffff", tagId]);
-                const bookmarkTags = await BookmarkTag.getAll(query);
+                const bookmarkTags = await BookmarkTag.getAllByTagId(tagId);
                 return bookmarkTags.map(({ bookmark_id }) => bookmark_id);
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkTag.getBookmarksIds:- ${error}, ${tagId}`);
@@ -151,18 +149,55 @@ export default class BookmarkTag implements IBookmarkTag {
     }
 
     /**
-     * Retrieves all bookmarks associated with a specific tag.
+     * Retrieves all bookmark tags associated with a specific tag ID.
      *
-     * @param tagId - The ID of the tag for which to retrieve bookmarks.
-     * @returns A promise that resolves to an array of bookmarks associated with the given tag.
+     * @param tagId - The ID of the tag for which to retrieve bookmark tags.
+     * @returns A promise that resolves to an array of IBookmarkTag objects associated with the given tag ID.
+     * @throws An error if the retrieval process
+     */
+    static async getAllByTagId(tagId: string): Promise<IBookmarkTag[]> {
+        return lockManager.acquire(`BookmarkTag.getAllByTagId:${tagId}`, async () => {
+            try {
+                // Get all the bookmark tags available
+                const bookmarkTags = await Operator.getRecords<IBookmarkTag>('bookmark_tags');
+                return bookmarkTags.filter((bookmarkTag) => bookmarkTag.tag_id === tagId);
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.getAllByTagId:- ${error}, ${tagId}`);
+            }
+        });
+    }
+
+    /**
+     * Retrieves all bookmark tags associated with a specific bookmark ID.
+     *
+     * @param bookmarkId - The ID of the bookmark for which to retrieve tags.
+     * @returns A promise that resolves to an array of IBookmarkTag objects associated with the given bookmark ID.
      * @throws An error if the retrieval process fails.
      */
+    static async getAllByBookmarkId(bookmarkId: string): Promise<IBookmarkTag[]> {
+        return lockManager.acquire(`BookmarkTag.getAllByBookmarkId:${bookmarkId}`, async () => {
+            try {
+                // Get all the bookmark tags available
+                const bookmarkTags = await Operator.getRecords<IBookmarkTag>('bookmark_tags');
+                return bookmarkTags.filter((bookmarkTag) => bookmarkTag.bookmark_id === bookmarkId);
+            } catch (error) {
+                throw new Error(`An error occurred in BookmarkTag.getAllByBookmarkId:- ${error}, ${bookmarkId}`);
+            }
+        });
+    }
+
+    /**
+      * Retrieves all bookmarks associated with a specific tag.
+      *
+      * @param tagId - The ID of the tag for which to retrieve bookmarks.
+      * @returns A promise that resolves to an array of bookmarks associated with the given tag.
+      * @throws An error if the retrieval process fails.
+      */
     static async getBookmarks(tagId: string): Promise<IBookmark[]> {
         return lockManager.acquire(`BookmarkTag.getBookmarks:${tagId}`, async () => {
             try {
                 // Query to handle compound keys between tag_id and any other key: ["...", tagId]
-                const query = IDBKeyRange.bound(["", tagId], ["\uffff", tagId]);
-                const bookmarkTags = await BookmarkTag.getAll(query);
+                const bookmarkTags = await BookmarkTag.getAllByTagId(tagId);
                 const allBookmarks = await Operator.getRecords<IBookmark>('bookmarks');
                 return allBookmarks.filter((bookmark) => {
                     return bookmarkTags.some((bookmarkTag) => bookmarkTag.bookmark_id === bookmark.id);
@@ -172,6 +207,7 @@ export default class BookmarkTag implements IBookmarkTag {
             }
         });
     }
+
 
     /**
      * Adds a tag to a bookmark and links it to a given category.
@@ -212,7 +248,7 @@ export default class BookmarkTag implements IBookmarkTag {
      */
     static async moveBookmarkTag(tagId: string, fromBookmarkId: string, toBookmarkId: string): Promise<void> {
         const query = [fromBookmarkId, tagId];
-        lockManager.acquire(`BookmarkTag.moveBookmarkTag:${query}`, async () => {
+        return lockManager.acquire(`BookmarkTag.moveBookmarkTag:${query}`, async () => {
             // Move a tag from one bookmark to another
 
             // Ensure tag exists
@@ -252,11 +288,11 @@ export default class BookmarkTag implements IBookmarkTag {
      */
     async delete(): Promise<void> {
         const query = [this.bookmark_id, this.tag_id];
-        lockManager.acquire(`BookmarkTag.delete:${query}`, async () => {
+        return lockManager.acquire(`BookmarkTag.delete:${query}`, async () => {
             // Ensure tag exists
             try {
                 if (!(await Operator.getRecordByIndex<ITag>('tags', 'tags_index', this.tag_id)))
-                    throw new Error(`BookmarkTag.delete:- Tag not found: ${this}`);
+                    throw new Error(`BookmarkTag.delete:- Tag not found: ${this.tag_id}`);
 
                 // Ensure bookmark exists
                 if (!(await Operator.getRecordByIndex<IBookmark>('bookmarks', 'bookmarks_index', this.bookmark_id)))
@@ -270,7 +306,7 @@ export default class BookmarkTag implements IBookmarkTag {
                 // Delete the bookmark_tag reference
                 await Operator.deleteRecordsByIndex("bookmark_tags", "bookmark_tags_index", query);
             } catch (error) {
-                throw new Error(`An error occurred in BookmarkTag.delete:- ${error}, ${this}`);
+                throw new Error(`An error occurred in BookmarkTag.delete:- ${error}, ${this.id}`);
             }
         });
     }

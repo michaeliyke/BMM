@@ -362,4 +362,34 @@ export const Operator = {
             });
         });
     },
+
+    async clearStores(db: IDBDatabase, stores: string[] = []): Promise<void> {
+        return queueManager.enqueue(async () => {
+            return new Promise<void>((resolve, reject) => {
+                const storeNames = stores.length > 0 ? stores : [...db.objectStoreNames];
+                const tx = db.transaction(storeNames, "readwrite");
+
+                tx.onerror = (event) => reject((event.target as IDBTransaction).error);
+                tx.onabort = (event) => reject((event.target as IDBTransaction).error);
+
+                for (const storeName of storeNames) {
+                    const request = (tx.objectStore(storeName)).openCursor();
+
+                    request.onsuccess = (event) => {
+                        const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
+                        if (cursor) {
+                            cursor.delete(); // Delete the current record
+                            cursor.continue(); // Move to the next record
+                            return;
+                        }
+                        resolve(); // Cursor is null, all records deleted
+                    };
+
+                    request.onerror = (event) => {
+                        reject((event.target as IDBRequest<IDBCursorWithValue | null>).error);
+                    };
+                }
+            });
+        });
+    },
 };
