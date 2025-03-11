@@ -1,6 +1,7 @@
+import { v4 as uuid4 } from 'uuid';
 import { isEmpty } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
-import { IBookmark, IBookmarkTag, ICategoryBookmark, IDeletedBookmark } from "../../utils/types/schemas";
+import { IBookmark, IDeletedBookmark } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 import Bookmark from "./bookmark";
 import BookmarkTag from "./bookmark_tag";
@@ -57,10 +58,17 @@ export default class BookmarkBin {
         this.url = bookmark.url;
         this.description = bookmark.description;
 
-        const prop = isEmpty([
-            'created_at', 'updated_at', 'deleted_at', 'tag_ids',
-            'category_ids', 'note_ids', 'id', 'bookmark_id', 'url'
-        ], bookmark);
+        // Standard fields that must be present
+        const list: (keyof IDeletedBookmark)[] = [
+            'created_at', 'updated_at', 'deleted_at', 'id', 'bookmark_id', 'url'
+        ];
+
+        // note_id, tag_id, and category_id must be present, but CAN BE EMPTY
+        if (typeof bookmark.note_ids !== 'string') list.push('note_ids');
+        if (typeof bookmark.tag_ids !== 'string') list.push('tag_ids');
+        if (typeof bookmark.category_ids !== 'string') list.push('category_ids');
+
+        const prop = isEmpty(list, bookmark);
 
         if (prop) {
             throw new Error(`BookmarkBin.constructor:- required field: ${prop}`);
@@ -84,11 +92,13 @@ export default class BookmarkBin {
      */
     async #restoreCategories(): Promise<void> {
         return lockManager.acquire(`BookmarkBin.restoreCategories:${this.id}`, async () => {
+            const { bookmark_id } = this;
             try {
                 for (const category_id of this.category_ids.split(',')) {
-                    const { bookmark_id } = this;
-                    const categoryBookmark = new CategoryBookmark({ id: '', category_id, bookmark_id });
-                    await Operator.createRecord<ICategoryBookmark>('category_bookmarks', categoryBookmark);
+                    // if category does not exist, skip
+                    if (!await Operator.getRecordById('categories', category_id)) continue
+                    const categoryBookmark = new CategoryBookmark({ id: uuid4(), category_id, bookmark_id });
+                    await categoryBookmark.create();
                 }
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkBin.restoreCategories:- ${error}`);
@@ -108,11 +118,13 @@ export default class BookmarkBin {
      */
     async #restoreTags(): Promise<void> {
         return lockManager.acquire(`BookmarkBin.restoreTags:${this.id}`, async () => {
+            const { bookmark_id } = this;
             try {
                 for (const tag_id of this.tag_ids.split(',')) {
-                    const { bookmark_id } = this;
-                    const bookmarkTag = new BookmarkTag({ id: '', bookmark_id, tag_id });
-                    await Operator.createRecord<IBookmarkTag>('bookmark_tags', bookmarkTag);
+                    // if tag does not exist, skip
+                    if (!await Operator.getRecordById('tags', tag_id)) continue;
+                    const bookmarkTag = new BookmarkTag({ id: uuid4(), bookmark_id, tag_id });
+                    await bookmarkTag.create();
                 }
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkBin.restoreTags:- ${error}`);
@@ -201,11 +213,11 @@ export default class BookmarkBin {
                     archived: 0
                 });
                 if (!await bookmark.exists()) {
+                    if (await this.exists()) { // if it exists in bookmark_bin, warn
+                        console.warn(`Bookmark already exists in bin:- ${this.id}`);
+                        return;
+                    }
                     throw new Error(`Bookmark not found:- ${bookmark.id}`);
-                }
-                if (await this.exists()) { // if it exists in bookmark_bin, warn
-                    console.warn(`Bookmark already exists in bin:- ${this.id}`);
-                    return;
                 }
                 const tag_ids = await BookmarkTag.deleteTagLinks(bookmark.id);
                 this.tag_ids = tag_ids.join(',');
@@ -241,7 +253,7 @@ export default class BookmarkBin {
     async getDeleted(ID: string): Promise<IDeletedBookmark> {
         return lockManager.acquire(`BookmarkBin.getDeleted:${ID}`, async () => {
             try {
-                return await Operator.getRecordById<IDeletedBookmark>('bookmark_bin', ID);
+                return await Operator.getRecordById<IDeletedBookmark>('bookmark_bin', ID) || null;
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkBin.getDeleted:- ${error}, ${ID}`);
             }
@@ -279,7 +291,7 @@ export default class BookmarkBin {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
         return lockManager.acquire(`${callerName}:${this.id}`, async () => {
             try {
-                return await Operator.getRecordById<IDeletedBookmark>('bookmark_bin', this.id);
+                return await Operator.getRecordById<IDeletedBookmark>('bookmark_bin', this.id) || null;
             } catch (error) {
                 throw new Error(`An error occurred in BookmarkBin.exists:- ${error}, ${this.id}`);
             }
