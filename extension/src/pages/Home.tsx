@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'reac
 import ContentBar from '../components/ContentBar/ContentBar'
 import Header from '../components/HeaderBar/Header'
 import SideBar from '../components/SideBar/SideBar'
-import { update } from '../utils/crud'
 import { IBookmark, ICategory, ITag } from '../utils/types/schemas'
 
 
@@ -75,11 +74,6 @@ export default function Home(props: IHomeProps) {
 
 
 
-    // Update a single category of the category list identified by its name
-    function updateCategory(updatedCategory: ICategory) {
-        setData((prevCategories) => update(prevCategories, updatedCategory));
-    }
-
     useEffect(() => {
         for (const category of data) {
             if (category.is_default === 1) {
@@ -111,7 +105,6 @@ export default function Home(props: IHomeProps) {
                         defaultCategory,
                         bookmarkToShow,
                         setBookmarkToShow,
-                        updateCategory,
                         selectedTag,
                         setSelectedTag,
                         setGrouping,
@@ -129,7 +122,6 @@ export default function Home(props: IHomeProps) {
                 <ContentBar
                     filterBy={filterBy}
                     setFilterBy={setFilterBy}
-                    updateCategory={updateCategory}
                     selectedCategory={selectedCategory}
                     data={data}
                     setData={setData}

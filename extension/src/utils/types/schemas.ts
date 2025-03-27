@@ -16,6 +16,7 @@ export interface IUser {
 };
 
 export interface ITag {
+    importExists?: boolean;
     id: string;
     name: string;
     created_at: string;
@@ -23,6 +24,8 @@ export interface ITag {
 };
 
 export interface ICategory {
+    importType?: 'category' | 'bookmark';
+    importExists?: boolean;
     id: string;
     name: string;
     is_default: number; // 0 or 1
@@ -33,6 +36,8 @@ export interface ICategory {
 };
 
 export interface IBookmark {
+    importType?: 'category' | 'bookmark';
+    importExists?: boolean;
     id: string;
     title: string;
     url: string;
@@ -43,6 +48,8 @@ export interface IBookmark {
     archived: number; // 0 or 1
     starred?: number; // 0 or 1
 };
+
+export type ImportData = ICategory[] | IBookmark[];
 
 
 export interface ICategoryBookmark {

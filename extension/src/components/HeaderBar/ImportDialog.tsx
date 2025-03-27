@@ -2,32 +2,41 @@ import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/re
 import { useState } from "react";
 import { CiImport } from "react-icons/ci";
 import { FaFileUpload } from "react-icons/fa";
+import { getBookmarks } from "../../utils/common";
+import { getImportHandler, isImportData, validateImported } from "../../utils/importExport";
+import { IBookmark, ICategory, ImportData } from "../../utils/types/schemas";
 
-export default function ImportPopover() {
-    const [names, setNames] = useState<string[]>([]);
+type IPProps = {
+    setData: React.Dispatch<React.SetStateAction<ICategory[]>>;
+}
+
+export default function ImportDialog(props: IPProps) {
     const [isFileLoaded, setIsFileLoaded] = useState(false);
+    const [importData, setImportData] = useState<ImportData>([]);
+    const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
+    const { setData } = props;
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0];
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async function importFileLoader(e: ProgressEvent<FileReader>) {
             try {
-                const json = JSON.parse(e.target?.result as string);
-                if (Array.isArray(json) && json.every(item => typeof item === "string")) {
-                    console.log(json);
-                    setNames(json);
-                    setIsFileLoaded(true);
-                } else {
-                    console.error("Invalid JSON format. Expected an array of strings.");
-                }
+                const data = JSON.parse(e.target?.result as string);
+                if (!isImportData(data))
+                    throw new Error("Invalid JSON format. Expected an array of bookmarks or categories.");
+                setImportData(data); // Data to be imported
+                await validateImported(data); // Mark existsing items as existsing
+                // For displaying the imported bookmarks
+                setBookmarks(getBookmarks(data as ICategory[]));
+                setIsFileLoaded(true);
             } catch (error) {
                 console.error("Error parsing JSON:", error);
             }
         };
         reader.readAsText(file);
-    };
+    }
 
     return (
         <Popover className="relative">
@@ -44,7 +53,7 @@ export default function ImportPopover() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
             >
-                <PopoverPanel className="absolute z-10 mt-2 w-80 p-6 bg-white border border-gray-300 shadow-xl rounded-lg">
+                <PopoverPanel className="absolute z-10 -mt-8 w-80 p-6 -left-20 bg-white border border-gray-300 shadow-xl rounded-lg">
                     {!isFileLoaded ? (
                         // First Screen: File Upload View
                         <div className="flex flex-col items-center text-center space-y-4">
@@ -67,20 +76,20 @@ export default function ImportPopover() {
                             <h2 className="text-xl font-semibold text-gray-800 text-center">Imported Names</h2>
                             <hr />
                             <ul className="max-h-48 overflow-y-auto space-y-2 text-center">
-                                {names.map((name, index) => (
-                                    <li key={index} className="text-gray-700 border-b py-1">
-                                        {name}
+                                {bookmarks.map((bookmark, index) => (
+                                    <li key={index} className="text-gray-700 text-left border-b py-1">
+                                        {bookmark.title}
                                     </li>
                                 ))}
                             </ul>
-                            <hr />
                             <button
                                 type="button"
-                                className="w-full py-2 rounded-lg bg-green-600 text-white text-lg font-semibold hover:bg-green-700 focus:ring-2 focus:ring-green-300"
-                                onClick={() => console.log("Adding all names")}
+                                className="w-full py-1.5 bg-green-600 text-white uppercase font-semibold hover:bg-green-700 focus:ring-2 focus:ring-green-300"
+                                onClick={getImportHandler(importData, setData)}
                             >
                                 Add All
                             </button>
+
                         </div>
                     )}
                 </PopoverPanel>
@@ -88,3 +97,5 @@ export default function ImportPopover() {
         </Popover>
     );
 }
+
+

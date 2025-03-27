@@ -10,6 +10,7 @@ import { getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import ImportDialog from "./ImportDialog";
 
+type rightSetData = React.Dispatch<React.SetStateAction<ICategory[]>>;
 type HeaderProps = {
     selectedCategory: ICategory | null;
     categories: ICategory[];
@@ -247,7 +248,7 @@ export default function Header(props: HeaderProps) {
                             <CiImport className="mr-1" />
                             Import
                         </button> */}
-                        <ImportDialog />
+                        <ImportDialog setData={setData as rightSetData} />
                         <button
                             type="button"
                             className="py-2 pr-2 pl-1 rounded-lg tracking-wide border border-green-700 text-green-700 focus:ring-2 focus:ring-green-50 flex items-center"

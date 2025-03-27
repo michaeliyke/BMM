@@ -3,7 +3,7 @@ import Category from "./adapters/category";
 import Tag from "./adapters/tag";
 // import User from "./adapters/user";
 import { v4 as uuid4 } from "uuid";
-import { ICategory } from "../utils/types/schemas";
+import { IBookmark, ICategory } from "../utils/types/schemas";
 import BookmarkTag from "./adapters/bookmark_tag";
 import CategoryBookmark from "./adapters/category_bookmark";
 import CategoryTag from "./adapters/category_tag";
@@ -27,7 +27,7 @@ export default {
      * @param data - An array of categories, each containing bookmarks and tags to be loaded into the database.
      * @returns A promise that resolves when the data has been successfully loaded.
      */
-    async loadInitialData(data: ICategory[]): Promise<void> {
+    async loadBulkData(data: ICategory[]): Promise<void> {
         for (const category of data) {
             /* TODO: There must be a clear way to avoid data corruption */
             // Save the category
@@ -82,6 +82,31 @@ export default {
                     if (!await bookTg.exists())
                         await bookTg.create();
                 }
+            }
+        }
+    },
+
+    async loadBulkBookmarks(bookmarks: IBookmark[]): Promise<void> {
+        // Save bookmarks, category-bookmarks, and bookmark-tags relationships
+        for (const bookmark of bookmarks) {
+
+            if (!await Bookmark.exists(bookmark.id))
+                await (new Bookmark({ ...bookmark, archived: 0 })).create();
+
+            // save bookmark-tags relationship
+            for (const tag of bookmark.tags) {
+                if (!await Tag.exists(tag.name))
+                    await (new Tag(tag)).create();
+
+                // Save bookmark-tag association
+                const bookTg = new BookmarkTag({
+                    id: uuid4(),
+                    bookmark_id: bookmark.id,
+                    tag_id: tag.id,
+                });
+
+                if (!await bookTg.exists())
+                    await bookTg.create();
             }
         }
     },
