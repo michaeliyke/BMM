@@ -1,31 +1,32 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import ByCategories from "./filter/ByCategories";
 import { ByCategoryTags } from "./filter/ByCategoryTags";
 import { ByTags } from "./filter/ByTags";
+import { useAppState } from "../../hooks/globalstate";
 
 type SBSProps = {
-    props: {
-        bookmarks: IBookmark[];
-        setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-        filteredCategories: ICategory[];
-        setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
-        categories: ICategory[];
-        setData: Dispatch<SetStateAction<ICategory[]>>;
-        updateCategory?: (category: ICategory) => void;
-        selectedCategory: ICategory | null;
-        setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
-        defaultCategory: ICategory;
-        bookmarkToShow: IBookmark | null;
-        setBookmarkToShow: (bookmark: IBookmark | null) => void;
-        filterBy?: string;
-        setFilterBy?: Dispatch<SetStateAction<string>>;
-        selectedTag?: ITag | null;
-        setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
-        setGrouping?: Dispatch<SetStateAction<string>>;
-        query: string;
-        setQuery: Dispatch<SetStateAction<string>>;
-    };
+  props: {
+    bookmarks: IBookmark[];
+    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+    filteredCategories: ICategory[];
+    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
+    categories: ICategory[];
+    setData: Dispatch<SetStateAction<ICategory[]>>;
+    updateCategory?: (category: ICategory) => void;
+    selectedCategory: ICategory | null;
+    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
+    defaultCategory: ICategory;
+    bookmarkToShow: IBookmark | null;
+    setBookmarkToShow: (bookmark: IBookmark | null) => void;
+    filterBy?: string;
+    setFilterBy?: Dispatch<SetStateAction<string>>;
+    selectedTag?: ITag | null;
+    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
+    setGrouping?: Dispatch<SetStateAction<string>>;
+    query: string;
+    setQuery: Dispatch<SetStateAction<string>>;
+  };
 };
 
 
@@ -48,14 +49,27 @@ type SBSProps = {
  * - Any other value defaults to rendering the `ByCategories` component.
  */
 export default function SideBarSwitcher({ props }: SBSProps) {
-    switch (props.filterBy) {
-        case 'categories':
-            return <ByCategories props={props} />;
-        case 'filter:tags':
-            return <ByTags props={props} />
-        case 'filter:category/tags':
-            return <ByCategoryTags props={props} />
-        default:
-            return <ByCategories props={props} />;
-    }
+  const { headerForm, setHeaderForm } = useAppState();
+
+  useEffect(() => {
+    // The following views need the header form, so we unhide it.
+    const viewsNeedForm = ["categories"];
+    if (props.filterBy && viewsNeedForm.includes(props.filterBy)) {
+      if (headerForm === false) setHeaderForm(true);
+
+    } else
+      if (headerForm === true) setHeaderForm(false);
+
+  }, [headerForm, setHeaderForm, props.filterBy]);
+
+  switch (props.filterBy) {
+    case 'categories':
+      return <ByCategories props={props} />;
+    case 'filter:tags':
+      return <ByTags props={props} />
+    case 'filter:category/tags':
+      return <ByCategoryTags props={props} />
+    default:
+      return <ByCategories props={props} />;
+  }
 }
