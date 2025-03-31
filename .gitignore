@@ -1,6 +1,8 @@
 coverage/
 mdx.tsx
 names.json
+env/
+.env/
 .env
 *.env
 *.env.*
@@ -16,7 +18,13 @@ default
 config
 logging
 # *.test
-# test*
+t/
+temp/
+tmp/
+temp.*
+tmp.*
+t.*
+*.t
 temp*
 *.temp
 tmp*
