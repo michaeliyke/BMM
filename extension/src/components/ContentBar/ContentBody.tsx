@@ -5,19 +5,18 @@ import BookmarkView from "./BookmarkView";
 import ListArchived from "./ListArchived";
 import ListDeleted from "./ListDeleted";
 import ListFavorites from "./ListFavorites";
+import { useAppState } from "../../hooks/globalstate";
 
 type BookmarksDisplayProps = {
-    bookmarks: IBookmark[];
-    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-    filteredCategories: ICategory[];
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: Dispatch<SetStateAction<IBookmark | null>>;
-    selectedTag?: ITag | null;
-    data: ICategory[];
-    setData: Dispatch<SetStateAction<ICategory[]>>;
-    filterBy: string;
-    setFilterBy: Dispatch<SetStateAction<string>>;
-    selectedCategory: ICategory | null;
+  bookmarks: IBookmark[];
+  setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+  filteredCategories: ICategory[];
+  bookmarkToShow: IBookmark | null;
+  setBookmarkToShow: Dispatch<SetStateAction<IBookmark | null>>;
+  selectedTag?: ITag | null;
+  data: ICategory[];
+  setData: Dispatch<SetStateAction<ICategory[]>>;
+  selectedCategory: ICategory | null;
 };
 
 
@@ -36,65 +35,65 @@ type BookmarksDisplayProps = {
  * @returns {JSX.Element} The rendered component, either `BookmarkView` or `BookmarkList`.
  */
 export default function ContentBody(props: BookmarksDisplayProps) {
-    const {
-        filteredCategories,
-        bookmarkToShow,
-        setBookmarkToShow,
-        selectedTag,
-        bookmarks,
-        setBookmarks,
-        data,
-        setData,
-        filterBy,
-        selectedCategory,
-    } = props;
+  const {
+    filteredCategories,
+    bookmarkToShow,
+    setBookmarkToShow,
+    selectedTag,
+    bookmarks,
+    setBookmarks,
+    data,
+    setData,
+    selectedCategory,
+  } = props;
 
-    const [showDetails, setShowDetails] = useState<boolean>(true);
+  const [showDetails, setShowDetails] = useState<boolean>(true);
+  const { filterBy } = useAppState();
 
-    if (bookmarkToShow) {
-        return <BookmarkView
-            filteredCategories={filteredCategories}
-            bookmarkToShow={bookmarkToShow}
-            setBookmarkToShow={setBookmarkToShow}
-            bookmarks={bookmarks}
-            setBookmarks={setBookmarks}
-            data={data}
-            setData={setData}
-            showDetails={showDetails}
-            setShowDetails={setShowDetails}
-        />
-    }
+  if (bookmarkToShow) {
+    return <BookmarkView
+      filteredCategories={filteredCategories}
+      bookmarkToShow={bookmarkToShow}
+      setBookmarkToShow={setBookmarkToShow}
+      bookmarks={bookmarks}
+      setBookmarks={setBookmarks}
+      data={data}
+      setData={setData}
+      showDetails={showDetails}
+      setShowDetails={setShowDetails}
+    />
+  }
 
-    if (filterBy === 'filter:archived') {
-        return <ListArchived
-            filteredCategories={filteredCategories}
-            bookmarkToShow={bookmarkToShow}
-            setBookmarkToShow={setBookmarkToShow}
-            selectedTag={selectedTag}
-            bookmarks={bookmarks}
-            setBookmarks={setBookmarks}
-            data={data}
-            setData={setData}
-        />;
-    }
-
-    if (filterBy === 'filter:deleted') {
-        return <ListDeleted />;
-    }
-
-    if (filterBy === 'filter:favorites') {
-        return <ListFavorites />;
-    }
-
-    return <BookmarkList
-        filteredCategories={filteredCategories}
-        bookmarkToShow={bookmarkToShow}
-        setBookmarkToShow={setBookmarkToShow}
-        selectedTag={selectedTag}
-        bookmarks={bookmarks}
-        setBookmarks={setBookmarks}
-        data={data}
-        setData={setData}
-        selectedCategory={selectedCategory}
+  if (filterBy === 'filter:archived') {
+    return <ListArchived
+      filteredCategories={filteredCategories}
+      bookmarkToShow={bookmarkToShow}
+      setBookmarkToShow={setBookmarkToShow}
+      selectedTag={selectedTag}
+      bookmarks={bookmarks}
+      setBookmarks={setBookmarks}
+      data={data}
+      setData={setData}
     />;
+  }
+
+  if (filterBy === 'filter:deleted') {
+    return <ListDeleted />;
+  }
+
+  if (filterBy === 'filter:favorites') {
+    return <ListFavorites />;
+  }
+
+  return <BookmarkList
+    filteredCategories={filteredCategories}
+    bookmarkToShow={bookmarkToShow}
+    setBookmarkToShow={setBookmarkToShow}
+    selectedTag={selectedTag}
+    bookmarks={bookmarks}
+    setBookmarks={setBookmarks}
+    data={data}
+    setData={setData}
+    selectedCategory={selectedCategory}
+  />;
 }

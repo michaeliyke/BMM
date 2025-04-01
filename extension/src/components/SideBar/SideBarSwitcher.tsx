@@ -19,8 +19,6 @@ type SBSProps = {
     defaultCategory: ICategory;
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
-    filterBy?: string;
-    setFilterBy?: Dispatch<SetStateAction<string>>;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
@@ -30,38 +28,23 @@ type SBSProps = {
 
 /**
  * A component that renders different sidebar variations based on the filter type provided in the props.
- *
- * @component
- * @param {SBSProps} props - The properties object containing the filter type and other necessary data.
- * @returns {JSX.Element} The corresponding sidebar variation component.
- *
- * @example
- * // Usage example:
- * <SideBarVariator props={{ filterBy: 'categories', ...otherProps }} />
- *
- * @remarks
- * The component supports the following filter types:
- * - 'categories': Renders the `ByCategories` component.
- * - 'filter:tags': Renders the `ByTags` component.
- * - 'filter:category/tags': Renders the `ByCategoryTags` component.
- * - Any other value defaults to rendering the `ByCategories` component.
  */
 export default function SideBarSwitcher({ props }: SBSProps) {
-  const { headerForm, setHeaderForm } = useAppState();
+  const { headerForm, setHeaderForm, filterBy } = useAppState();
 
   useEffect(() => {
     // The following views need the header form, so we unhide it.
-    const viewsNeedForm = ["categories"];
-    if (props.filterBy && viewsNeedForm.includes(props.filterBy)) {
+    const viewsNeedForm = ["filter:categories"];
+    if (filterBy && viewsNeedForm.includes(filterBy)) {
       if (headerForm === false) setHeaderForm(true);
 
     } else
       if (headerForm === true) setHeaderForm(false);
 
-  }, [headerForm, setHeaderForm, props.filterBy]);
+  }, [headerForm, setHeaderForm, filterBy]);
 
-  switch (props.filterBy) {
-    case 'categories':
+  switch (filterBy) {
+    case 'filter:categories':
       return <ByCategories props={props} />;
     case 'filter:tags':
       return <ByTags props={props} />

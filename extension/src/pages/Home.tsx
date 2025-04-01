@@ -49,7 +49,6 @@ export default function Home(props: IHomeProps) {
     (selectedCategory || defaultCategory).name +
     (selectedTag ? ` # ${selectedTag.name}` : '')
   );
-  const [filterBy, setFilterBy] = useState('categories');
   const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
   const [bookmarks, setBookmarksRaw] = useState<IBookmark[]>([]);
   // query: cleared in Sidebar header and, set and used in Content SearchWidget
@@ -93,7 +92,6 @@ export default function Home(props: IHomeProps) {
         grouping={grouping}
         setGrouping={setGrouping}
         selectedTag={selectedTag}
-        filterBy={filterBy}
       />
 
       <section className={headerForm ? `pt-[128px]` : ''}>
@@ -109,8 +107,6 @@ export default function Home(props: IHomeProps) {
             selectedTag,
             setSelectedTag,
             setGrouping,
-            filterBy,
-            setFilterBy,
             bookmarks,
             setBookmarks,
             filteredCategories,
@@ -119,8 +115,6 @@ export default function Home(props: IHomeProps) {
         />
 
         <ContentBar
-          filterBy={filterBy}
-          setFilterBy={setFilterBy}
           selectedCategory={selectedCategory}
           data={data}
           setData={setData}

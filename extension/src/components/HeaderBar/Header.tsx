@@ -23,7 +23,6 @@ type HeaderProps = {
   grouping: string;
   setGrouping?: Dispatch<SetStateAction<string>>;
   selectedTag?: ITag | null;
-  filterBy: string;
 };
 
 

@@ -2,7 +2,7 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headless
 import { Dispatch, SetStateAction } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { getBookmarks } from "../../utils/common";
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { IBookmark, ICategory, ITag, TFilters } from "../../utils/types/schemas";
 import { useAppState } from "../../hooks/globalstate";
 
 type SideBarHeaderProps = {
@@ -19,8 +19,6 @@ type SideBarHeaderProps = {
     defaultCategory: ICategory;
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
-    filterBy?: string;
-    setFilterBy?: Dispatch<SetStateAction<string>>;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
@@ -41,16 +39,11 @@ type SideBarHeaderProps = {
  * @returns {JSX.Element} The rendered SideBarHeader component.
  */
 export default function SideBarHeader({ props }: SideBarHeaderProps) {
-  const {
-    filterBy,
-    setFilterBy,
-    setBookmarks,
-    filteredCategories,
-  } = props;
+  const { setBookmarks, filteredCategories, } = props;
 
-  const { setQuery } = useAppState();
+  const { setQuery, setFilterBy, filterBy } = useAppState();
 
-  function handleFilterSelection(value: string) {
+  function handleFilterSelection(value: TFilters) {
     if (setFilterBy) {
       setFilterBy(value);
       setBookmarks(getBookmarks(filteredCategories));
@@ -59,7 +52,7 @@ export default function SideBarHeader({ props }: SideBarHeaderProps) {
   }
 
   const options = [
-    { value: "categories", label: "Categories" },
+    { value: "filter:categories", label: "Categories" },
     { value: "filter:tags", label: "Filter : Tags" },
     { value: "filter:category/tags", label: "Filter : Category / Tags" },
     { value: "filter:favorites", label: "Filter : Favorites" },

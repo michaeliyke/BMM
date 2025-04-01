@@ -18,8 +18,6 @@ type SideBarProps = {
     defaultCategory: ICategory;
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
-    filterBy?: string;
-    setFilterBy?: Dispatch<SetStateAction<string>>;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;

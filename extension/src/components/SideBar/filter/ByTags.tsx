@@ -18,8 +18,6 @@ type DAPProps = {
     defaultCategory: ICategory;
     bookmarkToShow: IBookmark | null;
     setBookmarkToShow: (bookmark: IBookmark | null) => void;
-    filterBy?: string;
-    setFilterBy?: Dispatch<SetStateAction<string>>;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
@@ -71,7 +69,6 @@ export function ByTags({ props }: DAPProps) {
     setQuery(query);
     search(query, categories, setTags);
   }
-
 
   function toggleSelected(tag: ITag, event: React.MouseEvent<HTMLLIElement>) {
     const target = event.currentTarget;

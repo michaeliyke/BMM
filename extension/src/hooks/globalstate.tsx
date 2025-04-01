@@ -1,23 +1,12 @@
 import { create } from "zustand";
-
-type filters = "filter:categories"
-  | "filter:bookmarks"
-  | "filter:tags"
-  | "filter:category/tags"
-  | "filter:category/bookmarks"
-  | "filter:bookmark/tags"
-  | "filter:bookmark/categories"
-  | "filter:favorites"
-  | "filter:archived"
-  | "filter:delete"
-  ;
+import { TFilters } from "../utils/types/schemas";
 
 interface IState {
   headerForm: boolean;
-  filterBy: filters;
+  filterBy: TFilters;
   query: string;
   setHeaderForm: (value: boolean) => void;
-  setFilterBy: (value: filters) => void;
+  setFilterBy: (value: TFilters) => void;
   setQuery: (value: string) => void;
 }
 
@@ -51,10 +40,10 @@ function stateInitializer(set: TState): IState {
     /**
      * Sets the filter type.
      *
-     * @param {filters}
+     * @param {TFilters}
      * @returns {void}
      */
-    setFilterBy(value: filters) {
+    setFilterBy(value: TFilters) {
       set({ filterBy: value });
     },
 
