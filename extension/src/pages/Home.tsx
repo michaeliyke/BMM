@@ -43,7 +43,6 @@ export default function Home(props: IHomeProps) {
   const { data, setData } = props;
   const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
   const [defaultCategory, setDefaultCategory] = useState<ICategory>(_defaultCategory);
-  const [bookmarkToShow, setBookmarkToShow] = useState<IBookmark | null>(null);
   const [selectedTag, setSelectedTag] = useState<ITag | null>(null);
   const [grouping, setGrouping] = useState(
     (selectedCategory || defaultCategory).name +
@@ -102,8 +101,6 @@ export default function Home(props: IHomeProps) {
             selectedCategory,
             setSelectedCategory,
             defaultCategory,
-            bookmarkToShow,
-            setBookmarkToShow,
             selectedTag,
             setSelectedTag,
             setGrouping,
@@ -118,8 +115,6 @@ export default function Home(props: IHomeProps) {
           selectedCategory={selectedCategory}
           data={data}
           setData={setData}
-          bookmarkToShow={bookmarkToShow}
-          setBookmarkToShow={setBookmarkToShow}
           selectedTag={selectedTag}
           setSelectedTag={setSelectedTag}
           bookmarks={bookmarks}

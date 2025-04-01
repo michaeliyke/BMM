@@ -8,8 +8,6 @@ type SearchWidgetProps = {
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
   filteredCategories: ICategory[];
-  bookmarkToShow: IBookmark | null;
-  setBookmarkToShow: (bookmark: IBookmark | null) => void;
   grouping: string;
 };
 

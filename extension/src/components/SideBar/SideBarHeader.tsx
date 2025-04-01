@@ -17,8 +17,6 @@ type SideBarHeaderProps = {
     selectedCategory: ICategory | null;
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
     defaultCategory: ICategory;
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;

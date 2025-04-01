@@ -10,8 +10,6 @@ type ContentBarProps = {
   setData: Dispatch<SetStateAction<ICategory[]>>;
   updateCategory?: (category: ICategory) => void;
   selectedCategory: ICategory | null;
-  bookmarkToShow: IBookmark | null;
-  setBookmarkToShow: Dispatch<SetStateAction<IBookmark | null>>;
   selectedTag?: ITag | null;
   setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
   bookmarks: IBookmark[];
@@ -63,8 +61,6 @@ export default function ContentBar(props: ContentBarProps) {
     data,
     setData,
     selectedCategory,
-    bookmarkToShow,
-    setBookmarkToShow,
     selectedTag,
     bookmarks,
     setBookmarks,
@@ -90,8 +86,6 @@ export default function ContentBar(props: ContentBarProps) {
       <ContentHeader
         selectedCategory={selectedCategory}
         filteredCategories={filteredCategories}
-        bookmarkToShow={bookmarkToShow}
-        setBookmarkToShow={setBookmarkToShow}
         setFilteredCategories={setFilteredCategories}
         bookmarks={bookmarks}
         setBookmarks={setBookmarks}
@@ -100,8 +94,6 @@ export default function ContentBar(props: ContentBarProps) {
 
       <ContentBody
         filteredCategories={filteredCategories}
-        bookmarkToShow={bookmarkToShow}
-        setBookmarkToShow={setBookmarkToShow}
         selectedTag={selectedTag}
         bookmarks={bookmarks}
         setBookmarks={setBookmarks}

@@ -1,13 +1,23 @@
 import { create } from "zustand";
-import { TFilters } from "../utils/types/schemas";
+import { IBookmark, ICategory, ITag, TFilters } from "../utils/types/schemas";
 
 interface IState {
   headerForm: boolean;
-  filterBy: TFilters;
-  query: string;
   setHeaderForm: (value: boolean) => void;
+  filterBy: TFilters;
   setFilterBy: (value: TFilters) => void;
+  query: string;
   setQuery: (value: string) => void;
+  selectedTag: ITag | null;
+  setSelectedTag: (value: ITag | null) => void;
+  grouping: string;
+  setGrouping: (value: string) => void;
+  bookmarkToShow: IBookmark | null;
+  setBookmarkToShow: (bookmark: IBookmark | null) => void;
+  selectedCategory: ICategory | null;
+  setSelectedCategory: (value: ICategory | null) => void;
+  defaultCategory: ICategory;
+  setDefaultCategory: (category: ICategory) => void;
 }
 
 type TState = {
@@ -26,33 +36,48 @@ function stateInitializer(set: TState): IState {
     headerForm: false,
     filterBy: "filter:categories",
     query: "",
+    selectedTag: null,
+    grouping: "",
+    bookmarkToShow: null,
+    selectedCategory: null,
+    defaultCategory: {
+      id: "default",
+      name: "Default",
+      bookmarks: [],
+      tags: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      is_default: 1,
+    },
 
-    /**
-     * Sets the header form state.
-     *
-     * @param {boolean}
-     * @returns {void}
-     */
+    setDefaultCategory: (category: ICategory) => {
+      set({ defaultCategory: category });
+    },
+
+    setBookmarkToShow: (bookmark: IBookmark | null) => {
+      set({ bookmarkToShow: bookmark });
+    },
+
+    setSelectedCategory: (value: ICategory | null) => {
+      set({ selectedCategory: value });
+    },
+
+    setSelectedTag: (value: ITag | null) => {
+      set({ selectedTag: value });
+    },
+
+    setGrouping: (value: string) => {
+      set({ grouping: value });
+    },
+
     setHeaderForm(value: boolean) {
       set({ headerForm: value });
     },
 
-    /**
-     * Sets the filter type.
-     *
-     * @param {TFilters}
-     * @returns {void}
-     */
     setFilterBy(value: TFilters) {
       set({ filterBy: value });
     },
 
-    /**
-     * Sets the query string.
-     *
-     * @param {string}
-     * @returns {void}
-     */
     setQuery(value: string) {
       set({ query: value });
     },

@@ -10,6 +10,7 @@ import { debounce, DebouncedFunc } from "lodash-es";
 import { FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
+import { useAppState } from "../../../hooks/globalstate";
 
 type BCProps = {
   props: {
@@ -23,8 +24,6 @@ type BCProps = {
     selectedCategory: ICategory | null;
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
     defaultCategory: ICategory;
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
@@ -43,13 +42,13 @@ export default function ByCategories({ props }: BCProps) {
     defaultCategory,
     categories,
     setSelectedCategory,
-    setBookmarkToShow,
     setGrouping,
   } = props;
 
   const [query, setQuery] = useState<string>("");
   const [_categories, setCategories] = useState<ICategory[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(true);
+  const { setBookmarkToShow } = useAppState();
 
   function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
     setSelectedCategory(category.is_default !== 1 ? category : null); // Global state

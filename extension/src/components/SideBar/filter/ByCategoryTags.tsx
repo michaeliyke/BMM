@@ -4,6 +4,7 @@ import { FiChevronRight, FiHash, FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { categoryTagsSearch, sortedCategories, toggleHighlightedClass } from "../../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
+import { useAppState } from "../../../hooks/globalstate";
 
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
@@ -20,8 +21,6 @@ type DCPProps = {
     selectedCategory: ICategory | null;
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
     defaultCategory: ICategory;
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
@@ -34,7 +33,6 @@ export function ByCategoryTags({ props }: DCPProps) {
     categories,
     selectedCategory,
     setSelectedCategory,
-    setBookmarkToShow,
     setGrouping,
     selectedTag,
     setSelectedTag,
@@ -44,6 +42,7 @@ export function ByCategoryTags({ props }: DCPProps) {
   const [query, setQuery] = useState<string>('');
   const [_categories, setCategories] = useState<ICategory[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(false);
+  const { setBookmarkToShow } = useAppState();
 
   function toggleExpand(category: ICategory) {
     setExpandedCategories((prev) => {

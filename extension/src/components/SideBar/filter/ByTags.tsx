@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } fr
 import { FiHash, FiSearch } from "react-icons/fi";
 import { getTags, resetSelections, tagsSearch, toggleHighlightedClass } from "../../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
+import { useAppState } from "../../../hooks/globalstate";
 
 type DAPProps = {
   props: {
@@ -16,8 +17,6 @@ type DAPProps = {
     selectedCategory: ICategory | null;
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
     defaultCategory: ICategory;
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
@@ -34,12 +33,12 @@ export function ByTags({ props }: DAPProps) {
     setSelectedTag,
     selectedTag,
     setGrouping,
-    setBookmarkToShow,
   } = props;
 
   const [query, setQuery] = useState<string>('');
   const [tags, setTags] = useState<ITag[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(false);
+  const { setBookmarkToShow } = useAppState();
 
   /**
    * A reference to a debounced search function.

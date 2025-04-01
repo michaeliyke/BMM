@@ -16,8 +16,6 @@ type SideBarProps = {
     selectedCategory: ICategory | null;
     setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
     defaultCategory: ICategory;
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: (bookmark: IBookmark | null) => void;
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
@@ -26,12 +24,6 @@ type SideBarProps = {
 
 /**
  * SideBar component that renders a sidebar with a header, variator, and footer.
- *
- * @component
- * @param {SideBarProps} props - The properties passed to the SideBar component.
- * @param {Function} props.setData - Function to set data.
- * @param {string} props.selectedCategory - The currently selected category.
- * @returns {JSX.Element} The rendered SideBar component.
  */
 export default function SideBar({ props }: SideBarProps) {
   const {
