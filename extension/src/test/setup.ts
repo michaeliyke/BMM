@@ -1,4 +1,9 @@
 // src/test/setup.ts
-import { expect } from "vitest";
+import { Assertion } from "vitest";
 
-globalThis.expect = expect;
+declare global {
+  let expect: (value: unknown) => Assertion;
+  interface Window {
+    expect: (value: unknown) => Assertion;
+  }
+}
