@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import ByCategories from "./filter/ByCategories";
 import { ByCategoryTags } from "./filter/ByCategoryTags";
 import { ByTags } from "./filter/ByTags";
@@ -14,11 +14,6 @@ type SBSProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    selectedCategory: ICategory | null;
-    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
-    defaultCategory: ICategory;
-    selectedTag?: ITag | null;
-    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };

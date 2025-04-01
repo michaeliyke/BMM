@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'reac
 import ContentBar from '../components/ContentBar/ContentBar'
 import Header from '../components/HeaderBar/Header'
 import SideBar from '../components/SideBar/SideBar'
-import { IBookmark, ICategory, ITag } from '../utils/types/schemas'
+import { IBookmark, ICategory } from '../utils/types/schemas'
 import { useAppState } from '../hooks/globalstate'
 
 
@@ -10,17 +10,6 @@ export type IHomeProps = {
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
 }
-
-const _defaultCategory = {
-  id: 'dummy-id',
-  name: 'No Category Selected',
-  is_default: 0,
-  created_at: (new Date()).toUTCString(),
-  updated_at: (new Date()).toUTCString(),
-  tags: [],
-  bookmarks: []
-};
-
 
 /**
  * The `Home` component is the main page of the application. It manages the state and interactions
@@ -41,9 +30,13 @@ const _defaultCategory = {
  */
 export default function Home(props: IHomeProps) {
   const { data, setData } = props;
-  const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
-  const [defaultCategory, setDefaultCategory] = useState<ICategory>(_defaultCategory);
-  const [selectedTag, setSelectedTag] = useState<ITag | null>(null);
+  const {
+    headerForm,
+    selectedCategory,
+    selectedTag,
+    defaultCategory,
+    setDefaultCategory,
+  } = useAppState();
   const [grouping, setGrouping] = useState(
     (selectedCategory || defaultCategory).name +
     (selectedTag ? ` # ${selectedTag.name}` : '')
@@ -51,7 +44,6 @@ export default function Home(props: IHomeProps) {
   const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
   const [bookmarks, setBookmarksRaw] = useState<IBookmark[]>([]);
   // query: cleared in Sidebar header and, set and used in Content SearchWidget
-  const { headerForm } = useAppState();
 
   // Wrapper function to for setBookmarks: filter out archived bookmarks
   const setBookmarks = useCallback((bookmarks: SetStateAction<IBookmark[]>): void => {
@@ -79,18 +71,15 @@ export default function Home(props: IHomeProps) {
         setDefaultCategory(category);
       }
     }
-  }, [data]);
+  }, [data, setDefaultCategory]);
 
   return (
     <>
       <Header
-        selectedCategory={selectedCategory}
         setData={setData}
         categories={data}
-        defaultCategory={defaultCategory}
         grouping={grouping}
         setGrouping={setGrouping}
-        selectedTag={selectedTag}
       />
 
       <section className={headerForm ? `pt-[128px]` : ''}>
@@ -98,11 +87,6 @@ export default function Home(props: IHomeProps) {
           props={{
             categories: data,
             setData,
-            selectedCategory,
-            setSelectedCategory,
-            defaultCategory,
-            selectedTag,
-            setSelectedTag,
             setGrouping,
             bookmarks,
             setBookmarks,
@@ -112,11 +96,8 @@ export default function Home(props: IHomeProps) {
         />
 
         <ContentBar
-          selectedCategory={selectedCategory}
           data={data}
           setData={setData}
-          selectedTag={selectedTag}
-          setSelectedTag={setSelectedTag}
           bookmarks={bookmarks}
           setBookmarks={setBookmarks}
           filteredCategories={filteredCategories}

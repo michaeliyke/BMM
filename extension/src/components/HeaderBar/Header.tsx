@@ -6,23 +6,20 @@ import CategoryBookmark from "../../data/adapters/category_bookmark";
 import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
 import { getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import ImportDialog from "./ImportDialog";
 import { useAppState } from "../../hooks/globalstate";
 import ExportWidget from "./ExportWidget";
 
 type rightSetData = React.Dispatch<React.SetStateAction<ICategory[]>>;
 type HeaderProps = {
-  selectedCategory: ICategory | null;
   categories: ICategory[];
   // setData takes in fn, a function that takes in the old state (ICategory[])
   // and returns the new state (ICategory[])
   // setData itself returns void
   setData: (fn: (categories: ICategory[]) => ICategory[]) => void;
-  defaultCategory: ICategory;
   grouping: string;
   setGrouping?: Dispatch<SetStateAction<string>>;
-  selectedTag?: ITag | null;
 };
 
 
@@ -41,14 +38,11 @@ type HeaderProps = {
  */
 export default function Header(props: HeaderProps) {
   const {
-    selectedCategory,
     setData,
-    defaultCategory,
     grouping,
-    selectedTag,
   } = props;
 
-  const { headerForm } = useAppState();
+  const { headerForm, selectedCategory, defaultCategory, selectedTag } = useAppState();
   const [url, setUrl] = useState(location.href);
   const [title, setTitle] = useState(document.title);
   const isButtonDisabled = !url || !title;

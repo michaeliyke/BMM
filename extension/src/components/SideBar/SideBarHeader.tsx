@@ -2,7 +2,7 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headless
 import { Dispatch, SetStateAction } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { getBookmarks } from "../../utils/common";
-import { IBookmark, ICategory, ITag, TFilters } from "../../utils/types/schemas";
+import { IBookmark, ICategory, TFilters } from "../../utils/types/schemas";
 import { useAppState } from "../../hooks/globalstate";
 
 type SideBarHeaderProps = {
@@ -14,11 +14,6 @@ type SideBarHeaderProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    selectedCategory: ICategory | null;
-    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
-    defaultCategory: ICategory;
-    selectedTag?: ITag | null;
-    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };

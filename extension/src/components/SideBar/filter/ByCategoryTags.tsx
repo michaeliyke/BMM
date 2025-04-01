@@ -18,31 +18,28 @@ type DCPProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    selectedCategory: ICategory | null;
-    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
-    defaultCategory: ICategory;
-    selectedTag?: ITag | null;
-    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };
 
 export function ByCategoryTags({ props }: DCPProps) {
   const {
-    defaultCategory,
     categories,
-    selectedCategory,
-    setSelectedCategory,
     setGrouping,
-    selectedTag,
-    setSelectedTag,
   } = props;
 
   const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean; }>({});
   const [query, setQuery] = useState<string>('');
   const [_categories, setCategories] = useState<ICategory[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(false);
-  const { setBookmarkToShow } = useAppState();
+  const {
+    setBookmarkToShow,
+    selectedTag,
+    setSelectedTag,
+    selectedCategory,
+    setSelectedCategory,
+    defaultCategory,
+  } = useAppState();
 
   function toggleExpand(category: ICategory) {
     setExpandedCategories((prev) => {

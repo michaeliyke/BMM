@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import BookmarkList from "./BookmarkList";
 import BookmarkView from "./BookmarkView";
 import ListArchived from "./ListArchived";
@@ -11,10 +11,8 @@ type BookmarksDisplayProps = {
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
   filteredCategories: ICategory[];
-  selectedTag?: ITag | null;
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
-  selectedCategory: ICategory | null;
 };
 
 
@@ -25,12 +23,10 @@ type BookmarksDisplayProps = {
 export default function ContentBody(props: BookmarksDisplayProps) {
   const {
     filteredCategories,
-    selectedTag,
     bookmarks,
     setBookmarks,
     data,
     setData,
-    selectedCategory,
   } = props;
 
   const [showDetails, setShowDetails] = useState<boolean>(true);
@@ -51,7 +47,6 @@ export default function ContentBody(props: BookmarksDisplayProps) {
   if (filterBy === 'filter:archived') {
     return <ListArchived
       filteredCategories={filteredCategories}
-      selectedTag={selectedTag}
       bookmarks={bookmarks}
       setBookmarks={setBookmarks}
       data={data}
@@ -69,11 +64,9 @@ export default function ContentBody(props: BookmarksDisplayProps) {
 
   return <BookmarkList
     filteredCategories={filteredCategories}
-    selectedTag={selectedTag}
     bookmarks={bookmarks}
     setBookmarks={setBookmarks}
     data={data}
     setData={setData}
-    selectedCategory={selectedCategory}
   />;
 }

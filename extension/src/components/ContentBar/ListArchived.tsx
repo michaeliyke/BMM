@@ -1,14 +1,13 @@
 import moment from "moment";
 import { Dispatch, SetStateAction } from "react";
 import { filterArchived, sortedBookmarks } from "../../utils/common";
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import { useAppState } from "../../hooks/globalstate";
 
 type ListArchivedProps = {
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
   filteredCategories: ICategory[];
-  selectedTag?: ITag | null;
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
 };

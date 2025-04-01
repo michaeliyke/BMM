@@ -1,17 +1,15 @@
 
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { getBookmarks } from "../../utils/common";
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import ContentBody from "./ContentBody";
 import ContentHeader from "./ContentHeader";
+import { useAppState } from "../../hooks/globalstate";
 
 type ContentBarProps = {
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
   updateCategory?: (category: ICategory) => void;
-  selectedCategory: ICategory | null;
-  selectedTag?: ITag | null;
-  setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
   filteredCategories: ICategory[];
@@ -60,14 +58,13 @@ export default function ContentBar(props: ContentBarProps) {
   const {
     data,
     setData,
-    selectedCategory,
-    selectedTag,
     bookmarks,
     setBookmarks,
     setFilteredCategories,
     filteredCategories,
     grouping,
   } = props;
+  const { selectedCategory } = useAppState();
 
   const sel = selectedCategory;
 
@@ -84,7 +81,6 @@ export default function ContentBar(props: ContentBarProps) {
   return (
     <article className="content mt-0">
       <ContentHeader
-        selectedCategory={selectedCategory}
         filteredCategories={filteredCategories}
         setFilteredCategories={setFilteredCategories}
         bookmarks={bookmarks}
@@ -94,12 +90,10 @@ export default function ContentBar(props: ContentBarProps) {
 
       <ContentBody
         filteredCategories={filteredCategories}
-        selectedTag={selectedTag}
         bookmarks={bookmarks}
         setBookmarks={setBookmarks}
         data={data}
         setData={setData}
-        selectedCategory={selectedCategory}
       />
       <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
     </article>

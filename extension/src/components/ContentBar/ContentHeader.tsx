@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import { GoBackWidget } from "./widgets/GoBackWidget";
 import { SearchWidget } from "./widgets/SearchWidget";
 import { useAppState } from "../../hooks/globalstate";
@@ -10,9 +10,6 @@ type ContentHeaderProps = {
   filteredCategories: ICategory[];
   setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
   updateCategory?: (category: ICategory) => void;
-  selectedCategory: ICategory | null;
-  selectedTag?: ITag | null;
-  setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
   grouping: string;
 };
 

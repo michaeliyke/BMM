@@ -14,11 +14,6 @@ type DAPProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    selectedCategory: ICategory | null;
-    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
-    defaultCategory: ICategory;
-    selectedTag?: ITag | null;
-    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };
@@ -28,17 +23,14 @@ type CL = ICategory[];
 
 export function ByTags({ props }: DAPProps) {
   const {
-    defaultCategory,
     categories,
-    setSelectedTag,
-    selectedTag,
     setGrouping,
   } = props;
 
   const [query, setQuery] = useState<string>('');
   const [tags, setTags] = useState<ITag[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(false);
-  const { setBookmarkToShow } = useAppState();
+  const { setBookmarkToShow, selectedTag, defaultCategory, setSelectedTag } = useAppState();
 
   /**
    * A reference to a debounced search function.

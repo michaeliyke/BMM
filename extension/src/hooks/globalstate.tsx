@@ -41,13 +41,13 @@ function stateInitializer(set: TState): IState {
     bookmarkToShow: null,
     selectedCategory: null,
     defaultCategory: {
-      id: "default",
-      name: "Default",
-      bookmarks: [],
+      id: 'dummy-id',
+      name: 'No Category Selected',
+      is_default: 0,
+      created_at: (new Date()).toUTCString(),
+      updated_at: (new Date()).toUTCString(),
       tags: [],
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      is_default: 1,
+      bookmarks: []
     },
 
     setDefaultCategory: (category: ICategory) => {

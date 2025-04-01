@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import SideBarFooter from "./SideBarFooter";
 import SideBarHeader from "./SideBarHeader";
 import SideBarSwitcher from "./SideBarSwitcher";
@@ -13,11 +13,6 @@ type SideBarProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    selectedCategory: ICategory | null;
-    setSelectedCategory: Dispatch<SetStateAction<ICategory | null>>;
-    defaultCategory: ICategory;
-    selectedTag?: ITag | null;
-    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };
@@ -28,7 +23,6 @@ type SideBarProps = {
 export default function SideBar({ props }: SideBarProps) {
   const {
     setData,
-    selectedCategory,
   } = props;
 
   // return <SideBarVariator props={props} />;
@@ -40,7 +34,6 @@ export default function SideBar({ props }: SideBarProps) {
 
       <SideBarFooter
         setData={setData}
-        selectedCategory={selectedCategory}
       />
     </article>
   );
