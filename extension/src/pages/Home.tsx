@@ -53,7 +53,6 @@ export default function Home(props: IHomeProps) {
   const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
   const [bookmarks, setBookmarksRaw] = useState<IBookmark[]>([]);
   // query: cleared in Sidebar header and, set and used in Content SearchWidget
-  const [query, setQuery] = useState("");
   const { headerForm } = useAppState();
 
   // Wrapper function to for setBookmarks: filter out archived bookmarks
@@ -116,8 +115,6 @@ export default function Home(props: IHomeProps) {
             setBookmarks,
             filteredCategories,
             setFilteredCategories,
-            query,
-            setQuery,
           }}
         />
 
@@ -135,8 +132,6 @@ export default function Home(props: IHomeProps) {
           setBookmarks={setBookmarks}
           filteredCategories={filteredCategories}
           setFilteredCategories={setFilteredCategories}
-          query={query}
-          setQuery={setQuery}
           grouping={grouping}
         />
       </section>

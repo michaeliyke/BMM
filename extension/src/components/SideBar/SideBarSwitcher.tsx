@@ -24,8 +24,6 @@ type SBSProps = {
     selectedTag?: ITag | null;
     setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
     setGrouping?: Dispatch<SetStateAction<string>>;
-    query: string;
-    setQuery: Dispatch<SetStateAction<string>>;
   };
 };
 

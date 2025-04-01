@@ -6,23 +6,21 @@ import ContentBody from "./ContentBody";
 import ContentHeader from "./ContentHeader";
 
 type ContentBarProps = {
-    data: ICategory[];
-    setData: Dispatch<SetStateAction<ICategory[]>>;
-    updateCategory?: (category: ICategory) => void;
-    selectedCategory: ICategory | null;
-    bookmarkToShow: IBookmark | null;
-    setBookmarkToShow: Dispatch<SetStateAction<IBookmark | null>>;
-    selectedTag?: ITag | null;
-    setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
-    bookmarks: IBookmark[];
-    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-    filteredCategories: ICategory[];
-    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
-    query: string;
-    setQuery: Dispatch<SetStateAction<string>>;
-    grouping: string;
-    filterBy: string;
-    setFilterBy: Dispatch<SetStateAction<string>>;
+  data: ICategory[];
+  setData: Dispatch<SetStateAction<ICategory[]>>;
+  updateCategory?: (category: ICategory) => void;
+  selectedCategory: ICategory | null;
+  bookmarkToShow: IBookmark | null;
+  setBookmarkToShow: Dispatch<SetStateAction<IBookmark | null>>;
+  selectedTag?: ITag | null;
+  setSelectedTag?: Dispatch<SetStateAction<ITag | null>>;
+  bookmarks: IBookmark[];
+  setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
+  filteredCategories: ICategory[];
+  setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
+  grouping: string;
+  filterBy: string;
+  setFilterBy: Dispatch<SetStateAction<string>>;
 };
 
 /**
@@ -63,65 +61,61 @@ type ContentBarProps = {
  * />
  */
 export default function ContentBar(props: ContentBarProps) {
-    const {
-        data,
-        setData,
-        selectedCategory,
-        bookmarkToShow,
-        setBookmarkToShow,
-        selectedTag,
-        bookmarks,
-        setBookmarks,
-        setFilteredCategories,
-        filteredCategories,
-        query,
-        setQuery,
-        grouping,
-    } = props;
+  const {
+    data,
+    setData,
+    selectedCategory,
+    bookmarkToShow,
+    setBookmarkToShow,
+    selectedTag,
+    bookmarks,
+    setBookmarks,
+    setFilteredCategories,
+    filteredCategories,
+    grouping,
+  } = props;
 
-    const sel = selectedCategory;
+  const sel = selectedCategory;
 
-    useEffect(() => {
-        /* CAUTION: the calls below is likely to cause infinite rendering */
-        const x = sel ? data.filter((cat) => cat.id === sel.id) : data;
-        setFilteredCategories(x);
-        setBookmarks(getBookmarks(x));
-    }, [selectedCategory, data, sel, setFilteredCategories, setBookmarks]);
+  useEffect(() => {
+    /* CAUTION: the calls below is likely to cause infinite rendering */
+    const x = sel ? data.filter((cat) => cat.id === sel.id) : data;
+    setFilteredCategories(x);
+    setBookmarks(getBookmarks(x));
+  }, [selectedCategory, data, sel, setFilteredCategories, setBookmarks]);
 
-    // console.log("Filtered Categories: ", data, filteredCategories);
-    // console.log("Filtered Bookmarks: ", data, bookmarks);
+  // console.log("Filtered Categories: ", data, filteredCategories);
+  // console.log("Filtered Bookmarks: ", data, bookmarks);
 
-    return (
-        <article className="content mt-0">
-            <ContentHeader
-                selectedCategory={selectedCategory}
-                filteredCategories={filteredCategories}
-                bookmarkToShow={bookmarkToShow}
-                setBookmarkToShow={setBookmarkToShow}
-                setFilteredCategories={setFilteredCategories}
-                bookmarks={bookmarks}
-                setBookmarks={setBookmarks}
-                query={query}
-                setQuery={setQuery}
-                grouping={grouping}
-                filterBy={props.filterBy}
-                setFilterBy={props.setFilterBy}
-            />
+  return (
+    <article className="content mt-0">
+      <ContentHeader
+        selectedCategory={selectedCategory}
+        filteredCategories={filteredCategories}
+        bookmarkToShow={bookmarkToShow}
+        setBookmarkToShow={setBookmarkToShow}
+        setFilteredCategories={setFilteredCategories}
+        bookmarks={bookmarks}
+        setBookmarks={setBookmarks}
+        grouping={grouping}
+        filterBy={props.filterBy}
+        setFilterBy={props.setFilterBy}
+      />
 
-            <ContentBody
-                filteredCategories={filteredCategories}
-                bookmarkToShow={bookmarkToShow}
-                setBookmarkToShow={setBookmarkToShow}
-                selectedTag={selectedTag}
-                bookmarks={bookmarks}
-                setBookmarks={setBookmarks}
-                data={data}
-                setData={setData}
-                filterBy={props.filterBy}
-                setFilterBy={props.setFilterBy}
-                selectedCategory={selectedCategory}
-            />
-            <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
-        </article>
-    );
+      <ContentBody
+        filteredCategories={filteredCategories}
+        bookmarkToShow={bookmarkToShow}
+        setBookmarkToShow={setBookmarkToShow}
+        selectedTag={selectedTag}
+        bookmarks={bookmarks}
+        setBookmarks={setBookmarks}
+        data={data}
+        setData={setData}
+        filterBy={props.filterBy}
+        setFilterBy={props.setFilterBy}
+        selectedCategory={selectedCategory}
+      />
+      <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
+    </article>
+  );
 }

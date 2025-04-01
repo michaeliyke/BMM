@@ -1,27 +1,29 @@
-import {create} from "zustand";
+import { create } from "zustand";
 
 type filters = "filter:categories"
-	| "filter:bookmarks"
-	| "filter:tags"
-	| "filter:category/tags"
-	| "filter:category/bookmarks"
-	| "filter:bookmark/tags"
-	| "filter:bookmark/categories"
-	| "filter:favorites"
-	| "filter:archived"
-	| "filter:delete"
-	;
+  | "filter:bookmarks"
+  | "filter:tags"
+  | "filter:category/tags"
+  | "filter:category/bookmarks"
+  | "filter:bookmark/tags"
+  | "filter:bookmark/categories"
+  | "filter:favorites"
+  | "filter:archived"
+  | "filter:delete"
+  ;
 
 interface IState {
-  	headerForm: boolean;
-	filterBy: filters;
-  	setHeaderForm: (value: boolean) => void;
-	setFilterBy: (value: filters) => void;
+  headerForm: boolean;
+  filterBy: filters;
+  query: string;
+  setHeaderForm: (value: boolean) => void;
+  setFilterBy: (value: filters) => void;
+  setQuery: (value: string) => void;
 }
 
 type TState = {
-	(partial: IState | Partial<IState> | ((state: IState) => IState | Partial<IState>),replace?: false): void;
-	(state: IState | ((state: IState) => IState), replace: true): void;
+  (partial: IState | Partial<IState> | ((state: IState) => IState | Partial<IState>), replace?: false): void;
+  (state: IState | ((state: IState) => IState), replace: true): void;
 }
 
 /**
@@ -31,30 +33,41 @@ type TState = {
  * @returns {IState} The initial state and functions to update it.
  */
 function stateInitializer(set: TState): IState {
-	return {
-		headerForm: false,
-		filterBy: "filter:categories",
+  return {
+    headerForm: false,
+    filterBy: "filter:categories",
+    query: "",
 
-		/**
-		 * Sets the header form state.
-		 *
-		 * @param {boolean}
-		 * @returns {void}
-		 */
-		setHeaderForm(value: boolean) {
-			set({ headerForm: value });
-		},
+    /**
+     * Sets the header form state.
+     *
+     * @param {boolean}
+     * @returns {void}
+     */
+    setHeaderForm(value: boolean) {
+      set({ headerForm: value });
+    },
 
-		/**
-		 * Sets the filter type.
-		 *
-		 * @param {filters}
-		 * @returns {void}
-		 */
-		setFilterBy(value: filters){
-			set({ filterBy: value });
-		},
-	};
+    /**
+     * Sets the filter type.
+     *
+     * @param {filters}
+     * @returns {void}
+     */
+    setFilterBy(value: filters) {
+      set({ filterBy: value });
+    },
+
+    /**
+     * Sets the query string.
+     *
+     * @param {string}
+     * @returns {void}
+     */
+    setQuery(value: string) {
+      set({ query: value });
+    },
+  };
 }
 
 /**
