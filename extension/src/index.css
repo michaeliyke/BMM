@@ -321,17 +321,17 @@ main>header form span {
 
 
 main>header form button {
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: background-color 0.1s ease, transform 0.1s ease;
     margin-top: 2em;
 }
 
 main>header form button:not(:disabled):hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 main>header form button:disabled {
-    cursor: not-allowed;
-    /* pointer-events:none; */
+    /* cursor: not-allowed; */
+    pointer-events:none;
     transform: scale(1);
     opacity: 0.5;
 }

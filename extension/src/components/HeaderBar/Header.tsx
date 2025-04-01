@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { TiExport } from "react-icons/ti";
 import { v4 as uuid4 } from 'uuid';
 import Bookmark from "../../data/adapters/bookmark";
 import Category from "../../data/adapters/category";
@@ -10,6 +9,7 @@ import { getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import ImportDialog from "./ImportDialog";
 import { useAppState } from "../../hooks/globalstate";
+import ExportWidget from "./ExportWidget";
 
 type rightSetData = React.Dispatch<React.SetStateAction<ICategory[]>>;
 type HeaderProps = {
@@ -245,13 +245,7 @@ export default function Header(props: HeaderProps) {
                             Import
                         </button> */}
             <ImportDialog setData={setData as rightSetData} />
-            <button
-              type="button"
-              className="py-2 pr-2 pl-1 rounded-lg tracking-wide border border-green-700 text-green-700 focus:ring-2 focus:ring-green-50 flex items-center"
-            >
-              <TiExport className="mr-1" />
-              Export
-            </button>
+            <ExportWidget categories={props.categories} />
             <button
               disabled={isButtonDisabled}
               type="button"

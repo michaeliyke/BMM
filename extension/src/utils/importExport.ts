@@ -174,7 +174,7 @@ export function getImportHandler(data: ImportData, setData: React.Dispatch<React
   return importBookmarksHandler(data, setData);
 }
 
-export function isBookmarks(data: unknown): data is IBookmark {
+export function isBookmarks(data: unknown): data is IBookmark[] {
   const data_ = data as IBookmark[];
   const compulsoryProps = ["id", "title", "url", "created_at", "updated_at", "tags"];
 
@@ -200,7 +200,7 @@ export function isBookmarks(data: unknown): data is IBookmark {
   return true;
 }
 
-export function isTags(data: unknown): data is ITag {
+export function isTags(data: unknown): data is ITag[] {
   const data_ = data as ITag[];
   const compulsoryProps = ["id", "name", "created_at", "updated_at"];
   if (!Array.isArray(data_)) return false; // should be an array
@@ -217,7 +217,7 @@ export function isTags(data: unknown): data is ITag {
   return true;
 }
 
-export function isCategories(data: unknown): data is ICategory {
+export function isCategories(data: unknown): data is ICategory[] {
   const data_ = data as ICategory[];
   const compulsoryProps = ["id", "name", "is_default", "created_at", "updated_at", "bookmarks", "tags"];
 
@@ -246,4 +246,19 @@ export function isCategories(data: unknown): data is ICategory {
     }
   }
   return true;
+}
+
+export function markImportType(data: ImportData) {
+  if (isCategories(data)) {
+    data.forEach((category) => {
+      category.importType = "category";
+      category.bookmarks.forEach((bookmark) => {
+        bookmark.importType = "bookmark";
+      });
+    });
+  } else {
+    data.forEach((bookmark) => {
+      bookmark.importType = "bookmark";
+    });
+  }
 }

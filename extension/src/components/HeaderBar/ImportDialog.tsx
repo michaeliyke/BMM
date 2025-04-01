@@ -41,7 +41,7 @@ export default function ImportDialog(props: IPProps) {
 
   return (
     <Popover className="relative">
-      <PopoverButton className="py-2 px-4 rounded-lg tracking-wide border border-green-700 text-green-700 hover:bg-green-100 focus:ring-2 focus:ring-green-50 flex items-center">
+      <PopoverButton className="py-2 px-4 rounded-lg tracking-wide border border-green-700 text-green-700 flex items-center">
         <CiImport className="mr-1" />
         Import
       </PopoverButton>
