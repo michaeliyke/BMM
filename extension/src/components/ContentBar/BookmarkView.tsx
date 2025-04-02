@@ -4,14 +4,12 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
 import { FaClock, FaCommentDots, FaRegStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
+import { useAppState } from "../../hooks/globalstate";
 import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
 import { BookmarkEditForm } from "./BookmarkEditForm";
 import BookmarkItemFooter from "./BookmarkItemFooter";
-import { useAppState } from "../../hooks/globalstate";
 
 type BookmarkViewProps = {
-  bookmarks: IBookmark[];
-  setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
   selectedTag?: ITag | null;
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
@@ -72,7 +70,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
           {/* Header */}
           {HeaderPart(bookmark, showDetails, setShowDetails, initiateEditing)}
           {showDetails
-            ? DetailsTab(bookmark, props)
+            ? DetailsTab(bookmark)
             : CategoryTab(categories)
           }
         </article>
@@ -80,7 +78,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
   );
 }
 
-function DetailsTab(bookmark: IBookmark, props: BookmarkViewProps) {
+function DetailsTab(bookmark: IBookmark) {
   return <>
     {/* Description */}
     <section className="mb-6" aria-labelledby="description-heading">
@@ -106,9 +104,7 @@ function DetailsTab(bookmark: IBookmark, props: BookmarkViewProps) {
       </h2>
     </section>
     <hr className="my-3" />
-    <BookmarkItemFooter
-      setBookmarks={props.setBookmarks}
-      bookmarks={props.bookmarks} />
+    <BookmarkItemFooter />
   </>;
 }
 

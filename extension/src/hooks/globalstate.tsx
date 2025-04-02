@@ -22,7 +22,7 @@ interface IState {
   filteredCategories: ICategory[];
   setFilteredCategories: (categories: ICategory[]) => void;
   bookmarks: IBookmark[];
-  setBookmarks: (bookmarks: IBookmark[]) => void;
+  setBookmarks: (bookmarks: IBookmark[] | ((bookmarks: IBookmark[]) => IBookmark[])) => void;
   data: ICategory[];
   setData: (data: ICategory[]) => void;
   filteredBookmarks: IBookmark[];
@@ -64,50 +64,56 @@ function stateInitializer(set: TState): IState {
     filteredBookmarks: [],
 
 
-    setFilteredCategories: (categories: ICategory[]) => {
+    setFilteredCategories(categories: ICategory[]) {
       set({ filteredCategories: categories });
     },
 
-    setFilteredBookmarks: (bookmarks: IBookmark[]) => {
+    setFilteredBookmarks(bookmarks: IBookmark[]) {
       set({ filteredBookmarks: bookmarks });
     },
 
-    setBookmarks: (bookmarks: IBookmark[]) => {
-      // Use a map to ensure that the bookmarks are unique
-      set(() => {
-        const uniqueBookmarks = new Map<string, IBookmark>();
-        const filteredBookmarks = bookmarks.filter((bookmark) => {
-          if (bookmark.archived === 1 || uniqueBookmarks.has(bookmark.id)) {
-            return false;
-          }
-          uniqueBookmarks.set(bookmark.id, bookmark);
-          return true;
+    setBookmarks(bookmarks: IBookmark[] | ((bookmarks: IBookmark[]) => IBookmark[])) {
+      if (Array.isArray(bookmarks)) {
+        // Use a map to ensure that the bookmarks are unique
+        set(() => {
+          const uniqueBookmarks = new Map<string, IBookmark>();
+          const filteredBookmarks = bookmarks.filter((bookmark) => {
+            if (bookmark.archived === 1 || uniqueBookmarks.has(bookmark.id)) {
+              return false;
+            }
+            uniqueBookmarks.set(bookmark.id, bookmark);
+            return true;
+          });
+          return { bookmarks: filteredBookmarks };
         });
-        return { bookmarks: filteredBookmarks };
-      });
+      } else {
+        set((state) => ({
+          bookmarks: bookmarks(state.bookmarks),
+        }));
+      }
     },
 
-    setData: (data: ICategory[]) => {
+    setData(data: ICategory[]) {
       set({ data });
     },
 
-    setDefaultCategory: (category: ICategory) => {
+    setDefaultCategory(category: ICategory) {
       set({ defaultCategory: category });
     },
 
-    setBookmarkToShow: (bookmark: IBookmark | null) => {
+    setBookmarkToShow(bookmark: IBookmark | null) {
       set({ bookmarkToShow: bookmark });
     },
 
-    setSelectedCategory: (value: ICategory | null) => {
+    setSelectedCategory(value: ICategory | null) {
       set({ selectedCategory: value });
     },
 
-    setSelectedTag: (value: ITag | null) => {
+    setSelectedTag(value: ITag | null) {
       set({ selectedTag: value });
     },
 
-    setGrouping: (value: string) => {
+    setGrouping(value: string) {
       set({ grouping: value });
     },
 

@@ -5,6 +5,7 @@ import { BsTrash } from 'react-icons/bs';
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
 import Bookmark from "../../data/adapters/bookmark";
+import { useAppState } from "../../hooks/globalstate";
 import { sortedBookmarks } from "../../utils/common";
 import ReadableDate from "../../utils/readabledate";
 import { IBookmark, ICategory } from "../../utils/types/schemas";
@@ -12,11 +13,8 @@ import BookmarkItemFooter from "./BookmarkItemFooter";
 import CategoryDropdown from "./CategoryDropDown";
 import { ArchiveDialog } from "./dialogs/ArchiveDialog";
 import { DeleteDialog } from "./dialogs/DeleteDialog";
-import { useAppState } from "../../hooks/globalstate";
 
 type BookmarkListProps = {
-  bookmarks: IBookmark[];
-  setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
 };
@@ -26,12 +24,16 @@ type BookmarkListProps = {
  * Each bookmark can be viewed, edited, archived, or deleted.
  */
 export default function BookmarkList(props: BookmarkListProps) {
-  const { bookmarks, data, } = props;
+  const { data, } = props;
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [activeBookmarkIndex, setActiveBookmarkIndex] = useState<number>(-1);
-  const { setBookmarkToShow, selectedTag } = useAppState();
+  const {
+    setBookmarkToShow,
+    selectedTag,
+    bookmarks,
+  } = useAppState();
 
   const handleDelete = (index: number) => {
     setActiveBookmarkIndex(index);
@@ -132,10 +134,7 @@ export default function BookmarkList(props: BookmarkListProps) {
           <FavoriteButton bookmark={bookmark} />
 
           {/* Tags Section */}
-          <BookmarkItemFooter
-            setBookmarks={props.setBookmarks}
-            bookmarks={props.bookmarks}
-          />
+          <BookmarkItemFooter />
         </article>
       ))}
       <ArchiveDialog

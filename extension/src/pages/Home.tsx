@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import ContentBar from '../components/ContentBar/ContentBar'
 import Header from '../components/HeaderBar/Header'
 import SideBar from '../components/SideBar/SideBar'
-import { IBookmark, ICategory } from '../utils/types/schemas'
 import { useAppState } from '../hooks/globalstate'
+import { ICategory } from '../utils/types/schemas'
 
 
 export type IHomeProps = {
@@ -22,27 +22,6 @@ export default function Home(props: IHomeProps) {
     headerForm,
     setDefaultCategory,
   } = useAppState();
-  const [bookmarks, setBookmarksRaw] = useState<IBookmark[]>([]);
-
-  // Wrapper function to for setBookmarks: filter out archived bookmarks
-  const setBookmarks = useCallback((bookmarks: SetStateAction<IBookmark[]>): void => {
-    // Use a map to ensure that the bookmarks are unique
-    setBookmarksRaw((prev) => {
-      const uniqueBookmarks = new Map<string, IBookmark>();
-      return (bookmarks instanceof Function ? bookmarks(prev) : bookmarks)
-        .filter((bookmark) => {
-          if (bookmark.archived === 1 || uniqueBookmarks.has(bookmark.id)) {
-            return false;
-          }
-          uniqueBookmarks.set(bookmark.id, bookmark);
-          return true;
-        });
-    });
-
-  }, []);
-
-
-
 
   useEffect(() => {
     for (const category of data) {
@@ -61,16 +40,12 @@ export default function Home(props: IHomeProps) {
           props={{
             categories: data,
             setData,
-            bookmarks,
-            setBookmarks,
           }}
         />
 
         <ContentBar
           data={data}
           setData={setData}
-          bookmarks={bookmarks}
-          setBookmarks={setBookmarks}
         />
       </section>
     </>

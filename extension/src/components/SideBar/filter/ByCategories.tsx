@@ -9,13 +9,11 @@ import {
 import { debounce, DebouncedFunc } from "lodash-es";
 import { FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
-import { IBookmark, ICategory } from "../../../utils/types/schemas";
 import { useAppState } from "../../../hooks/globalstate";
+import { ICategory } from "../../../utils/types/schemas";
 
 type BCProps = {
   props: {
-    bookmarks: IBookmark[];
-    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;

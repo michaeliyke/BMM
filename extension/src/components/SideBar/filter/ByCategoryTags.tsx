@@ -2,17 +2,15 @@ import { DebouncedFunc, debounce } from "lodash-es";
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { FiChevronRight, FiHash, FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
-import { categoryTagsSearch, sortedCategories, toggleHighlightedClass } from "../../../utils/common";
-import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
 import { useAppState } from "../../../hooks/globalstate";
+import { categoryTagsSearch, sortedCategories, toggleHighlightedClass } from "../../../utils/common";
+import { ICategory, ITag } from "../../../utils/types/schemas";
 
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
 
 type DCPProps = {
   props: {
-    bookmarks: IBookmark[];
-    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;

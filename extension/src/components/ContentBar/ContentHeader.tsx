@@ -1,22 +1,12 @@
-import { Dispatch, SetStateAction } from "react";
-import { IBookmark, ICategory } from "../../utils/types/schemas";
+import { useAppState } from "../../hooks/globalstate";
 import { GoBackWidget } from "./widgets/GoBackWidget";
 import { SearchWidget } from "./widgets/SearchWidget";
-import { useAppState } from "../../hooks/globalstate";
-
-type ContentHeaderProps = {
-  bookmarks: IBookmark[];
-  setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-  updateCategory?: (category: ICategory) => void;
-};
 
 /**
  * ContentHeader component renders a header section that conditionally displays
  * either a GoBackButton or a SearchWidget based on the presence of a bookmark to show.
  */
-export default function ContentHeader(props: ContentHeaderProps) {
-  const { bookmarks, setBookmarks } = props;
-
+export default function ContentHeader() {
   const { bookmarkToShow } = useAppState();
 
   return (
@@ -25,10 +15,7 @@ export default function ContentHeader(props: ContentHeaderProps) {
         <nav aria-label="Go back">
           <GoBackWidget />
         </nav>
-      ) : <SearchWidget
-        bookmarks={bookmarks}
-        setBookmarks={setBookmarks}
-      />}
+      ) : <SearchWidget />}
     </header>
   );
 }

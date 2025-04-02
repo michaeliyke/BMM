@@ -1,30 +1,24 @@
 import { DebouncedFunc, debounce } from "lodash-es";
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { useAppState } from "../../../hooks/globalstate";
 import { getBookmarks, weightedSearch } from "../../../utils/common";
 import { IBookmark } from "../../../utils/types/schemas";
-import { useAppState } from "../../../hooks/globalstate";
-
-type SearchWidgetProps = {
-  bookmarks: IBookmark[];
-  setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-};
 
 /**
  * SearchWidget component allows users to search and filter bookmarks.
 */
-export function SearchWidget(props: SearchWidgetProps) {
-  const { setBookmarks } = props;
-
+export function SearchWidget() {
   const {
     query,
     setQuery,
     grouping,
     filteredCategories,
+    setBookmarks,
   } = useAppState();
 
   const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 
-  const debouncedSearch = useCallback((query: string, bookmarks: IBookmark[], setBookmarks: Dispatch<SetStateAction<IBookmark[]>>) => {
+  const debouncedSearch = useCallback((query: string, bookmarks: IBookmark[], setBookmarks: (bookmarks: IBookmark[]) => void) => {
     if (!debouncedSearchRef.current) {
       debouncedSearchRef.current = debounce((q: string) => {
         setBookmarks(weightedSearch(q, bookmarks));

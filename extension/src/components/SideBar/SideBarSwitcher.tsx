@@ -1,14 +1,12 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
-import { IBookmark, ICategory } from "../../utils/types/schemas";
+import { useAppState } from "../../hooks/globalstate";
+import { ICategory } from "../../utils/types/schemas";
 import ByCategories from "./filter/ByCategories";
 import { ByCategoryTags } from "./filter/ByCategoryTags";
 import { ByTags } from "./filter/ByTags";
-import { useAppState } from "../../hooks/globalstate";
 
 type SBSProps = {
   props: {
-    bookmarks: IBookmark[];
-    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;

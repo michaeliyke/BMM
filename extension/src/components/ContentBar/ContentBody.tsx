@@ -1,15 +1,13 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { IBookmark, ICategory } from "../../utils/types/schemas";
+import { useAppState } from "../../hooks/globalstate";
+import { ICategory } from "../../utils/types/schemas";
 import BookmarkList from "./BookmarkList";
 import BookmarkView from "./BookmarkView";
 import ListArchived from "./ListArchived";
 import ListDeleted from "./ListDeleted";
 import ListFavorites from "./ListFavorites";
-import { useAppState } from "../../hooks/globalstate";
 
 type BookmarksDisplayProps = {
-  bookmarks: IBookmark[];
-  setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
 };
@@ -20,15 +18,13 @@ type BookmarksDisplayProps = {
  * component based on the presence of a `bookmarkToShow` prop.
  */
 export default function ContentBody(props: BookmarksDisplayProps) {
-  const { bookmarks, setBookmarks, data, setData } = props;
+  const { data, setData } = props;
 
   const [showDetails, setShowDetails] = useState<boolean>(true);
   const { filterBy, bookmarkToShow } = useAppState();
 
   if (bookmarkToShow) {
     return <BookmarkView
-      bookmarks={bookmarks}
-      setBookmarks={setBookmarks}
       data={data}
       setData={setData}
       showDetails={showDetails}
@@ -37,12 +33,7 @@ export default function ContentBody(props: BookmarksDisplayProps) {
   }
 
   if (filterBy === 'filter:archived') {
-    return <ListArchived
-      bookmarks={bookmarks}
-      setBookmarks={setBookmarks}
-      data={data}
-      setData={setData}
-    />;
+    return <ListArchived data={data} setData={setData} />;
   }
 
   if (filterBy === 'filter:deleted') {
@@ -53,10 +44,5 @@ export default function ContentBody(props: BookmarksDisplayProps) {
     return <ListFavorites />;
   }
 
-  return <BookmarkList
-    bookmarks={bookmarks}
-    setBookmarks={setBookmarks}
-    data={data}
-    setData={setData}
-  />;
+  return <BookmarkList data={data} setData={setData} />;
 }

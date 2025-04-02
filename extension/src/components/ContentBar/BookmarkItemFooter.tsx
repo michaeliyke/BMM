@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { PiHashBold } from "react-icons/pi";
 import { TiPlus } from "react-icons/ti";
 import { v4 as uuidv4 } from "uuid";
@@ -6,25 +6,20 @@ import Bookmark from "../../data/adapters/bookmark";
 import BookmarkTag from "../../data/adapters/bookmark_tag";
 import Category from "../../data/adapters/category";
 import Tag from "../../data/adapters/tag";
-import { IBookmark } from "../../utils/types/schemas";
 import { useAppState } from "../../hooks/globalstate";
-type FooterProps = {
-  bookmarks: IBookmark[];
-  setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-};
 
 /**
  * Footer component that displays a list of tags associated with a bookmark and allows adding new tags.
  */
-export default function BookmarkItemFooter(props: FooterProps) {
-  const { setBookmarks } = props;
+export default function BookmarkItemFooter() {
   const [showTagInput, setShowTagInput] = useState(false);
   const [newTag, setNewTag] = useState("");
   const {
     bookmarkToShow,
     setBookmarkToShow:
     setBookmark,
-    selectedCategory
+    setBookmarks,
+    selectedCategory,
   } = useAppState();
   const bookmark = bookmarkToShow;
   // if (bookmark === null) console.warn("No bookmark selected");

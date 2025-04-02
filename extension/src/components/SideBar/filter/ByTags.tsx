@@ -1,14 +1,12 @@
 import { debounce, DebouncedFunc } from "lodash-es";
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { FiHash, FiSearch } from "react-icons/fi";
-import { getTags, resetSelections, tagsSearch, toggleHighlightedClass } from "../../../utils/common";
-import { IBookmark, ICategory, ITag } from "../../../utils/types/schemas";
 import { useAppState } from "../../../hooks/globalstate";
+import { getTags, resetSelections, tagsSearch, toggleHighlightedClass } from "../../../utils/common";
+import { ICategory, ITag } from "../../../utils/types/schemas";
 
 type DAPProps = {
   props: {
-    bookmarks: IBookmark[];
-    setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
