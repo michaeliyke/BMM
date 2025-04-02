@@ -5,12 +5,11 @@ import { BsTrash } from 'react-icons/bs';
 import { FaClock, FaCommentDots, FaRegStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
 import { useAppState } from "../../hooks/globalstate";
-import { IBookmark, ITag } from "../../utils/types/schemas";
+import { IBookmark } from "../../utils/types/schemas";
 import { BookmarkEditForm } from "./BookmarkEditForm";
 import BookmarkItemFooter from "./BookmarkItemFooter";
 
 type BookmarkViewProps = {
-  selectedTag?: ITag | null;
   showDetails: boolean;
   setShowDetails: Dispatch<SetStateAction<boolean>>;
 };

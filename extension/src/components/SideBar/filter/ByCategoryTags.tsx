@@ -35,8 +35,7 @@ export function ByCategoryTags() {
 
   function toggleSelectedTag(tag: ITag, event: React.MouseEvent<HTMLElement>) {
     const target = event.currentTarget;
-    if (setSelectedTag)
-      setSelectedTag(tag);
+    setSelectedTag(tag);
     setBookmarkToShow(null); /* Allow this later */
 
     // Update the category text in the header
@@ -50,8 +49,7 @@ export function ByCategoryTags() {
     if (category) {
       setSelectedCategory(category.is_default !== 1 ? category : null);
       setBookmarkToShow(null);
-      if (setSelectedTag)
-        setSelectedTag(null);
+      setSelectedTag(null);
       // Update the category text in the header
       setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
       toggleHighlightedClass(target);

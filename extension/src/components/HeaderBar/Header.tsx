@@ -216,13 +216,6 @@ export default function Header() {
 
           {/* Submit Button */}
           <div className="form-control flex space-x-2">
-            {/*  <button
-                            type="button"
-                            className="py-2 pr-2 pl-1 rounded-lg tracking-wide border border-green-700 text-green-700 focus:ring-2 focus:ring-green-50 flex items-center"
-                        >
-                            <CiImport className="mr-1" />
-                            Import
-                        </button> */}
             <ImportDialog />
             <ExportWidget />
             <button

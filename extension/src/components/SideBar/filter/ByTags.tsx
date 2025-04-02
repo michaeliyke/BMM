@@ -52,8 +52,7 @@ export function ByTags() {
 
   function toggleSelected(tag: ITag, event: React.MouseEvent<HTMLLIElement>) {
     const target = event.currentTarget;
-    if (setSelectedTag)
-      setSelectedTag(tag);
+    setSelectedTag(tag);
     setBookmarkToShow(null); /* Allow this later */
 
     // Update the category text in the header
@@ -63,8 +62,7 @@ export function ByTags() {
 
   // Brings the selection and highlighting to the default state
   function restoreDefaultSection() {
-    if (setSelectedTag)
-      setSelectedTag(null);
+    setSelectedTag(null);
     setBookmarkToShow(null);
     // If the default category is already selected
     resetSelections("tag");
