@@ -90,3 +90,9 @@ function stateInitializer(set: TState): IState {
  * @type {IState}
  */
 export const useAppState = create<IState>(stateInitializer);
+
+/*
+  const [grouping, setGrouping] = useState(
+    (selectedCategory || defaultCategory).name +
+    (selectedTag ? ` # ${selectedTag.name}` : '')
+  ); */

@@ -18,15 +18,11 @@ type DCPProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };
 
 export function ByCategoryTags({ props }: DCPProps) {
-  const {
-    categories,
-    setGrouping,
-  } = props;
+  const { categories } = props;
 
   const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean; }>({});
   const [query, setQuery] = useState<string>('');
@@ -39,6 +35,7 @@ export function ByCategoryTags({ props }: DCPProps) {
     selectedCategory,
     setSelectedCategory,
     defaultCategory,
+    setGrouping,
   } = useAppState();
 
   function toggleExpand(category: ICategory) {
@@ -56,7 +53,7 @@ export function ByCategoryTags({ props }: DCPProps) {
 
     // Update the category text in the header
     toggleHighlightedClass(target, "tag");
-    if (selectedCategory && setGrouping)
+    if (selectedCategory)
       setGrouping(selectedCategory.name + (tag ? ` # ${tag.name}` : ''));
   }
 
@@ -68,8 +65,7 @@ export function ByCategoryTags({ props }: DCPProps) {
       if (setSelectedTag)
         setSelectedTag(null);
       // Update the category text in the header
-      if (setGrouping)
-        setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+      setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
       toggleHighlightedClass(target);
     }
   }
@@ -122,8 +118,7 @@ export function ByCategoryTags({ props }: DCPProps) {
   useEffect(() => {
     // Set the default category text in the header
     const category = selectedCategory || defaultCategory;
-    if (setGrouping) // Global state
-      setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+    setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
 
     if (!query)
       setCategories(categories);

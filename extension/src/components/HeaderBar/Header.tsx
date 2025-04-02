@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { v4 as uuid4 } from 'uuid';
 import Bookmark from "../../data/adapters/bookmark";
 import Category from "../../data/adapters/category";
@@ -14,40 +14,34 @@ import ExportWidget from "./ExportWidget";
 type rightSetData = React.Dispatch<React.SetStateAction<ICategory[]>>;
 type HeaderProps = {
   categories: ICategory[];
-  // setData takes in fn, a function that takes in the old state (ICategory[])
-  // and returns the new state (ICategory[])
-  // setData itself returns void
   setData: (fn: (categories: ICategory[]) => ICategory[]) => void;
-  grouping: string;
-  setGrouping?: Dispatch<SetStateAction<string>>;
 };
 
 
 /**
  * Header component for the Bookmark Manager application.
- *
- * @param {HeaderProps} props - The properties passed to the Header component.
- * @param {ICategory | null} props.selectedCategory - The currently selected category.
- * @param {Function} props.setData - Function to update the state data.
- * @param {ICategory} props.defaultCategory - The default category to use if no category is selected.
- * @param {string} props.grouping - The current grouping criteria.
- * @param {string | null} props.selectedTag - The currently selected tag.
- * @param {string} props.filterBy - The current filter criteria.
- *
- * @returns {JSX.Element} The rendered Header component.
  */
 export default function Header(props: HeaderProps) {
-  const {
-    setData,
-    grouping,
-  } = props;
+  const { setData } = props;
 
-  const { headerForm, selectedCategory, defaultCategory, selectedTag } = useAppState();
+  const {
+    headerForm,
+    selectedCategory,
+    defaultCategory,
+    selectedTag,
+    grouping,
+    setGrouping,
+  } = useAppState();
   const [url, setUrl] = useState(location.href);
   const [title, setTitle] = useState(document.title);
   const isButtonDisabled = !url || !title;
 
   useState(() => {
+
+    setGrouping(
+      (selectedCategory || defaultCategory).name + (selectedTag ? ` # ${selectedTag.name}` : '')
+    );
+
     getCurrentTabUrl()
       .then((url) => setUrl(url))
       .catch(console.error);

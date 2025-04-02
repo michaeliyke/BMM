@@ -32,15 +32,8 @@ export default function Home(props: IHomeProps) {
   const { data, setData } = props;
   const {
     headerForm,
-    selectedCategory,
-    selectedTag,
-    defaultCategory,
     setDefaultCategory,
   } = useAppState();
-  const [grouping, setGrouping] = useState(
-    (selectedCategory || defaultCategory).name +
-    (selectedTag ? ` # ${selectedTag.name}` : '')
-  );
   const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
   const [bookmarks, setBookmarksRaw] = useState<IBookmark[]>([]);
   // query: cleared in Sidebar header and, set and used in Content SearchWidget
@@ -75,19 +68,13 @@ export default function Home(props: IHomeProps) {
 
   return (
     <>
-      <Header
-        setData={setData}
-        categories={data}
-        grouping={grouping}
-        setGrouping={setGrouping}
-      />
+      <Header setData={setData} categories={data} />
 
       <section className={headerForm ? `pt-[128px]` : ''}>
         <SideBar
           props={{
             categories: data,
             setData,
-            setGrouping,
             bookmarks,
             setBookmarks,
             filteredCategories,
@@ -102,7 +89,6 @@ export default function Home(props: IHomeProps) {
           setBookmarks={setBookmarks}
           filteredCategories={filteredCategories}
           setFilteredCategories={setFilteredCategories}
-          grouping={grouping}
         />
       </section>
     </>

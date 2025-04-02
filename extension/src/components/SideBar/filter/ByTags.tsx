@@ -14,7 +14,6 @@ type DAPProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };
 
@@ -22,15 +21,18 @@ type DSI = Dispatch<SetStateAction<ITag[]>>;
 type CL = ICategory[];
 
 export function ByTags({ props }: DAPProps) {
-  const {
-    categories,
-    setGrouping,
-  } = props;
+  const { categories } = props;
 
   const [query, setQuery] = useState<string>('');
   const [tags, setTags] = useState<ITag[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(false);
-  const { setBookmarkToShow, selectedTag, defaultCategory, setSelectedTag } = useAppState();
+  const {
+    setBookmarkToShow,
+    selectedTag,
+    defaultCategory,
+    setSelectedTag,
+    setGrouping,
+  } = useAppState();
 
   /**
    * A reference to a debounced search function.
@@ -69,8 +71,7 @@ export function ByTags({ props }: DAPProps) {
 
     // Update the category text in the header
     toggleHighlightedClass(target, "tag");
-    if (defaultCategory && setGrouping)
-      setGrouping(defaultCategory.name + (tag ? ` # ${tag.name}` : ''));
+    setGrouping(defaultCategory.name + (tag ? ` # ${tag.name}` : ''));
   }
 
   // Brings the selection and highlighting to the default state
@@ -80,13 +81,11 @@ export function ByTags({ props }: DAPProps) {
     setBookmarkToShow(null);
     // If the default category is already selected
     resetSelections("tag");
-    if (defaultCategory && setGrouping)
-      setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+    setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
   }
 
   useEffect(() => {
-    if (setGrouping)
-      setGrouping(defaultCategory?.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+    setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
 
     if (!query)
       setTags(getTags(categories));

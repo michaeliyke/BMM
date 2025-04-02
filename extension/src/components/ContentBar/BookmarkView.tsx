@@ -108,7 +108,6 @@ function DetailsTab(bookmark: IBookmark, props: BookmarkViewProps) {
     </section>
     <hr className="my-3" />
     <BookmarkItemFooter
-      selectedCategory={null}
       setBookmarks={props.setBookmarks}
       bookmarks={props.bookmarks} />
   </>;

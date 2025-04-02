@@ -8,7 +8,6 @@ type SearchWidgetProps = {
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
   filteredCategories: ICategory[];
-  grouping: string;
 };
 
 /**
@@ -35,11 +34,9 @@ type SearchWidgetProps = {
  * />
  */
 export function SearchWidget(props: SearchWidgetProps) {
-  const {
-    setBookmarks, filteredCategories, grouping,
-  } = props;
+  const { setBookmarks, filteredCategories } = props;
 
-  const { query, setQuery } = useAppState();
+  const { query, setQuery, grouping } = useAppState();
 
   const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 

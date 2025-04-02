@@ -10,21 +10,17 @@ type ContentHeaderProps = {
   filteredCategories: ICategory[];
   setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
   updateCategory?: (category: ICategory) => void;
-  grouping: string;
 };
 
 /**
  * ContentHeader component renders a header section that conditionally displays
  * either a GoBackButton or a SearchWidget based on the presence of a bookmark to show.
- *
- * @returns {JSX.Element} The rendered ContentHeader component.
  */
 export default function ContentHeader(props: ContentHeaderProps) {
   const {
     filteredCategories,
     bookmarks,
     setBookmarks,
-    grouping,
   } = props;
 
   const { bookmarkToShow } = useAppState();
@@ -39,7 +35,6 @@ export default function ContentHeader(props: ContentHeaderProps) {
         filteredCategories={filteredCategories}
         bookmarks={bookmarks}
         setBookmarks={setBookmarks}
-        grouping={grouping}
       />}
     </header>
   );

@@ -14,7 +14,6 @@ type ContentBarProps = {
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
   filteredCategories: ICategory[];
   setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
-  grouping: string;
 };
 
 /**
@@ -62,7 +61,6 @@ export default function ContentBar(props: ContentBarProps) {
     setBookmarks,
     setFilteredCategories,
     filteredCategories,
-    grouping,
   } = props;
   const { selectedCategory } = useAppState();
 
@@ -85,7 +83,6 @@ export default function ContentBar(props: ContentBarProps) {
         setFilteredCategories={setFilteredCategories}
         bookmarks={bookmarks}
         setBookmarks={setBookmarks}
-        grouping={grouping}
       />
 
       <ContentBody

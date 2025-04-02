@@ -14,7 +14,6 @@ type SideBarHeaderProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };
 

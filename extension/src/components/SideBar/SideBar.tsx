@@ -13,7 +13,6 @@ type SideBarProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };
 
@@ -21,9 +20,7 @@ type SideBarProps = {
  * SideBar component that renders a sidebar with a header, variator, and footer.
  */
 export default function SideBar({ props }: SideBarProps) {
-  const {
-    setData,
-  } = props;
+  const { setData } = props;
 
   // return <SideBarVariator props={props} />;
   return (

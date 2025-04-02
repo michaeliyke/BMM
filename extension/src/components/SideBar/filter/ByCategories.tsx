@@ -21,7 +21,6 @@ type BCProps = {
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
-    setGrouping?: Dispatch<SetStateAction<string>>;
   };
 };
 
@@ -33,15 +32,17 @@ type CL = ICategory[];
  * Component for displaying and selecting categories in a sidebar.
  */
 export default function ByCategories({ props }: BCProps) {
-  const {
-    categories,
-    setGrouping,
-  } = props;
+  const { categories } = props;
 
   const [query, setQuery] = useState<string>("");
   const [_categories, setCategories] = useState<ICategory[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(true);
-  const { setBookmarkToShow, defaultCategory, setSelectedCategory } = useAppState();
+  const {
+    setBookmarkToShow,
+    defaultCategory,
+    setSelectedCategory,
+    setGrouping,
+  } = useAppState();
 
   function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
     setSelectedCategory(category.is_default !== 1 ? category : null); // Global state
