@@ -1,23 +1,13 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { useEffect } from "react";
 import { useAppState } from "../../hooks/globalstate";
-import { ICategory } from "../../utils/types/schemas";
 import ByCategories from "./filter/ByCategories";
 import { ByCategoryTags } from "./filter/ByCategoryTags";
 import { ByTags } from "./filter/ByTags";
 
-type SBSProps = {
-  props: {
-    categories: ICategory[];
-    setData: Dispatch<SetStateAction<ICategory[]>>;
-    updateCategory?: (category: ICategory) => void;
-  };
-};
-
-
 /**
  * A component that renders different sidebar variations based on the filter type provided in the props.
  */
-export default function SideBarSwitcher({ props }: SBSProps) {
+export default function SideBarSwitcher() {
   const { headerForm, setHeaderForm, filterBy } = useAppState();
 
   useEffect(() => {
@@ -33,12 +23,12 @@ export default function SideBarSwitcher({ props }: SBSProps) {
 
   switch (filterBy) {
     case 'filter:categories':
-      return <ByCategories props={props} />;
+      return <ByCategories />;
     case 'filter:tags':
-      return <ByTags props={props} />
+      return <ByTags />
     case 'filter:category/tags':
-      return <ByCategoryTags props={props} />
+      return <ByCategoryTags />
     default:
-      return <ByCategories props={props} />;
+      return <ByCategories />;
   }
 }

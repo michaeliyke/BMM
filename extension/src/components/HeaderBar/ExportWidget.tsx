@@ -1,26 +1,20 @@
 import { FaFileUpload } from "react-icons/fa";
-import { ICategory } from "../../utils/types/schemas";
 import { markImportType } from "../../utils/importExport";
+import { useAppState } from "../../hooks/globalstate";
 
-// define the props type
-type propsType = {
-  categories: ICategory[];
-};
-
-export default function ExportWidget(props: propsType) {
-  const { categories } = props;
-
+export default function ExportWidget() {
+  const { data } = useAppState();
   // Button onclick handler: make a json of all categories and pop up a download
   // dialog to save the file as bookmarks_data.json
   function handleExport(event: React.MouseEvent) {
-    if (!categories || categories.length === 0) {
+    if (data.length === 0) {
       event.preventDefault();
       event.stopPropagation();
       console.error("No categories to export");
       return;
     }
-    markImportType(categories);
-    const dataStr = JSON.stringify(categories, null, 2);
+    markImportType(data);
+    const dataStr = JSON.stringify(data, null, 2);
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -37,10 +31,6 @@ export default function ExportWidget(props: propsType) {
         onClick={handleExport}
         title="Export bookmarks"
       >
-        {/* Icon */}
-        {/* <CiImport className="mr-1" /> */}
-        {/* <CiExport className="mr-1" /> */}
-        {/* <CiExport className="mr-1" /> */}
         <FaFileUpload className="mr-1" />
         Export
       </button>

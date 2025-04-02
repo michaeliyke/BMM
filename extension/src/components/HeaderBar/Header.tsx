@@ -5,25 +5,16 @@ import Category from "../../data/adapters/category";
 import CategoryBookmark from "../../data/adapters/category_bookmark";
 import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
+import { useAppState } from "../../hooks/globalstate";
 import { getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
 import { IBookmark, ICategory } from "../../utils/types/schemas";
-import ImportDialog from "./ImportDialog";
-import { useAppState } from "../../hooks/globalstate";
 import ExportWidget from "./ExportWidget";
-
-type rightSetData = React.Dispatch<React.SetStateAction<ICategory[]>>;
-type HeaderProps = {
-  categories: ICategory[];
-  setData: (fn: (categories: ICategory[]) => ICategory[]) => void;
-};
-
+import ImportDialog from "./ImportDialog";
 
 /**
  * Header component for the Bookmark Manager application.
  */
-export default function Header(props: HeaderProps) {
-  const { setData } = props;
-
+export default function Header() {
   const {
     headerForm,
     selectedCategory,
@@ -31,6 +22,7 @@ export default function Header(props: HeaderProps) {
     selectedTag,
     grouping,
     setGrouping,
+    setData,
   } = useAppState();
   const [url, setUrl] = useState(location.href);
   const [title, setTitle] = useState(document.title);
@@ -231,8 +223,8 @@ export default function Header(props: HeaderProps) {
                             <CiImport className="mr-1" />
                             Import
                         </button> */}
-            <ImportDialog setData={setData as rightSetData} />
-            <ExportWidget categories={props.categories} />
+            <ImportDialog />
+            <ExportWidget />
             <button
               disabled={isButtonDisabled}
               type="button"

@@ -1,18 +1,9 @@
 import moment from "moment";
-import { Dispatch, SetStateAction } from "react";
 import { useAppState } from "../../hooks/globalstate";
 import { filterArchived, sortedBookmarks } from "../../utils/common";
-import { ICategory } from "../../utils/types/schemas";
 
-type ListArchivedProps = {
-  data: ICategory[];
-  setData: Dispatch<SetStateAction<ICategory[]>>;
-};
-
-
-export default function ListArchived(props: ListArchivedProps) {
-  const { data, } = props;
-  const { setBookmarkToShow } = useAppState();
+export default function ListArchived() {
+  const { setBookmarkToShow, data } = useAppState();
 
   return (
     <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">

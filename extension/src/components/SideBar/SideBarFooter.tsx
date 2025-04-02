@@ -1,25 +1,17 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { MdAdd } from "react-icons/md";
+import { v4 as uuid4 } from 'uuid';
 import Category from "../../data/adapters/category";
 import Tag from "../../data/adapters/tag";
-import { ICategory } from "../../utils/types/schemas";
-import { v4 as uuid4 } from 'uuid';
 import { useAppState } from "../../hooks/globalstate";
+import { ICategory } from "../../utils/types/schemas";
 
-type SideBarFooterProps = {
-  setData: Dispatch<SetStateAction<ICategory[]>>;
-};
-
-
-export default function SideBarFooter(props: SideBarFooterProps) {
-
-  const { setData, } = props;
-
+export default function SideBarFooter() {
   const [showCategoryPopup, setShowCategoryPopup] = useState(false);
   const [showTagPopup, setShowTagPopup] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [tagName, setTagName] = useState("");
-  const { selectedCategory } = useAppState();
+  const { selectedCategory, setData } = useAppState();
 
 
   const handleCreateCategory = () => {

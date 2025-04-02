@@ -5,20 +5,10 @@ import { useAppState } from "../../../hooks/globalstate";
 import { getTags, resetSelections, tagsSearch, toggleHighlightedClass } from "../../../utils/common";
 import { ICategory, ITag } from "../../../utils/types/schemas";
 
-type DAPProps = {
-  props: {
-    categories: ICategory[];
-    setData: Dispatch<SetStateAction<ICategory[]>>;
-    updateCategory?: (category: ICategory) => void;
-  };
-};
-
 type DSI = Dispatch<SetStateAction<ITag[]>>;
 type CL = ICategory[];
 
-export function ByTags({ props }: DAPProps) {
-  const { categories } = props;
-
+export function ByTags() {
   const [query, setQuery] = useState<string>('');
   const [tags, setTags] = useState<ITag[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(false);
@@ -28,6 +18,7 @@ export function ByTags({ props }: DAPProps) {
     defaultCategory,
     setSelectedTag,
     setGrouping,
+    data,
   } = useAppState();
 
   /**
@@ -56,7 +47,7 @@ export function ByTags({ props }: DAPProps) {
 
   function handleSearch(query: string) {
     setQuery(query);
-    search(query, categories, setTags);
+    search(query, data, setTags);
   }
 
   function toggleSelected(tag: ITag, event: React.MouseEvent<HTMLLIElement>) {
@@ -84,7 +75,7 @@ export function ByTags({ props }: DAPProps) {
     setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
 
     if (!query)
-      setTags(getTags(categories));
+      setTags(getTags(data));
 
     return () => {
       // Clean up the debounced search function after it has executed
@@ -94,7 +85,7 @@ export function ByTags({ props }: DAPProps) {
       }
     };
 
-  }, [setGrouping, defaultCategory.name, selectedTag, query, categories, hasExecuted]);
+  }, [setGrouping, defaultCategory.name, selectedTag, query, data, hasExecuted]);
 
   return (
     <section className="filtered-list bg-white -ml-[15px] w-64 h-full overflow-y-auto border-r border-gray-200">

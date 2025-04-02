@@ -1,23 +1,21 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { ICategory } from "../../utils/types/schemas";
 import Bookmark from "../../data/adapters/bookmark";
 import { useAppState } from "../../hooks/globalstate";
+import { ICategory } from "../../utils/types/schemas";
 
 
 export interface BookmarkEditFormProps {
   isEditing: boolean;
   setIsEditing: Dispatch<SetStateAction<boolean>>;
-  data: ICategory[];
-  setData: Dispatch<SetStateAction<ICategory[]>>;
 }
 
 /**
  * BookmarkEditForm component allows users to edit the details of a bookmark.
  */
 export function BookmarkEditForm(props: BookmarkEditFormProps) {
-  const { setIsEditing, setData } = props;
-  const { bookmarkToShow } = useAppState();
-  const bookmark = bookmarkToShow!;
+  const { setIsEditing } = props;
+  const { bookmarkToShow, setData } = useAppState();
+  const bookmark = bookmarkToShow!; // Non-null assertion operator to assert not null
   const [title, setTitle] = useState<string>(bookmark.title);
   const [url, setUrl] = useState<string>(bookmark.url);
   const [description, setDescription] = useState<string>(bookmark.description);

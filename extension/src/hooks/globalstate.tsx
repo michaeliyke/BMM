@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { create } from "zustand";
 import { IBookmark, ICategory, ITag, TFilters } from "../utils/types/schemas";
 
@@ -24,7 +25,7 @@ interface IState {
   bookmarks: IBookmark[];
   setBookmarks: (bookmarks: IBookmark[] | ((bookmarks: IBookmark[]) => IBookmark[])) => void;
   data: ICategory[];
-  setData: (data: ICategory[]) => void;
+  setData: Dispatch<SetStateAction<ICategory[]>>;
   filteredBookmarks: IBookmark[];
   setFilteredBookmarks: (bookmarks: IBookmark[]) => void;
 }
@@ -93,8 +94,12 @@ function stateInitializer(set: TState): IState {
       }
     },
 
-    setData(data: ICategory[]) {
-      set({ data });
+    setData(data: SetStateAction<ICategory[]>) {
+      set((state) => ({
+        data: typeof data === 'function'
+          ? (data as (prev: ICategory[]) => ICategory[])(state.data)
+          : data,
+      }));
     },
 
     setDefaultCategory(category: ICategory) {

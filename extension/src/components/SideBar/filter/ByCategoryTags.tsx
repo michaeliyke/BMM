@@ -9,16 +9,7 @@ import { ICategory, ITag } from "../../../utils/types/schemas";
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
 
-type DCPProps = {
-  props: {
-    categories: ICategory[];
-    setData: Dispatch<SetStateAction<ICategory[]>>;
-    updateCategory?: (category: ICategory) => void;
-  };
-};
-
-export function ByCategoryTags({ props }: DCPProps) {
-  const { categories } = props;
+export function ByCategoryTags() {
 
   const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean; }>({});
   const [query, setQuery] = useState<string>('');
@@ -32,6 +23,7 @@ export function ByCategoryTags({ props }: DCPProps) {
     setSelectedCategory,
     defaultCategory,
     setGrouping,
+    data,
   } = useAppState();
 
   function toggleExpand(category: ICategory) {
@@ -108,7 +100,7 @@ export function ByCategoryTags({ props }: DCPProps) {
    */
   function handleSearch(query: string) {
     setQuery(query);
-    search(query, categories, setCategories);
+    search(query, data, setCategories);
   }
 
   useEffect(() => {
@@ -117,7 +109,7 @@ export function ByCategoryTags({ props }: DCPProps) {
     setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
 
     if (!query)
-      setCategories(categories);
+      setCategories(data);
 
     return () => {
       // Cancel the debounced search function when the component unmounts.
@@ -126,7 +118,7 @@ export function ByCategoryTags({ props }: DCPProps) {
         setHasExecuted(false);
       }
     };
-  }, [defaultCategory, setGrouping, selectedTag, selectedCategory, categories, query, setCategories, hasExecuted]);
+  }, [defaultCategory, setGrouping, selectedTag, selectedCategory, data, query, setCategories, hasExecuted]);
 
 
   return (

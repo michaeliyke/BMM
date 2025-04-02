@@ -5,16 +5,13 @@ import { FaFileUpload } from "react-icons/fa";
 import { getBookmarks } from "../../utils/common";
 import { getImportHandler, isImportData, validateImported } from "../../utils/importExport";
 import { IBookmark, ICategory, ImportData } from "../../utils/types/schemas";
+import { useAppState } from "../../hooks/globalstate";
 
-type IPProps = {
-  setData: React.Dispatch<React.SetStateAction<ICategory[]>>;
-}
-
-export default function ImportDialog(props: IPProps) {
+export default function ImportDialog() {
   const [isFileLoaded, setIsFileLoaded] = useState(false);
   const [importData, setImportData] = useState<ImportData>([]);
   const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
-  const { setData } = props;
+  const { setData } = useAppState();
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];

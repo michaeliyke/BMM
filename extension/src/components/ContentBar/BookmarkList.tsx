@@ -1,5 +1,5 @@
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
 import { FaRegStar, FaStar } from "react-icons/fa";
@@ -8,24 +8,17 @@ import Bookmark from "../../data/adapters/bookmark";
 import { useAppState } from "../../hooks/globalstate";
 import { sortedBookmarks } from "../../utils/common";
 import ReadableDate from "../../utils/readabledate";
-import { IBookmark, ICategory } from "../../utils/types/schemas";
+import { IBookmark } from "../../utils/types/schemas";
 import BookmarkItemFooter from "./BookmarkItemFooter";
 import CategoryDropdown from "./CategoryDropDown";
 import { ArchiveDialog } from "./dialogs/ArchiveDialog";
 import { DeleteDialog } from "./dialogs/DeleteDialog";
 
-type BookmarkListProps = {
-  data: ICategory[];
-  setData: Dispatch<SetStateAction<ICategory[]>>;
-};
-
 /**
  * BookmarkList component displays a list of bookmarks filtered by a selected tag.
  * Each bookmark can be viewed, edited, archived, or deleted.
  */
-export default function BookmarkList(props: BookmarkListProps) {
-  const { data, } = props;
-
+export default function BookmarkList() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [activeBookmarkIndex, setActiveBookmarkIndex] = useState<number>(-1);
@@ -76,7 +69,7 @@ export default function BookmarkList(props: BookmarkListProps) {
                 </button>
               </h2>
               {/* Categories Dropdown */}
-              <CategoryDropdown bookmark={bookmark} data={data} />
+              <CategoryDropdown bookmark={bookmark} />
 
             </div>
             <nav className="flex items-center space-x-5">
@@ -138,16 +131,12 @@ export default function BookmarkList(props: BookmarkListProps) {
         </article>
       ))}
       <ArchiveDialog
-        data={props.data}
-        setData={props.setData}
         bookmark={filteredBookmarks[activeBookmarkIndex]}
         archiveDialogOpen={archiveDialogOpen}
         setArchiveDialogOpen={setArchiveDialogOpen}
         setActiveBookmarkIndex={setActiveBookmarkIndex}
       />
       <DeleteDialog
-        data={props.data}
-        setData={props.setData}
         bookmark={filteredBookmarks[activeBookmarkIndex]}
         deleteDialogOpen={deleteDialogOpen}
         setDeleteDialogOpen={setDeleteDialogOpen}

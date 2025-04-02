@@ -11,15 +11,6 @@ import { FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { useAppState } from "../../../hooks/globalstate";
 import { ICategory } from "../../../utils/types/schemas";
-
-type BCProps = {
-  props: {
-    categories: ICategory[];
-    setData: Dispatch<SetStateAction<ICategory[]>>;
-    updateCategory?: (category: ICategory) => void;
-  };
-};
-
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
 
@@ -27,9 +18,7 @@ type CL = ICategory[];
 /**
  * Component for displaying and selecting categories in a sidebar.
  */
-export default function ByCategories({ props }: BCProps) {
-  const { categories } = props;
-
+export default function ByCategories() {
   const [query, setQuery] = useState<string>("");
   const [_categories, setCategories] = useState<ICategory[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(true);
@@ -38,6 +27,7 @@ export default function ByCategories({ props }: BCProps) {
     defaultCategory,
     setSelectedCategory,
     setGrouping,
+    data,
   } = useAppState();
 
   function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
@@ -78,13 +68,13 @@ export default function ByCategories({ props }: BCProps) {
    */
   function handleSearch(query: string) {
     setQuery(query);
-    search(query, categories, setCategories);
+    search(query, data, setCategories);
   }
 
   useEffect(() => {
     // Set the default category text in the header
     setGrouping(defaultCategory.name); // Global state
-    setCategories(categories);
+    setCategories(data);
     return () => {
       // Cancel the debounced search function when the component unmounts.
       if (searchFnRef.current && hasExecuted) {
@@ -92,7 +82,7 @@ export default function ByCategories({ props }: BCProps) {
         setHasExecuted(false);
       }
     };
-  }, [defaultCategory.name, setGrouping, searchFnRef, categories, hasExecuted]);
+  }, [defaultCategory.name, setGrouping, searchFnRef, data, hasExecuted]);
 
   return (
     <section className="filtered-list -ml-[15px] bg-white w-64 h-full overflow-y-auto border-r border-gray-200">

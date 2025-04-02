@@ -5,14 +5,12 @@ import { BsTrash } from 'react-icons/bs';
 import { FaClock, FaCommentDots, FaRegStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
 import { useAppState } from "../../hooks/globalstate";
-import { IBookmark, ICategory, ITag } from "../../utils/types/schemas";
+import { IBookmark, ITag } from "../../utils/types/schemas";
 import { BookmarkEditForm } from "./BookmarkEditForm";
 import BookmarkItemFooter from "./BookmarkItemFooter";
 
 type BookmarkViewProps = {
   selectedTag?: ITag | null;
-  data: ICategory[];
-  setData: Dispatch<SetStateAction<ICategory[]>>;
   showDetails: boolean;
   setShowDetails: Dispatch<SetStateAction<boolean>>;
 };
@@ -59,8 +57,6 @@ export default function BookmarkView(props: BookmarkViewProps) {
       <BookmarkEditForm
         isEditing={isEditing}
         setIsEditing={setIsEditing}
-        data={props.data}
-        setData={props.setData}
       /> :
       <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
         <article
