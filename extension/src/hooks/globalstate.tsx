@@ -18,6 +18,15 @@ interface IState {
   setSelectedCategory: (value: ICategory | null) => void;
   defaultCategory: ICategory;
   setDefaultCategory: (category: ICategory) => void;
+
+  filteredCategories: ICategory[];
+  setFilteredCategories: (categories: ICategory[]) => void;
+  bookmarks: IBookmark[];
+  setBookmarks: (bookmarks: IBookmark[]) => void;
+  data: ICategory[];
+  setData: (data: ICategory[]) => void;
+  filteredBookmarks: IBookmark[];
+  setFilteredBookmarks: (bookmarks: IBookmark[]) => void;
 }
 
 type TState = {
@@ -48,6 +57,38 @@ function stateInitializer(set: TState): IState {
       updated_at: (new Date()).toUTCString(),
       tags: [],
       bookmarks: []
+    },
+    filteredCategories: [],
+    bookmarks: [],
+    data: [],
+    filteredBookmarks: [],
+
+
+    setFilteredCategories: (categories: ICategory[]) => {
+      set({ filteredCategories: categories });
+    },
+
+    setFilteredBookmarks: (bookmarks: IBookmark[]) => {
+      set({ filteredBookmarks: bookmarks });
+    },
+
+    setBookmarks: (bookmarks: IBookmark[]) => {
+      // Use a map to ensure that the bookmarks are unique
+      set(() => {
+        const uniqueBookmarks = new Map<string, IBookmark>();
+        const filteredBookmarks = bookmarks.filter((bookmark) => {
+          if (bookmark.archived === 1 || uniqueBookmarks.has(bookmark.id)) {
+            return false;
+          }
+          uniqueBookmarks.set(bookmark.id, bookmark);
+          return true;
+        });
+        return { bookmarks: filteredBookmarks };
+      });
+    },
+
+    setData: (data: ICategory[]) => {
+      set({ data });
     },
 
     setDefaultCategory: (category: ICategory) => {

@@ -1,42 +1,26 @@
 import { DebouncedFunc, debounce } from "lodash-es";
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef } from "react";
 import { getBookmarks, weightedSearch } from "../../../utils/common";
-import { IBookmark, ICategory } from "../../../utils/types/schemas";
+import { IBookmark } from "../../../utils/types/schemas";
 import { useAppState } from "../../../hooks/globalstate";
 
 type SearchWidgetProps = {
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-  filteredCategories: ICategory[];
 };
 
 /**
  * SearchWidget component allows users to search and filter bookmarks.
- *
- * @param {SearchWidgetProps} props - The properties for the SearchWidget component.
- * @param {Dispatch<SetStateAction<IBookmark[]>>} props.setBookmarks - Function to update the list of bookmarks.
- * @param {string[]} props.filteredCategories - The categories to filter the bookmarks.
- * @param {string} props.query - The current search query.
- * @param {Dispatch<SetStateAction<string>>} props.setQuery - Function to update the search query.
- * @param {string} [props.grouping] - Optional grouping filter for the search.
- *
- * @returns {JSX.Element} The rendered SearchWidget component.
- *
- * @component
- *
- * @example
- * <SearchWidget
- *   setBookmarks={setBookmarks}
- *   filteredCategories={filteredCategories}
- *   query={query}
- *   setQuery={setQuery}
- *   grouping={grouping}
- * />
- */
+*/
 export function SearchWidget(props: SearchWidgetProps) {
-  const { setBookmarks, filteredCategories } = props;
+  const { setBookmarks } = props;
 
-  const { query, setQuery, grouping } = useAppState();
+  const {
+    query,
+    setQuery,
+    grouping,
+    filteredCategories,
+  } = useAppState();
 
   const debouncedSearchRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
 

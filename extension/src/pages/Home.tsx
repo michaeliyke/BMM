@@ -15,18 +15,6 @@ export type IHomeProps = {
  * The `Home` component is the main page of the application. It manages the state and interactions
  * for displaying and filtering categories, bookmarks, and tags. It also handles the default category
  * and updates to categories.
- *
- * @param {IHomeProps} props - The properties passed to the component.
- * @param {ICategory[]} props.data - The list of categories.
- * @param {React.Dispatch<React.SetStateAction<ICategory[]>>} props.setData - The function to update the list of categories.
- *
- * @returns {JSX.Element} The rendered Home component.
- *
- * @component
- * @example
- * return (
- *   <Home data={data} setData={setData} />
- * )
  */
 export default function Home(props: IHomeProps) {
   const { data, setData } = props;
@@ -34,9 +22,7 @@ export default function Home(props: IHomeProps) {
     headerForm,
     setDefaultCategory,
   } = useAppState();
-  const [filteredCategories, setFilteredCategories] = useState<ICategory[]>([]);
   const [bookmarks, setBookmarksRaw] = useState<IBookmark[]>([]);
-  // query: cleared in Sidebar header and, set and used in Content SearchWidget
 
   // Wrapper function to for setBookmarks: filter out archived bookmarks
   const setBookmarks = useCallback((bookmarks: SetStateAction<IBookmark[]>): void => {
@@ -77,8 +63,6 @@ export default function Home(props: IHomeProps) {
             setData,
             bookmarks,
             setBookmarks,
-            filteredCategories,
-            setFilteredCategories,
           }}
         />
 
@@ -87,8 +71,6 @@ export default function Home(props: IHomeProps) {
           setData={setData}
           bookmarks={bookmarks}
           setBookmarks={setBookmarks}
-          filteredCategories={filteredCategories}
-          setFilteredCategories={setFilteredCategories}
         />
       </section>
     </>

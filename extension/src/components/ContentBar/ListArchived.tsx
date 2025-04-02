@@ -7,7 +7,6 @@ import { useAppState } from "../../hooks/globalstate";
 type ListArchivedProps = {
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-  filteredCategories: ICategory[];
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
 };

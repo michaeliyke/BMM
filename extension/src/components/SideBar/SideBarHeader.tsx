@@ -9,8 +9,6 @@ type SideBarHeaderProps = {
   props: {
     bookmarks: IBookmark[];
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-    filteredCategories: ICategory[];
-    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
@@ -19,21 +17,16 @@ type SideBarHeaderProps = {
 
 /**
  * SideBarHeader component renders a header with a filter selection dropdown.
- *
- * @component
- * @param {SideBarHeaderProps} props - The properties passed to the component.
- * @param {string} props.filterBy - The current filter selection.
- * @param {Function} props.setFilterBy - Function to update the filter selection.
- * @param {Function} props.setBookmarks - Function to update the bookmarks based on the filter.
- * @param {Array} props.filteredCategories - The list of filtered categories.
- * @param {Function} props.setQuery - Function to update the search query.
- *
- * @returns {JSX.Element} The rendered SideBarHeader component.
  */
 export default function SideBarHeader({ props }: SideBarHeaderProps) {
-  const { setBookmarks, filteredCategories, } = props;
+  const { setBookmarks } = props;
 
-  const { setQuery, setFilterBy, filterBy } = useAppState();
+  const {
+    setQuery,
+    setFilterBy,
+    filterBy,
+    filteredCategories,
+  } = useAppState();
 
   function handleFilterSelection(value: TFilters) {
     if (setFilterBy) {

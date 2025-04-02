@@ -9,8 +9,6 @@ type SBSProps = {
   props: {
     bookmarks: IBookmark[];
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-    filteredCategories: ICategory[];
-    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;

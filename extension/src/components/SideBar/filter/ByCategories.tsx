@@ -16,8 +16,6 @@ type BCProps = {
   props: {
     bookmarks: IBookmark[];
     setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-    filteredCategories: ICategory[];
-    setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
     categories: ICategory[];
     setData: Dispatch<SetStateAction<ICategory[]>>;
     updateCategory?: (category: ICategory) => void;
@@ -47,8 +45,7 @@ export default function ByCategories({ props }: BCProps) {
   function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
     setSelectedCategory(category.is_default !== 1 ? category : null); // Global state
     setBookmarkToShow(null); // Global state
-    if (setGrouping) // Update the category text in the header
-      setGrouping(category.name); // Global state
+    setGrouping(category.name); // Global state
     toggleHighlightedClass(event.currentTarget, "category");
   }
 
@@ -88,8 +85,7 @@ export default function ByCategories({ props }: BCProps) {
 
   useEffect(() => {
     // Set the default category text in the header
-    if (setGrouping)
-      setGrouping(defaultCategory?.name); // Global state
+    setGrouping(defaultCategory.name); // Global state
     setCategories(categories);
     return () => {
       // Cancel the debounced search function when the component unmounts.

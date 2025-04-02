@@ -7,8 +7,6 @@ import { useAppState } from "../../hooks/globalstate";
 type ContentHeaderProps = {
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-  filteredCategories: ICategory[];
-  setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
   updateCategory?: (category: ICategory) => void;
 };
 
@@ -17,11 +15,7 @@ type ContentHeaderProps = {
  * either a GoBackButton or a SearchWidget based on the presence of a bookmark to show.
  */
 export default function ContentHeader(props: ContentHeaderProps) {
-  const {
-    filteredCategories,
-    bookmarks,
-    setBookmarks,
-  } = props;
+  const { bookmarks, setBookmarks } = props;
 
   const { bookmarkToShow } = useAppState();
 
@@ -32,7 +26,6 @@ export default function ContentHeader(props: ContentHeaderProps) {
           <GoBackWidget />
         </nav>
       ) : <SearchWidget
-        filteredCategories={filteredCategories}
         bookmarks={bookmarks}
         setBookmarks={setBookmarks}
       />}

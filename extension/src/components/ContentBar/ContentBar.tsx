@@ -12,57 +12,18 @@ type ContentBarProps = {
   updateCategory?: (category: ICategory) => void;
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-  filteredCategories: ICategory[];
-  setFilteredCategories: Dispatch<SetStateAction<ICategory[]>>;
 };
 
 /**
  * ContentBar component is responsible for rendering the content section of the application.
  * It includes a header, body, and footer, and manages the state of bookmarks and filtered categories.
- *
- * @component
- * @param {ContentBarProps} props - The properties passed to the component.
- * @param {Array} props.data - The data to be displayed.
- * @param {Object} props.selectedCategory - The currently selected category.
- * @param {Object} props.bookmarkToShow - The bookmark to be displayed.
- * @param {Function} props.setBookmarkToShow - Function to set the bookmark to be displayed.
- * @param {Object} props.selectedTag - The currently selected tag.
- * @param {Array} props.bookmarks - The list of bookmarks.
- * @param {Function} props.setBookmarks - Function to set the list of bookmarks.
- * @param {Function} props.setFilteredCategories - Function to set the filtered categories.
- * @param {Array} props.filteredCategories - The list of filtered categories.
- * @param {string} props.query - The search query.
- * @param {Function} props.setQuery - Function to set the search query.
- * @param {string} props.grouping - The grouping criteria.
- *
- * @returns {JSX.Element} The rendered ContentBar component.
- *
- * @example
- * <ContentBar
- *   data={data}
- *   selectedCategory={selectedCategory}
- *   bookmarkToShow={bookmarkToShow}
- *   setBookmarkToShow={setBookmarkToShow}
- *   selectedTag={selectedTag}
- *   bookmarks={bookmarks}
- *   setBookmarks={setBookmarks}
- *   setFilteredCategories={setFilteredCategories}
- *   filteredCategories={filteredCategories}
- *   query={query}
- *   setQuery={setQuery}
- *   grouping={grouping}
- * />
  */
 export default function ContentBar(props: ContentBarProps) {
+  const { data, setData, bookmarks, setBookmarks } = props;
   const {
-    data,
-    setData,
-    bookmarks,
-    setBookmarks,
+    selectedCategory,
     setFilteredCategories,
-    filteredCategories,
-  } = props;
-  const { selectedCategory } = useAppState();
+  } = useAppState();
 
   const sel = selectedCategory;
 
@@ -73,20 +34,14 @@ export default function ContentBar(props: ContentBarProps) {
     setBookmarks(getBookmarks(x));
   }, [selectedCategory, data, sel, setFilteredCategories, setBookmarks]);
 
-  // console.log("Filtered Categories: ", data, filteredCategories);
-  // console.log("Filtered Bookmarks: ", data, bookmarks);
-
   return (
     <article className="content mt-0">
       <ContentHeader
-        filteredCategories={filteredCategories}
-        setFilteredCategories={setFilteredCategories}
         bookmarks={bookmarks}
         setBookmarks={setBookmarks}
       />
 
       <ContentBody
-        filteredCategories={filteredCategories}
         bookmarks={bookmarks}
         setBookmarks={setBookmarks}
         data={data}

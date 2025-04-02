@@ -12,7 +12,6 @@ import { useAppState } from "../../hooks/globalstate";
 type BookmarkViewProps = {
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-  filteredCategories: ICategory[];
   selectedTag?: ITag | null;
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;

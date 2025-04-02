@@ -10,7 +10,6 @@ import { useAppState } from "../../hooks/globalstate";
 type BookmarksDisplayProps = {
   bookmarks: IBookmark[];
   setBookmarks: Dispatch<SetStateAction<IBookmark[]>>;
-  filteredCategories: ICategory[];
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
 };
@@ -21,20 +20,13 @@ type BookmarksDisplayProps = {
  * component based on the presence of a `bookmarkToShow` prop.
  */
 export default function ContentBody(props: BookmarksDisplayProps) {
-  const {
-    filteredCategories,
-    bookmarks,
-    setBookmarks,
-    data,
-    setData,
-  } = props;
+  const { bookmarks, setBookmarks, data, setData } = props;
 
   const [showDetails, setShowDetails] = useState<boolean>(true);
   const { filterBy, bookmarkToShow } = useAppState();
 
   if (bookmarkToShow) {
     return <BookmarkView
-      filteredCategories={filteredCategories}
       bookmarks={bookmarks}
       setBookmarks={setBookmarks}
       data={data}
@@ -46,7 +38,6 @@ export default function ContentBody(props: BookmarksDisplayProps) {
 
   if (filterBy === 'filter:archived') {
     return <ListArchived
-      filteredCategories={filteredCategories}
       bookmarks={bookmarks}
       setBookmarks={setBookmarks}
       data={data}
@@ -63,7 +54,6 @@ export default function ContentBody(props: BookmarksDisplayProps) {
   }
 
   return <BookmarkList
-    filteredCategories={filteredCategories}
     bookmarks={bookmarks}
     setBookmarks={setBookmarks}
     data={data}
