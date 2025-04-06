@@ -86,7 +86,7 @@ export function ByTags() {
   }, [setGrouping, defaultCategory.name, selectedTag, query, data, hasExecuted]);
 
   return (
-    <section className="filtered-list bg-white -ml-[15px] w-64 h-full overflow-y-auto border-r border-gray-200">
+    <section className="filtered-list w-full h-full overflow-y-auto">
       {/* Search Bar */}
       <label htmlFor="tag-search" className="sr-only">
         Search Tags

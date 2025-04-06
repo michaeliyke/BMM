@@ -10,7 +10,7 @@ export default function ContentHeader() {
   const { bookmarkToShow } = useAppState();
 
   return (
-    <header className="flex items-center justify-center p-2 bg-gray-100 border-b border-gray-200">
+    <header className="flex items-center justify-center p-2 bg-gray-_100 border border-gray-200">
       {bookmarkToShow ? (
         <nav aria-label="Go back">
           <GoBackWidget />

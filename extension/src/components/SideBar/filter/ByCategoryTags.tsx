@@ -120,7 +120,7 @@ export function ByCategoryTags() {
 
 
   return (
-    <section className="filtered-list -ml-[15px]  bg-white w-64 h-full overflow-y-auto">
+    <section className="filtered-list w-full h-full overflow-y-auto">
       {/* Search Bar */}
       <label htmlFor="category-tags-search" className="sr-only">
         Search Category Tags

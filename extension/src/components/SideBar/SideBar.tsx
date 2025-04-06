@@ -9,7 +9,7 @@ export default function SideBar() {
 
   // return <SideBarVariator props={props} />;
   return (
-    <article className="sidebar bg-white border-t border-t-gray-200">
+    <article className="sidebar border border-gray-200 shaddow-sm">
       <SideBarHeader />
 
       <SideBarSwitcher />

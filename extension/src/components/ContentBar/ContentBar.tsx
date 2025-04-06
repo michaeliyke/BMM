@@ -27,7 +27,7 @@ export default function ContentBar() {
   }, [selectedCategory, data, sel, setFilteredCategories, setBookmarks]);
 
   return (
-    <article className="content mt-0">
+    <article className="content mt-0 border-l border-r border-gray-200 shadow-sm">
       <ContentHeader />
 
       <ContentBody />

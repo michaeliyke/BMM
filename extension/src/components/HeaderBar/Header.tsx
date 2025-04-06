@@ -140,7 +140,7 @@ export default function Header() {
   }
 
   return (
-    <header>
+    <header className="border border-gray-200 shadow-sm">
       <article>
         <section className="banner">
           <figure className="logo-container">
