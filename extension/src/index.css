@@ -147,8 +147,6 @@ main>header>article:first-of-type {
 
 main>section {
     display: flex;
-    /* padding-top: calc(var(--header-height) - 25px); */
-    padding-top: 45px;
     /* Push down for fixed header */
     height: var(--body-height);
     overflow: hidden;

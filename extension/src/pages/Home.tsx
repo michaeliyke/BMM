@@ -1,7 +1,7 @@
-import ContentBar from '../components/ContentBar/ContentBar'
-import Header from '../components/HeaderBar/Header'
-import SideBar from '../components/SideBar/SideBar'
-import { useAppState } from '../hooks/globalstate'
+import ContentBar from '../components/ContentBar/ContentBar';
+import Header from '../components/HeaderBar/Header';
+import SideBar from '../components/SideBar/SideBar';
+import { useAppState } from '../hooks/globalstate';
 
 
 /**
@@ -16,7 +16,7 @@ export default function Home() {
     <>
       <Header />
 
-      <section className={headerForm ? `pt-[128px]` : ''}>
+      <section className={headerForm ? `pt-[128px]` : 'pt-[35px]'}>
         <SideBar />
 
         <ContentBar />

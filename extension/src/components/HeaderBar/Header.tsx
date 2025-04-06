@@ -165,7 +165,7 @@ export default function Header() {
           </figure>
         </section>
       </article>
-      <article className="form-container mt-4">
+      <article className={`form-container ${headerForm ? 'mt-4' : ''}`}>
         <form className={`form ${headerForm ? '' : 'hidden'}`}>
           {/* URL Input */}
           <div className="form-control relative">

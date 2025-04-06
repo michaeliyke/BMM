@@ -329,7 +329,6 @@ export async function getAllTabs(): Promise<ITab[]> {
   try {
     const tabs = await chrome.tabs.query({ currentWindow: true });
     return tabs.map((tab) => {
-      console.log('tab', tab);
       return {
         id: tab.id || 0,
         title: tab.title || '',

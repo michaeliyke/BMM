@@ -44,6 +44,7 @@ export default function AddAllWidget({ tabs, setTabs }: IAAWidgetProps) {
       console.log("Skipping test URL:", tab.url);
       return false; // Skip this tab
     }
+    return true; // Include this tab
   }
 
   function skipUnchecked(tab: ITab) {
