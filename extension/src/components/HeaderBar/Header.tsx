@@ -6,8 +6,9 @@ import CategoryBookmark from "../../data/adapters/category_bookmark";
 import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
 import { useAppState } from "../../hooks/globalstate";
-import { getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
-import { IBookmark, ICategory } from "../../utils/types/schemas";
+import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
+import { IBookmark, ICategory, ITab } from "../../utils/types/schemas";
+import AddAllWidget from "./AddAllWidget";
 import ExportWidget from "./ExportWidget";
 import ImportDialog from "./ImportDialog";
 
@@ -27,6 +28,7 @@ export default function Header() {
   const [url, setUrl] = useState(location.href);
   const [title, setTitle] = useState(document.title);
   const isButtonDisabled = !url || !title;
+  const [tabs, setTabs] = useState<ITab[]>([]);
 
   useState(() => {
 
@@ -40,6 +42,13 @@ export default function Header() {
 
     getCurrentTabTitle()
       .then((title) => setTitle(title))
+      .catch(console.error);
+
+    getAllTabs()
+      .then((tabs) => {
+        setTabs(tabs);
+      }
+      )
       .catch(console.error);
   });
 
@@ -213,11 +222,12 @@ export default function Header() {
               CURRENT CATEGORY
             </label>
           </div>
-
-          {/* Submit Button */}
           <div className="form-control flex space-x-2">
+            <AddAllWidget tabs={tabs} setTabs={setTabs} />
+            {/* Submit Button */}
             <ImportDialog />
             <ExportWidget />
+
             <button
               disabled={isButtonDisabled}
               type="button"

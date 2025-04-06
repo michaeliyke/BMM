@@ -108,3 +108,21 @@ export type TFilters = "filter:categories"
   | "filter:archived"
   | "filter:deleted"
   ;
+
+export interface ITab {
+  checked: boolean;
+  id: number;
+  title: string;
+  url: string;
+  favIconUrl: string;
+  windowId: number;
+  pinned: boolean;
+  active: boolean;
+  highlighted: boolean;
+  incognito: boolean;
+  status: string;
+  index: number;
+  width: number;
+  height: number;
+  sessionId?: string;
+};
