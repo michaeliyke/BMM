@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import adapters from "./data/adapters";
-import originalData from "./data/data";
 import { useAppState } from "./hooks/globalstate";
 import Home from "./pages/Home";
 
@@ -23,20 +22,20 @@ export default function App() {
   const { setData, setDefaultCategory } = useAppState();
 
   useEffect(() => {
-    adapters.loadBulkData(originalData).then(() => {
-      adapters.getAll()
-        .then((data) => {
-          for (const category of data) {
-            if (category.is_default === 1) {
-              setDefaultCategory(category);
-            }
+    // adapters.loadBulkData(originalData).then(() => {
+    adapters.getAll()
+      .then((data) => {
+        for (const category of data) {
+          if (category.is_default === 1) {
+            setDefaultCategory(category);
           }
-          setData(data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
+        }
+        setData(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // });
   }, [setData, setDefaultCategory]);
 
   return (

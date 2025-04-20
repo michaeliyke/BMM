@@ -74,23 +74,22 @@ function stateInitializer(set: TState): IState {
     },
 
     setBookmarks(bookmarks: IBookmark[] | ((bookmarks: IBookmark[]) => IBookmark[])) {
+      // Use a map to ensure that the bookmarks are unique
+      const uniqueBookmarks = new Map<string, IBookmark>();
+      function unique(bookmark: IBookmark) {
+        if (bookmark.archived === 1 || uniqueBookmarks.has(bookmark.id)) {
+          return false;
+        }
+        uniqueBookmarks.set(bookmark.id, bookmark);
+        return true;
+      }
+
       if (Array.isArray(bookmarks)) {
-        // Use a map to ensure that the bookmarks are unique
-        set(() => {
-          const uniqueBookmarks = new Map<string, IBookmark>();
-          const filteredBookmarks = bookmarks.filter((bookmark) => {
-            if (bookmark.archived === 1 || uniqueBookmarks.has(bookmark.id)) {
-              return false;
-            }
-            uniqueBookmarks.set(bookmark.id, bookmark);
-            return true;
-          });
-          return { bookmarks: filteredBookmarks };
-        });
+        set({ bookmarks: bookmarks.filter(unique) });
       } else {
-        set((state) => ({
-          bookmarks: bookmarks(state.bookmarks),
-        }));
+        set((state) => {
+          return { bookmarks: bookmarks(state.bookmarks).filter(unique) };
+        });
       }
     },
 

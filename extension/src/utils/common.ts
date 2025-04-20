@@ -465,3 +465,27 @@ export function strsIncludes(strs: string[], query: string): boolean {
       || query.toLowerCase().includes(str.toLowerCase());
   });
 }
+
+
+/**
+ * Determines if the current execution context is within a Chrome extension.
+ *
+ * This function checks for the existence of the global 'chrome' object and
+ * verifies that it has a valid runtime ID, which is a property specific to
+ * Chrome extensions.
+ *
+ * @returns {boolean} True if the code is running in a Chrome extension environment,
+ *                   false otherwise.
+ */
+export function isChromeExtension(): boolean {
+  return typeof chrome !== "undefined" && !!chrome.runtime?.id;
+}
+
+/**
+ * This function always returns `true` as it assumes the code is running in a browser.
+ *
+ * @returns {boolean} True, indicating a browser environment.
+ */
+export function isBrowserEnvironment(): boolean {
+  return typeof window !== "undefined" && typeof document !== "undefined";
+}
