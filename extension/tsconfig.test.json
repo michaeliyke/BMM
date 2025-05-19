@@ -1,8 +1,15 @@
 {
-  "extends": "./tsconfig.app.json",
-  "compilerOptions": {
-    "strict": false,
-    "noImplicitAny": false
-  },
-  "include": ["src/test/**/*.ts", "src/test/**/*.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"]
+    "extends": "./tsconfig.app.json",
+    "compilerOptions": {
+        "strict": false,
+        "noImplicitAny": false
+    },
+    "include": [
+        "test/**/*.ts",
+        "test/**/*.tsx",
+        "upload/**/*.test.ts",
+        "popup/**/*.test.ts",
+        "upload/**/*.test.tsx",
+        "popup/**/*.test.tsx",
+    ]
 }

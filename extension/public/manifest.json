@@ -5,25 +5,25 @@
     "description": "An extension to manage bookmarks",
     "author": "Michael C. Iyke, Dawit Getu, and Jumoke Kazeem",
     "icons": {
-        "128": "img/icons/icon128.png",
-        "48": "img/icons/icon48.ico",
-        "16": "img/icons/icon16.png"
+        "128": "/assets/img/icons/icon128.png",
+        "48": "/assets/img/icons/icon48.ico",
+        "16": "/assets/img/icons/icon16.png"
     },
     "background": {
-        "service_worker": "js/background/sw.js"
+        "service_worker": "/assets/js/background/sw.js"
     },
     "action": {
         "default_icon": {
-            "32": "img/icons/icon128.png",
-            "24": "img/icons/icon48.ico",
-            "16": "img/icons/icon16.png"
+            "32": "/assets/img/icons/icon128.png",
+            "24": "/assets/img/icons/icon48.ico",
+            "16": "/assets/img/icons/icon16.png"
         },
-        "default_popup": "index.html",
+        "default_popup": "/popup/index.html",
         "default_title": "BookMark Manager"
     },
     "options_ui": {
-        "page": "templates/settings.html",
-        "open_in_tab": true
+        "page": "/assets/templates/options_ui.html",
+        "open_in_tab": false
     },
     "permissions": [
         "bookmarks",

@@ -1,14 +1,14 @@
 import js from '@eslint/js'
-import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   { ignores: ['dist'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    files: ['upload/**/*.{ts,tsx}', 'popup/**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -28,7 +28,7 @@ export default tseslint.config(
   },
   // ✅ Override for test files
   {
-    files: ['src/**/*.test.{ts,tsx}'],
+    files: ['popup/**/*.test.{ts,tsx}', 'upload/**/*.test.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off', // Allow `any` in tests
     },

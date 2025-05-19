@@ -281,15 +281,13 @@ export async function getCurrentTabUrl() {
 // Mimic the getAllTabs function for development purposes - generate a list of 10 tabs
 export async function getAllTabsDev(): Promise<ITab[]> {
   const tabs: ITab[] = [];
-  // @ts-expect-error function to make the url dynamic if needed
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function uuid4() {
+  /* function uuid4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function gen(c) {
       const r = Math.random() * 16 | 0;
       const v = c === 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
-  }
+  } */
   for (let i = 0; i < 10; i++) {
     tabs.push({
       id: i,
@@ -488,4 +486,39 @@ export function isChromeExtension(): boolean {
  */
 export function isBrowserEnvironment(): boolean {
   return typeof window !== "undefined" && typeof document !== "undefined";
+}
+
+export function showChromePopup() {
+  chrome.windows.create(
+    {
+      url: chrome.runtime.getURL("/upload/index.html"),
+      type: "popup",
+      width: 400,
+      height: 350,
+      left: 750,
+      top: 200,
+    },
+    function anonymous(win) {
+
+      if (!win?.id)
+        return;
+
+      function focusListener(winId: number) {
+        if (win?.id === winId) {
+          // Wait briefly before attaching bkur event
+          setTimeout(function () {
+            chrome.windows.onFocusChanged.addListener(function blurListener(id) {
+              if (id !== win?.id) {
+                if (win) {
+                  chrome.windows.onFocusChanged.removeListener(blurListener);
+                  chrome.windows.remove(win.id!);
+                }
+              }
+            });
+          }, 300);
+          chrome.windows.onFocusChanged.removeListener(focusListener);
+        }
+      }
+      chrome.windows.onFocusChanged.addListener(focusListener);
+    });
 }
