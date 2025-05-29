@@ -1,0 +1,16 @@
+Why BMM 1
+Today I wish to share why BMM aka Bookmark Manager for the next generation.
+These days people read far too many things online and the need to remember links
+is unavoidable. How would you do that reliably, effortlessly. If u are already 
+using tools for that, I bet they aren't always a one click away. But u use them
+because they get the job done for u. Some of them tend to add a significant level
+of distraction to u just to help u manage u time series activities. 
+Before I introduce BMM properly, let's see a scenario. You have just read several 
+blog posts, they are related and u wish to add them to a quick list that can follow
+u around. 
+U are going through learning resources and wish to organize all or just some of them carefully so as to build a resource base for ur self against the rainy day - the day you'll want to practice what you've learned. Usually u'll refer to a number of materials as u progress through ur task.
+
+In all these cases, BMM is ur friend.
+Save a link any time.
+Group them under a category name.
+Tag them even accross categories for better organization and referencing

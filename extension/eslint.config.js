@@ -28,7 +28,10 @@ export default tseslint.config(
   },
   // ✅ Override for test files
   {
-    files: ['popup/**/*.test.{ts,tsx}', 'upload/**/*.test.{ts,tsx}'],
+    files: [
+    '{popup,upload}/**/*.test.{ts,tsx}',
+    '{upload,popup}/**/*.d.ts',
+    ],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off', // Allow `any` in tests
     },

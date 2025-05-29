@@ -1,7 +1,7 @@
 import moment from "moment";
 import { addClass, removeClass } from "./domHelpers";
+import { compose, deCycle } from "./functional.lib.dev";
 import { IBookmark, ICategory, ITab, ITag } from "./types/schemas";
-
 
 export function sortedBookmarks(bookmarks: IBookmark[]): IBookmark[] {
   // Deep copy the original data to avoid mutation
@@ -488,37 +488,96 @@ export function isBrowserEnvironment(): boolean {
   return typeof window !== "undefined" && typeof document !== "undefined";
 }
 
-export function showChromePopup() {
-  chrome.windows.create(
-    {
-      url: chrome.runtime.getURL("/upload/index.html"),
+export function showChromePopup(url: string): Promise<chrome.windows.Window> {
+  return chrome.windows.create(
+    { // "/upload/index.html"
+      url: chrome.runtime.getURL(url),
       type: "popup",
       width: 400,
       height: 350,
       left: 750,
       top: 200,
-    },
-    function anonymous(win) {
-
-      if (!win?.id)
-        return;
-
-      function focusListener(winId: number) {
-        if (win?.id === winId) {
-          // Wait briefly before attaching bkur event
-          setTimeout(function () {
-            chrome.windows.onFocusChanged.addListener(function blurListener(id) {
-              if (id !== win?.id) {
-                if (win) {
-                  chrome.windows.onFocusChanged.removeListener(blurListener);
-                  chrome.windows.remove(win.id!);
-                }
-              }
-            });
-          }, 300);
-          chrome.windows.onFocusChanged.removeListener(focusListener);
-        }
-      }
-      chrome.windows.onFocusChanged.addListener(focusListener);
     });
+}
+
+export function setLocalStorage(key: string, value: string | number) {
+  localStorage.setItem(key, String(value));
+}
+
+export const JSONParse = compose(JSON.parse, deCycle);
+export const JSONStringify = compose(JSON.stringify, deCycle);
+export const stringify = JSONStringify;
+
+export function getLocalStorage<T = string>(key: string): T {
+  const item = localStorage.getItem(key);
+  if (item === null)
+    return "" as T;
+
+  try {
+    return JSONParse(item);
+  } catch {
+    return item as T;
+  }
+}
+
+export function clearLocalStorage(key: string) {
+  localStorage.removeItem(key);
+}
+
+// The popup id string used to manage popup
+function popupIdStr() {
+  return "extension_popup_window_id";
+}
+
+export function openPopup(url: string): Promise<chrome.windows.Window> {
+  const popupId = popupIdStr();
+  return new Promise(function popup(resolve, reject) {
+    const existingId = getLocalStorage<number>(popupId);
+
+    if (existingId) { // Bring existing window to the front
+      chrome.windows.update(existingId, { focused: true }, function (updatedWin) {
+        if (updatedWin) {
+          resolve(updatedWin);
+        } else {
+          clearLocalStorage(popupId);
+          _showPopup(url).catch(reject);
+        }
+      });
+    } else {
+      _showPopup(url).catch(reject);
+    }
+
+    function _showPopup(url: string) {
+      return showChromePopup(url)
+        .then(function (newWin) {
+          if (newWin?.id) {
+            setLocalStorage(popupId, newWin.id);
+            resolve(newWin);
+          } else {
+            reject(new Error("Failed to create popup window."));
+          }
+        }, reject);
+    }
+  })
+}
+
+
+export function closePopup(): Promise<void> {
+  return new Promise(function (resolve, reject) {
+    const popupId = popupIdStr();
+    const winId = getLocalStorage<number>(popupId);
+    if (!winId) {
+      resolve();
+    } else {
+      chrome.windows.remove(winId, function () {
+        if (chrome.runtime.lastError) {
+          clearLocalStorage(popupId)
+          reject(new Error(`Error closing popup ${popupId}: ${chrome.runtime.lastError}`));
+        } else {
+          clearLocalStorage(popupId);
+          resolve();
+        }
+      })
+    }
+  });
 }
