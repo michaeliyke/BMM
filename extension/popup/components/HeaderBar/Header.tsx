@@ -6,11 +6,11 @@ import CategoryBookmark from "../../data/adapters/category_bookmark";
 import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
 import { useAppState } from "../../hooks/globalstate";
-import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl, isChromeExtension, showChromePopup } from "../../utils/common";
+import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
 import { IBookmark, ICategory, ITab } from "../../utils/types/schemas";
 import AddAllWidget from "./AddAllWidget";
-import ExportWidget from "./ExportWidget";
-import ImportDialog from "./ImportDialog";
+import ExportWidget from "./ImportExport/ExportWidget";
+import ImportWidget from "./ImportExport/ImportWidget";
 
 /**
  * Header component for the Bookmark Manager application.
@@ -225,7 +225,7 @@ export default function Header() {
           <div className="form-control flex space-x-2">
             <AddAllWidget tabs={tabs} setTabs={setTabs} />
             {/* Submit Button */}
-            {isChromeExtension() ? <ChromeUploadDialog /> : <ImportDialog />}
+            <ImportWidget />
             <ExportWidget />
 
             <button
@@ -248,17 +248,4 @@ export default function Header() {
       </article>
     </header>
   )
-}
-
-function ChromeUploadDialog() {
-  return (<div className="flex items-center" >
-    <button
-      className="py-2 px-4 rounded-lg tracking-wide border border-blue-700 text-blue-700 flex items-center"
-      onClick={showChromePopup}
-      title="Export bookmarks"
-    >
-      {/* <FaFileUpload className="mr-1" /> */}
-      Import
-    </button>
-  </div>);
 }

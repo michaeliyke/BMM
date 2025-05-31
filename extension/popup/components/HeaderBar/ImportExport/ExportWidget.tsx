@@ -1,6 +1,6 @@
 import { FaFileUpload } from "react-icons/fa";
-import { markImportType } from "../../utils/importExport";
-import { useAppState } from "../../hooks/globalstate";
+import { useAppState } from "../../../hooks/globalstate";
+import { markImportType } from "../../../utils/importExport";
 
 export default function ExportWidget() {
   const { data } = useAppState();

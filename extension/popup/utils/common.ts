@@ -488,7 +488,7 @@ export function isBrowserEnvironment(): boolean {
   return typeof window !== "undefined" && typeof document !== "undefined";
 }
 
-export function showChromePopup(url: string): Promise<chrome.windows.Window> {
+function showChromePopup(url: string): Promise<chrome.windows.Window> {
   return chrome.windows.create(
     { // "/upload/index.html"
       url: chrome.runtime.getURL(url),

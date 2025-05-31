@@ -2,13 +2,13 @@ import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/re
 import { useState } from "react";
 import { CiImport } from "react-icons/ci";
 import { FaFileUpload } from "react-icons/fa";
-import { useAppState } from "../../hooks/globalstate";
-import { getBookmarks } from "../../utils/common";
-import { getImportHandler, isImportData, validateImported } from "../../utils/importExport";
-import { IBookmark, ICategory, ImportData } from "../../utils/types/schemas";
+import { useAppState } from "../../../hooks/globalstate";
+import { getBookmarks } from "../../../utils/common";
+import { getImportHandler, isImportData, validateImported } from "../../../utils/importExport";
+import { IBookmark, ICategory, ImportData } from "../../../utils/types/schemas";
 
 
-export default function ImportDialog() {
+export default function RegularImportDialog() {
   const [isFileLoaded, setIsFileLoaded] = useState(false);
   const [importData, setImportData] = useState<ImportData>([]);
   const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);

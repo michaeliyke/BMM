@@ -1,7 +1,7 @@
 import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/react";
 import { CiImport } from "react-icons/ci";
-import { getBookmarks } from "../../utils/common";
-import { ICategory } from "../../utils/types/schemas";
+import { getBookmarks } from "../../../utils/common";
+import { ICategory } from "../../../utils/types/schemas";
 
 type IPProps = {
   categories: ICategory[];
