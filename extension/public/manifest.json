@@ -30,7 +30,8 @@
         "tabs",
         "storage",
         "activeTab",
-        "scripting"
+        "scripting",
+        "windows"
     ],
     "content_security_policy": {
         "extension_pages": "script-src 'self'; object-src 'self'"

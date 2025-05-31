@@ -1,5 +1,3 @@
-import { max } from "moment";
-
 // Takes one argument and does nothing but return the value untouched
 export function identity(value) {
   return value;
@@ -461,7 +459,7 @@ export function gatherArgs(fn) {
   };
 }
 
-export function noCircles(obj) {
+export function deCycle(obj) {
   for (var p in obj)
     if (obj[p] && obj[p][p] && obj[p][p][p]) obj[p] = "[object Circles]";
   return obj;
