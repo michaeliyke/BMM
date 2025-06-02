@@ -1,5 +1,5 @@
 {
-    "name": "Bookmarks Manager",
+    "name": "Bookmark Manager",
     "version": "0.0.1",
     "manifest_version": 3,
     "description": "An extension to manage bookmarks",
@@ -10,7 +10,8 @@
         "16": "/assets/img/icons/icon16.png"
     },
     "background": {
-        "service_worker": "/assets/js/background/sw.js"
+        "service_worker": "/popup/background/sw.js",
+        "type": "module"
     },
     "action": {
         "default_icon": {
@@ -18,7 +19,6 @@
             "24": "/assets/img/icons/icon48.ico",
             "16": "/assets/img/icons/icon16.png"
         },
-        "default_popup": "/popup/index.html",
         "default_title": "BookMark Manager"
     },
     "options_ui": {

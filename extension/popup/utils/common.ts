@@ -488,19 +488,35 @@ export function isBrowserEnvironment(): boolean {
   return typeof window !== "undefined" && typeof document !== "undefined";
 }
 
-function showChromePopup(url: string): Promise<chrome.windows.Window> {
-  return chrome.windows.create(
-    { // "/upload/index.html"
-      url: chrome.runtime.getURL(url),
-      type: "popup",
-      width: 400,
-      height: 350,
-      left: 750,
-      top: 200,
-    });
+export function validPopup(popupID: null | undefined | number): boolean {
+  if (Number(popupID) !== Number(popupID) || !popupID) // Exlude NaN|null|undefined here
+    return false;
+
+  if (popupID === chrome.windows.WINDOW_ID_NONE) // Effectivley -1
+    return false;
+
+  return true
 }
 
-export function setLocalStorage(key: string, value: string | number) {
+export async function showChromePopup(url: string): Promise<chrome.windows.Window> {
+  try { // Opening a new popup window
+    return chrome.windows.create(
+      { // "/upload/index.html"
+        url: chrome.runtime.getURL(url),
+        type: "popup",
+        width: 400,
+        height: 350,
+        left: 750,
+        top: 200,
+      });
+  } catch (error) {
+    throw new Error(`Error creating application window:, ${error}`);
+  }
+}
+
+export async function addCacheItem(key: string, value: Response) {
+  const cache = await caches.open("bmm");
+  cache.put(key, value); // put only stores cache item without running the fetch unlike .add()
   localStorage.setItem(key, String(value));
 }
 
@@ -508,9 +524,10 @@ export const JSONParse = compose(JSON.parse, deCycle);
 export const JSONStringify = compose(JSON.stringify, deCycle);
 export const stringify = JSONStringify;
 
-export function getLocalStorage<T = string>(key: string): T {
-  const item = localStorage.getItem(key);
-  if (item === null)
+export async function getCache<T = string>(key: string): Promise<T> {
+  const cache = await caches.open("bmm");
+  const item = await cache.match(key);
+  if (item === undefined)
     return "" as T;
 
   try {
@@ -520,64 +537,15 @@ export function getLocalStorage<T = string>(key: string): T {
   }
 }
 
-export function clearLocalStorage(key: string) {
-  localStorage.removeItem(key);
+export async function removeCacheItem(key: string) {
+  const cache = await caches.open("bmm");
+  await cache.delete(key);
 }
 
-// The popup id string used to manage popup
-function popupIdStr() {
-  return "extension_popup_window_id";
-}
-
-export function openPopup(url: string): Promise<chrome.windows.Window> {
-  const popupId = popupIdStr();
-  return new Promise(function popup(resolve, reject) {
-    const existingId = getLocalStorage<number>(popupId);
-
-    if (existingId) { // Bring existing window to the front
-      chrome.windows.update(existingId, { focused: true }, function (updatedWin) {
-        if (updatedWin) {
-          resolve(updatedWin);
-        } else {
-          clearLocalStorage(popupId);
-          _showPopup(url).catch(reject);
-        }
-      });
-    } else {
-      _showPopup(url).catch(reject);
-    }
-
-    function _showPopup(url: string) {
-      return showChromePopup(url)
-        .then(function (newWin) {
-          if (newWin?.id) {
-            setLocalStorage(popupId, newWin.id);
-            resolve(newWin);
-          } else {
-            reject(new Error("Failed to create popup window."));
-          }
-        }, reject);
-    }
-  })
-}
-
-
-export function closePopup(): Promise<void> {
-  return new Promise(function (resolve, reject) {
-    const popupId = popupIdStr();
-    const winId = getLocalStorage<number>(popupId);
-    if (!winId) {
-      resolve();
-    } else {
-      chrome.windows.remove(winId, function () {
-        if (chrome.runtime.lastError) {
-          clearLocalStorage(popupId)
-          reject(new Error(`Error closing popup ${popupId}: ${chrome.runtime.lastError}`));
-        } else {
-          clearLocalStorage(popupId);
-          resolve();
-        }
-      })
-    }
-  });
+export async function closePopup(POPUPID: number) {
+  try {
+    await chrome.windows.remove(POPUPID);
+  } catch (e) {
+    throw new Error(`Application window already closed: ${e}`);
+  }
 }

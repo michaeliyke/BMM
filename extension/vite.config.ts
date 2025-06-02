@@ -10,9 +10,14 @@ export default defineConfig({
       input: {
         popup: "/popup/index.html",
         upload: "/upload/index.html",
+        sw: "/popup/background/sw.ts",
       },
       output: {
-        entryFileNames: 'assets/js/[name].js',
+        entryFileNames: function createName(chunk) {
+          return chunk.name === "sw"
+            ? "popup/background/sw.js"
+            : "assets/js/[name].js";
+        },
         chunkFileNames: 'assets/js/[name].js',
         assetFileNames: 'assets/[ext]/[name].[ext]',
       },
