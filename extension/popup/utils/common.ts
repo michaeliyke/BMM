@@ -504,10 +504,10 @@ export async function showChromePopup(url: string): Promise<chrome.windows.Windo
       { // "/upload/index.html"
         url: chrome.runtime.getURL(url),
         type: "popup",
-        width: 400,
-        height: 350,
-        left: 750,
-        top: 200,
+        width: 800,
+        height: 535,
+        left: 400,
+        top: 140,
       });
   } catch (error) {
     throw new Error(`Error creating application window:, ${error}`);
