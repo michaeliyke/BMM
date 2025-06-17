@@ -191,7 +191,7 @@ export default class CategoryBookmark implements ICategoryBookmark {
             try {
                 // Ensure the category exists
                 if (!(await category.exists()))
-                    throw new Error(`CategoryBookmark.createBookmark:- Category not found: ${category.id}`);
+                    throw new Error(`CategoryBookmark.createBookmark:- Category not found: ${category.name}`);
 
                 // If the bookmark already exists under the category, throw an error
                 if (await CategoryBookmark.exists(category.id, bookmark.id))

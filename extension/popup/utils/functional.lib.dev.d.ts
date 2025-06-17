@@ -695,6 +695,9 @@ declare module './functional.lib.dev' {
    * ```
    */
   export function identity<T>(value: T): T;
+
+  export function log(...data: any[]): void;
+  export function error(...data: any[]): void;
 }
 
 export { };

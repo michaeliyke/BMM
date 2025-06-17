@@ -9,14 +9,19 @@ export default class Tag implements ITag {
     name: string;
     created_at: string;
     updated_at: string;
+    bookmarkIds: string[];
+    categoryIds: string[];
 
     constructor(tag: ITag) {
         this.id = tag.id; /* uuid4(); */
         this.name = tag.name;
         this.created_at = tag.created_at; /* (new Date()).toISOString(); */
         this.updated_at = tag.updated_at; /* (new Date()).toISOString(); */
+        this.bookmarkIds = tag.bookmarkIds;
+        this.categoryIds = tag.categoryIds;
 
-        const empty = isEmpty(['id', 'name', 'created_at', 'updated_at'], tag);
+        const empty = isEmpty(['id', 'name', 'created_at', 'updated_at',
+            'bookmarkIds', 'categoryIds'], tag);
         if (empty) {
             throw new Error(`Tag.constructor:- required field: ${empty}`);
         }

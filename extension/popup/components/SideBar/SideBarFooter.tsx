@@ -23,6 +23,8 @@ export default function SideBarFooter() {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       tags: [],
+      tagIds: [],
+      bookmarkIds: [],
     });
     category.create()
       .then(() => {
@@ -44,6 +46,8 @@ export default function SideBarFooter() {
       id: uuid4(),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+      bookmarkIds: [],
+      categoryIds: [],
     });
 
     tag.create()

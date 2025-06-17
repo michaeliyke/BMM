@@ -464,3 +464,8 @@ export function deCycle(obj) {
     if (obj[p] && obj[p][p] && obj[p][p][p]) obj[p] = "[object Circles]";
   return obj;
 }
+
+export const log = console.log.bind(console);
+
+export const error = console.error.bind(console);
+

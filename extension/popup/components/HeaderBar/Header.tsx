@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { v4 as uuid4 } from 'uuid';
 import Bookmark from "../../data/adapters/bookmark";
+import BookmarkTag from "../../data/adapters/bookmark_tag";
 import Category from "../../data/adapters/category";
 import CategoryBookmark from "../../data/adapters/category_bookmark";
 import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
 import { useAppState } from "../../hooks/globalstate";
 import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
+import { error, log } from "../../utils/functional.lib.dev";
 import { IBookmark, ICategory, ITab } from "../../utils/types/schemas";
 import AddAllWidget from "./AddAllWidget";
 import ExportWidget from "./ImportExport/ExportWidget";
@@ -19,7 +21,6 @@ export default function Header() {
   const {
     headerForm,
     selectedCategory,
-    defaultCategory,
     selectedTag,
     grouping,
     setGrouping,
@@ -30,113 +31,72 @@ export default function Header() {
   const isButtonDisabled = !url || !title;
   const [tabs, setTabs] = useState<ITab[]>([]);
 
+
   useState(() => {
-
-    setGrouping(
-      (selectedCategory || defaultCategory).name + (selectedTag ? ` # ${selectedTag.name}` : '')
-    );
-
-    getCurrentTabUrl()
-      .then((url) => setUrl(url))
-      .catch(console.error);
-
-    getCurrentTabTitle()
-      .then((title) => setTitle(title))
-      .catch(console.error);
-
-    getAllTabs()
-      .then((tabs) => {
-        setTabs(tabs);
-      }
-      )
-      .catch(console.error);
+    setGrouping(selectedCategory?.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+    getCurrentTabUrl().then(setUrl).catch(error);
+    getCurrentTabTitle().then(setTitle).catch(error);
+    getAllTabs().then(setTabs).catch(error);
   });
+
+  function postProcessing(newBookmark: IBookmark) {
+    setUrl('');
+    setTitle('');
+    setData((state: ICategory[]) => {
+      const newState = [...state]; // shallow copy of the state array
+
+      const index = newState.findIndex((x) => x.id === selectedCategory?.id);
+      if (index === -1) return state; // Safety check: if not found, return the current state
+
+      const updatedCategory = {
+        ...newState[index], // shallow copy of the category object
+        bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
+      };
+
+      newState[index] = updatedCategory; // Replace the category with the updated one
+      return newState; // Return the new state
+    });
+  }
 
 
   function createBookmark() {
-    const resolvedCategory = selectedCategory || defaultCategory;
     if (!url || !title) return;
-
-    if (!resolvedCategory) return;
-
-    /* If selectedTag is set, it must be a tag under the selected category */
-
-    const newBookmark: IBookmark = {
+    const bookmark = new Bookmark({
       id: uuid4(),
       title,
       description: '',
       url,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      tags: [],
+      tags: selectedTag ? [selectedTag] : [],
       archived: 0,
-    };
+      tagIds: selectedTag ? [selectedTag.id] : [],
+      categoryIds: selectedCategory ? [selectedCategory.id] : [],
+      categories: selectedCategory ? [selectedCategory] : [],
+    });
 
-    const bookmark = new Bookmark(newBookmark);
-    const category = new Category(resolvedCategory);
-
-    // selectedTag and selectedCategory are set under CategoryTag filtering
-    if (selectedTag && resolvedCategory) {
-      const tag = new Tag(selectedTag);
-      newBookmark.tags = [selectedTag];
-
-      CategoryTag.createBookmark(bookmark, category, tag)
-        .then(() => {
-          setUrl('');
-          setTitle('');
-          setData((state: ICategory[]) => {
-            const newState = [...state]; // shallow copy of the state array
-
-            const index = newState.findIndex((x) => x.id === resolvedCategory.id);
-            if (index === -1) return state; // Safety check: if not found, return the current state
-
-            const updatedCategory = {
-              ...newState[index], // shallow copy of the category object
-              bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
-            };
-
-            newState[index] = updatedCategory; // Replace the category with the updated one
-            return newState; // Return the new state
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      return;
+    if (!selectedCategory && !selectedTag) {// Case 0: Neither category nor tag selected
+      return void bookmark.create().then(postProcessing).catch(error);
     }
 
-    // Here no tag is selected, so we create a bookmark under the selected category
-    if (selectedTag) {
-      console.error('Unexpected selectedTag');
-      // console.log('_selectedCategory: ', _selectedCategory);
-      // console.log('selectedCategory: ', selectedCategory);
-      return;
+    if (!selectedTag && selectedCategory !== null) {// case 1: ony category, no tag
+      const x = CategoryBookmark.createBookmark(bookmark, new Category(selectedCategory));
+      log("category")
+      return void x.then(postProcessing).catch(error);
     }
 
-    CategoryBookmark.createBookmark(new Bookmark(newBookmark), new Category(resolvedCategory))
-      .then(() => {
+    if (!selectedCategory && selectedTag !== null) {// case 2: only tag selected, no category
+      const x = BookmarkTag.createBookmark(bookmark, new Tag(selectedTag));
+      log("tag")
+      return void x.then(postProcessing).catch(error);
+    }
 
-        setUrl(location.href);
-        setTitle(document.title);
-        setData((state: ICategory[]) => {
-          const newState = [...state]; // shallow copy of the state array
-
-          const index = newState.findIndex((x) => x.id === resolvedCategory.id);
-          if (index === -1) return state; // Safety check: if not found, return the current state
-
-          const updatedCategory = {
-            ...newState[index], // shallow copy of the category object
-            bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
-          };
-
-          newState[index] = updatedCategory; // Replace the category with the updated one
-          return newState; // Return the new state
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
+    if (selectedTag && selectedCategory) { // case 3: both category and tag are selected
+      bookmark.tags = [selectedTag];
+      const x = CategoryTag.createBookmark(bookmark, new Category(selectedCategory), new Tag(selectedTag))
+      log("both")
+      return void x.then(postProcessing).catch(error);
+    }
   }
 
   return (

@@ -1,5 +1,5 @@
 import { queueManager } from "../utils/locker";
-import { ICategory } from "../utils/types/schemas";
+import { IBookmarkObjects, ICategory, ITag } from "../utils/types/schemas";
 
 type CURSOR = IDBRequest<IDBCursorWithValue | null>;
 
@@ -388,6 +388,82 @@ export const Operator = {
                     request.onerror = (event) => {
                         reject((event.target as IDBRequest<IDBCursorWithValue | null>).error);
                     };
+                }
+            });
+        });
+    },
+
+    // Side effects - populates input category objects
+    async fillCategories(bookmarkObjects: IBookmarkObjects) {
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return new Promise<IBookmarkObjects>((resolve, reject) => {
+                const tx = db.transaction("categories", "readwrite");
+                const store = tx.objectStore("categories");
+                const request = store.openCursor();
+
+                request.onsuccess = function onSuccess(event) {
+                    const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
+                    if (!cursor) return void (0); /* No [more rows | rows found] */
+
+                    const category = cursor.value as ICategory;
+                    if (category.bookmarkIds.length === 0)
+                        bookmarkObjects.solo.categories.push(category);/* HERE
+                     */
+
+                    for (const id of category.bookmarkIds) {
+                        if (!bookmarkObjects[id]) continue
+                        bookmarkObjects[id].categories ??= [];
+                        bookmarkObjects[id].categories.push(category);
+                    }
+
+                    cursor.continue();
+                };
+
+                tx.oncomplete = () => resolve(bookmarkObjects);
+                tx.onerror = errResponse;
+                tx.onabort = errResponse;
+                request.onerror = errResponse;
+
+                function errResponse(event: Event) {
+                    reject(((event.target as IDBTransaction | IDBRequest<IDBCursorWithValue>).error));
+                }
+            });
+        });
+    },
+    // Side effects - populates the input with tags objects
+    async fillTags(bookmarkObjects: IBookmarkObjects) {
+        return queueManager.enqueue(async () => {
+            const db = await this.initializeDatabase();
+            return new Promise<IBookmarkObjects>((resolve, reject) => {
+                const tx = db.transaction("tags", "readwrite");
+                const store = tx.objectStore("tags");
+                const request = store.openCursor();
+
+                request.onsuccess = function onSuccess(event) {
+                    const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
+                    if (!cursor) return void (0); /* No [more rows | rows found] */
+
+                    const tag = cursor.value as ITag;
+                    if (tag.bookmarkIds.length === 0)
+                        bookmarkObjects.solo.tags.push(tag);
+
+                    for (const id of tag.bookmarkIds) {
+                        if (!bookmarkObjects[id]) continue
+                        bookmarkObjects[id].categories ??= [];
+                        bookmarkObjects[id].tags.push(tag);
+                    }
+
+                    cursor.continue();
+                };
+
+                tx.oncomplete = () => resolve(bookmarkObjects);
+                tx.onerror = errResponse;
+                tx.onabort = errResponse;
+                request.onerror = errResponse;
+
+                function errResponse(event: Event) {
+                    reject(((event.target as IDBTransaction | IDBRequest<IDBCursorWithValue>).error));
                 }
             });
         });

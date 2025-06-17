@@ -2,6 +2,7 @@ import { DebouncedFunc, debounce } from "lodash-es";
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { FiChevronRight, FiHash, FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
+import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
 import { categoryTagsSearch, sortedCategories, toggleHighlightedClass } from "../../../utils/common";
 import { ICategory, ITag } from "../../../utils/types/schemas";
@@ -21,7 +22,6 @@ export function ByCategoryTags() {
     setSelectedTag,
     selectedCategory,
     setSelectedCategory,
-    defaultCategory,
     setGrouping,
     data,
   } = useAppState();
@@ -116,7 +116,7 @@ export function ByCategoryTags() {
         setHasExecuted(false);
       }
     };
-  }, [defaultCategory, setGrouping, selectedTag, selectedCategory, data, query, setCategories, hasExecuted]);
+  }, [setGrouping, selectedTag, selectedCategory, data, query, setCategories, hasExecuted]);
 
 
   return (

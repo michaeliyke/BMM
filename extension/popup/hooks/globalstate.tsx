@@ -1,33 +1,49 @@
 import { Dispatch, SetStateAction } from "react";
 import { create } from "zustand";
-import { IBookmark, ICategory, ITag, TFilters } from "../utils/types/schemas";
+import { IBookmark, IBookmarkObjects, ICategory, ITag, TFilters } from "../utils/types/schemas";
 
 interface IState {
   headerForm: boolean;
   setHeaderForm: (value: boolean) => void;
+
   filterBy: TFilters;
   setFilterBy: (value: TFilters) => void;
+
   query: string;
   setQuery: (value: string) => void;
+
   selectedTag: ITag | null;
   setSelectedTag: (value: ITag | null) => void;
+
   grouping: string;
   setGrouping: (value: string) => void;
+
   bookmarkToShow: IBookmark | null;
   setBookmarkToShow: (bookmark: IBookmark | null) => void;
+
   selectedCategory: ICategory | null;
   setSelectedCategory: (value: ICategory | null) => void;
-  defaultCategory: ICategory;
-  setDefaultCategory: (category: ICategory) => void;
+  getSelectedCategory: () => ICategory | null;
 
   filteredCategories: ICategory[];
   setFilteredCategories: (categories: ICategory[]) => void;
+  getFilteredCategories: () => ICategory[];
+
   bookmarks: IBookmark[];
   setBookmarks: (bookmarks: IBookmark[] | ((bookmarks: IBookmark[]) => IBookmark[])) => void;
+
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
+
   filteredBookmarks: IBookmark[];
   setFilteredBookmarks: (bookmarks: IBookmark[]) => void;
+  getFilteredBookmarks: () => IBookmark[];
+
+  allProperties: IBookmarkObjects;
+  getAllProperties: () => IBookmarkObjects;
+  setAllProperties: Dispatch<SetStateAction<IBookmarkObjects>>;
+
+  getAllCategories: () => ICategory[];
 }
 
 type TState = {
@@ -35,13 +51,15 @@ type TState = {
   (state: IState | ((state: IState) => IState), replace: true): void;
 }
 
+type TStateGet<T> = () => T;
+
 /**
  * Zustand store for managing application state.
  *
  * @param {TState} set - The function to update the state.
  * @returns {IState} The initial state and functions to update it.
  */
-function stateInitializer(set: TState): IState {
+function stateInitializer(set: TState, get: TStateGet<IState>): IState {
   return {
     headerForm: false,
     filterBy: "filter:categories",
@@ -49,28 +67,42 @@ function stateInitializer(set: TState): IState {
     selectedTag: null,
     grouping: "",
     bookmarkToShow: null,
+
     selectedCategory: null,
-    defaultCategory: {
-      id: 'dummy-id',
-      name: 'No Category Selected',
-      is_default: 0,
-      created_at: (new Date()).toUTCString(),
-      updated_at: (new Date()).toUTCString(),
-      tags: [],
-      bookmarks: []
-    },
     filteredCategories: [],
     bookmarks: [],
     data: [],
     filteredBookmarks: [],
 
+    allProperties: {},
+
+    getAllProperties() {
+      return get().allProperties;
+    },
+    setAllProperties(props: SetStateAction<IBookmarkObjects>) {
+      set((state) => ({
+        allProperties: typeof props === 'function'
+          ? (props as (prev: IBookmarkObjects) => IBookmarkObjects)(state.allProperties)
+          : props,
+      }));
+    },
+
+    getAllCategories() {
+      return Object.values(get().allProperties).flatMap(v => v.categories);
+    },
 
     setFilteredCategories(categories: ICategory[]) {
       set({ filteredCategories: categories });
     },
+    getFilteredCategories() {
+      return get().filteredCategories;
+    },
 
     setFilteredBookmarks(bookmarks: IBookmark[]) {
       set({ filteredBookmarks: bookmarks });
+    },
+    getFilteredBookmarks() {
+      return get().filteredBookmarks;
     },
 
     setBookmarks(bookmarks: IBookmark[] | ((bookmarks: IBookmark[]) => IBookmark[])) {
@@ -101,16 +133,18 @@ function stateInitializer(set: TState): IState {
       }));
     },
 
-    setDefaultCategory(category: ICategory) {
-      set({ defaultCategory: category });
-    },
-
     setBookmarkToShow(bookmark: IBookmark | null) {
       set({ bookmarkToShow: bookmark });
     },
 
-    setSelectedCategory(value: ICategory | null) {
-      set({ selectedCategory: value });
+    getSelectedCategory() {
+      return get().selectedCategory;
+    },
+
+    setSelectedCategory(category: ICategory | null) {
+      if (category?.is_default === 1) /* If default category quit */
+        return void set({ selectedCategory: null });
+      set({ selectedCategory: category });
     },
 
     setSelectedTag(value: ITag | null) {
@@ -141,9 +175,3 @@ function stateInitializer(set: TState): IState {
  * @type {IState}
  */
 export const useAppState = create<IState>(stateInitializer);
-
-/*
-  const [grouping, setGrouping] = useState(
-    (selectedCategory || defaultCategory).name +
-    (selectedTag ? ` # ${selectedTag.name}` : '')
-  ); */

@@ -13,8 +13,17 @@ export default {
      *
      * @returns {Promise<ICategory[]>} A promise that resolves to an array of ICategory objects.
      */
-    async getAll(): Promise<ICategory[]> {
-        return Category.getAll();
+    async getAll() {
+        return await Category.getAll();
+    },
+
+    async fetchAllProperties() {
+        return await Bookmark.fechAllProperties();
+    },
+
+    // Initializes and makes the UI ready to recieve user input
+    async initialize(): Promise<ICategory[]> {
+        return []; /* We'll find uses for this later */
     },
 
     /**

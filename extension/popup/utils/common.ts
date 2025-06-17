@@ -257,6 +257,7 @@ export function filterBy<T>(items: T[], predicate: (item: T) => boolean): T[] {
  */
 export function isEmpty<T extends object>(props: (keyof T)[], obj: T): false | (keyof T) {
   for (const prop of props) {
+    if (Array.isArray(obj[prop])) continue; /* an array is not empty */
     const value = prop in obj ? String(obj[prop]).trim() : '';
     if (!value) return prop;
   }

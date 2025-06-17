@@ -1,7 +1,8 @@
 
 import { isEmpty } from "../../utils/common";
+import { adaptedBookmark } from "../../utils/common2";
 import { lockManager } from "../../utils/locker";
-import { IBookmark, ITag } from "../../utils/types/schemas";
+import { IBookmark, IBookmarkObjects, ICategory, ITag } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 
 export default class Bookmark implements IBookmark {
@@ -14,6 +15,11 @@ export default class Bookmark implements IBookmark {
     tags: ITag[];
     archived: number;
     starred?: number;
+    importType?: "category" | "bookmark" | undefined;
+    importExists?: boolean | undefined;
+    categories: ICategory[];
+    categoryIds: string[];
+    tagIds: string[];
 
     constructor(bookmark: IBookmark) {
         this.id = bookmark.id; /* uuid4() */
@@ -25,9 +31,12 @@ export default class Bookmark implements IBookmark {
         this.tags = bookmark.tags;
         this.archived = bookmark.archived;
         this.starred = bookmark.starred;
+        this.categoryIds = bookmark.categoryIds;
+        this.tagIds = bookmark.tagIds;
+        this.categories = bookmark.categories;
 
-        const prop = isEmpty([
-            'id', 'url', 'created_at', 'updated_at', 'archived'], bookmark);
+        const prop = isEmpty(['id', 'url', 'created_at', 'updated_at',
+            'archived', 'tagIds', 'categoryIds', 'categories'], bookmark);
         if (prop) throw new Error(`Bookmark.constructor: required field: '${prop}'`);
     }
 
@@ -127,17 +136,18 @@ export default class Bookmark implements IBookmark {
      * @throws {Error} Throws an error if a bookmark with the same id already exists.
      */
     async create(): Promise<IBookmark> {
-        return lockManager.acquire(`Bookmark.create:${this.id}`, async () => {
-            this.tags = []; // Do not save tags in the bookmark object
+        const x = lockManager.acquire(`Bookmark.create:${this.id}`, async () => {
+            const bookmark = adaptedBookmark(this); // adapt for saving
             // Create a new bookmark record in the database if not exists
-            try {
-                const existing = await this.exists();
-                if (existing) return existing;
-                return await Operator.createRecord<IBookmark>('bookmarks', this);
-            } catch (error) {
-                throw new Error(`An error occurred in Bookmark.create:- ${error}, ${this.id}`);
-            }
+            const existing = await this.exists();
+            if (existing) return existing;
+            return await Operator.createRecord<IBookmark>('bookmarks', bookmark);
         });
+        try {
+            return await x;
+        } catch (error) {
+            throw new Error(`An error occurred in Bookmark.create:- ${error}, ${this.id}`);
+        }
     }
 
     /**
@@ -147,16 +157,18 @@ export default class Bookmark implements IBookmark {
      * @throws An error if the bookmark with the specified ID does not exist.
      */
     async update(): Promise<void> {
-        await lockManager.acquire(`Bookmark.update:${this.id}`, async () => {
-            this.tags = []; // Do not save tags in the bookmark object
+        const x = lockManager.acquire(`Bookmark.update:${this.id}`, async () => {
+            const bookmark = adaptedBookmark(this); // adapt for saving
             if (!(await this.exists()))
-                throw new Error(`Bookmark.update: Bookmark does not exist: ${this}`);
-            try {
-                await Operator.updateRecord<IBookmark>('bookmarks', this);
-            } catch (error) {
-                throw new Error(`An error occurred in Bookmark.update:- ${error}, ${this.id}`);
-            }
+                throw new Error(`Bookmark.update: Bookmark does not exist: ${this.id}`);
+            await Operator.updateRecord<IBookmark>('bookmarks', bookmark);
         });
+
+        try {
+            return await x;
+        } catch (error) {
+            throw new Error(`An error occurred in Bookmark.update:- ${error}, ${this.id}`);
+        }
     }
 
     /**
@@ -220,6 +232,26 @@ export default class Bookmark implements IBookmark {
     async archive(): Promise<void> {
         this.archived = 1;
         return await this.update();
+    }
+
+    static async fechAllProperties() {
+        const p = lockManager.acquire('Bookmark.fechAllProperties', async () => {
+            const bookmarks: IBookmark[] = await this.getBookmarks();
+            const bookmarkObjects: IBookmarkObjects = {};
+            bookmarkObjects.solo = { tags: [] as ITag[], categories: [] as ICategory[] };
+
+            for (const bookmark of bookmarks) bookmarkObjects[bookmark.id] = bookmark;
+
+            await Operator.fillCategories(bookmarkObjects); // side effects - modifies input
+            await Operator.fillTags(bookmarkObjects); // side effects - modifies input
+            return bookmarkObjects;
+        });
+
+        try {
+            return await p;
+        } catch (err) {
+            throw new Error(`An error occurred in Bookmark.getBookmarkById:- ${err}`);
+        }
     }
 
 }

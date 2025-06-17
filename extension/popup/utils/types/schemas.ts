@@ -21,6 +21,8 @@ export interface ITag {
   name: string;
   created_at: string;
   updated_at: string;
+  categoryIds: string[];
+  bookmarkIds: string[];
 };
 
 export interface ICategory {
@@ -33,6 +35,8 @@ export interface ICategory {
   updated_at: string;
   bookmarks: IBookmark[];
   tags: ITag[];
+  bookmarkIds: string[];
+  tagIds: string[];
 };
 
 export interface IBookmark {
@@ -45,9 +49,21 @@ export interface IBookmark {
   created_at: string;
   updated_at: string;
   tags: ITag[];
+  categories: ICategory[];
   archived: number; // 0 or 1
   starred?: number; // 0 or 1
+  categoryIds: string[];
+  tagIds: string[];
 };
+
+export interface IBookmarkObjects {
+  [key: string]: IBookmark | ISoloObjects;
+}
+
+export interface ISoloObjects {
+  categories: ICategory[];
+  tags: ITag[];
+}
 
 export type ImportData = ICategory[] | IBookmark[];
 

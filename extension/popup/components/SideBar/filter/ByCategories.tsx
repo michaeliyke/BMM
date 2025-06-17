@@ -9,7 +9,9 @@ import {
 import { debounce, DebouncedFunc } from "lodash-es";
 import { FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
+import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
+import { log } from "../../../utils/functional.lib.dev";
 import { ICategory } from "../../../utils/types/schemas";
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
@@ -20,18 +22,17 @@ type CL = ICategory[];
  */
 export default function ByCategories() {
   const [query, setQuery] = useState<string>("");
-  const [_categories, setCategories] = useState<ICategory[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(true);
   const {
     setBookmarkToShow,
-    defaultCategory,
     setSelectedCategory,
     setGrouping,
-    data,
+    getAllCategories,
   } = useAppState();
+  const [_categories, setCategories] = useState<ICategory[]>([]);
 
   function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
-    setSelectedCategory(category.is_default !== 1 ? category : null); // Global state
+    setSelectedCategory(category); // Global state
     setBookmarkToShow(null); // Global state
     setGrouping(category.name); // Global state
     toggleHighlightedClass(event.currentTarget, "category");
@@ -68,13 +69,14 @@ export default function ByCategories() {
    */
   function handleSearch(query: string) {
     setQuery(query);
-    search(query, data, setCategories);
+    search(query, _categories, setCategories);
   }
 
   useEffect(() => {
     // Set the default category text in the header
     setGrouping(defaultCategory.name); // Global state
-    setCategories(data);
+    setCategories(getAllCategories())
+    log("useEffects Here--------------");
     return () => {
       // Cancel the debounced search function when the component unmounts.
       if (searchFnRef.current && hasExecuted) {
@@ -82,7 +84,7 @@ export default function ByCategories() {
         setHasExecuted(false);
       }
     };
-  }, [defaultCategory.name, setGrouping, searchFnRef, data, hasExecuted]);
+  }, [setGrouping, searchFnRef, hasExecuted, getAllCategories]);
 
   return (
     <section className="filtered-list w-full h-full overflow-y-auto">
@@ -109,14 +111,24 @@ export default function ByCategories() {
 
       {/* Categories List */}
       <ul className="categories">
+        <li /* Default Category */
+          key={1}
+          data-category={defaultCategory.name}
+          data-id={defaultCategory.id}
+          data-default={defaultCategory.is_default}
+          className="category flex items-center px-4 py-2 text-xs text-gray-700 cursor-pointer hover:bg-slate-50 highlighted"
+          onClick={(e) => toggleSelected(defaultCategory, e)}
+        >
+          <PiTagSimpleFill size={12} className="text-gray-400" />
+          <span>{defaultCategory.name}</span>
+        </li>
         {sortedCategories(_categories).map((category, index) => (
           <li
             key={index}
             data-category={category.name}
             data-id={category.id}
             data-default={category.is_default}
-            className={`category flex items-center px-4 py-2 text-xs text-gray-700 cursor-pointer hover:bg-slate-50 ${category.is_default === 1 ? 'highlighted' : ''
-              }`}
+            className="category flex items-center px-4 py-2 text-xs text-gray-700 cursor-pointer hover:bg-slate-50"
             onClick={(e) => toggleSelected(category, e)}
           >
             <PiTagSimpleFill size={12} className="text-gray-400" />

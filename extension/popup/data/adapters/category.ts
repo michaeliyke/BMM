@@ -1,4 +1,5 @@
 import { isEmpty } from "../../utils/common";
+import { adaptedCategory } from "../../utils/common2";
 import { lockManager } from "../../utils/locker";
 import {
     IBookmark,
@@ -21,6 +22,8 @@ export default class Category implements ICategory {
     updated_at: string;
     bookmarks: IBookmark[];
     tags: ITag[];
+    tagIds: string[];
+    bookmarkIds: string[];
 
     constructor(category: ICategory) {
         this.id = category.id; /* uuid4() */
@@ -30,8 +33,11 @@ export default class Category implements ICategory {
         this.updated_at = category.updated_at; /* (new Date()).toISOString() */
         this.bookmarks = category.bookmarks;
         this.tags = category.tags;
+        this.tagIds = category.tagIds;
+        this.bookmarkIds = category.bookmarkIds;
 
-        const empty = isEmpty(['id', 'name', 'is_default', 'created_at', 'updated_at'], category);
+        const empty = isEmpty(['id', 'name', 'is_default', 'created_at',
+            'updated_at', 'tagIds', 'bookmarkIds'], category);
         if (empty) throw new Error(`Category.constructor: required field: ${empty}`);
     }
 
@@ -42,7 +48,7 @@ export default class Category implements ICategory {
      */
     async exists(): Promise<ICategory | null> {
         const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        return lockManager.acquire(`${callerName}:${this.id}`, async () => {
+        return lockManager.acquire(`${callerName}:${this.name}`, async () => {
             return await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', this.name) || null;
         });
     }
@@ -94,19 +100,24 @@ export default class Category implements ICategory {
      * @returns A promise that resolves when the category has been successfully created.
      */
     async create(): Promise<ICategory> {
-        return lockManager.acquire(`Category.create:${this.id}`, async () => {
-            this.tags = []; // Do not save tags in the category object
-            this.bookmarks = []; // Do not save bookmarks in the category object
-            // Only proceed if the category does not already exist
-            try {
-                const existing = await this.exists();
-                if (!existing)
-                    return Operator.createRecord<ICategory>('categories', this);
-                return existing;
-            } catch (error) {
-                throw new Error(`An error occurred in Category.create:- ${error}, ${JSON.stringify(this)}`);
-            }
+        const x = lockManager.acquire(`Category.create:${this.name}`, async () => {
+            const category = adaptedCategory(this); // adapt for saving
+            const existing = await this.exists();
+            if (!existing) // Only proceed if the category does not already exist
+                return Operator.createRecord<ICategory>('categories', category);
+            return existing;
         });
+
+        try {
+            return await x;
+        } catch (error) {
+            throw new Error(`An error occurred in Category.create:- ${error}, ${this.id}`);
+        }
+    }
+
+    // Alias to the instance.create() method
+    static async create(category: ICategory): Promise<ICategory> {
+        return new Category(category).create();
     }
 
     /**
@@ -115,19 +126,19 @@ export default class Category implements ICategory {
      * @returns A promise that resolves when the update operation is complete.
      */
     async update(): Promise<void> {
-        await lockManager.acquire(`Category.update:${this.id}`, async () => {
-            this.tags = []; // Do not save tags in the category object
-            this.bookmarks = []; // Do not save bookmarks in the category object
-            try {
-                const existing = await this.exists();
-                if (!(existing)) {
-                    throw new Error(`Category.update: Category does not exist: ${this.id}`);
-                }
-                await Operator.updateRecord<ICategory>('categories', this);
-            } catch (error) {
-                throw new Error(`An error occurred in Category.update:- ${error}`);
+        const x = lockManager.acquire(`Category.update:${this.name}`, async () => {
+            const category = adaptedCategory(this); // adapt for saving
+            const existing = await this.exists();
+            if (!(existing)) {
+                throw new Error(`Category.update: Category does not exist: ${this.id}`);
             }
+            await Operator.updateRecord<ICategory>('categories', category);
         });
+        try {
+            await x;
+        } catch (error) {
+            throw new Error(`An error occurred in Category.update:- ${error}`);
+        }
     }
 
     /**
@@ -191,7 +202,7 @@ export default class Category implements ICategory {
      * @returns A promise that resolves when the category has been deleted and its bookmarks and tags have been migrated.
      */
     async delete(): Promise<void> {
-        lockManager.acquire(`Category.delete:${this.id}`, async () => {
+        lockManager.acquire(`Category.delete:${this.name}`, async () => {
             // Ensure the category exists
             try {
                 if (!(await Operator.getRecordByIndex('categories', 'categories_index', this.id)))

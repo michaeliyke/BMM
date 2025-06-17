@@ -15,42 +15,62 @@ const tags: ITag[] = [
         name: "Coals",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
+        categoryIds: [],
+        bookmarkIds: []
     },
     {
         id: '1',
         name: "Scamble",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
+        categoryIds: [],
+        bookmarkIds: []
     },
     {
         id: '2',
         name: "Steam",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
+        categoryIds: [],
+        bookmarkIds: []
     },
     {
         id: '3',
         name: "Hots",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
+        categoryIds: [],
+        bookmarkIds: []
     },
     {
         id: '4',
         name: "Muses",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
+        categoryIds: [],
+        bookmarkIds: []
     },
     {
         id: '5',
         name: "Rants",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
+        categoryIds: [],
+        bookmarkIds: []
     },
 ];
 
 // Tags 1-6 named through destructred array assignment
 const [t1, t2, t3, t4, t5, t6] = tags;
-const uxDesign = [{ id: '6', name: "Design", updated_at: "2021-09-01T00:00:00.000Z", created_at: "2021-09-01T00:00:00.000Z" }, { id: '7', name: "UX", updated_at: "2021-09-01T00:00:00.000Z", created_at: "2021-09-01T00:00:00.000Z" }];
+const uxDesign: ITag[] = [{
+    id: '6', name: "Design", updated_at: "2021-09-01T00:00:00.000Z", created_at: "2021-09-01T00:00:00.000Z",
+    categoryIds: [],
+    bookmarkIds: []
+}, {
+    id: '7', name: "UX", updated_at: "2021-09-01T00:00:00.000Z", created_at: "2021-09-01T00:00:00.000Z",
+    categoryIds: [],
+    bookmarkIds: []
+}];
 
 /**
  * An array of bookmark objects, each representing a bookmarked resource.
@@ -74,6 +94,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: tags.slice(4, 6),
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '1',
@@ -84,6 +107,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: tags.slice(0, 2),
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '2',
@@ -94,6 +120,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: tags.slice(4, 6),
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '3',
@@ -104,6 +133,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: tags.slice(4, 6),
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '4',
@@ -114,6 +146,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: tags.slice(1, 3),
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '5',
@@ -124,6 +159,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: tags.slice(1, 3),
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '6',
@@ -134,6 +172,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: tags.slice(1, 3),
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '7',
@@ -144,6 +185,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: tags.slice(1, 3),
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '8',
@@ -154,6 +198,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: uxDesign,
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '9',
@@ -164,6 +211,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: uxDesign,
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
     {
         id: '10',
@@ -174,6 +224,9 @@ const bookmarks: IBookmark[] = [
         created_at: "2021-09-01T00:00:00.000Z",
         tags: uxDesign,
         archived: 0,
+        categories: [],
+        categoryIds: [],
+        tagIds: []
     },
 ];
 
@@ -193,16 +246,7 @@ const [b1, b2, b3, b4, b5, b6, b7, b8] = bookmarks;
  * @property {string} created_at - The date when the category was created, in the format "YYYY-MM-DD".
  * @property {ITag[]} tags - An array of tags associated with the category, sliced from the `tags` array.
  */
-const categories: ICategory[] = [
-    {
-        id: '0',
-        is_default: 1,
-        name: "Default Category",
-        bookmarks: [b1, b2],
-        updated_at: "2021-09-01T00:00:00.000Z",
-        created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t1, t2],
-    },
+export const categories: ICategory[] = [
     {
         id: '1',
         is_default: 0,
@@ -211,6 +255,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t3, t4],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '2',
@@ -220,6 +266,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t5, t6],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '3',
@@ -229,6 +277,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t1, t2],
+        bookmarkIds: [],
+        tagIds: []
     },
 
     {
@@ -239,6 +289,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t3, t4],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '5',
@@ -248,6 +300,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t5, t6],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '6',
@@ -257,6 +311,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t1, t2],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '7',
@@ -266,6 +322,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t3, t4],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '8',
@@ -275,6 +333,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '9',
@@ -284,6 +344,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t5, t6],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '10',
@@ -293,6 +355,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t1, t2],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '11',
@@ -302,6 +366,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t3, t4],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '12',
@@ -311,6 +377,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t5, t6],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '13',
@@ -320,6 +388,8 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t1, t2],
+        bookmarkIds: [],
+        tagIds: []
     },
     {
         id: '14',
@@ -329,8 +399,21 @@ const categories: ICategory[] = [
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
         tags: [t3, t4, t5, t6],
+        bookmarkIds: [],
+        tagIds: []
     },
 
 ];
 
-export default categories;
+// Default category is purely UI: just means "all bookmarks"
+export const defaultCategory: ICategory = {
+    id: 'dummy-id',
+    name: 'Default Category', /* Do not change this, else logics may fail */
+    is_default: 1,
+    created_at: "",
+    updated_at: "",
+    tags: [],
+    bookmarks: [],
+    tagIds: [],
+    bookmarkIds: [],
+};

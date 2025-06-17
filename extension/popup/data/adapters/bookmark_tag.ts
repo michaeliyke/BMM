@@ -418,6 +418,49 @@ export default class BookmarkTag implements IBookmarkTag {
     }
 
     /**
+     * Creates a new bookmark and associates it with the specified tag.
+     *
+     * This method performs several validations before creating the bookmark:
+     * 1. Checks if the tag exists
+     * 2. Verifies that the bookmark does not already exist
+     * 3. Ensures the bookmark is not already associated with the tag
+     *
+     * The operation is protected by a lock to prevent concurrent modifications
+     * of the same bookmark.
+     *
+     * @param bookmark - The bookmark object to be created
+     * @param tag - The tag to associate with the bookmark
+     * @returns Promise resolving to the created bookmark object
+     * @throws Error if the tag doesn't exist
+     * @throws Error if the bookmark already exists
+     * @throws Error if the bookmark is already associated with the tag
+     * @throws Error if any other error occurs during creation
+     */
+    static async createBookmark(bookmark: Bookmark, tag: Tag): Promise<IBookmark> {
+        return lockManager.acquire(`BookmarkTag.createBookmark:${bookmark.id}`, async () => {
+            try {
+                // Ensure the tag exists
+                if (!(await tag.exists()))
+                    throw new Error(`BookmarkTag.createBookmark:- Tag not found: ${tag.name}`);
+
+                // Ensure bookmark does not already exists
+                if (await bookmark.exists())
+                    throw new Error(`BookmarkTag.createBookmark:- bookmark already exists ${bookmark.id}`);
+
+                // If the bookmark already exists under the category, throw an error
+                if (await BookmarkTag.exists(bookmark.id, tag.id))
+                    throw new Error("BookmarkTag.createBookmark:- index already exists");
+
+                await bookmark.create();
+                await new BookmarkTag({ bookmark_id: bookmark.id, tag_id: tag.id, id: uuid4() }).create();
+                return bookmark;
+            } catch (error) {
+                throw new Error(`An error occurred in Bookmarktag.createBookmark:- ${error}`);
+            }
+        });
+    }
+
+    /**
      * Adds an existing tag to a bookmark under a category.
      * If no category is selected, the tag is added the bookmark only.
      * @param tag - The tag to be added.

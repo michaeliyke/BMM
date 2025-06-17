@@ -1,6 +1,7 @@
 import { debounce, DebouncedFunc } from "lodash-es";
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { FiHash, FiSearch } from "react-icons/fi";
+import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
 import { getTags, resetSelections, tagsSearch, toggleHighlightedClass } from "../../../utils/common";
 import { ICategory, ITag } from "../../../utils/types/schemas";
@@ -15,7 +16,6 @@ export function ByTags() {
   const {
     setBookmarkToShow,
     selectedTag,
-    defaultCategory,
     setSelectedTag,
     setGrouping,
     data,
@@ -83,7 +83,7 @@ export function ByTags() {
       }
     };
 
-  }, [setGrouping, defaultCategory.name, selectedTag, query, data, hasExecuted]);
+  }, [setGrouping, selectedTag, query, data, hasExecuted]);
 
   return (
     <section className="filtered-list w-full h-full overflow-y-auto">
