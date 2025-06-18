@@ -35,6 +35,9 @@ interface IState {
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
 
+  allCategories: ICategory[];
+  setAllCategories: Dispatch<SetStateAction<ICategory[]>>;
+
   filteredBookmarks: IBookmark[];
   setFilteredBookmarks: (bookmarks: IBookmark[]) => void;
   getFilteredBookmarks: () => IBookmark[];
@@ -43,7 +46,6 @@ interface IState {
   getAllProperties: () => IBookmarkObjects;
   setAllProperties: Dispatch<SetStateAction<IBookmarkObjects>>;
 
-  getAllCategories: () => ICategory[];
 }
 
 type TState = {
@@ -75,20 +77,26 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
     filteredBookmarks: [],
 
     allProperties: {},
+    allCategories: [],
 
     getAllProperties() {
       return get().allProperties;
     },
+
+    setAllCategories(categories: SetStateAction<ICategory[]>) {
+      set((state) => ({
+        allCategories: typeof categories === 'function'
+          ? (categories as (prev: ICategory[]) => ICategory[])(state.allCategories)
+          : categories,
+      }));
+    },
+
     setAllProperties(props: SetStateAction<IBookmarkObjects>) {
       set((state) => ({
         allProperties: typeof props === 'function'
           ? (props as (prev: IBookmarkObjects) => IBookmarkObjects)(state.allProperties)
           : props,
       }));
-    },
-
-    getAllCategories() {
-      return Object.values(get().allProperties).flatMap(v => v.categories);
     },
 
     setFilteredCategories(categories: ICategory[]) {
@@ -175,3 +183,7 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
  * @type {IState}
  */
 export const useAppState = create<IState>(stateInitializer);
+
+export function getAllCategories(allProperties: IBookmarkObjects) {
+  return Object.values(allProperties).flatMap(v => v.categories);
+}

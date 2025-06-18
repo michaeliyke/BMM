@@ -11,7 +11,6 @@ import { FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
-import { log } from "../../../utils/functional.lib.dev";
 import { ICategory } from "../../../utils/types/schemas";
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
@@ -27,7 +26,7 @@ export default function ByCategories() {
     setBookmarkToShow,
     setSelectedCategory,
     setGrouping,
-    getAllCategories,
+    allCategories,
   } = useAppState();
   const [_categories, setCategories] = useState<ICategory[]>([]);
 
@@ -74,17 +73,17 @@ export default function ByCategories() {
 
   useEffect(() => {
     // Set the default category text in the header
+    // const d = getAllCategories(allProperties);
     setGrouping(defaultCategory.name); // Global state
-    setCategories(getAllCategories())
-    log("useEffects Here--------------");
-    return () => {
+    setCategories(allCategories);
+    return function () {
       // Cancel the debounced search function when the component unmounts.
       if (searchFnRef.current && hasExecuted) {
         searchFnRef.current.cancel();
         setHasExecuted(false);
       }
     };
-  }, [setGrouping, searchFnRef, hasExecuted, getAllCategories]);
+  }, [setGrouping, searchFnRef, hasExecuted, setCategories, allCategories]);
 
   return (
     <section className="filtered-list w-full h-full overflow-y-auto">
