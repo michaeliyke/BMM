@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import adapters from "./data/adapters";
-import { getAllCategories, useAppState } from "./hooks/globalstate";
+import { useAppState } from "./hooks/globalstate";
 import Home from "./pages/Home";
 import { error } from "./utils/functional.lib.dev";
 
@@ -18,7 +18,6 @@ export default function App() {
       setData(categories);
       const allProperties = await adapters.fetchAllProperties();
       setAllProperties(allProperties);
-      setAllCategories(getAllCategories(allProperties));
       return categories;
     }
     init().catch(error);

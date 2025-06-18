@@ -4,18 +4,19 @@ import { v4 as uuid4 } from 'uuid';
 import Category from "../../data/adapters/category";
 import Tag from "../../data/adapters/tag";
 import { useAppState } from "../../hooks/globalstate";
-import { ICategory } from "../../utils/types/schemas";
+import { error } from "../../utils/functional.lib.dev";
+import { IBookmarkObjects, ICategory } from "../../utils/types/schemas";
 
 export default function SideBarFooter() {
   const [showCategoryPopup, setShowCategoryPopup] = useState(false);
   const [showTagPopup, setShowTagPopup] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [tagName, setTagName] = useState("");
-  const { selectedCategory, setData } = useAppState();
+  const { selectedCategory, setData, setAllProperties } = useAppState();
 
 
-  const handleCreateCategory = () => {
-    const category = new Category({
+  function handleCreateCategory() {
+    Category.create({
       name: categoryName,
       is_default: 0,
       bookmarks: [],
@@ -25,20 +26,21 @@ export default function SideBarFooter() {
       tags: [],
       tagIds: [],
       bookmarkIds: [],
-    });
-    category.create()
-      .then(() => {
-        setData((state: ICategory[]) => {
-          return [...state, category]; // shallow copy of the state array
-        });
-        console.log("Category Created:", categoryName);
-        setShowCategoryPopup(false);
-        setCategoryName("");
-      })
-      .catch((error) => {
-        console.error(error);
+    }).then(function (category) {
+      setData(function (state: ICategory[]) {
+        return [...state, category]; // shallow copy of the state array
       });
-  };
+
+      setAllProperties(function (props: IBookmarkObjects) {
+        const categories = [...props.solo.categories, category];
+        const solo = { ...props.solo, categories };
+        return { ...props, solo };
+      });
+      console.log("Category Created:", categoryName);
+      setShowCategoryPopup(false);
+      setCategoryName("");
+    }).catch(error);
+  }
 
   const handleCreateTag = () => {
     const tag = new Tag({

@@ -46,6 +46,7 @@ interface IState {
   getAllProperties: () => IBookmarkObjects;
   setAllProperties: Dispatch<SetStateAction<IBookmarkObjects>>;
 
+  feedAllStateComponents(state: IBookmarkObjects): void;
 }
 
 type TState = {
@@ -84,19 +85,32 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
     },
 
     setAllCategories(categories: SetStateAction<ICategory[]>) {
-      set((state) => ({
-        allCategories: typeof categories === 'function'
-          ? (categories as (prev: ICategory[]) => ICategory[])(state.allCategories)
-          : categories,
-      }));
+      set(function (state) {
+
+        if (typeof categories === 'function')
+          return { allCategories: categories(state.allCategories) };
+
+        return { allCategories: categories };
+      });
     },
 
-    setAllProperties(props: SetStateAction<IBookmarkObjects>) {
-      set((state) => ({
-        allProperties: typeof props === 'function'
-          ? (props as (prev: IBookmarkObjects) => IBookmarkObjects)(state.allProperties)
-          : props,
-      }));
+    // All data parts needing properties will be fed here upon properties update
+    feedAllStateComponents(allProperties: IBookmarkObjects): void {
+      get().setAllCategories(getAllCategories(allProperties));
+    },
+
+    // sets up an all properties object. This objects makes things faster
+    setAllProperties(properties: SetStateAction<IBookmarkObjects>) {
+      set(function (state) {
+
+        if (typeof properties === 'function') {
+          get().feedAllStateComponents(properties(state.allProperties));
+          return { allProperties: properties(state.allProperties) };
+        }
+
+        get().feedAllStateComponents(properties);
+        return { allProperties: properties };
+      });
     },
 
     setFilteredCategories(categories: ICategory[]) {
@@ -134,11 +148,9 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
     },
 
     setData(data: SetStateAction<ICategory[]>) {
-      set((state) => ({
-        data: typeof data === 'function'
-          ? (data as (prev: ICategory[]) => ICategory[])(state.data)
-          : data,
-      }));
+      set(function (state) {
+        return { data: typeof data === 'function' ? data(state.data) : data };
+      });
     },
 
     setBookmarkToShow(bookmark: IBookmark | null) {
