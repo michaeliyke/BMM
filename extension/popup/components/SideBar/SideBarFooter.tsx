@@ -12,7 +12,7 @@ export default function SideBarFooter() {
   const [showTagPopup, setShowTagPopup] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [tagName, setTagName] = useState("");
-  const { selectedCategory, setBmm } = useAppState();
+  const { selectedCategory, feedAllStateComponents } = useAppState();
 
 
   function handleCreateCategory() {
@@ -26,7 +26,7 @@ export default function SideBarFooter() {
       bookmarkIds: [],
     }).then(function (category) {
 
-      setBmm(function (bmm: IBMM) {
+      feedAllStateComponents(function (bmm: IBMM) {
         bmm.categoryObjects = { ...bmm.categoryObjects, [category.id]: category };
         bmm.categories = [...bmm.categories, category.id];
         bmm.unlinked.categories = [...bmm.unlinked.categories, category.id];
@@ -51,7 +51,7 @@ export default function SideBarFooter() {
 
     tag.create()
       .then((tag) => {
-        return void setBmm(function (bmm: IBMM) {
+        return void feedAllStateComponents(function (bmm: IBMM) {
           bmm.tagObjects = { ...bmm.tagObjects, [tag.id]: tag };
           bmm.tags = [...bmm.tags, tag.id];
 

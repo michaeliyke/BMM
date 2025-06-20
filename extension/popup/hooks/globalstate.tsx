@@ -51,7 +51,7 @@ interface IState {
   getBmm(): IBMM;
   setBmm(next: IBMM | ((prev: IBMM) => IBMM)): void;
 
-  feedAllStateComponents(state: IBMM): void;
+  feedAllStateComponents(nextBMM: IBMM | ((prev: IBMM) => IBMM)): void;
 }
 
 type TState = {
@@ -132,7 +132,8 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
     },
 
     // All data parts needing properties will be fed here upon properties update
-    feedAllStateComponents(bmm: IBMM): void {
+    feedAllStateComponents(_bmm: SetStateAction<IBMM>): void {
+      const bmm = typeof _bmm === "function" ? _bmm(get().bmm) : _bmm;
       get().setBmm(bmm);
       get().setAllCategories(getAllCategories(bmm));
     },
