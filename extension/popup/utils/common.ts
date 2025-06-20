@@ -505,3 +505,16 @@ export async function closePopup(POPUPID: number) {
     throw new Error(`Application window already closed: ${e}`);
   }
 }
+
+export function filterUniqueBookmarks(bookmarks: IBookmark[]) {
+  // Use a map to ensure that the bookmarks are unique
+  const uniqueBookmarks = new Map<string, IBookmark>();
+  function unique(bookmark: IBookmark) {
+    if (bookmark.archived === 1 || uniqueBookmarks.has(bookmark.id)) {
+      return false;
+    }
+    uniqueBookmarks.set(bookmark.id, bookmark);
+    return true;
+  }
+  return bookmarks.filter(unique)
+}

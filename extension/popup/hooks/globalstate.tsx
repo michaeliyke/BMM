@@ -31,13 +31,16 @@ interface IState {
   getFilteredCategories: () => ICategory[];
 
   bookmarks: IBookmark[];
-  setBookmarks: (bookmarks: IBookmark[] | ((bookmarks: IBookmark[]) => IBookmark[])) => void;
+  setBookmarks: (bookmarks: IBookmark[] | ((prev: IBookmark[]) => IBookmark[])) => void;
 
   data: ICategory[];
   setData: Dispatch<SetStateAction<ICategory[]>>;
 
   allCategories: ICategory[];
   setAllCategories(next: ICategory[] | ((prev: ICategory[]) => ICategory[])): void
+
+  tags: ITag[];
+  setTags(tags: ITag[] | ((prev: ITag[]) => ITag[])): void
 
   filteredBookmarks: IBookmark[];
   setFilteredBookmarks: (bookmarks: IBookmark[]) => void;
@@ -94,6 +97,7 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
         tags: []
       }
     },
+    tags: [],
     bmm: {
       bookmarks: [],
       bookmarkObjects: {},
@@ -124,6 +128,24 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
       return get().allProperties;
     },
 
+    setBookmarks(bookmarks: SetStateAction<IBookmark[]>) {
+      set(function (state) {
+        const _state = typeof bookmarks === "function"
+          ? { ...state, bookmarks: bookmarks(state.bookmarks) }
+          : { ...state, bookmarks };
+        return _state;
+      });
+    },
+
+    setTags(tags: SetStateAction<ITag[]>): void {
+      set(function (state) {
+        const _state = typeof tags === "function"
+          ? { ...state, tags: tags(state.tags) }
+          : { ...state, tags };
+        return _state;
+      });
+    },
+
     setAllCategories(categories: SetStateAction<ICategory[]>) {
       if (typeof categories !== 'function') {
         return void set({ allCategories: categories });
@@ -136,6 +158,8 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
       const bmm = typeof _bmm === "function" ? _bmm(get().bmm) : _bmm;
       get().setBmm(bmm);
       get().setAllCategories(getAllCategories(bmm));
+      get().setBookmarks(getAllBookmarks(bmm));
+      get().setTags(getAllTags(bmm));
     },
 
     // sets up an all properties object. This objects makes things faster
@@ -164,26 +188,6 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
     },
     getFilteredBookmarks() {
       return get().filteredBookmarks;
-    },
-
-    setBookmarks(bookmarks: IBookmark[] | ((bookmarks: IBookmark[]) => IBookmark[])) {
-      // Use a map to ensure that the bookmarks are unique
-      const uniqueBookmarks = new Map<string, IBookmark>();
-      function unique(bookmark: IBookmark) {
-        if (bookmark.archived === 1 || uniqueBookmarks.has(bookmark.id)) {
-          return false;
-        }
-        uniqueBookmarks.set(bookmark.id, bookmark);
-        return true;
-      }
-
-      if (Array.isArray(bookmarks)) {
-        set({ bookmarks: bookmarks.filter(unique) });
-      } else {
-        set((state) => {
-          return { bookmarks: bookmarks(state.bookmarks).filter(unique) };
-        });
-      }
     },
 
     setData(data: SetStateAction<ICategory[]>) {

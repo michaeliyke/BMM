@@ -12,14 +12,15 @@ type CL = ICategory[];
 
 export function ByTags() {
   const [query, setQuery] = useState<string>('');
-  const [tags, setTags] = useState<ITag[]>([]);
+  const [_tags, setTags] = useState<ITag[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(false);
   const {
     setBookmarkToShow,
     selectedTag,
     setSelectedTag,
     setGrouping,
-    data,
+    allCategories,
+    tags,
   } = useAppState();
 
   /**
@@ -38,11 +39,6 @@ export function ByTags() {
     return [];
   }
 
-  function getTags(d: ICategory[]): ITag[] {
-    log(d);
-    return [];
-  }
-
   const search = useCallback((query: string, categories: CL, setCategories: DSI) => {
     if (!searchFnRef.current)
       searchFnRef.current = debounce(performSearch, 300);
@@ -58,7 +54,7 @@ export function ByTags() {
 
   function handleSearch(query: string) {
     setQuery(query);
-    search(query, data, setTags);
+    search(query, allCategories, setTags);
   }
 
   function toggleSelected(tag: ITag, event: React.MouseEvent<HTMLLIElement>) {
@@ -84,7 +80,7 @@ export function ByTags() {
     setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
 
     if (!query)
-      setTags(getTags(data));
+      setTags(tags);
 
     return () => {
       // Clean up the debounced search function after it has executed
@@ -94,7 +90,7 @@ export function ByTags() {
       }
     };
 
-  }, [setGrouping, selectedTag, query, data, hasExecuted]);
+  }, [setGrouping, selectedTag, query, hasExecuted, tags]);
 
   return (
     <section className="filtered-list w-full h-full overflow-y-auto">
@@ -127,7 +123,7 @@ export function ByTags() {
           <FiHash className="text-sm text-gray-400" />
           <span>All Tags</span>
         </li>
-        {tags.map((tag, index) => (
+        {_tags.map((tag, index) => (
           <li
             key={index}
             data-tag={tag.name}
