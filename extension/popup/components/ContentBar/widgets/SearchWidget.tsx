@@ -1,8 +1,9 @@
 import { DebouncedFunc, debounce } from "lodash-es";
 import { useCallback, useEffect, useRef } from "react";
 import { useAppState } from "../../../hooks/globalstate";
-import { getBookmarks, weightedSearch } from "../../../utils/common";
-import { IBookmark } from "../../../utils/types/schemas";
+import { weightedSearch } from "../../../utils/common";
+import { log } from "../../../utils/functional.lib.dev";
+import { IBookmark, ICategory } from "../../../utils/types/schemas";
 
 /**
  * SearchWidget component allows users to search and filter bookmarks.
@@ -27,6 +28,11 @@ export function SearchWidget() {
     }
     debouncedSearchRef.current(query);
   }, []);
+
+  function getBookmarks(d: ICategory[]): IBookmark[] {
+    log(d);
+    return [];
+  }
 
   function searchHandler(event: React.ChangeEvent<HTMLInputElement>) {
     const query = event.target.value;

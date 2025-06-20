@@ -18,19 +18,6 @@ import CategoryBookmark from "./category_bookmark";
  *
  * The `BookmarkBin` class provides methods to manage bookmarks that have been deleted.
  * It allows for restoring bookmarks, moving bookmarks to the bin, and retrieving deleted bookmarks.
- *
- * @class
- * @property {string} created_at - The creation date of the bookmark.
- * @property {string} updated_at - The last update date of the bookmark.
- * @property {string} deleted_at - The deletion date of the bookmark.
- * @property {string} tag_ids - A comma-separated list of tag IDs associated with the bookmark.
- * @property {string} category_ids - A comma-separated list of category IDs associated with the bookmark.
- * @property {string} note_ids - A comma-separated list of note IDs associated with the bookmark.
- * @property {string} id - The unique identifier of the bookmark bin entry.
- * @property {string} bookmark_id - The unique identifier of the bookmark.
- * @property {string} title - The title of the bookmark.
- * @property {string} url - The URL of the bookmark.
- * @property {string} description - The description of the bookmark.
  */
 export default class BookmarkBin {
     created_at: string;
@@ -161,8 +148,9 @@ export default class BookmarkBin {
                     description: this.description,
                     created_at: this.created_at,
                     updated_at: this.updated_at,
-                    tags: [],
-                    archived: 0
+                    archived: 0,
+                    categoryIds: [],
+                    tagIds: [],
                 });
                 if (await bookmark.exists())  // TODO
                     throw new Error(`Bookmark already exists:- ${bookmark.id}`);
@@ -209,8 +197,9 @@ export default class BookmarkBin {
                     description: this.description,
                     created_at: this.created_at,
                     updated_at: this.updated_at,
-                    tags: [],
-                    archived: 0
+                    archived: 0,
+                    categoryIds: [],
+                    tagIds: [],
                 });
                 if (!await bookmark.exists()) {
                     if (await this.exists()) { // if it exists in bookmark_bin, warn

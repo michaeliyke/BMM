@@ -8,15 +8,11 @@ export function uuid4(options?: Version4Options, buf?: undefined, offset?: numbe
 
 export function adaptedCategory(_category: ICategory) {
   const category = Object.assign({}, _category);
-  category.bookmarks = [];
-  category.tags = [];
   return category;
 }
 
 export function adaptedBookmark(_bookmark: IBookmark) {
   const bookmark = Object.assign({}, _bookmark);
-  bookmark.categories = [];
-  bookmark.tags = [];
   return bookmark;
 }
 

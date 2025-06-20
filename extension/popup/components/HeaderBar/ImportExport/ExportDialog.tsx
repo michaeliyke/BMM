@@ -1,6 +1,5 @@
 import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/react";
 import { CiImport } from "react-icons/ci";
-import { getBookmarks } from "../../../utils/common";
 import { ICategory } from "../../../utils/types/schemas";
 
 type IPProps = {
@@ -8,8 +7,8 @@ type IPProps = {
 }
 
 export default function ImportPopover(props: IPProps) {
-  const names = getBookmarks(props.categories)
-    .map(bookmark => bookmark.title);
+  // const names = getBookmarks(props.categories).map(bookmark => bookmark.title);
+  const names: string[] = [];
 
   function exportBookmarks() {
     const json = JSON.stringify(props.categories, null, 4);

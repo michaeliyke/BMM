@@ -3,7 +3,8 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } fr
 import { FiHash, FiSearch } from "react-icons/fi";
 import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
-import { getTags, resetSelections, tagsSearch, toggleHighlightedClass } from "../../../utils/common";
+import { resetSelections, toggleHighlightedClass } from "../../../utils/common";
+import { log } from "../../../utils/functional.lib.dev";
 import { ICategory, ITag } from "../../../utils/types/schemas";
 
 type DSI = Dispatch<SetStateAction<ITag[]>>;
@@ -31,6 +32,16 @@ export function ByTags() {
    * @type {React.MutableRefObject<DebouncedFunc<(q: string) => void> | null>}
    */
   const searchFnRef = useRef<DebouncedFunc<(q: string) => void> | null>(null);
+
+  function tagsSearch(s: string, d: ICategory[]): ITag[] {
+    log(s, d);
+    return [];
+  }
+
+  function getTags(d: ICategory[]): ITag[] {
+    log(d);
+    return [];
+  }
 
   const search = useCallback((query: string, categories: CL, setCategories: DSI) => {
     if (!searchFnRef.current)

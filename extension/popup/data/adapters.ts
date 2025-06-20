@@ -1,12 +1,7 @@
 import Bookmark from "./adapters/bookmark";
 import Category from "./adapters/category";
-import Tag from "./adapters/tag";
 // import User from "./adapters/user";
-import { v4 as uuid4 } from "uuid";
 import { IBookmark, ICategory } from "../utils/types/schemas";
-import BookmarkTag from "./adapters/bookmark_tag";
-import CategoryBookmark from "./adapters/category_bookmark";
-import CategoryTag from "./adapters/category_tag";
 export default {
     /**
      * Retrieves all categories.
@@ -44,7 +39,7 @@ export default {
             if (!await cat.exists())
                 await cat.create();
             // save category-tags relationship
-            for (const tag of category.tags) {
+            /* for (const tag of category.tags) {
                 const tg = new Tag(tag);
                 if (!await tg.exists())
                     await tg.create();
@@ -57,41 +52,41 @@ export default {
 
                 if (!await catTg.exists())
                     await catTg.create();
-            }
+            } */
 
             // Save bookmarks, category-bookmarks, and bookmark-tags relationships
-            for (const bookmark of category.bookmarks) {
-                const book = new Bookmark({ ...bookmark, archived: 0 });
-                if (!await book.exists())
-                    await book.create();
-                // Save category-bookmark
-                const cateBook = new CategoryBookmark({
-                    id: uuid4(),
-                    category_id: category.id,
-                    bookmark_id: bookmark.id,
-                });
+            /*  for (const bookmark of category.bookmarks) {
+                 const book = new Bookmark({ ...bookmark, archived: 0 });
+                 if (!await book.exists())
+                     await book.create();
+                 // Save category-bookmark
+                 const cateBook = new CategoryBookmark({
+                     id: uuid4(),
+                     category_id: category.id,
+                     bookmark_id: bookmark.id,
+                 });
 
-                if (!await cateBook.exists())
-                    await cateBook.create();
+                 if (!await cateBook.exists())
+                     await cateBook.create();
 
-                // save bookmark-tags relationship
-                for (const tag of bookmark.tags) {
-                    const tg = new Tag(tag);
+                 // save bookmark-tags relationship
+                 for (const tag of bookmark.tags) {
+                     const tg = new Tag(tag);
 
-                    if (!await tg.exists())
-                        await tg.create();
+                     if (!await tg.exists())
+                         await tg.create();
 
-                    // Save bookmark-tag association
-                    const bookTg = new BookmarkTag({
-                        id: uuid4(),
-                        bookmark_id: bookmark.id,
-                        tag_id: tag.id,
-                    });
+                     // Save bookmark-tag association
+                     const bookTg = new BookmarkTag({
+                         id: uuid4(),
+                         bookmark_id: bookmark.id,
+                         tag_id: tag.id,
+                     });
 
-                    if (!await bookTg.exists())
-                        await bookTg.create();
-                }
-            }
+                     if (!await bookTg.exists())
+                         await bookTg.create();
+                 }
+             } */
         }
     },
 
@@ -103,7 +98,7 @@ export default {
                 await (new Bookmark({ ...bookmark, archived: 0 })).create();
 
             // save bookmark-tags relationship
-            for (const tag of bookmark.tags) {
+            /* for (const tag of bookmark.tags) {
                 if (!await Tag.exists(tag.name))
                     await (new Tag(tag)).create();
 
@@ -116,7 +111,7 @@ export default {
 
                 if (!await bookTg.exists())
                     await bookTg.create();
-            }
+            } */
         }
     },
 };

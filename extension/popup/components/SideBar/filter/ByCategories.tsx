@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 
 import {
-  categoryTagsSearch,
   sortedCategories,
   toggleHighlightedClass
 } from "../../../utils/common";
@@ -12,6 +11,7 @@ import { PiTagSimpleFill } from "react-icons/pi";
 import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
 import { ICategory } from "../../../utils/types/schemas";
+import { log } from "../../../utils/functional.lib.dev";
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
 
@@ -138,5 +138,10 @@ export default function ByCategories() {
     </section>
 
   )
+}
+
+function categoryTagsSearch(q: string, categories: CL): SetStateAction<ICategory[]> {
+  log(q, categories);
+  throw new Error("Function not implemented.");
 }
 

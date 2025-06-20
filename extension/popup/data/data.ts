@@ -61,8 +61,8 @@ const tags: ITag[] = [
 ];
 
 // Tags 1-6 named through destructred array assignment
-const [t1, t2, t3, t4, t5, t6] = tags;
-const uxDesign: ITag[] = [{
+export const [t1, t2, t3, t4, t5, t6] = tags;
+export const uxDesign: ITag[] = [{
     id: '6', name: "Design", updated_at: "2021-09-01T00:00:00.000Z", created_at: "2021-09-01T00:00:00.000Z",
     categoryIds: [],
     bookmarkIds: []
@@ -92,9 +92,9 @@ const bookmarks: IBookmark[] = [
         url: "https://grow.google/certificates/",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: tags.slice(4, 6),
+        // tags: tags.slice(4, 6),
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -105,9 +105,9 @@ const bookmarks: IBookmark[] = [
         url: "https://grow.google/certificates/",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: tags.slice(0, 2),
+        // tags: tags.slice(0, 2),
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -118,9 +118,9 @@ const bookmarks: IBookmark[] = [
         url: "https://grow.google/certificates/",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: tags.slice(4, 6),
+        // tags: tags.slice(4, 6),
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -131,9 +131,9 @@ const bookmarks: IBookmark[] = [
         url: "https://grow.google/certificates/",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: tags.slice(4, 6),
+        // tags: tags.slice(4, 6),
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -144,9 +144,9 @@ const bookmarks: IBookmark[] = [
         url: "https://michaelcareers.com/",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: tags.slice(1, 3),
+        // tags: tags.slice(1, 3),
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -157,9 +157,9 @@ const bookmarks: IBookmark[] = [
         url: "https://michaelcareers.com/",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: tags.slice(1, 3),
+        // tags: tags.slice(1, 3),
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -170,9 +170,9 @@ const bookmarks: IBookmark[] = [
         url: "https://michaelcareers.com/",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: tags.slice(1, 3),
+        // tags: tags.slice(1, 3),
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -183,9 +183,9 @@ const bookmarks: IBookmark[] = [
         url: "https://michaelcareers.com/",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: tags.slice(1, 3),
+        // tags: tags.slice(1, 3),
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -196,9 +196,9 @@ const bookmarks: IBookmark[] = [
         url: "https://www.uxlibrary.org/explore/ui-design/ui-patterns-and-inspiration",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: uxDesign,
+        // tags: uxDesign,
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -209,9 +209,9 @@ const bookmarks: IBookmark[] = [
         url: "https://copilot.microsoft.com/shares/cSL3TNPTKa4abaiJc86At",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: uxDesign,
+        // tags: uxDesign,
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
@@ -222,16 +222,16 @@ const bookmarks: IBookmark[] = [
         url: "https://layers.to/",
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: uxDesign,
+        // tags: uxDesign,
         archived: 0,
-        categories: [],
+        // categories: [],
         categoryIds: [],
         tagIds: []
     },
 ];
 
 // Bookmarks 1-4 named through destructred array assignment
-const [b1, b2, b3, b4, b5, b6, b7, b8] = bookmarks;
+export const [b1, b2, b3, b4, b5, b6, b7, b8] = bookmarks;
 
 /**
  * An array of category objects, each representing a category with its associated properties.
@@ -251,10 +251,10 @@ export const categories: ICategory[] = [
         id: '1',
         is_default: 0,
         name: "Programming Languages",
-        bookmarks: [b3, b4],
+        // bookmarks: [b3, b4],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t3, t4],
+        // tags: [t3, t4],
         bookmarkIds: [],
         tagIds: []
     },
@@ -262,10 +262,10 @@ export const categories: ICategory[] = [
         id: '2',
         is_default: 0,
         name: "Frontend Space",
-        bookmarks: [b5, b6],
+        // bookmarks: [b5, b6],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t5, t6],
+        // tags: [t5, t6],
         bookmarkIds: [],
         tagIds: []
     },
@@ -273,10 +273,10 @@ export const categories: ICategory[] = [
         id: '3',
         is_default: 0,
         name: "Backend Space",
-        bookmarks: [b7, b8],
+        // bookmarks: [b7, b8],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t1, t2],
+        // tags: [t1, t2],
         bookmarkIds: [],
         tagIds: []
     },
@@ -285,10 +285,10 @@ export const categories: ICategory[] = [
         id: '4',
         is_default: 0,
         name: "The Physical World",
-        bookmarks: [b1, b2],
+        // bookmarks: [b1, b2],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t3, t4],
+        // tags: [t3, t4],
         bookmarkIds: [],
         tagIds: []
     },
@@ -296,10 +296,10 @@ export const categories: ICategory[] = [
         id: '5',
         is_default: 0,
         name: "Career Solutions",
-        bookmarks: [b3, b4],
+        // bookmarks: [b3, b4],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t5, t6],
+        // tags: [t5, t6],
         bookmarkIds: [],
         tagIds: []
     },
@@ -307,10 +307,10 @@ export const categories: ICategory[] = [
         id: '6',
         is_default: 0,
         name: "Programming World",
-        bookmarks: [b5, b6],
+        // bookmarks: [b5, b6],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t1, t2],
+        // tags: [t1, t2],
         bookmarkIds: [],
         tagIds: []
     },
@@ -318,10 +318,10 @@ export const categories: ICategory[] = [
         id: '7',
         is_default: 0,
         name: "Frontend",
-        bookmarks: [b7, b8],
+        // bookmarks: [b7, b8],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t3, t4],
+        // tags: [t3, t4],
         bookmarkIds: [],
         tagIds: []
     },
@@ -329,10 +329,10 @@ export const categories: ICategory[] = [
         id: '8',
         is_default: 0,
         name: "Backend Engineering",
-        bookmarks: [b1, b2],
+        // bookmarks: [b1, b2],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [],
+        // tags: [],
         bookmarkIds: [],
         tagIds: []
     },
@@ -340,10 +340,10 @@ export const categories: ICategory[] = [
         id: '9',
         is_default: 0,
         name: "Human Emotions",
-        bookmarks: [b3, b4],
+        // bookmarks: [b3, b4],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t5, t6],
+        // tags: [t5, t6],
         bookmarkIds: [],
         tagIds: []
     },
@@ -351,10 +351,10 @@ export const categories: ICategory[] = [
         id: '10',
         is_default: 0,
         name: "Career Paths",
-        bookmarks: [b5, b6],
+        // bookmarks: [b5, b6],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t1, t2],
+        // tags: [t1, t2],
         bookmarkIds: [],
         tagIds: []
     },
@@ -362,10 +362,10 @@ export const categories: ICategory[] = [
         id: '11',
         is_default: 0,
         name: "Programming",
-        bookmarks: [b7, b8],
+        // bookmarks: [b7, b8],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t3, t4],
+        // tags: [t3, t4],
         bookmarkIds: [],
         tagIds: []
     },
@@ -373,10 +373,10 @@ export const categories: ICategory[] = [
         id: '12',
         is_default: 0,
         name: "Frontend World",
-        bookmarks: [b1, b2],
+        // bookmarks: [b1, b2],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t5, t6],
+        // tags: [t5, t6],
         bookmarkIds: [],
         tagIds: []
     },
@@ -384,10 +384,10 @@ export const categories: ICategory[] = [
         id: '13',
         is_default: 0,
         name: "Backend",
-        bookmarks: [b3, b4],
+        // bookmarks: [b3, b4],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t1, t2],
+        // tags: [t1, t2],
         bookmarkIds: [],
         tagIds: []
     },
@@ -395,10 +395,10 @@ export const categories: ICategory[] = [
         id: '14',
         is_default: 0,
         name: "Human World",
-        bookmarks: [b5, b6],
+        // bookmarks: [b5, b6],
         updated_at: "2021-09-01T00:00:00.000Z",
         created_at: "2021-09-01T00:00:00.000Z",
-        tags: [t3, t4, t5, t6],
+        // tags: [t3, t4, t5, t6],
         bookmarkIds: [],
         tagIds: []
     },
@@ -412,8 +412,8 @@ export const defaultCategory: ICategory = {
     is_default: 1,
     created_at: "",
     updated_at: "",
-    tags: [],
-    bookmarks: [],
+    // tags: [],
+    // bookmarks: [],
     tagIds: [],
     bookmarkIds: [],
 };

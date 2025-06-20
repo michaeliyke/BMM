@@ -156,7 +156,7 @@ export function weightedSearch(query: string, bookmarks: IBookmark[]): IBookmark
     .map((result) => result.bookmark); // Return sorted bookmarks.
 }
 
-export function categoryTagsSearch(query: string, categories: ICategory[]): ICategory[] {
+/* export function categoryTagsSearch(query: string, categories: ICategory[]): ICategory[] {
   if (!query.trim())
     return categories;
 
@@ -189,7 +189,7 @@ export function categoryTagsSearch(query: string, categories: ICategory[]): ICat
     .sort((a, b) => b.totalScore - a.totalScore) // Sort by relevance (highest score first).
     .map((result) => result.category); // Return sorted bookmarks.
 }
-
+ */
 export function categoriesSearch(query: string, categories: ICategory[]): ICategory[] {
   if (!query.trim())
     return categories;
@@ -199,42 +199,6 @@ export function categoriesSearch(query: string, categories: ICategory[]): ICateg
     .sort((a, b) => a.name.localeCompare(b.name)); // Sort by name (alphabetical order).
 }
 
-/**
- * Retrieves all bookmarks from the provided categories.
- *
- * @param categories - An array of category objects, each containing an array of bookmarks.
- * @returns An array of bookmarks extracted from the provided categories.
- */
-export function getBookmarks(categories: ICategory[]): IBookmark[] {
-  return categories.flatMap((category) => category.bookmarks)
-    .filter((bookmark) => bookmark.archived !== 1);
-}
-
-/**
- * Retrieves the categories that contain the specified bookmark.
- *
- * @param bookmark - The bookmark to find categories for.
- * @param categories - The list of categories to search within.
- * @returns An array of categories that contain the specified bookmark.
- */
-export function getBookmarkCategories(bookmark: IBookmark, categories: ICategory[]): ICategory[] {
-  return categories.filter((category) => {
-    // Exclude default category from search
-    if (category.is_default === 1) return false;
-    return category.bookmarks.some((b) => b.id === bookmark.id);
-  });
-}
-
-/**
- * Filters out archived bookmarks from a list of categories.
- *
- * @param categories - An array of category objects, each containing a list of bookmarks.
- * @returns An array of bookmarks that are marked as archived.
- */
-export function filterArchived(categories: ICategory[]): IBookmark[] {
-  return categories.flatMap((category) => category.bookmarks)
-    .filter((bookmark) => bookmark.archived === 1);
-}
 
 
 /**
@@ -370,15 +334,6 @@ export async function getCurrentTabTitle() {
 }
 
 
-/**
- * Extracts and returns an array of tags from the given categories.
- *
- * @param categories - An array of category objects, each containing a list of tags.
- * @returns An array of tags extracted from the provided categories.
- */
-export function getTags(categories: ICategory[]): ITag[] {
-  return fixTagDuplicates(categories.flatMap((category) => category.tags));
-}
 
 /**
  * Removes duplicate tags from an array and sorts them by name.
@@ -402,7 +357,7 @@ export function fixTagDuplicates(tags: ITag[]): ITag[] {
  * @param categories - An array of tags to be filtered and sorted.
  * @returns An array of tags that match the search query, sorted alphabetically by name.
  */
-export function tagsSearch(query: string, categories: ICategory[]): ITag[] {
+/* export function tagsSearch(query: string, categories: ICategory[]): ITag[] {
   if (!query.trim())
     return fixTagDuplicates(categories.flatMap((category) => category.tags));
 
@@ -413,7 +368,7 @@ export function tagsSearch(query: string, categories: ICategory[]): ITag[] {
         tags.push(tag);
 
   return fixTagDuplicates(tags);
-}
+} */
 
 
 /**

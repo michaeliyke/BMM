@@ -1,12 +1,17 @@
 import { useRef, useState } from "react";
 import { FiChevronDown, FiChevronUp, FiTag } from "react-icons/fi";
 import { useClickAway } from "react-use";
-import { getBookmarkCategories } from "../../utils/common";
-import { IBookmark } from "../../utils/types/schemas";
 import { useAppState } from "../../hooks/globalstate";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
+import { log } from "../../utils/functional.lib.dev";
 
 interface CategoryDropdownProps {
   bookmark: IBookmark;
+}
+
+function getBookmarkCategories(b: IBookmark, d: ICategory[]): ICategory[] {
+  log(b, d)
+  return [];
 }
 
 export default function CategoryDropdown({ bookmark }: CategoryDropdownProps) {

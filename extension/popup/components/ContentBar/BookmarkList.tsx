@@ -8,7 +8,7 @@ import Bookmark from "../../data/adapters/bookmark";
 import { useAppState } from "../../hooks/globalstate";
 import { sortedBookmarks } from "../../utils/common";
 import ReadableDate from "../../utils/readabledate";
-import { IBookmark } from "../../utils/types/schemas";
+import { IBookmark, ITag } from "../../utils/types/schemas";
 import BookmarkItemFooter from "./BookmarkItemFooter";
 import CategoryDropdown from "./CategoryDropDown";
 import { ArchiveDialog } from "./dialogs/ArchiveDialog";
@@ -43,8 +43,8 @@ export default function BookmarkList() {
 
   // Filter out bookmarks that include the selected tag
   if (selectedTag) {
-    filteredBookmarks = bookmarks.filter((bookmark) => {
-      return bookmark.tags.some((tag) => tag.name === selectedTag.name);
+    filteredBookmarks = bookmarks.filter(() => {
+      return ([] as ITag[]).some((tag) => tag.name === selectedTag.name);
     });
   }
 

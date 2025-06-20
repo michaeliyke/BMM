@@ -1,7 +1,3 @@
-import adapters from "../data/adapters";
-import Bookmark from "../data/adapters/bookmark";
-import Category from "../data/adapters/category";
-import Tag from "../data/adapters/tag";
 import { IBookmark, ICategory, ImportData, ITag } from "./types/schemas";
 
 /**
@@ -11,7 +7,7 @@ import { IBookmark, ICategory, ImportData, ITag } from "./types/schemas";
  * @param setData - A React state setter function to update the categories state.
  * @returns An asynchronous function that performs the import operation.
  */
-export function importCategoriesHandler(categories: ICategory[], setData: React.Dispatch<React.SetStateAction<ICategory[]>>) {
+/* export function importCategoriesHandler(categories: ICategory[], setData: React.Dispatch<React.SetStateAction<ICategory[]>>) {
   return async function () {
     await adapters.loadBulkData(categories);
     setData((prevData) => {
@@ -62,7 +58,7 @@ export function importCategoriesHandler(categories: ICategory[], setData: React.
     });
   };
 }
-
+ */
 /**
  * Handles the import of bookmarks and updates the state with the new bookmarks.
  *
@@ -70,7 +66,7 @@ export function importCategoriesHandler(categories: ICategory[], setData: React.
  * @param {React.Dispatch<React.SetStateAction<ICategory[]>>} setData - A function to update the state with the new categories.
  * @returns {() => Promise<void>} - A function that, when called, imports the bookmarks and updates the state.
  */
-export function importBookmarksHandler(bookmarks: IBookmark[], setData: React.Dispatch<React.SetStateAction<ICategory[]>>) {
+/* export function importBookmarksHandler(bookmarks: IBookmark[], setData: React.Dispatch<React.SetStateAction<ICategory[]>>) {
   return async function () {
     await adapters.loadBulkBookmarks(bookmarks);
     setData((prevData) => {
@@ -87,7 +83,7 @@ export function importBookmarksHandler(bookmarks: IBookmark[], setData: React.Di
       return newCategories;
     });
   };
-}
+} */
 
 /**
  * Validates the imported data by checking if each category, bookmark, and tag already exists in the database.
@@ -99,7 +95,7 @@ export function importBookmarksHandler(bookmarks: IBookmark[], setData: React.Di
  *
  * @returns A promise that resolves when the validation is complete.
  */
-export async function validateImported(importedData: ImportData) {
+/* export async function validateImported(importedData: ImportData) {
   if (isCategoryArray(importedData)) {
     // If the imported data is a list of categories, check if each category already exists.
     for (const category of importedData) {
@@ -113,7 +109,7 @@ export async function validateImported(importedData: ImportData) {
   }
   // If the imported data is a list of bookmarks, check if each bookmark already exists.
   await markBookmarkExists(importedData);
-}
+} */
 
 /**
  * Checks if each bookmark and its associated tags exist in the database and updates their `importExists` property.
@@ -121,7 +117,7 @@ export async function validateImported(importedData: ImportData) {
  * @param bookmarks - An array of bookmarks to check for existence.
  * @returns A promise that resolves when the existence check is complete.
  */
-export async function markBookmarkExists(bookmarks: IBookmark[]) {
+/* export async function markBookmarkExists(bookmarks: IBookmark[]) {
   for (const bookmark of bookmarks) {
     bookmark.importExists = !!await Bookmark.exists(bookmark.id);
     for (const tag of bookmark.tags) {
@@ -129,7 +125,7 @@ export async function markBookmarkExists(bookmarks: IBookmark[]) {
     }
   }
 }
-
+ */
 /**
  * Checks if the given array is an array of ICategory objects.
  *
@@ -168,11 +164,11 @@ export function isImportData(data: unknown): data is ImportData {
  * @param setData - A React state setter function to update the state with the imported data.
  * @returns The result of the appropriate import handler function.
  */
-export function getImportHandler(data: ImportData, setData: React.Dispatch<React.SetStateAction<ICategory[]>>) {
+/* export function getImportHandler(data: ImportData, setData: React.Dispatch<React.SetStateAction<ICategory[]>>) {
   if (isCategoryArray(data))
     return importCategoriesHandler(data, setData);
   return importBookmarksHandler(data, setData);
-}
+} */
 
 export function isBookmarks(data: unknown): data is IBookmark[] {
   const data_ = data as IBookmark[];
@@ -248,7 +244,7 @@ export function isCategories(data: unknown): data is ICategory[] {
   return true;
 }
 
-export function markImportType(data: ImportData) {
+/* export function markImportType(data: ImportData) {
   if (isCategories(data)) {
     data.forEach((category) => {
       category.importType = "category";
@@ -261,4 +257,4 @@ export function markImportType(data: ImportData) {
       bookmark.importType = "bookmark";
     });
   }
-}
+} */

@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { create } from "zustand";
-import { IBookmark, IBookmarkObjects, ICategory, ITag, TFilters } from "../utils/types/schemas";
+import { IBMM, IBookmark, ICategory, ITag, TFilters } from "../utils/types/schemas";
 
 interface IState {
   headerForm: boolean;
@@ -36,17 +36,21 @@ interface IState {
   setData: Dispatch<SetStateAction<ICategory[]>>;
 
   allCategories: ICategory[];
-  setAllCategories: Dispatch<SetStateAction<ICategory[]>>;
+  setAllCategories(next: ICategory[] | ((prev: ICategory[]) => ICategory[])): void
 
   filteredBookmarks: IBookmark[];
   setFilteredBookmarks: (bookmarks: IBookmark[]) => void;
   getFilteredBookmarks: () => IBookmark[];
 
-  allProperties: IBookmarkObjects;
-  getAllProperties: () => IBookmarkObjects;
-  setAllProperties: Dispatch<SetStateAction<IBookmarkObjects>>;
+  allProperties: IBMM;
+  getAllProperties: () => IBMM;
+  setAllProperties: Dispatch<SetStateAction<IBMM>>;
 
-  feedAllStateComponents(state: IBookmarkObjects): void;
+  bmm: IBMM;
+  getBmm(): IBMM;
+  setBmm(next: IBMM | ((prev: IBMM) => IBMM)): void;
+
+  feedAllStateComponents(state: IBMM): void;
 }
 
 type TState = {
@@ -77,8 +81,47 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
     data: [],
     filteredBookmarks: [],
 
-    allProperties: {},
+    allProperties: {
+      bookmarks: [],
+      bookmarkObjects: {},
+      tagObjects: {},
+      tags: [],
+      categories: [],
+      categoryObjects: {},
+      unlinked: {
+        categories: [],
+        tags: []
+      }
+    },
+    bmm: {
+      bookmarks: [],
+      bookmarkObjects: {},
+      tagObjects: {},
+      tags: [],
+      categories: [],
+      categoryObjects: {},
+      unlinked: {
+        categories: [],
+        tags: []
+      }
+    },
     allCategories: [],
+
+    getBmm() {
+      return get().bmm;
+    },
+    setBmm(bmm: SetStateAction<IBMM>) {
+      set(function (state: IState) {
+
+        if (typeof bmm === "function") {
+          get().feedAllStateComponents(bmm(state.bmm));
+          return { ...state, bmm: bmm(state.bmm) };
+        }
+
+        get().feedAllStateComponents(bmm);
+        return { ...state, bmm };
+      });
+    },
 
     getAllProperties() {
       return get().allProperties;
@@ -95,21 +138,21 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
     },
 
     // All data parts needing properties will be fed here upon properties update
-    feedAllStateComponents(allProperties: IBookmarkObjects): void {
-      get().setAllCategories(getAllCategories(allProperties));
+    feedAllStateComponents(bmm: IBMM): void {
+      get().setAllCategories(getAllCategories(bmm));
     },
 
     // sets up an all properties object. This objects makes things faster
-    setAllProperties(properties: SetStateAction<IBookmarkObjects>) {
+    setAllProperties(bmm: SetStateAction<IBMM>) {
       set(function (state) {
 
-        if (typeof properties === 'function') {
-          get().feedAllStateComponents(properties(state.allProperties));
-          return { allProperties: properties(state.allProperties) };
+        if (typeof bmm === 'function') {
+          get().feedAllStateComponents(bmm(state.allProperties));
+          return { allProperties: bmm(state.allProperties) };
         }
 
-        get().feedAllStateComponents(properties);
-        return { allProperties: properties };
+        get().feedAllStateComponents(bmm);
+        return { allProperties: bmm };
       });
     },
 
@@ -196,6 +239,32 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
  */
 export const useAppState = create<IState>(stateInitializer);
 
-export function getAllCategories(allProperties: IBookmarkObjects) {
-  return Object.values(allProperties).flatMap(v => v.categories);
+// Category Related functions
+export function getAllCategories(bmm: IBMM): ICategory[] {
+  return bmm.categories.map((categoryId: string) => bmm.categoryObjects[categoryId]);
+}
+export function getCategoryTags(bmm: IBMM, categoryId: string): ITag[] {
+  return bmm.tags.map((tagId) => bmm.tagObjects[tagId])
+    .filter((tag) => tag.categoryIds.includes(categoryId));
+}
+export function getCategoryBookmarks(bmm: IBMM, categoryId: string): IBookmark[] {
+  return bmm.bookmarks.map((bookmarkId) => bmm.bookmarkObjects[bookmarkId])
+    .filter((bookmark) => bookmark.categoryIds.includes(categoryId));
+}
+
+
+export function getAllTags(bmm: IBMM): ITag[] {
+  return bmm.tags.map((tagId: string) => bmm.tagObjects[tagId]);
+}
+
+export function getAllBookmarks(bmm: IBMM): IBookmark[] {
+  return bmm.bookmarks.map((bookmarkId: string) => bmm.bookmarkObjects[bookmarkId]);
+}
+export function getBookmarkCategories(bmm: IBMM, bookmarkId: string): ICategory[] {
+  return bmm.categories.map((categoryId) => bmm.categoryObjects[categoryId])
+    .filter((category) => category.bookmarkIds.includes(bookmarkId));
+}
+export function getBookmarkTags(bmm: IBMM, bookmarkId: string): ITag[] {
+  return bmm.tags.map((tagId) => bmm.tagObjects[tagId])
+    .filter((tag) => tag.bookmarkIds.includes(bookmarkId));
 }

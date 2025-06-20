@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { PiHashBold } from "react-icons/pi";
 import { TiPlus } from "react-icons/ti";
-import { v4 as uuidv4 } from "uuid";
-import Bookmark from "../../data/adapters/bookmark";
-import BookmarkTag from "../../data/adapters/bookmark_tag";
-import Category from "../../data/adapters/category";
-import Tag from "../../data/adapters/tag";
-import { useAppState } from "../../hooks/globalstate";
+import { ITag } from "../../utils/types/schemas";
 
 /**
  * Footer component that displays a list of tags associated with a bookmark and allows adding new tags.
@@ -14,53 +9,48 @@ import { useAppState } from "../../hooks/globalstate";
 export default function BookmarkItemFooter() {
   const [showTagInput, setShowTagInput] = useState(false);
   const [newTag, setNewTag] = useState("");
-  const {
-    bookmarkToShow,
-    setBookmarkToShow:
-    setBookmark,
-    setBookmarks,
-    selectedCategory,
-  } = useAppState();
-  const bookmark = bookmarkToShow;
+  // const bookmark = bookmarkToShow;
   // if (bookmark === null) console.warn("No bookmark selected");
 
   function handleAddTag() {
     // If there is a selectedCategory, add the tag to the selected category
-    const category = selectedCategory ? new Category(selectedCategory) : null;
-    const bookmark_ = new Bookmark(bookmark!);
-    const tag = new Tag({
-      name: newTag,
-      id: uuidv4(),
-      created_at: (new Date()).toISOString(),
-      updated_at: (new Date()).toISOString(),
-    });
-
-    BookmarkTag.createCategoryBookmarkTag(tag, bookmark_, category)
-      .then(() => {
-        setBookmarks((prevBookmarks) => {
-          const updatedBookmarks = prevBookmarks.map((b) => {
-            if (b.id === bookmark?.id) {
-              const modifiedBookmark = {
-                ...b,
-                tags: [...b.tags, tag],
-              };
-              setBookmark(modifiedBookmark);
-              return modifiedBookmark;
-            }
-            return b;
-          });
-          return updatedBookmarks;
-        });
-      })
-      .catch(console.error)
-      .finally(() => {
-        setShowTagInput(false);
-        setNewTag("");
-      });
+    // const category = selectedCategory ? new Category(selectedCategory) : null;
+    // const bookmark_ = new Bookmark(bookmark!);
+    // const tag: ITag = new Tag({
+    //   name: newTag,
+    //   id: uuidv4(),
+    //   created_at: (new Date()).toISOString(),
+    //   updated_at: (new Date()).toISOString(),
+    //   categoryIds: [],
+    //   bookmarkIds: [],
+    // });
+    /*
+        BookmarkTag.createCategoryBookmarkTag(tag, bookmark_, category)
+          .then(() => {
+            setBookmarks((prevBookmarks) => {
+              const updatedBookmarks = prevBookmarks.map((b) => {
+                if (b.id === bookmark?.id) {
+                  const modifiedBookmark = {
+                    ...b,
+                    tags: [...b.tags, tag],
+                  };
+                  setBookmark(modifiedBookmark);
+                  return modifiedBookmark;
+                }
+                return b;
+              });
+              return updatedBookmarks;
+            });
+          })
+          .catch(console.error)
+          .finally(() => {
+            setShowTagInput(false);
+            setNewTag("");
+          }); */
   }
 
   return <footer className="mt-0 flex flex-wrap gap-1.5 items-center relative">
-    {bookmark?.tags?.map((tag, tagIndex) => (
+    {([] as ITag[]).map((tag, tagIndex) => (
       <span
         key={tagIndex}
         className="flex items-center text-xs/2 text-gray-500 italic"

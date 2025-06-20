@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import Bookmark from "../../../data/adapters/bookmark";
-import { IBookmark } from "../../../utils/types/schemas";
 import { useAppState } from "../../../hooks/globalstate";
+import { IBookmark } from "../../../utils/types/schemas";
 
 type ArchiveDialogProps = {
   bookmark: IBookmark;
@@ -40,7 +40,7 @@ export function ArchiveDialog(props: ArchiveDialogProps) {
     (new Bookmark(bookmark)).archive()
       .then(() => {
         const updatedData = data.map((category) => {
-          const updatedBookmarks = category.bookmarks.map((b) => {
+          const updatedBookmarks = ([] as IBookmark[]).map((b) => {
             return b.id === bookmark.id ? { ...b, archived: 1 } : b;
           });
           return { ...category, bookmarks: updatedBookmarks };

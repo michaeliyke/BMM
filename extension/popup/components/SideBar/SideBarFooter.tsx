@@ -5,44 +5,41 @@ import Category from "../../data/adapters/category";
 import Tag from "../../data/adapters/tag";
 import { useAppState } from "../../hooks/globalstate";
 import { error } from "../../utils/functional.lib.dev";
-import { IBookmarkObjects, ICategory } from "../../utils/types/schemas";
+import { IBMM } from "../../utils/types/schemas";
 
 export default function SideBarFooter() {
   const [showCategoryPopup, setShowCategoryPopup] = useState(false);
   const [showTagPopup, setShowTagPopup] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [tagName, setTagName] = useState("");
-  const { selectedCategory, setData, setAllProperties } = useAppState();
+  const { selectedCategory, setBmm } = useAppState();
 
 
   function handleCreateCategory() {
     Category.create({
       name: categoryName,
       is_default: 0,
-      bookmarks: [],
       id: uuid4(),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      tags: [],
       tagIds: [],
       bookmarkIds: [],
     }).then(function (category) {
-      setData(function (state: ICategory[]) {
-        return [...state, category]; // shallow copy of the state array
+
+      setBmm(function (bmm: IBMM) {
+        bmm.categoryObjects = { ...bmm.categoryObjects, [category.id]: category };
+        bmm.categories = [...bmm.categories, category.id];
+        bmm.unlinked.categories = [...bmm.unlinked.categories, category.id];
+        return bmm;
       });
 
-      setAllProperties(function (props: IBookmarkObjects) {
-        const categories = [...props.solo.categories, category];
-        const solo = { ...props.solo, categories };
-        return { ...props, solo };
-      });
       console.log("Category Created:", categoryName);
       setShowCategoryPopup(false);
       setCategoryName("");
     }).catch(error);
   }
 
-  const handleCreateTag = () => {
+  function handleCreateTag() {
     const tag = new Tag({
       name: tagName,
       id: uuid4(),
@@ -53,33 +50,30 @@ export default function SideBarFooter() {
     });
 
     tag.create()
-      .then(() => {
-        setData((state: ICategory[]) => {
-          // Find the index of the selected category
-          const index = state.findIndex((cat) => cat.id === selectedCategory?.id);
-          if (index === -1) return state; // Safety check: if not found, return the current state
+      .then((tag) => {
+        return void setBmm(function (bmm: IBMM) {
+          bmm.tagObjects = { ...bmm.tagObjects, [tag.id]: tag };
+          bmm.tags = [...bmm.tags, tag.id];
 
-          // Modify the selected category's tags array and return the new state
-          const updatedCategory = {
-            ...state[index], // shallow copy of the category object
-            tags: [...state[index].tags, tag], // new tags array
-          };
-
-          // Replace the category with the updated one
-          state[index] = updatedCategory;
-          return state; // Return the new state
+          if (selectedCategory === null) {
+            bmm.unlinked.tags = [...bmm.unlinked.tags, tag.id];
+          } else {
+            tag.categoryIds.push(selectedCategory.id);
+            const tagIds = bmm.bookmarkObjects[selectedCategory.id].tagIds;
+            bmm.bookmarkObjects[selectedCategory.id].tagIds = [...tagIds, tag.id];
+          }
+          return bmm;
         });
+
       })
       .then(() => {
         console.log("Tag Created:", tagName);
         setShowTagPopup(false);
         setTagName("");
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch(error);
 
-  };
+  }
 
   return (
     <footer className="relative flex items-center p-2 bg-gray-100 border-t space-x-4">

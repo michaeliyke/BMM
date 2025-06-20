@@ -4,7 +4,8 @@ import { FiChevronRight, FiHash, FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
-import { categoryTagsSearch, sortedCategories, toggleHighlightedClass } from "../../../utils/common";
+import { sortedCategories, toggleHighlightedClass } from "../../../utils/common";
+import { log } from "../../../utils/functional.lib.dev";
 import { ICategory, ITag } from "../../../utils/types/schemas";
 
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
@@ -54,6 +55,11 @@ export function ByCategoryTags() {
       setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
       toggleHighlightedClass(target);
     }
+  }
+
+  function categoryTagsSearch(s: string, d: CL): ICategory[] {
+    log(s, d);
+    return [];
   }
 
 
@@ -163,9 +169,9 @@ export function ByCategoryTags() {
                 ? <FiChevronRight className="text-lg text-gray-300 ml-auto" />
                 : <FiChevronRight className={`text-lg ml-auto text-blue-500 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />}
             </div>
-            {expandedCategories[category.id] && category.tags.length > 0 && (
+            {expandedCategories[category.id] && category.tagIds.length > 0 && (
               <ul className="tags ml-8 mt-2 space-y-1">
-                {category.tags.map((tag, tagIndex) => (
+                {([] as ITag[]).map((tag, tagIndex) => (
                   <li
                     key={tagIndex}
                     className="tag flex items-center px-4 py-1 text-xs text-gray-500 hover:bg-slate-50 rounded-md cursor-pointer"

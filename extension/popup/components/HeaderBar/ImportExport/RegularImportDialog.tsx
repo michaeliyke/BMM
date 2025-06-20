@@ -1,10 +1,10 @@
 import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { CiImport } from "react-icons/ci";
 import { FaFileUpload } from "react-icons/fa";
 import { useAppState } from "../../../hooks/globalstate";
-import { getBookmarks } from "../../../utils/common";
-import { getImportHandler, isImportData, validateImported } from "../../../utils/importExport";
+import { log } from "../../../utils/functional.lib.dev";
+import { isImportData } from "../../../utils/importExport";
 import { IBookmark, ICategory, ImportData } from "../../../utils/types/schemas";
 
 
@@ -36,6 +36,11 @@ export default function RegularImportDialog() {
     };
     reader.readAsText(file);
   }
+  function getImportHandler(x: ImportData, y: Dispatch<SetStateAction<ICategory[]>>): import("react").MouseEventHandler<HTMLButtonElement> | undefined {
+    log(x, y)
+    throw new Error("Function not implemented.");
+  }
+
   return <Popover className="relative">
     <PopoverButton className="py-2 px-4 rounded-lg tracking-wide border border-green-700 text-green-700 flex items-center">
       <CiImport className="mr-1" />
@@ -94,4 +99,14 @@ export default function RegularImportDialog() {
   </Popover>;
 }
 
+
+function validateImported(data: ImportData) {
+  log(data);
+  throw new Error("Function not implemented.");
+}
+
+function getBookmarks(data: ICategory[]) {
+  log(data);
+  return [];
+}
 

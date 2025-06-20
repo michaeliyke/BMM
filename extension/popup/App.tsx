@@ -10,18 +10,15 @@ import { error } from "./utils/functional.lib.dev";
  * The main application component that initializes and manages the state of the application.
  */
 export default function App() {
-  const { setData, setAllProperties, setAllCategories } = useAppState();
+  const { setBmm } = useAppState();
 
   useEffect(function () {
     async function init() {
-      const categories = await adapters.getAll();
-      setData(categories);
-      const allProperties = await adapters.fetchAllProperties();
-      setAllProperties(allProperties);
-      return categories;
+      const bmm = await adapters.fetchAllProperties();
+      setBmm(bmm);
     }
     init().catch(error);
-  }, [setData, setAllProperties, setAllCategories]);
+  }, [setBmm]);
 
   return <Home />;
 }

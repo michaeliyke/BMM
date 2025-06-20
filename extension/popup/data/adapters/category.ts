@@ -1,17 +1,11 @@
 import { isEmpty } from "../../utils/common";
-import { adaptedCategory } from "../../utils/common2";
 import { lockManager } from "../../utils/locker";
 import {
-    IBookmark,
     ICategory,
     ICategoryBookmark,
-    ICategoryTag,
-    ITag,
+    ICategoryTag
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
-import BookmarkTag from "./bookmark_tag";
-import CategoryBookmark from "./category_bookmark";
-import CategoryTag from "./category_tag";
 
 export default class Category implements ICategory {
 
@@ -20,8 +14,6 @@ export default class Category implements ICategory {
     is_default: number;
     created_at: string;
     updated_at: string;
-    bookmarks: IBookmark[];
-    tags: ITag[];
     tagIds: string[];
     bookmarkIds: string[];
 
@@ -31,8 +23,6 @@ export default class Category implements ICategory {
         this.is_default = category.is_default;
         this.created_at = category.created_at; /* (new Date()).toISOString() */
         this.updated_at = category.updated_at; /* (new Date()).toISOString() */
-        this.bookmarks = category.bookmarks;
-        this.tags = category.tags;
         this.tagIds = category.tagIds;
         this.bookmarkIds = category.bookmarkIds;
 
@@ -80,7 +70,7 @@ export default class Category implements ICategory {
         // TODO: Modify to fetch all categories, its bookmarks and tags and their refs
         return lockManager.acquire('Category.getAll', async () => {
             const categories = await Category.getCategories();
-            for (const category of categories) {
+            /* for (const category of categories) {
                 const tags = await CategoryTag.getTags(category.id);
                 const bookmarks = await CategoryBookmark.getBookmarks(category.id);
                 for (const bookmark of bookmarks) {
@@ -89,7 +79,7 @@ export default class Category implements ICategory {
                 }
                 category.bookmarks = bookmarks;
                 category.tags = tags;
-            }
+            } */
             return categories;
         });
     }
@@ -101,10 +91,9 @@ export default class Category implements ICategory {
      */
     async create(): Promise<ICategory> {
         const x = lockManager.acquire(`Category.create:${this.name}`, async () => {
-            const category = adaptedCategory(this); // adapt for saving
             const existing = await this.exists();
             if (!existing) // Only proceed if the category does not already exist
-                return Operator.createRecord<ICategory>('categories', category);
+                return Operator.createRecord<ICategory>('categories', this);
             return existing;
         });
 
@@ -127,12 +116,11 @@ export default class Category implements ICategory {
      */
     async update(): Promise<void> {
         const x = lockManager.acquire(`Category.update:${this.name}`, async () => {
-            const category = adaptedCategory(this); // adapt for saving
             const existing = await this.exists();
             if (!(existing)) {
                 throw new Error(`Category.update: Category does not exist: ${this.id}`);
             }
-            await Operator.updateRecord<ICategory>('categories', category);
+            await Operator.updateRecord<ICategory>('categories', this);
         });
         try {
             await x;

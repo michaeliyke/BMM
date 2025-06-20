@@ -33,8 +33,6 @@ export interface ICategory {
   is_default: number; // 0 or 1
   created_at: string;
   updated_at: string;
-  bookmarks: IBookmark[];
-  tags: ITag[];
   bookmarkIds: string[];
   tagIds: string[];
 };
@@ -48,21 +46,26 @@ export interface IBookmark {
   description: string;
   created_at: string;
   updated_at: string;
-  tags: ITag[];
-  categories: ICategory[];
   archived: number; // 0 or 1
   starred?: number; // 0 or 1
   categoryIds: string[];
   tagIds: string[];
 };
 
-export interface IBookmarkObjects {
-  [key: string]: IBookmark | ISoloObjects;
-}
+// A map of IDs to a type.
+export type IDMap<T> = { [ID: string]: T };
 
-export interface ISoloObjects {
-  categories: ICategory[];
-  tags: ITag[];
+export interface IBMM {
+  bookmarks: string[]; /* ID strings references only */
+  bookmarkObjects: IDMap<IBookmark>;
+
+  tagObjects: IDMap<ITag>;
+  tags: string[]; /* ID strings references only */
+
+  categories: string[]; /* ID strings references only */
+  categoryObjects: IDMap<ICategory>;
+
+  unlinked: { categories: string[]; tags: string[] };
 }
 
 export type ImportData = ICategory[] | IBookmark[];

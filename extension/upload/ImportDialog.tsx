@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { FaFileUpload } from "react-icons/fa";
 import { useAppState } from "../popup/hooks/globalstate";
-import { getBookmarks } from "../popup/utils/common";
-import { getImportHandler, isImportData, validateImported } from "../popup/utils/importExport";
+import { log } from "../popup/utils/functional.lib.dev";
+import { isImportData } from "../popup/utils/importExport";
 import { IBookmark, ICategory, ImportData } from "../popup/utils/types/schemas";
 
 
@@ -11,6 +11,20 @@ export default function ImportDialog() {
   const [importData, setImportData] = useState<ImportData>([]);
   const [bookmarks, setBookmarks] = useState<IBookmark[]>([]);
   const { setData } = useAppState();
+
+  async function validateImported(d: ImportData) {
+    log(d);
+  }
+
+  function getBookmarks(d: ICategory[]): IBookmark[] {
+    log(d);
+    return [];
+  }
+
+  function getImportHandler(d: ImportData, s: Dispatch<SetStateAction<ICategory[]>>) {
+    log(d, s);
+    return function () { };
+  }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];

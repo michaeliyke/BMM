@@ -1,9 +1,16 @@
 import moment from "moment";
 import { useAppState } from "../../hooks/globalstate";
-import { filterArchived, sortedBookmarks } from "../../utils/common";
+import { sortedBookmarks } from "../../utils/common";
+import { ICategory } from "../../utils/types/schemas";
+import { log } from "../../utils/functional.lib.dev";
 
 export default function ListArchived() {
   const { setBookmarkToShow, data } = useAppState();
+
+  function filterArchived(d: ICategory[]) {
+    log(d);
+    return [];
+  }
 
   return (
     <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">

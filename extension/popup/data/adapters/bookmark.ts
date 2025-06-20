@@ -1,8 +1,7 @@
 
 import { isEmpty } from "../../utils/common";
-import { adaptedBookmark } from "../../utils/common2";
 import { lockManager } from "../../utils/locker";
-import { IBookmark, IBookmarkObjects, ICategory, ITag } from "../../utils/types/schemas";
+import { IBMM, IBookmark, IDMap } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 
 export default class Bookmark implements IBookmark {
@@ -12,12 +11,10 @@ export default class Bookmark implements IBookmark {
     description: string;
     created_at: string;
     updated_at: string;
-    tags: ITag[];
     archived: number;
     starred?: number;
     importType?: "category" | "bookmark" | undefined;
     importExists?: boolean | undefined;
-    categories: ICategory[];
     categoryIds: string[];
     tagIds: string[];
 
@@ -28,15 +25,13 @@ export default class Bookmark implements IBookmark {
         this.description = bookmark.description;
         this.created_at = bookmark.created_at; /* (new Date()).toISOString(); */
         this.updated_at = bookmark.updated_at; /* (new Date()).toISOString(); */
-        this.tags = bookmark.tags;
         this.archived = bookmark.archived;
         this.starred = bookmark.starred;
         this.categoryIds = bookmark.categoryIds;
         this.tagIds = bookmark.tagIds;
-        this.categories = bookmark.categories;
 
         const prop = isEmpty(['id', 'url', 'created_at', 'updated_at',
-            'archived', 'tagIds', 'categoryIds', 'categories'], bookmark);
+            'archived', 'tagIds', 'categoryIds',], bookmark);
         if (prop) throw new Error(`Bookmark.constructor: required field: '${prop}'`);
     }
 
@@ -137,11 +132,10 @@ export default class Bookmark implements IBookmark {
      */
     async create(): Promise<IBookmark> {
         const x = lockManager.acquire(`Bookmark.create:${this.id}`, async () => {
-            const bookmark = adaptedBookmark(this); // adapt for saving
             // Create a new bookmark record in the database if not exists
             const existing = await this.exists();
             if (existing) return existing;
-            return await Operator.createRecord<IBookmark>('bookmarks', bookmark);
+            return await Operator.createRecord<IBookmark>('bookmarks', this);
         });
         try {
             return await x;
@@ -158,10 +152,9 @@ export default class Bookmark implements IBookmark {
      */
     async update(): Promise<void> {
         const x = lockManager.acquire(`Bookmark.update:${this.id}`, async () => {
-            const bookmark = adaptedBookmark(this); // adapt for saving
             if (!(await this.exists()))
                 throw new Error(`Bookmark.update: Bookmark does not exist: ${this.id}`);
-            await Operator.updateRecord<IBookmark>('bookmarks', bookmark);
+            await Operator.updateRecord<IBookmark>('bookmarks', this);
         });
 
         try {
@@ -236,15 +229,29 @@ export default class Bookmark implements IBookmark {
 
     static async fechAllProperties() {
         const p = lockManager.acquire('Bookmark.fechAllProperties', async () => {
+            const bmm = {} as IBMM;
             const bookmarks: IBookmark[] = await this.getBookmarks();
-            const bookmarkObjects: IBookmarkObjects = {};
-            bookmarkObjects.solo = { tags: [] as ITag[], categories: [] as ICategory[] };
 
-            for (const bookmark of bookmarks) bookmarkObjects[bookmark.id] = bookmark;
+            // Initialize BMM objects to defaults values
+            bmm.bookmarks = [];
+            bmm.categories = [];
+            bmm.tags = [];
 
-            await Operator.fillCategories(bookmarkObjects); // side effects - modifies input
-            await Operator.fillTags(bookmarkObjects); // side effects - modifies input
-            return bookmarkObjects;
+            bmm.bookmarkObjects = {};
+            bmm.categoryObjects = {};
+            bmm.tagObjects = {};
+            bmm.unlinked = { categories: [], tags: [] };
+
+            // Fill up the initial empty values with data
+            bmm.bookmarks = bookmarks.map((bookmark) => bookmark.id);
+            bmm.bookmarkObjects = bookmarks.reduce(function (bookmarkObject, bookmark) {
+                bookmarkObject[bookmark.id] = bookmark;
+                return bookmarkObject;
+            }, {} as IDMap<IBookmark>);
+
+            await Operator.fillCategories(bmm); // side effects - modifies input
+            await Operator.fillTags(bmm); // side effects - modifies input
+            return bmm;
         });
 
         try {

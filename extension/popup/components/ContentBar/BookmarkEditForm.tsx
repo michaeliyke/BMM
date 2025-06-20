@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import Bookmark from "../../data/adapters/bookmark";
 import { useAppState } from "../../hooks/globalstate";
-import { ICategory } from "../../utils/types/schemas";
 
 
 export interface BookmarkEditFormProps {
@@ -14,7 +13,7 @@ export interface BookmarkEditFormProps {
  */
 export function BookmarkEditForm(props: BookmarkEditFormProps) {
   const { setIsEditing } = props;
-  const { bookmarkToShow, setData } = useAppState();
+  const { bookmarkToShow } = useAppState();
   const bookmark = bookmarkToShow!; // Non-null assertion operator to assert not null
   const [title, setTitle] = useState<string>(bookmark.title);
   const [url, setUrl] = useState<string>(bookmark.url);
@@ -31,23 +30,23 @@ export function BookmarkEditForm(props: BookmarkEditFormProps) {
     const modification = { ...bookmark, title, url, description };
 
     (new Bookmark(modification)).update().then(() => {
-      setData((state: ICategory[]) => {
-        const newState = [...state]; // shallow copy of the state array
+      // setData((state: ICategory[]) => {
+      //   const newState = [...state]; // shallow copy of the state array
 
-        const categoryIndex = newState.findIndex((c) => { // If any returns true
-          return c.bookmarks.some((b) => b.id === bookmark.id);
-        });
+      //   const categoryIndex = newState.findIndex((c) => { // If any returns true
+      //     return c.bookmarks.some((b) => b.id === bookmark.id);
+      //   });
 
-        if (categoryIndex === -1) return state; // Safety checks
+      //   if (categoryIndex === -1) return state; // Safety checks
 
-        const bookmarkIndex = newState[categoryIndex].bookmarks.findIndex((b) => b.id === bookmark.id);
-        if (bookmarkIndex === -1) return state; // Safety checks
+      //   const bookmarkIndex = newState[categoryIndex].bookmarks.findIndex((b) => b.id === bookmark.id);
+      //   if (bookmarkIndex === -1) return state; // Safety checks
 
-        newState[categoryIndex].bookmarks[bookmarkIndex] = modification;
-        // console.log("Bookmark updated successfully", modification);
-        setIsEditing(false);
-        return newState; // Return the new state
-      });
+      //   newState[categoryIndex].bookmarks[bookmarkIndex] = modification;
+      //   // console.log("Bookmark updated successfully", modification);
+      //   setIsEditing(false);
+      //   return newState; // Return the new state
+      // });
 
     })
       .catch((error) => {

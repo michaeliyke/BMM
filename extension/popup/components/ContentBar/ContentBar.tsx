@@ -1,9 +1,10 @@
 
 import { useEffect } from "react";
 import { useAppState } from "../../hooks/globalstate";
-import { getBookmarks } from "../../utils/common";
+import { IBookmark, ICategory } from "../../utils/types/schemas";
 import ContentBody from "./ContentBody";
 import ContentHeader from "./ContentHeader";
+import { log } from "../../utils/functional.lib.dev";
 
 /**
  * ContentBar component is responsible for rendering the content section of the application.
@@ -18,6 +19,10 @@ export default function ContentBar() {
   } = useAppState();
 
   const sel = selectedCategory;
+  function getBookmarks(d: ICategory[]): IBookmark[] {
+    log(d);
+    return [];
+  }
 
   useEffect(() => {
     /* CAUTION: the calls below is likely to cause infinite rendering */

@@ -1,6 +1,7 @@
 import { FaFileUpload } from "react-icons/fa";
 import { useAppState } from "../../../hooks/globalstate";
-import { markImportType } from "../../../utils/importExport";
+import { ICategory } from "../../../utils/types/schemas";
+import { log } from "../../../utils/functional.lib.dev";
 
 export default function ExportWidget() {
   const { data } = useAppState();
@@ -37,3 +38,8 @@ export default function ExportWidget() {
     </div>
   );
 }
+function markImportType(data: ICategory[]) {
+  log(data)
+  throw new Error("Function not implemented.");
+}
+

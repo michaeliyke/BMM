@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
 import BookmarkBin from "../../../data/adapters/bookmark_bin";
-import { IBookmark } from "../../../utils/types/schemas";
 import { useAppState } from "../../../hooks/globalstate";
+import { IBookmark } from "../../../utils/types/schemas";
 
 type DeleteDialogProps = {
   bookmark: IBookmark;
@@ -59,7 +59,7 @@ export function DeleteDialog(props: DeleteDialogProps) {
     bookmarkBin.moveToBin()
       .then(() => {
         const updatedData = data.map((category) => {
-          const updatedBookmarks = category.bookmarks.filter((b) => b.id !== bookmark.id);
+          const updatedBookmarks = ([] as IBookmark[]).filter((b) => b.id !== bookmark.id);
           return { ...category, bookmarks: updatedBookmarks };
         });
         setData(updatedData);

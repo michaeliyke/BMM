@@ -9,7 +9,7 @@ import Tag from "../../data/adapters/tag";
 import { useAppState } from "../../hooks/globalstate";
 import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
 import { error, log } from "../../utils/functional.lib.dev";
-import { IBookmark, ICategory, ITab } from "../../utils/types/schemas";
+import { IBookmark, ITab } from "../../utils/types/schemas";
 import AddAllWidget from "./AddAllWidget";
 import ExportWidget from "./ImportExport/ExportWidget";
 import ImportWidget from "./ImportExport/ImportWidget";
@@ -24,7 +24,6 @@ export default function Header() {
     selectedTag,
     grouping,
     setGrouping,
-    setData,
   } = useAppState();
   const [url, setUrl] = useState(location.href);
   const [title, setTitle] = useState(document.title);
@@ -42,20 +41,21 @@ export default function Header() {
   function postProcessing(newBookmark: IBookmark) {
     setUrl('');
     setTitle('');
-    setData((state: ICategory[]) => {
-      const newState = [...state]; // shallow copy of the state array
+    log(newBookmark)
+    // setData((state: ICategory[]) => {
+    //   const newState = [...state]; // shallow copy of the state array
 
-      const index = newState.findIndex((x) => x.id === selectedCategory?.id);
-      if (index === -1) return state; // Safety check: if not found, return the current state
+    //   const index = newState.findIndex((x) => x.id === selectedCategory?.id);
+    //   if (index === -1) return state; // Safety check: if not found, return the current state
 
-      const updatedCategory = {
-        ...newState[index], // shallow copy of the category object
-        bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
-      };
+    //   const updatedCategory = {
+    //     ...newState[index], // shallow copy of the category object
+    //     bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
+    //   };
 
-      newState[index] = updatedCategory; // Replace the category with the updated one
-      return newState; // Return the new state
-    });
+    //   newState[index] = updatedCategory; // Replace the category with the updated one
+    //   return newState; // Return the new state
+    // });
   }
 
 
@@ -68,11 +68,9 @@ export default function Header() {
       url,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      tags: selectedTag ? [selectedTag] : [],
       archived: 0,
       tagIds: selectedTag ? [selectedTag.id] : [],
       categoryIds: selectedCategory ? [selectedCategory.id] : [],
-      categories: selectedCategory ? [selectedCategory] : [],
     });
 
     if (!selectedCategory && !selectedTag) {// Case 0: Neither category nor tag selected
@@ -92,7 +90,6 @@ export default function Header() {
     }
 
     if (selectedTag && selectedCategory) { // case 3: both category and tag are selected
-      bookmark.tags = [selectedTag];
       const x = CategoryTag.createBookmark(bookmark, new Category(selectedCategory), new Tag(selectedTag))
       log("both")
       return void x.then(postProcessing).catch(error);

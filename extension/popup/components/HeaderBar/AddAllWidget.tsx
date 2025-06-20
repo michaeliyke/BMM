@@ -66,8 +66,9 @@ export default function AddAllWidget({ tabs, setTabs }: IAAWidgetProps) {
         description: "",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-        tags: [],
         archived: 0,
+        tagIds: [],
+        categoryIds: [],
       });
       bookmark.create().then((res) => {
         setBookmarks((prev) => [...prev, res]);

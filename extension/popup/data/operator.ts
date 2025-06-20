@@ -1,5 +1,5 @@
 import { queueManager } from "../utils/locker";
-import { IBookmarkObjects, ICategory, ITag } from "../utils/types/schemas";
+import { IBMM, ICategory, ITag } from "../utils/types/schemas";
 
 type CURSOR = IDBRequest<IDBCursorWithValue | null>;
 
@@ -394,10 +394,10 @@ export const Operator = {
     },
 
     // Side effects - populates input category objects
-    async fillCategories(bookmarkObjects: IBookmarkObjects) {
+    async fillCategories(bmm: IBMM) {
         return queueManager.enqueue(async () => {
             const db = await this.initializeDatabase();
-            return new Promise<IBookmarkObjects>((resolve, reject) => {
+            return new Promise<IBMM>((resolve, reject) => {
                 const tx = db.transaction("categories", "readwrite");
                 const store = tx.objectStore("categories");
                 const request = store.openCursor();
@@ -406,21 +406,33 @@ export const Operator = {
                     const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
                     if (!cursor) return void (0); /* No [more rows | rows found] */
 
+                    // store the category by its ID
                     const category = cursor.value as ICategory;
-                    if (category.bookmarkIds.length === 0)
-                        bookmarkObjects.solo.categories.push(category);/* HERE
-                     */
+                    bmm.categoryObjects[category.id] = category;
+                    bmm.categories.push(category.id);
 
-                    for (const id of category.bookmarkIds) {
-                        if (!bookmarkObjects[id]) continue
-                        bookmarkObjects[id].categories ??= [];
-                        bookmarkObjects[id].categories.push(category);
+                    /* unlinked category */
+                    if (category.bookmarkIds.length === 0 && category.tagIds.length === 0)
+                        bmm.unlinked.categories.push(category.id);
+
+                    /* populate bookmark.categoryIds */
+                    for (const bookmarkId of category.bookmarkIds) {
+                        if (!bmm.bookmarkObjects[bookmarkId]) continue
+                        bmm.bookmarkObjects[bookmarkId].categoryIds ??= [];
+                        bmm.bookmarkObjects[bookmarkId].categoryIds.push(category.id);
+                    }
+
+                    /* populate tag.categoryIds */
+                    for (const tagId of category.tagIds) {
+                        if (!bmm.tagObjects[tagId]) continue
+                        bmm.tagObjects[tagId].categoryIds ??= [];
+                        bmm.tagObjects[tagId].categoryIds.push(category.id);
                     }
 
                     cursor.continue();
                 };
 
-                tx.oncomplete = () => resolve(bookmarkObjects);
+                tx.oncomplete = () => resolve(bmm);
                 tx.onerror = errResponse;
                 tx.onabort = errResponse;
                 request.onerror = errResponse;
@@ -431,11 +443,12 @@ export const Operator = {
             });
         });
     },
+
     // Side effects - populates the input with tags objects
-    async fillTags(bookmarkObjects: IBookmarkObjects) {
+    async fillTags(bmm: IBMM) {
         return queueManager.enqueue(async () => {
             const db = await this.initializeDatabase();
-            return new Promise<IBookmarkObjects>((resolve, reject) => {
+            return new Promise<IBMM>((resolve, reject) => {
                 const tx = db.transaction("tags", "readwrite");
                 const store = tx.objectStore("tags");
                 const request = store.openCursor();
@@ -445,19 +458,32 @@ export const Operator = {
                     if (!cursor) return void (0); /* No [more rows | rows found] */
 
                     const tag = cursor.value as ITag;
-                    if (tag.bookmarkIds.length === 0)
-                        bookmarkObjects.solo.tags.push(tag);
+                    bmm.tagObjects[tag.id] = tag; // store the tag by its ID
+                    bmm.tags.push(tag.id);
 
-                    for (const id of tag.bookmarkIds) {
-                        if (!bookmarkObjects[id]) continue
-                        bookmarkObjects[id].categories ??= [];
-                        bookmarkObjects[id].tags.push(tag);
+                    /* add to unlinked here */
+                    if (tag.bookmarkIds.length === 0 && tag.categoryIds.length === 0) {
+                        bmm.unlinked.tags.push(tag.id);
+                    }
+
+                    /* populate bookmark.tagIds */
+                    for (const bookmarkId of tag.bookmarkIds) {
+                        if (!bmm.bookmarkObjects[bookmarkId]) continue
+                        bmm.bookmarkObjects[bookmarkId].tagIds ??= [];
+                        bmm.bookmarkObjects[bookmarkId].tagIds.push(tag.id);
+                    }
+
+                    /* populate category.tagIds */
+                    for (const tagId of tag.categoryIds) {
+                        if (!bmm.categoryObjects[tagId]) continue
+                        bmm.categoryObjects[tagId].tagIds ??= [];
+                        bmm.categoryObjects[tagId].tagIds.push(tag.id);
                     }
 
                     cursor.continue();
                 };
 
-                tx.oncomplete = () => resolve(bookmarkObjects);
+                tx.oncomplete = () => resolve(bmm);
                 tx.onerror = errResponse;
                 tx.onabort = errResponse;
                 request.onerror = errResponse;
