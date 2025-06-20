@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 import { IBMM, IBookmark, ICategory, ITag, TFilters } from "../utils/types/schemas";
 
 interface IState {
@@ -112,14 +113,10 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
     },
     setBmm(bmm: SetStateAction<IBMM>) {
       set(function (state: IState) {
-
-        if (typeof bmm === "function") {
-          get().feedAllStateComponents(bmm(state.bmm));
-          return { ...state, bmm: bmm(state.bmm) };
-        }
-
-        get().feedAllStateComponents(bmm);
-        return { ...state, bmm };
+        const _state = typeof bmm === "function"
+          ? { ...state, bmm: bmm(state.bmm) }
+          : { ...state, bmm };
+        return _state;
       });
     },
 
@@ -128,17 +125,15 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
     },
 
     setAllCategories(categories: SetStateAction<ICategory[]>) {
-      set(function (state) {
-
-        if (typeof categories === 'function')
-          return { allCategories: categories(state.allCategories) };
-
-        return { allCategories: categories };
-      });
+      if (typeof categories !== 'function') {
+        return void set({ allCategories: categories });
+      }
+      set((state) => ({ allCategories: categories(state.allCategories) }));
     },
 
     // All data parts needing properties will be fed here upon properties update
     feedAllStateComponents(bmm: IBMM): void {
+      get().setBmm(bmm);
       get().setAllCategories(getAllCategories(bmm));
     },
 
@@ -232,13 +227,6 @@ function stateInitializer(set: TState, get: TStateGet<IState>): IState {
   };
 }
 
-/**
- * Zustand store for managing application state.
- *
- * @type {IState}
- */
-export const useAppState = create<IState>(stateInitializer);
-
 // Category Related functions
 export function getAllCategories(bmm: IBMM): ICategory[] {
   return bmm.categories.map((categoryId: string) => bmm.categoryObjects[categoryId]);
@@ -268,3 +256,13 @@ export function getBookmarkTags(bmm: IBMM, bookmarkId: string): ITag[] {
   return bmm.tags.map((tagId) => bmm.tagObjects[tagId])
     .filter((tag) => tag.bookmarkIds.includes(bookmarkId));
 }
+
+
+/**
+ * Zustand store for managing application state.
+ *
+ * @type {IState}
+ */
+export const useAppState = create<IState>()(subscribeWithSelector(stateInitializer));
+
+// subscribeWithSelector()

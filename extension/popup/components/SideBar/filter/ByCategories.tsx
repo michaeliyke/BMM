@@ -10,8 +10,8 @@ import { FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
+import { error, log } from "../../../utils/functional.lib.dev";
 import { ICategory } from "../../../utils/types/schemas";
-import { log } from "../../../utils/functional.lib.dev";
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
 
@@ -28,6 +28,7 @@ export default function ByCategories() {
     setGrouping,
     allCategories,
   } = useAppState();
+  // const allCategories = useAppState((s) => s.allCategories);
   const [_categories, setCategories] = useState<ICategory[]>([]);
 
   function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
@@ -72,10 +73,13 @@ export default function ByCategories() {
   }
 
   useEffect(() => {
-    // Set the default category text in the header
-    // const d = getAllCategories(allProperties);
-    setGrouping(defaultCategory.name); // Global state
-    setCategories(allCategories);
+    async function init() {
+      // Set the default category text in the header
+      // const d = getAllCategories(allProperties);
+      setGrouping(defaultCategory.name); // Global state
+      setCategories(allCategories);
+    }
+    init().catch(error);
     return function () {
       // Cancel the debounced search function when the component unmounts.
       if (searchFnRef.current && hasExecuted) {

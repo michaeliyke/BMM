@@ -19,8 +19,8 @@
         "jsx": "react-jsx",
         /* Linting */
         "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
+        "noUnusedLocals": false, /* Eslint is already handling this */
+        "noUnusedParameters": false,
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
     },
