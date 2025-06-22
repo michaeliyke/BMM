@@ -696,8 +696,27 @@ declare module './functional.lib.dev' {
    */
   export function identity<T>(value: T): T;
 
-  export function log(...data: any[]): void;
-  export function error(...data: any[]): void;
+  // Export all console function types
+  export const assert: Console['assert'];
+  export const clear: Console['clear'];
+  export const count: Console['count'];
+  export const countReset: Console['countReset'];
+  export const debug: Console['debug'];
+  export const dir: Console['dir'];
+  export const dirxml: Console['dirxml'];
+  export const error: Console['error'];
+  export const group: Console['group'];
+  export const groupCollapsed: Console['groupCollapsed'];
+  export const groupEnd: Console['groupEnd'];
+  export const info: Console['info'];
+  export const log: Console['log'];
+  export const table: Console['table'];
+  export const time: Console['time'];
+  export const timeEnd: Console['timeEnd'];
+  export const timeLog: Console['timeLog'];
+  export const timeStamp: Console['timeStamp'];
+  export const trace: Console['trace'];
+  export const warn: Console['warn'];
 }
 
 export { };
