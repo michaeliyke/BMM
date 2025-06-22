@@ -15,6 +15,9 @@ export interface IUser {
   updated_at: string;
 };
 
+/**
+ * A Tag object
+ */
 export interface ITag {
   importExists?: boolean;
   id: string;
@@ -25,6 +28,9 @@ export interface ITag {
   bookmarkIds: string[];
 };
 
+/**
+ * A Category object
+ */
 export interface ICategory {
   importType?: 'category' | 'bookmark';
   importExists?: boolean;
@@ -37,6 +43,9 @@ export interface ICategory {
   tagIds: string[];
 };
 
+/**
+ * A Bookmark object
+ */
 export interface IBookmark {
   importType?: 'category' | 'bookmark';
   importExists?: boolean;
@@ -52,19 +61,51 @@ export interface IBookmark {
   tagIds: string[];
 };
 
-// A map of IDs to a type.
+/**
+ * A generic map of entity IDs to corresponding values.
+ *
+ * Used within main BMM object to efficiently access, update, or remove
+ * items by ID. Commonly used for objects like bookmarks, tags, or categories.
+ *
+ * @template T - The type of the value being mapped (e.g., IBookmark, ITag, etc).
+ */
 export type IDMap<T> = { [ID: string]: T };
 
-// For Zustand State management
+/**
+ * Zustand-compatible state setter type for partial or full updates.
+ *
+ * This function signature allows updating Zustand state using:
+ * - A full or partial object
+ * - A function that receives the previous state and returns a full or partial update
+ * - An optional `replace` flag that determines whether to merge or fully replace state
+ *
+ * @template T - The shape of the state being managed.
+ */
 export type TState<T> = {
-  (partial: T | Partial<T> | ((state: T) => T | Partial<T>), replace?: false): void;
-  (state: T | ((state: T) => T), replace: true): void;
+  (
+    partial: T | Partial<T> | ((state: T) => T | Partial<T>),
+    replace?: false,
+  ): void;
+
+  (
+    state: T | ((state: T) => T),
+    replace: true,
+  ): void;
 }
 
-// For Zustand State management
+/**
+ * Zustand-compatible state getter type.
+ *
+ * Returns the current full state of the store at the point of invocation.
+ * Typically used within a slice to access current state values before updating.
+ *
+ * @template T - The shape of the state being retrieved.
+ */
 export type TStateGet<T> = () => T;
 
-
+/**
+ * Main BMM app object holding all state and data
+ */
 export interface IBMM {
   bookmarks: string[]; /* ID strings references only */
   bookmarkObjects: IDMap<IBookmark>;
@@ -125,7 +166,9 @@ export interface IDeletedBookmark {
   description: string;
 }
 
-// Various side bar selectable filters
+/**
+ * Various side bar selectable filters
+ */
 export type TFilters = "filter:categories"
   | "filter:bookmarks"
   | "filter:tags"
