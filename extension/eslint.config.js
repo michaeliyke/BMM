@@ -5,7 +5,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', "**/globalstate.tsx"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['upload/**/*.{ts,tsx}', 'popup/**/*.{ts,tsx}'],
@@ -29,8 +29,8 @@ export default tseslint.config(
   // ✅ Override for test files
   {
     files: [
-    '{popup,upload}/**/*.test.{ts,tsx}',
-    '{upload,popup}/**/*.d.ts',
+      '{popup,upload}/**/*.test.{ts,tsx}',
+      '{upload,popup}/**/*.d.ts',
     ],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off', // Allow `any` in tests

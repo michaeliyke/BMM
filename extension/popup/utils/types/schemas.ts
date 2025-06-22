@@ -55,6 +55,16 @@ export interface IBookmark {
 // A map of IDs to a type.
 export type IDMap<T> = { [ID: string]: T };
 
+// For Zustand State management
+export type TState<T> = {
+  (partial: T | Partial<T> | ((state: T) => T | Partial<T>), replace?: false): void;
+  (state: T | ((state: T) => T), replace: true): void;
+}
+
+// For Zustand State management
+export type TStateGet<T> = () => T;
+
+
 export interface IBMM {
   bookmarks: string[]; /* ID strings references only */
   bookmarkObjects: IDMap<IBookmark>;
