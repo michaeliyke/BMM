@@ -26,7 +26,7 @@ export default function ByCategories() {
     setBookmarkToShow,
     setSelectedCategory,
     setGrouping,
-    allCategories,
+    categories,
   } = useAppState();
   // const allCategories = useAppState((s) => s.allCategories);
   const [_categories, setCategories] = useState<ICategory[]>([]);
@@ -77,7 +77,7 @@ export default function ByCategories() {
       // Set the default category text in the header
       // const d = getAllCategories(allProperties);
       setGrouping(defaultCategory.name); // Global state
-      setCategories(allCategories);
+      setCategories(categories);
     }
     init().catch(error);
     return function () {
@@ -87,7 +87,7 @@ export default function ByCategories() {
         setHasExecuted(false);
       }
     };
-  }, [setGrouping, searchFnRef, hasExecuted, setCategories, allCategories]);
+  }, [setGrouping, searchFnRef, hasExecuted, setCategories, categories]);
 
   return (
     <section className="filtered-list w-full h-full overflow-y-auto">

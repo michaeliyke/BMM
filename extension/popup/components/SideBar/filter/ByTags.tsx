@@ -19,7 +19,7 @@ export function ByTags() {
     selectedTag,
     setSelectedTag,
     setGrouping,
-    allCategories,
+    categories,
     tags,
   } = useAppState();
 
@@ -54,7 +54,7 @@ export function ByTags() {
 
   function handleSearch(query: string) {
     setQuery(query);
-    search(query, allCategories, setTags);
+    search(query, categories, setTags);
   }
 
   function toggleSelected(tag: ITag, event: React.MouseEvent<HTMLLIElement>) {
