@@ -127,6 +127,15 @@ export default class Category implements ICategory {
     }
 
     /**
+     * Alias to the instance .update() method
+     * @param category An updated ICategory object
+     * @returns void
+     */
+    static async update(category: ICategory) {
+        return new Category(category).update();
+    }
+
+    /**
      * Retrieves a list of categories from the database.
      *
      * @returns {Promise<ICategory[]>} A promise that resolves to an array of category objects.

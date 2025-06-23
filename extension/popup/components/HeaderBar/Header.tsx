@@ -8,8 +8,8 @@ import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
 import { useAppState } from "../../hooks/globalstate";
 import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
-import { error, log } from "../../utils/functional.lib.dev";
-import { IBookmark, ITab } from "../../utils/types/schemas";
+import { error } from "../../utils/functional.lib.dev";
+import { IBMM, IBookmark, ITab } from "../../utils/types/schemas";
 import AddAllWidget from "./AddAllWidget";
 import ExportWidget from "./ImportExport/ExportWidget";
 import ImportWidget from "./ImportExport/ImportWidget";
@@ -24,6 +24,7 @@ export default function Header() {
     selectedTag,
     grouping,
     setGrouping,
+    feedAllStateComponents,
   } = useAppState();
   const [url, setUrl] = useState(location.href);
   const [title, setTitle] = useState(document.title);
@@ -39,23 +40,26 @@ export default function Header() {
   });
 
   function postProcessing(newBookmark: IBookmark) {
-    setUrl('');
-    setTitle('');
-    log(newBookmark)
-    // setData((state: ICategory[]) => {
-    //   const newState = [...state]; // shallow copy of the state array
+    // setUrl('');
+    // setTitle('');
+    feedAllStateComponents(function (bmm: IBMM) {
+      bmm.bookmarkObjects = { ...bmm.bookmarkObjects, [newBookmark.id]: newBookmark };
+      bmm.bookmarks = [...bmm.bookmarks, newBookmark.id];
 
-    //   const index = newState.findIndex((x) => x.id === selectedCategory?.id);
-    //   if (index === -1) return state; // Safety check: if not found, return the current state
+      if (selectedCategory) { // Take care of categories updating
+        const { bookmarkIds } = bmm.categoryObjects[selectedCategory.id];
+        bookmarkIds.push(newBookmark.id);
+        bmm.categoryObjects[selectedCategory.id].bookmarkIds = [...bookmarkIds];
+      }
 
-    //   const updatedCategory = {
-    //     ...newState[index], // shallow copy of the category object
-    //     bookmarks: [...newState[index].bookmarks, newBookmark], // new bookmarks array
-    //   };
+      if (selectedTag) { // Take care of tags updating
+        const { bookmarkIds } = bmm.tagObjects[selectedTag.id];
+        bookmarkIds.push(newBookmark.id);
+        bmm.tagObjects[selectedTag.id].bookmarkIds = [...bookmarkIds];
+      }
 
-    //   newState[index] = updatedCategory; // Replace the category with the updated one
-    //   return newState; // Return the new state
-    // });
+      return bmm;
+    });
   }
 
 
@@ -79,19 +83,16 @@ export default function Header() {
 
     if (!selectedTag && selectedCategory !== null) {// case 1: ony category, no tag
       const x = CategoryBookmark.createBookmark(bookmark, new Category(selectedCategory));
-      log("category")
       return void x.then(postProcessing).catch(error);
     }
 
     if (!selectedCategory && selectedTag !== null) {// case 2: only tag selected, no category
       const x = BookmarkTag.createBookmark(bookmark, new Tag(selectedTag));
-      log("tag")
       return void x.then(postProcessing).catch(error);
     }
 
     if (selectedTag && selectedCategory) { // case 3: both category and tag are selected
       const x = CategoryTag.createBookmark(bookmark, new Category(selectedCategory), new Tag(selectedTag))
-      log("both")
       return void x.then(postProcessing).catch(error);
     }
   }

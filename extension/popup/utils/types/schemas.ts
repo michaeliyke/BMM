@@ -47,18 +47,20 @@ export interface ICategory {
  * A Bookmark object
  */
 export interface IBookmark {
-  importType?: 'category' | 'bookmark';
-  importExists?: boolean;
   id: string;
   title: string;
   url: string;
   description: string;
   created_at: string;
   updated_at: string;
-  archived: number; // 0 or 1
-  starred?: number; // 0 or 1
   categoryIds: string[];
   tagIds: string[];
+  // Optional properties set as needed
+  importType?: 'category' | 'bookmark';
+  importExists?: boolean;
+  archived?: number; // 0 or 1
+  deleted?: number; // 0 or 1
+  starred?: number; // 0 or 1
 };
 
 /**

@@ -71,8 +71,9 @@ export default class Tag implements ITag {
             // Create a new tag record in the database if not exists
             try {
                 const existing = await this.exists();
-                if (!existing)
+                if (!existing) {
                     return await Operator.createRecord<ITag>('tags', this);
+                }
                 return existing;
             } catch (error) {
                 throw new Error(`An error occurred in Tag.create:- ${error}, ${this}`);

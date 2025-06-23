@@ -2,25 +2,27 @@ import { useRef, useState } from "react";
 import { FiChevronDown, FiChevronUp, FiTag } from "react-icons/fi";
 import { useClickAway } from "react-use";
 import { useAppState } from "../../hooks/globalstate";
-import { IBookmark, ICategory } from "../../utils/types/schemas";
+import { getBookmarkCategories } from "../../utils/appState";
 import { log } from "../../utils/functional.lib.dev";
+import { IBookmark } from "../../utils/types/schemas";
 
 interface CategoryDropdownProps {
   bookmark: IBookmark;
 }
 
-function getBookmarkCategories(b: IBookmark, d: ICategory[]): ICategory[] {
-  log(b, d)
-  return [];
-}
-
+/**
+ * Handles the categories dropdown icon on the bookmark listing view
+ * @param param0 The bookmark object whose categories dropdown icon is clicked
+ * @returns React component
+ */
 export default function CategoryDropdown({ bookmark }: CategoryDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const dropdownRef = useRef(null);
-  const { data } = useAppState();
+  const { bmm } = useAppState();
 
-  const categories = getBookmarkCategories(bookmark, data);
+  const categories = getBookmarkCategories(bmm, bookmark.id);
+  log(categories)
 
   useClickAway(dropdownRef, () => setIsOpen(false));
 

@@ -40,9 +40,8 @@ export const Operator = {
 
                 // categories table: uniqueness needed for the name field
                 if (!db.objectStoreNames.contains("categories")) {
-                    const temp = db.createObjectStore("categories", { keyPath: "id" });
-                    temp.createIndex("default_category_index", "is_default");
-                    temp.createIndex("categories_index", "name", unique);
+                    db.createObjectStore("categories", { keyPath: "id" })
+                        .createIndex("categories_index", "name", unique);
                 }
 
                 // users table

@@ -46,27 +46,34 @@ export default function SideBarFooter() {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       bookmarkIds: [],
-      categoryIds: [],
+      categoryIds: selectedCategory ? [selectedCategory.id] : [],
     });
 
     tag.create()
-      .then((tag) => {
-        return void feedAllStateComponents(function (bmm: IBMM) {
+      .then(function (tag) {
+        feedAllStateComponents(function (bmm: IBMM) {
           bmm.tagObjects = { ...bmm.tagObjects, [tag.id]: tag };
           bmm.tags = [...bmm.tags, tag.id];
 
-          if (selectedCategory === null) {
+          // Link tag to a selected category: 2-way linking (tagIds, categoryIds)
+          if (selectedCategory) { // link tag id to category
+            selectedCategory.tagIds = [...selectedCategory.tagIds, tag.id];
+          } else // or add it to the list of unlinked tags
             bmm.unlinked.tags = [...bmm.unlinked.tags, tag.id];
-          } else {
-            tag.categoryIds.push(selectedCategory.id);
-            const tagIds = bmm.bookmarkObjects[selectedCategory.id].tagIds;
-            bmm.bookmarkObjects[selectedCategory.id].tagIds = [...tagIds, tag.id];
-          }
+
           return bmm;
         });
 
+        return selectedCategory || null;
+      }).then(function (category) {
+        // Update the category if there are tags
+        if (category)
+          if (category.tagIds.length > 0)
+            Category.update(category);
+          else
+            throw ("The ID of new tag was not added to the selected bookmark");
       })
-      .then(() => {
+      .then(function () {
         console.log("Tag Created:", tagName);
         setShowTagPopup(false);
         setTagName("");
