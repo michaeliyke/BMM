@@ -8,10 +8,8 @@ import {
 import { Operator } from "../operator";
 
 export default class Category implements ICategory {
-
     id: string;
     name: string;
-    is_default: number;
     created_at: string;
     updated_at: string;
     tagIds: string[];
@@ -20,13 +18,12 @@ export default class Category implements ICategory {
     constructor(category: ICategory) {
         this.id = category.id; /* uuid4() */
         this.name = category.name;
-        this.is_default = category.is_default;
         this.created_at = category.created_at; /* (new Date()).toISOString() */
         this.updated_at = category.updated_at; /* (new Date()).toISOString() */
         this.tagIds = category.tagIds;
         this.bookmarkIds = category.bookmarkIds;
 
-        const empty = isEmpty(['id', 'name', 'is_default', 'created_at',
+        const empty = isEmpty(['id', 'name', 'created_at',
             'updated_at', 'tagIds', 'bookmarkIds'], category);
         if (empty) throw new Error(`Category.constructor: required field: ${empty}`);
     }

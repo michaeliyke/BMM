@@ -36,7 +36,7 @@ export interface ICategory {
   importExists?: boolean;
   id: string;
   name: string;
-  is_default: number; // 0 or 1
+  is_default?: number; // 0 or 1 Only the dummy default category should have it set
   created_at: string;
   updated_at: string;
   bookmarkIds: string[];

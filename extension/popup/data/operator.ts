@@ -24,11 +24,6 @@ export const Operator = {
             const request = indexedDB.open("bmm", 1);
             const unique = { unique: true };
 
-            // compound keys
-            const bookmarkTag = ["bookmark_id", "tag_id"];
-            const categoryBookmark = ["category_id", "bookmark_id"];
-            const categoryTag = ["category_id", "tag_id"];
-
             // Create a schema or upgrade an existing one
             request.onupgradeneeded = function upgrade() {
                 const db = request.result;
@@ -57,23 +52,6 @@ export const Operator = {
                 // bookmark_bin table: uniqueness NOT needed
                 if (!db.objectStoreNames.contains("bookmark_bin"))
                     db.createObjectStore("bookmark_bin", { keyPath: "id" });
-
-                /* RELATIONSHIP TABLES */
-
-                // Between bookmarks and tags
-                if (!db.objectStoreNames.contains("bookmark_tags")) // bookmark_tag table
-                    db.createObjectStore("bookmark_tags", { keyPath: "id" })
-                        .createIndex("bookmark_tags_index", bookmarkTag, unique);
-
-                // Between bookmarks and categories
-                if (!db.objectStoreNames.contains("category_bookmarks")) // category_bookmark table
-                    db.createObjectStore("category_bookmarks", { keyPath: "id" })
-                        .createIndex("category_bookmarks_index", categoryBookmark, unique);
-
-                // Between categories and tags
-                if (!db.objectStoreNames.contains("category_tags")) // category_tag table
-                    db.createObjectStore("category_tags", { keyPath: "id" })
-                        .createIndex("category_tags_index", categoryTag, unique);
             };
 
             request.onsuccess = () => resolve(request.result);
