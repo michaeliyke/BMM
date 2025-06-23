@@ -4,6 +4,7 @@ import { FiChevronRight, FiHash, FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
+import { getAllTags, getCategoryTags } from "../../../utils/appState";
 import { sortedCategories, toggleHighlightedClass } from "../../../utils/common";
 import { log } from "../../../utils/functional.lib.dev";
 import { ICategory, ITag } from "../../../utils/types/schemas";
@@ -24,7 +25,8 @@ export function ByCategoryTags() {
     selectedCategory,
     setSelectedCategory,
     setGrouping,
-    data,
+    categories,
+    bmm,
   } = useAppState();
 
   function toggleExpand(category: ICategory) {
@@ -104,7 +106,7 @@ export function ByCategoryTags() {
    */
   function handleSearch(query: string) {
     setQuery(query);
-    search(query, data, setCategories);
+    search(query, categories, setCategories);
   }
 
   useEffect(() => {
@@ -113,7 +115,7 @@ export function ByCategoryTags() {
     setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
 
     if (!query)
-      setCategories(data);
+      setCategories(categories);
 
     return () => {
       // Cancel the debounced search function when the component unmounts.
@@ -122,7 +124,7 @@ export function ByCategoryTags() {
         setHasExecuted(false);
       }
     };
-  }, [setGrouping, selectedTag, selectedCategory, data, query, setCategories, hasExecuted]);
+  }, [setGrouping, selectedTag, selectedCategory, categories, query, setCategories, hasExecuted]);
 
 
   return (
@@ -131,6 +133,8 @@ export function ByCategoryTags() {
       <label htmlFor="category-tags-search" className="sr-only">
         Search Category Tags
       </label>
+
+      {/* The search form */}
       <form role="search" className="relative px-4 py-3 border-b border-gray-200">
         <FiSearch
           aria-hidden="true"
@@ -146,7 +150,45 @@ export function ByCategoryTags() {
           aria-label="Search category tags"
         />
       </form>
+
+
       <ul className="categories">
+        {/* Default Category*/}
+        <li
+          key={defaultCategory.id}
+          className=""
+          data-category={defaultCategory.name}
+          data-id={defaultCategory.id}
+          data-default={defaultCategory.is_default}
+        >
+          <div
+            className={`category flex items-center justify-start px-4 py-2 text-xs text-gray-700 font-medium cursor-pointer hover:bg-slate-50 ${defaultCategory.is_default === 1 ? 'highlighted' : ''}`}
+            onClick={((e) => {
+              toggleSelected(defaultCategory, e.currentTarget);
+              toggleExpand(defaultCategory);
+            })}
+          >
+            <PiTagSimpleFill className="mr-2 text-gray-500" />
+            <span>{defaultCategory.name}</span>
+            {<FiChevronRight className={`text-lg ml-auto text-blue-500 transition-transform ${expandedCategories[defaultCategory.id] ? 'rotate-90' : ''}`} />}
+          </div>
+          {expandedCategories[defaultCategory.id] && (
+            <ul className="tags ml-8 mt-2 space-y-1">
+              {(getAllTags(bmm)).map((tag, tagIndex) => (
+                <li
+                  key={tagIndex}
+                  className="tag flex items-center px-4 py-1 text-xs text-gray-500 hover:bg-slate-50 rounded-md cursor-pointer"
+                  onClick={(event) => toggleSelectedTag(tag, event)}
+                >
+                  <FiHash className="mr-0.5 text-xs text-gray-400" />
+                  <span>{tag.name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+
+        {/* Regular categores */}
         {sortedCategories(_categories).map((category, index) => (
           <li
             key={index}
@@ -171,7 +213,7 @@ export function ByCategoryTags() {
             </div>
             {expandedCategories[category.id] && category.tagIds.length > 0 && (
               <ul className="tags ml-8 mt-2 space-y-1">
-                {([] as ITag[]).map((tag, tagIndex) => (
+                {(getCategoryTags(bmm, category.id) as ITag[]).map((tag, tagIndex) => (
                   <li
                     key={tagIndex}
                     className="tag flex items-center px-4 py-1 text-xs text-gray-500 hover:bg-slate-50 rounded-md cursor-pointer"
@@ -186,6 +228,8 @@ export function ByCategoryTags() {
           </li>
         ))}
       </ul>
+
+
     </section>
   );
 }
