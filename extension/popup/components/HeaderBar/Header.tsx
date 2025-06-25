@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuid4 } from 'uuid';
 import Bookmark from "../../data/adapters/bookmark";
 import Category from "../../data/adapters/category";
@@ -32,12 +32,12 @@ export default function Header() {
   const [tabs, setTabs] = useState<ITab[]>([]);
 
 
-  useState(function () {
+  useEffect(function () {
     setGrouping(selectedCategory?.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
     getCurrentTabUrl().then(setUrl).catch(error);
     getCurrentTabTitle().then(setTitle).catch(error);
     getAllTabs().then(setTabs).catch(error);
-  });
+  }, [selectedCategory?.name, selectedTag, setUrl, setTitle, setGrouping]);
 
   function postProcessing(newBookmark: IBookmark) {
     feedAllStateComponents(function (bmm: IBMM) {

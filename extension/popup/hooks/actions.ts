@@ -112,6 +112,8 @@ export default function action(set: TState<IAction>, get: TStateGet<IAction & IP
 
     grouping: "",
     setGrouping(grouping: SetStateAction<string>) {
+      if (!grouping) // Empty string
+        return;
       set(function (state) {
         return typeof grouping === "function"
           ? { ...state, grouping: grouping(state.grouping) }

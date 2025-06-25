@@ -76,13 +76,13 @@ export function ByTags() {
     setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
   }
 
-  useEffect(() => {
+  useEffect(function () {
     setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
 
     if (!query)
       setTags(tags);
 
-    return () => {
+    return function () {
       // Clean up the debounced search function after it has executed
       if (searchFnRef.current && hasExecuted) {
         searchFnRef.current.cancel();

@@ -6,7 +6,7 @@ import { SearchWidget } from "./widgets/SearchWidget";
  * ContentHeader component renders a header section that conditionally displays
  * either a GoBackButton or a SearchWidget based on the presence of a bookmark to show.
  */
-export default function ContentHeader() {
+export default function Header() {
   const { bookmarkToShow } = useAppState();
 
   return (

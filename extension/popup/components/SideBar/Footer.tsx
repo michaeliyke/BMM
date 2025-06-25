@@ -7,7 +7,7 @@ import { useAppState } from "../../hooks/globalstate";
 import { error } from "../../utils/functional.lib.dev";
 import { IBMM } from "../../utils/types/schemas";
 
-export default function SideBarFooter() {
+export default function Footer() {
   const [showCategoryPopup, setShowCategoryPopup] = useState(false);
   const [showTagPopup, setShowTagPopup] = useState(false);
   const [categoryName, setCategoryName] = useState("");

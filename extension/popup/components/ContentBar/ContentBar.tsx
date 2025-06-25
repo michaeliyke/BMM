@@ -1,6 +1,6 @@
 
-import ContentBody from "./ContentBody";
-import ContentHeader from "./ContentHeader";
+import Body from "./Body";
+import Header from "./Header";
 
 /**
  * ContentBar component is responsible for rendering the content section of the application.
@@ -9,9 +9,9 @@ import ContentHeader from "./ContentHeader";
 export default function ContentBar() {
   return (
     <article className="content mt-0 border-l border-r border-gray-200 shadow-sm">
-      <ContentHeader />
+      <Header />
 
-      <ContentBody />
+      <Body />
       <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
     </article>
   );

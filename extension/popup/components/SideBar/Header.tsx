@@ -1,13 +1,13 @@
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
 import { FiChevronDown } from "react-icons/fi";
 import { useAppState } from "../../hooks/globalstate";
-import { IBookmark, ICategory, TFilters } from "../../utils/types/schemas";
 import { log } from "../../utils/functional.lib.dev";
+import { IBookmark, ICategory, TFilters } from "../../utils/types/schemas";
 
 /**
  * SideBarHeader component renders a header with a filter selection dropdown.
  */
-export default function SideBarHeader() {
+export default function Header() {
 
   const {
     setQuery,

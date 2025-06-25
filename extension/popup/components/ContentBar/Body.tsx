@@ -10,7 +10,7 @@ import ListFavorites from "./ListFavorites";
  * The `ContentBody` component is responsible for rendering either the `BookmarkView` or `BookmarkList`
  * component based on the presence of a `bookmarkToShow` prop.
  */
-export default function ContentBody() {
+export default function Body() {
   const [showDetails, setShowDetails] = useState<boolean>(true);
   const { filterBy, bookmarkToShow } = useAppState();
 
