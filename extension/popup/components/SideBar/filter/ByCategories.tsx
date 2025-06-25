@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 
 import {
-  sortedCategories,
-  toggleHighlightedClass
+  highlightTarget,
+  sortedCategories
 } from "../../../utils/common";
 
 import { debounce, DebouncedFunc } from "lodash-es";
@@ -32,10 +32,10 @@ export default function ByCategories() {
   const [_categories, setCategories] = useState<ICategory[]>([]);
 
   function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
-    setSelectedCategory(category); // Global state
+    setSelectedCategory(category); // Global state Also updates bookmarks
     setBookmarkToShow(null); // Global state
     setGrouping(category.name); // Global state
-    toggleHighlightedClass(event.currentTarget, "category");
+    highlightTarget(event.currentTarget, "category");
   }
 
   /**
@@ -78,6 +78,7 @@ export default function ByCategories() {
       // const d = getAllCategories(allProperties);
       setGrouping(defaultCategory.name); // Global state
       setCategories(categories);
+      setSelectedCategory(null);
     }
     init().catch(error);
     return function () {
@@ -87,7 +88,7 @@ export default function ByCategories() {
         setHasExecuted(false);
       }
     };
-  }, [setGrouping, searchFnRef, hasExecuted, setCategories, categories]);
+  }, [setGrouping, searchFnRef, hasExecuted, setCategories, categories, setSelectedCategory]);
 
   return (
     <section className="filtered-list w-full h-full overflow-y-auto">
@@ -95,6 +96,8 @@ export default function ByCategories() {
       <label htmlFor="category-search" className="sr-only">
         Search Categories
       </label>
+
+      {/* The search form */}
       <form role="search" className="relative px-4 py-3 border-b border-gray-200">
         <FiSearch
           aria-hidden="true"

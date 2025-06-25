@@ -33,7 +33,6 @@ export default function SideBarFooter() {
         return bmm;
       });
 
-      console.log("Category Created:", categoryName);
       setShowCategoryPopup(false);
       setCategoryName("");
     }).catch(error);
@@ -74,7 +73,6 @@ export default function SideBarFooter() {
             throw ("The ID of new tag was not added to the selected bookmark");
       })
       .then(function () {
-        console.log("Tag Created:", tagName);
         setShowTagPopup(false);
         setTagName("");
       })

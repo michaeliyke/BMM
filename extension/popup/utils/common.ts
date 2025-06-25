@@ -1,6 +1,6 @@
 import moment from "moment";
 import { addClass, removeClass } from "./domHelpers";
-import { compose, deCycle } from "./functional.lib.dev";
+import { compose, deCycle, partial } from "./functional.lib.dev";
 import { IBookmark, ICategory, ITab, ITag } from "./types/schemas";
 
 export function sortedBookmarks(bookmarks: IBookmark[]): IBookmark[] {
@@ -12,69 +12,46 @@ export function sortedBookmarks(bookmarks: IBookmark[]): IBookmark[] {
 }
 
 /**
- * Prepends a dot to the given class name if it does not already start with one.
+ * Unhighlights previously highlighted, and highlights the new click target
  *
- * @param className - The class name to be processed.
- * @returns The class name with a dot prepended if it did not already start with one, or the original class name if it did.
+ * @param {HTMLElement} target - The new click target to highlight
+ * @param {string} [type] - The typeof of target - **category** or **tag**
  */
-export function dotIt(className: string): string {
-  if (!className) return '';
-  return className[0] === '.' ? className : `.${className}`;
-}
+export function highlightTarget(target: HTMLElement, type: "category" | "tag" = "category") {
+  const matches = document.querySelectorAll("." + type);
 
-/**
- * Toggles the 'highlighted' class on the target element and removes it from other elements of the same type.
- *
- * @param {HTMLElement} target - The target element to toggle the 'highlighted' class on.
- * @param {string} [type] - The type of elements to query and remove the 'highlighted' class from. Defaults to 'category'.
- */
-export function toggleHighlightedClass(target: HTMLElement, type?: string) {
-  const formattedType = dotIt(type || 'category');
-  const matches = document.querySelectorAll(formattedType);
-
-  matches.forEach((match) => {
+  matches.forEach((match) => { // find the highlighted, and unhighlight it
     if (match.classList.contains('highlighted') && match !== target) {
       removeClass(match, ['highlighted']);
     }
   });
-  addClass(target, ['highlighted']);
+  addClass(target, ['highlighted']); // Highlight the new click target
 }
 
 /**
- * Resets the selections based on the provided type.
+ * Removes the class name 'highlighted' from all matches of type in the DOM
  *
- * @param {string} [type] - The type of selection to reset. Defaults to 'category' if not provided.
- *
- * The function performs the following actions:
- * 1. Formats the type using the `dotIt` function.
- * 2. Selects all elements matching the formatted type.
- * 3. If no matches are found, the function returns early.
- * 4. Removes the 'selected' and 'highlighted' classes from all matched elements.
- * 5. If the formatted type is ".category":
- *    - Adds the 'selected' class to the first matched element.
- *    - Adds the 'highlighted' class to the second matched element.
- * 6. If the formatted type is not ".category":
- *    - Adds the 'highlighted' class to the first matched element.
+ * @param {string} [type] **category** or **tag**
  */
-export function resetSelections(type?: string) {
-  const formattedType = dotIt(type || 'category');
-  const matches = document.querySelectorAll(formattedType);
-  if (matches.length === 0)
-    return;
-
-  matches.forEach((match) => {  /* Remove current selections */
-    removeClass(match, ['selected', 'highlighted']);
-  });
-
-  if (formattedType === ".category") { /* Select the All Categories and highlight default category */
-    addClass(matches[0], ['selected']);
-    addClass(matches[1], ['highlighted']);
-    return;
+export function resetHighlights(type: "category" | "tag" = "category") {
+  const matches = document.querySelectorAll("." + type);
+  for (const match of matches) {  /* Remove current selections */
+    removeClass(match, ['highlighted']);
   }
 
-  /* Highlight All tags */
-  addClass(matches[0], ['highlighted']);
+  // Highligh All tags or Default Category
+  addClass(matches[0], ["highlighted"]);
 }
+
+/**
+ * Removes Removes the class name 'highlighted' from all **tag** in the DOM
+ */
+export const resetTagHighlights = partial(resetHighlights, "tag");
+
+/**
+ * Removes Removes the class name 'highlighted' from all **category** in the DOM
+ */
+export const resetCategoryHighlights = partial(resetHighlights, "category");
 
 
 /**

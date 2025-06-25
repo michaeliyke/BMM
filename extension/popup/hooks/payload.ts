@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { getAllBookmarks, getAllCategories, getAllTags } from "../utils/appState";
 import { IBMM, IBookmark, ICategory, ITag, TState, TStateGet } from "../utils/types/schemas";
+import { IAction } from "./actions";
 
 export interface IPayload {
   bookmarks: IBookmark[];
@@ -35,7 +36,7 @@ export interface IPayload {
  * @param get - Zustand's `get` function to access the current payload state.
  * @returns A partial state object implementing the `IPayload` interface.
  */
-export default function payload(set: TState<IPayload>, get: TStateGet<IPayload>): IPayload {
+export default function payload(set: TState<IPayload>, get: TStateGet<IPayload & IAction>): IPayload {
   return {
     bmm: {
       bookmarks: [],
@@ -49,6 +50,7 @@ export default function payload(set: TState<IPayload>, get: TStateGet<IPayload>)
         tags: []
       }
     },
+
     setBmm(bmm: SetStateAction<IBMM>) {
       set(function (state) {
         const _state = typeof bmm === "function"

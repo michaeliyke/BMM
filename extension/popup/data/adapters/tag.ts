@@ -101,6 +101,15 @@ export default class Tag implements ITag {
     }
 
     /**
+     * Alias to the instance .update() method
+     * @param tag An updated ITag object
+     * @returns void
+     */
+    static async update(tag: ITag) {
+        return new Tag(tag).update();
+    }
+
+    /**
      * Deletes a tag and removes all references to it.
      *
      * @returns A promise that resolves when the tag and all its references have been deleted.

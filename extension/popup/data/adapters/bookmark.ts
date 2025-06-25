@@ -11,7 +11,7 @@ export default class Bookmark implements IBookmark {
     description: string;
     created_at: string;
     updated_at: string;
-    archived: number;
+    archived?: number;
     starred?: number;
     importType?: "category" | "bookmark" | undefined;
     importExists?: boolean | undefined;
@@ -25,13 +25,11 @@ export default class Bookmark implements IBookmark {
         this.description = bookmark.description;
         this.created_at = bookmark.created_at; /* (new Date()).toISOString(); */
         this.updated_at = bookmark.updated_at; /* (new Date()).toISOString(); */
-        this.archived = bookmark.archived;
-        this.starred = bookmark.starred;
         this.categoryIds = bookmark.categoryIds;
         this.tagIds = bookmark.tagIds;
 
         const prop = isEmpty(['id', 'url', 'created_at', 'updated_at',
-            'archived', 'tagIds', 'categoryIds',], bookmark);
+            'tagIds', 'categoryIds',], bookmark);
         if (prop) throw new Error(`Bookmark.constructor: required field: '${prop}'`);
     }
 

@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { v4 as uuid4 } from 'uuid';
 import Bookmark from "../../data/adapters/bookmark";
-import BookmarkTag from "../../data/adapters/bookmark_tag";
 import Category from "../../data/adapters/category";
-import CategoryBookmark from "../../data/adapters/category_bookmark";
-import CategoryTag from "../../data/adapters/category_tag";
 import Tag from "../../data/adapters/tag";
 import { useAppState } from "../../hooks/globalstate";
-import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl } from "../../utils/common";
+import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl, resetCategoryHighlights, resetTagHighlights } from "../../utils/common";
 import { error } from "../../utils/functional.lib.dev";
 import { IBMM, IBookmark, ITab } from "../../utils/types/schemas";
 import AddAllWidget from "./AddAllWidget";
@@ -25,6 +22,9 @@ export default function Header() {
     grouping,
     setGrouping,
     feedAllStateComponents,
+    setSelectedTag,
+    setSelectedCategory,
+    filterBy,
   } = useAppState();
   const [url, setUrl] = useState(location.href);
   const [title, setTitle] = useState(document.title);
@@ -32,7 +32,7 @@ export default function Header() {
   const [tabs, setTabs] = useState<ITab[]>([]);
 
 
-  useState(() => {
+  useState(function () {
     setGrouping(selectedCategory?.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
     getCurrentTabUrl().then(setUrl).catch(error);
     getCurrentTabTitle().then(setTitle).catch(error);
@@ -40,8 +40,6 @@ export default function Header() {
   });
 
   function postProcessing(newBookmark: IBookmark) {
-    // setUrl('');
-    // setTitle('');
     feedAllStateComponents(function (bmm: IBMM) {
       bmm.bookmarkObjects = { ...bmm.bookmarkObjects, [newBookmark.id]: newBookmark };
       bmm.bookmarks = [...bmm.bookmarks, newBookmark.id];
@@ -60,6 +58,45 @@ export default function Header() {
 
       return bmm;
     });
+    return newBookmark;
+  }
+
+  function updateCategory(newBookmark: IBookmark) {
+    if (selectedCategory) {
+      selectedCategory.bookmarkIds.push(newBookmark.id);
+      Category.update(selectedCategory);
+    }
+    return newBookmark;
+  }
+
+  function updateTag(newBookmark: IBookmark) {
+    if (selectedTag) {
+      selectedTag.bookmarkIds.push(newBookmark.id);
+      Tag.update(selectedTag);
+    }
+    return newBookmark;
+  }
+
+  /**
+   * Resets any applicable state variables like selected category, tag. etc
+   */
+  function resetState() {
+    // setUrl('');
+    // setTitle('');
+
+    if (selectedTag)
+      setSelectedTag(null);
+
+    if (selectedCategory)
+      setSelectedCategory(null);
+
+    switch (filterBy) {
+      case "filter:categories":
+        resetCategoryHighlights();
+        break;
+      case "filter:tags":
+        resetTagHighlights();
+    }
   }
 
 
@@ -77,24 +114,18 @@ export default function Header() {
       categoryIds: selectedCategory ? [selectedCategory.id] : [],
     });
 
-    if (!selectedCategory && !selectedTag) {// Case 0: Neither category nor tag selected
-      return void bookmark.create().then(postProcessing).catch(error);
-    }
-
-    if (!selectedTag && selectedCategory !== null) {// case 1: ony category, no tag
-      const x = CategoryBookmark.createBookmark(bookmark, new Category(selectedCategory));
-      return void x.then(postProcessing).catch(error);
-    }
-
-    if (!selectedCategory && selectedTag !== null) {// case 2: only tag selected, no category
-      const x = BookmarkTag.createBookmark(bookmark, new Tag(selectedTag));
-      return void x.then(postProcessing).catch(error);
-    }
-
-    if (selectedTag && selectedCategory) { // case 3: both category and tag are selected
-      const x = CategoryTag.createBookmark(bookmark, new Category(selectedCategory), new Tag(selectedTag))
-      return void x.then(postProcessing).catch(error);
-    }
+    /**
+    * case 0: neither category nor tag selected
+    * case 1: ony category, no tag
+    * case 2: only tag selected, no category
+    * case 3: both category and tag are selected
+    */
+    bookmark.create()
+      .then(postProcessing)
+      .then(updateCategory)
+      .then(updateTag)
+      .then(resetState)
+      .catch(error);
   }
 
   return (

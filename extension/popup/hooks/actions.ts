@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
-import { IBookmark, ICategory, ITag, TFilters, TState } from "../utils/types/schemas";
+import { getAllBookmarks, getCategoryBookmarks, getTagBookmarks } from "../utils/appState";
+import { IBookmark, ICategory, ITag, TFilters, TState, TStateGet } from "../utils/types/schemas";
+import { IPayload } from "./payload";
 
 export interface IAction {
   headerForm: boolean;
@@ -42,7 +44,7 @@ export interface IAction {
  * @param set - Zustand's `set` function to update the action state.
  * @returns A partial state object implementing the `IAction` interface.
  */
-export default function action(set: TState<IAction>): IAction {
+export default function action(set: TState<IAction>, get: TStateGet<IAction & IPayload>): IAction {
   return {
     filteredCategories: [],
     setFilteredCategories(categories: SetStateAction<ICategory[]>) {
@@ -72,22 +74,39 @@ export default function action(set: TState<IAction>): IAction {
     },
 
     selectedCategory: null,
-    setSelectedCategory(category: SetStateAction<ICategory | null>) {
+    setSelectedCategory(cat: SetStateAction<ICategory | null>) {
       set(function (state) {
-        return typeof category === "function"
-          ? { ...state, selectedCategory: category(state.selectedCategory) }
-          : category?.is_default === 1 /* If default category quit */
-            ? { ...state, selectedCategory: null }
-            : { ...state, selectedCategory: category }
+        const category = typeof cat === "function" ? cat(state.selectedCategory) : cat;
+
+        // null should be used to reset category selection
+        if (!category) {
+          get().setBookmarks(getAllBookmarks(get().bmm));
+          return { ...state, selectedCategory: null };
+        }
+
+        if (category.is_default === 1) {
+          get().setBookmarks(getAllBookmarks(get().bmm));
+          return { ...state, selectedCategory: null };
+        }
+
+        get().setBookmarks(getCategoryBookmarks(get().bmm, category.id));
+        return { ...state, selectedCategory: category };
       });
     },
 
     selectedTag: null,
     setSelectedTag(tag: SetStateAction<ITag | null>) {
       set(function (state) {
-        return typeof tag === "function"
-          ? { ...state, selectedTag: tag(state.selectedTag) }
-          : { ...state, selectedTag: tag };
+        const _tag = typeof tag === "function" ? tag(state.selectedTag) : tag;
+
+        // null should be used to reset tag selection
+        if (!_tag) {
+          get().setBookmarks(getAllBookmarks(get().bmm));
+          return { ...state, selectedTag: null };
+        }
+
+        get().setBookmarks(getTagBookmarks(get().bmm, _tag.id));
+        return { ...state, selectedTag: _tag };
       });
     },
 

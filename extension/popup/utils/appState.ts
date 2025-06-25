@@ -46,6 +46,17 @@ export function getAllTags(bmm: IBMM): ITag[] {
 }
 
 /**
+ * Retrieves all the bookmarks of a given tag by its ID
+ * @param {IBMM} bmm - The bookmark manager state object
+ * @param {string} tagID - The ID of the tag object whose bookmarks are curated
+ * @returns {ITag[]} Array of all tag objects
+ */
+export function getTagBookmarks(bmm: IBMM, tagID: string): IBookmark[] {
+  return bmm.bookmarks.map((bookmarkId: string) => bmm.bookmarkObjects[bookmarkId])
+    .filter((bookmark) => bookmark.tagIds.includes(tagID));
+}
+
+/**
  * Retrieves all bookmarks from the bookmark manager state
  * @param {IBMM} bmm - The bookmark manager state object
  * @returns {IBookmark[]} Array of all bookmark objects

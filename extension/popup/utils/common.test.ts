@@ -11,12 +11,12 @@ import {
     getCurrentTabTitle,
     getCurrentTabUrl,
     getTags,
+    highlightTarget,
     isEmpty,
-    resetSelections,
+    resetHighlights,
     sortedBookmarks,
     sortedCategories,
     tagsSearch,
-    toggleHighlightedClass,
     weightedSearch
 } from "./common";
 import { IBookmark, ICategory, ITag } from "./types/schemas";
@@ -55,7 +55,7 @@ describe('common.ts', () => {
                 <div class="category"></div>
             `;
             const target = document.querySelector('.category') as HTMLElement;
-            toggleHighlightedClass(target, 'category');
+            highlightTarget(target, 'category');
             expect(target.classList.contains('highlighted')).toBe(true);
             expect(document.querySelectorAll('.highlighted').length).toBe(1);
         });
@@ -68,7 +68,7 @@ describe('common.ts', () => {
                 <div class="category highlighted"></div>
                 <div class="category"></div>
             `;
-            resetSelections('category');
+            resetHighlights('category');
             expect(document.querySelectorAll('.selected').length).toBe(1);
             expect(document.querySelectorAll('.highlighted').length).toBe(1);
         });

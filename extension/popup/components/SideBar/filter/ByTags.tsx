@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } fr
 import { FiHash, FiSearch } from "react-icons/fi";
 import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
-import { resetSelections, toggleHighlightedClass } from "../../../utils/common";
+import { highlightTarget, resetHighlights } from "../../../utils/common";
 import { log } from "../../../utils/functional.lib.dev";
 import { ICategory, ITag } from "../../../utils/types/schemas";
 
@@ -63,7 +63,7 @@ export function ByTags() {
     setBookmarkToShow(null); /* Allow this later */
 
     // Update the category text in the header
-    toggleHighlightedClass(target, "tag");
+    highlightTarget(target, "tag");
     setGrouping(defaultCategory.name + (tag ? ` # ${tag.name}` : ''));
   }
 
@@ -72,7 +72,7 @@ export function ByTags() {
     setSelectedTag(null);
     setBookmarkToShow(null);
     // If the default category is already selected
-    resetSelections("tag");
+    resetHighlights("tag");
     setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
   }
 

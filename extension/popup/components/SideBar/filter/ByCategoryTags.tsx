@@ -5,7 +5,7 @@ import { PiTagSimpleFill } from "react-icons/pi";
 import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
 import { getAllTags, getCategoryTags } from "../../../utils/appState";
-import { sortedCategories, toggleHighlightedClass } from "../../../utils/common";
+import { highlightTarget, sortedCategories } from "../../../utils/common";
 import { log } from "../../../utils/functional.lib.dev";
 import { ICategory, ITag } from "../../../utils/types/schemas";
 
@@ -42,7 +42,7 @@ export function ByCategoryTags() {
     setBookmarkToShow(null); /* Allow this later */
 
     // Update the category text in the header
-    toggleHighlightedClass(target, "tag");
+    highlightTarget(target, "tag");
     if (selectedCategory)
       setGrouping(selectedCategory.name + (tag ? ` # ${tag.name}` : ''));
   }
@@ -55,7 +55,7 @@ export function ByCategoryTags() {
       setSelectedTag(null);
       // Update the category text in the header
       setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
-      toggleHighlightedClass(target);
+      highlightTarget(target);
     }
   }
 

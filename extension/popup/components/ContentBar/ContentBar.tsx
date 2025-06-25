@@ -1,36 +1,12 @@
 
-import { useEffect } from "react";
-import { useAppState } from "../../hooks/globalstate";
-import { IBookmark, ICategory } from "../../utils/types/schemas";
 import ContentBody from "./ContentBody";
 import ContentHeader from "./ContentHeader";
-import { log } from "../../utils/functional.lib.dev";
 
 /**
  * ContentBar component is responsible for rendering the content section of the application.
  * It includes a header, body, and footer, and manages the state of bookmarks and filtered categories.
  */
 export default function ContentBar() {
-  const {
-    selectedCategory,
-    setFilteredCategories,
-    setBookmarks,
-    data,
-  } = useAppState();
-
-  const sel = selectedCategory;
-  function getBookmarks(d: ICategory[]): IBookmark[] {
-    log(d);
-    return [];
-  }
-
-  useEffect(() => {
-    /* CAUTION: the calls below is likely to cause infinite rendering */
-    const x = sel ? data.filter((cat) => cat.id === sel.id) : data;
-    setFilteredCategories(x);
-    setBookmarks(getBookmarks(x));
-  }, [selectedCategory, data, sel, setFilteredCategories, setBookmarks]);
-
   return (
     <article className="content mt-0 border-l border-r border-gray-200 shadow-sm">
       <ContentHeader />
