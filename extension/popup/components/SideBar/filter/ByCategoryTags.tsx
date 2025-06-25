@@ -7,17 +7,18 @@ import { useAppState } from "../../../hooks/globalstate";
 import { getAllTags, getCategoryTags } from "../../../utils/appState";
 import { highlightTarget, sortedCategories } from "../../../utils/common";
 import { log } from "../../../utils/functional.lib.dev";
-import { ICategory, ITag } from "../../../utils/types/schemas";
+import { ICategory, IDMap, ITag } from "../../../utils/types/schemas";
 
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
 
 export function ByCategoryTags() {
 
-  const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean; }>({});
+  const [expandedCategories, setExpandedCategories] = useState<IDMap<boolean>>({});
   const [query, setQuery] = useState<string>('');
   const [_categories, setCategories] = useState<ICategory[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(false);
+
   const {
     setBookmarkToShow,
     selectedTag,
@@ -28,36 +29,6 @@ export function ByCategoryTags() {
     categories,
     bmm,
   } = useAppState();
-
-  function toggleExpand(category: ICategory) {
-    setExpandedCategories((prev) => {
-      const temp = { ...prev, [category.id]: !prev[category.id] };
-      return temp;
-    });
-  }
-
-  function toggleSelectedTag(tag: ITag, event: React.MouseEvent<HTMLElement>) {
-    const target = event.currentTarget;
-    setSelectedTag(tag);
-    setBookmarkToShow(null); /* Allow this later */
-
-    // Update the category text in the header
-    highlightTarget(target, "tag");
-    if (selectedCategory)
-      setGrouping(selectedCategory.name + (tag ? ` # ${tag.name}` : ''));
-  }
-
-
-  function toggleSelected(category: ICategory, target: HTMLElement) {
-    if (category) {
-      setSelectedCategory(category.is_default !== 1 ? category : null);
-      setBookmarkToShow(null);
-      setSelectedTag(null);
-      // Update the category text in the header
-      setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
-      highlightTarget(target);
-    }
-  }
 
   function categoryTagsSearch(s: string, d: CL): ICategory[] {
     log(s, d);
@@ -107,6 +78,53 @@ export function ByCategoryTags() {
   function handleSearch(query: string) {
     setQuery(query);
     search(query, categories, setCategories);
+  }
+
+  /**
+   * 1. Resets the showing bookmark in order to display a list of bookmarks
+   * 2. Updates the category-tag indicator text
+   * 3. Removes highlighting from the previously highlighted and sets it on this category
+   *
+   * @param category The clicked category
+   * @param e Event object
+   */
+  function categoryClick(category: ICategory, e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    setBookmarkToShow(null);
+    setSelectedTag(null);
+    highlightTarget(e.currentTarget);
+
+    if (category.is_default === 1) {
+      setSelectedCategory(null);
+      setGrouping(defaultCategory.name);
+    } else {
+      setSelectedCategory(category);
+      setGrouping(category.name);
+    }
+
+    setExpandedCategories((s) => ({ ...s, [category.id]: !s[category.id] }));
+  }
+
+  /**
+   * 1. Removes previous highlighting and and sets it on the clicked tag.
+   * 2. Resets the showing bookmark in order to show list of bookmarks
+   * 3. Updates the category-tag indicator text
+   *
+   * @param category The category whose tag is clicked
+   * @param tag The clicked tag
+   * @param e Event object
+   */
+  function categoryTagClick(category: ICategory, tag: ITag, e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    setSelectedTag(tag);
+    setBookmarkToShow(null);
+    highlightTarget(e.currentTarget, "tag");
+
+    if (category.is_default === 1) {
+      setSelectedCategory(null);
+      setGrouping(`${defaultCategory.name}#${tag.name}`);
+    } else {
+      setSelectedCategory(category);
+      setGrouping(`${category.name}#${tag.name}`);
+    }
   }
 
   useEffect(() => {
@@ -166,10 +184,7 @@ export function ByCategoryTags() {
         >
           <div
             className={`category flex items-center justify-start px-4 py-2 text-xs text-gray-700 font-medium cursor-pointer hover:bg-slate-50 ${defaultCategory.is_default === 1 ? 'highlighted' : ''}`}
-            onClick={((e) => {
-              toggleSelected(defaultCategory, e.currentTarget);
-              toggleExpand(defaultCategory);
-            })}
+            onClick={(e) => categoryClick(defaultCategory, e)}
           >
             <PiTagSimpleFill className="mr-2 text-gray-500" />
             <span>{defaultCategory.name}</span>
@@ -181,7 +196,7 @@ export function ByCategoryTags() {
                 <li
                   key={tagIndex}
                   className="tag flex items-center px-4 py-1 text-xs text-gray-500 hover:bg-slate-50 rounded-md cursor-pointer"
-                  onClick={(event) => toggleSelectedTag(tag, event)}
+                  onClick={(event) => categoryTagClick(defaultCategory, tag, event)}
                 >
                   <FiHash className="mr-0.5 text-xs text-gray-400" />
                   <span>{tag.name}</span>
@@ -201,31 +216,25 @@ export function ByCategoryTags() {
             data-default={category.is_default}
           >
             <div
-              className={`category flex items-center justify-start px-4 py-2 text-xs text-gray-700 font-medium cursor-pointer hover:bg-slate-50 ${category.is_default === 1 ? 'highlighted' : ''}`}
-              onClick={((e) => {
-                toggleSelected(category, e.currentTarget);
-                if (category.is_default !== 1)
-                  toggleExpand(category);
-              })}
+              className="category flex items-center justify-start px-4 py-2 text-xs text-gray-700 font-medium cursor-pointer hover:bg-slate-50"
+              onClick={(e) => categoryClick(category, e)}
             >
               <PiTagSimpleFill className="mr-2 text-gray-500" />
               <span>{category.name}</span>
-              {category.is_default === 1
-                ? <FiChevronRight className="text-lg text-gray-300 ml-auto" />
-                : <FiChevronRight className={`text-lg ml-auto text-blue-500 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />}
+              {<FiChevronRight className={`text-lg ml-auto text-blue-500 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />}
             </div>
             {expandedCategories[category.id] && category.tagIds.length > 0 && (
               <ul className="tags ml-8 mt-2 space-y-1">
-                {(getCategoryTags(bmm, category.id) as ITag[]).map((tag, tagIndex) => (
-                  <li
+                {getCategoryTags(bmm, category.id).map(function (tag, tagIndex) {
+                  return <li
                     key={tagIndex}
                     className="tag flex items-center px-4 py-1 text-xs text-gray-500 hover:bg-slate-50 rounded-md cursor-pointer"
-                    onClick={(event) => toggleSelectedTag(tag, event)}
+                    onClick={(event) => categoryTagClick(category, tag, event)}
                   >
                     <FiHash className="mr-0.5 text-xs text-gray-400" />
                     <span>{tag.name}</span>
                   </li>
-                ))}
+                })}
               </ul>
             )}
           </li>
