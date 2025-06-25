@@ -124,7 +124,10 @@ export function ByCategoryTags() {
         setHasExecuted(false);
       }
     };
-  }, [setGrouping, selectedTag, selectedCategory, categories, query, setCategories, hasExecuted]);
+  }, [
+    setGrouping, selectedTag, selectedCategory, categories, query,
+    setCategories, hasExecuted,
+  ]);
 
 
   return (

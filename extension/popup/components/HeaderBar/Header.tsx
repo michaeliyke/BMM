@@ -17,6 +17,7 @@ import ImportWidget from "./ImportExport/ImportWidget";
 export default function Header() {
   const {
     headerForm,
+    setHeaderForm,
     selectedCategory,
     selectedTag,
     grouping,
@@ -37,7 +38,11 @@ export default function Header() {
     getCurrentTabUrl().then(setUrl).catch(error);
     getCurrentTabTitle().then(setTitle).catch(error);
     getAllTabs().then(setTabs).catch(error);
-  }, [selectedCategory?.name, selectedTag, setUrl, setTitle, setGrouping]);
+    setHeaderForm(true);
+  }, [
+    selectedCategory?.name, selectedTag, setUrl, setTitle, setGrouping,
+    setHeaderForm,
+  ]);
 
   function postProcessing(newBookmark: IBookmark) {
     feedAllStateComponents(function (bmm: IBMM) {
