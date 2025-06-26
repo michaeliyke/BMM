@@ -13,12 +13,6 @@ type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
 
 export function ByCategoryTags() {
-
-  const [expandedCategories, setExpandedCategories] = useState<IDMap<boolean>>({});
-  const [query, setQuery] = useState<string>('');
-  const [_categories, setCategories] = useState<ICategory[]>([]);
-  const [hasExecuted, setHasExecuted] = useState<boolean>(false);
-
   const {
     setBookmarkToShow,
     selectedTag,
@@ -29,6 +23,12 @@ export function ByCategoryTags() {
     categories,
     bmm,
   } = useAppState();
+
+  const [expandedCategories, setExpandedCategories] = useState<IDMap<boolean>>({});
+  const [query, setQuery] = useState<string>('');
+  const [_categories, setCategories] = useState<ICategory[]>([]);
+  const [hasExecuted, setHasExecuted] = useState<boolean>(false);
+
 
   function categoryTagsSearch(s: string, d: CL): ICategory[] {
     log(s, d);
@@ -128,12 +128,12 @@ export function ByCategoryTags() {
   }
 
   useEffect(() => {
-    // Set the default category text in the header
-    const category = selectedCategory || defaultCategory;
-    setGrouping(category.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+    setGrouping(
+      (selectedCategory || defaultCategory).name + (
+        selectedTag ? ` # ${selectedTag.name}` : ''
+      ));
 
-    if (!query)
-      setCategories(categories);
+    setCategories(categories);
 
     return () => {
       // Cancel the debounced search function when the component unmounts.
@@ -207,9 +207,9 @@ export function ByCategoryTags() {
         </li>
 
         {/* Regular categores */}
-        {sortedCategories(_categories).map((category, index) => (
-          <li
-            key={index}
+        {sortedCategories(_categories).map(function renderCategory(category, catIndex) {
+          return <li
+            key={catIndex}
             className=""
             data-category={category.name}
             data-id={category.id}
@@ -225,7 +225,7 @@ export function ByCategoryTags() {
             </div>
             {expandedCategories[category.id] && category.tagIds.length > 0 && (
               <ul className="tags ml-8 mt-2 space-y-1">
-                {getCategoryTags(bmm, category.id).map(function (tag, tagIndex) {
+                {getCategoryTags(bmm, category.id).map(function renderTag(tag, tagIndex) {
                   return <li
                     key={tagIndex}
                     className="tag flex items-center px-4 py-1 text-xs text-gray-500 hover:bg-slate-50 rounded-md cursor-pointer"
@@ -238,7 +238,7 @@ export function ByCategoryTags() {
               </ul>
             )}
           </li>
-        ))}
+        })}
       </ul>
 
 

@@ -5,17 +5,82 @@ import Category from "../../data/adapters/category";
 import Tag from "../../data/adapters/tag";
 import { useAppState } from "../../hooks/globalstate";
 import { error } from "../../utils/functional.lib.dev";
-import { IBMM } from "../../utils/types/schemas";
+import { IBMM, ICategory, ITag } from "../../utils/types/schemas";
 
 export default function Footer() {
   const [showCategoryPopup, setShowCategoryPopup] = useState(false);
   const [showTagPopup, setShowTagPopup] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [tagName, setTagName] = useState("");
-  const { selectedCategory, feedAllStateComponents } = useAppState();
+  const { selectedCategory, feedAllStateComponents, setSelectedCategory } = useAppState();
 
+  /**
+   * process the new category into the UI
+   * @param category category object returned from the model
+   */
+  function categoryPostProcess(category: ICategory) {
+    feedAllStateComponents(function (bmm: IBMM) {
+      bmm.categoryObjects = { ...bmm.categoryObjects, [category.id]: category };
+      bmm.categories = [...bmm.categories, category.id];
+      bmm.unlinked.categories = [...bmm.unlinked.categories, category.id];
+      return bmm;
+    });
 
-  function handleCreateCategory() {
+    setShowCategoryPopup(false);
+    setCategoryName("");
+  }
+
+  /**
+   * post process tag into view after creation
+   * @param tag object returned from the model
+   * @returns the selected category
+   */
+  function tagPostProcess(tag: ITag) {
+    if (selectedCategory && selectedCategory.tagIds.length < 0)
+      throw ("The ID of new tag was not added to the selected bookmark");
+
+    feedAllStateComponents(function (bmm: IBMM) {
+      bmm.tagObjects = { ...bmm.tagObjects, [tag.id]: tag };
+      bmm.tags = [...bmm.tags, tag.id];
+
+      // Link tag to a selected category: 2-way linking (tagIds, categoryIds)
+      if (selectedCategory) { // link tag id to category
+        const cat = selectedCategory;
+        cat.tagIds.push(tag.id);
+
+        bmm.categoryObjects[cat.id].tagIds = [...cat.tagIds];
+        setSelectedCategory(cat);
+      } else // or add it to the list of unlinked tags
+        bmm.unlinked.tags = [...bmm.unlinked.tags, tag.id];
+
+      return bmm;
+    });
+
+    return selectedCategory || null;
+  }
+
+  /**
+   * updates the selected category with the ID of the new tag for reference
+   * @param category the selected category
+   */
+  function categoryTagUpdate(category: ICategory | null) {
+    // Update the category if there are tags
+    if (category)
+      Category.update(category);
+  }
+
+  /**
+   * updates state variables after tag creation
+   */
+  function stateUpdates() {
+    setShowTagPopup(false);
+    setTagName("");
+  }
+
+  /**
+   * onClick handler to create a new category
+   */
+  function createCategory() {
     Category.create({
       name: categoryName,
       is_default: 0,
@@ -24,58 +89,26 @@ export default function Footer() {
       updated_at: new Date().toISOString(),
       tagIds: [],
       bookmarkIds: [],
-    }).then(function (category) {
-
-      feedAllStateComponents(function (bmm: IBMM) {
-        bmm.categoryObjects = { ...bmm.categoryObjects, [category.id]: category };
-        bmm.categories = [...bmm.categories, category.id];
-        bmm.unlinked.categories = [...bmm.unlinked.categories, category.id];
-        return bmm;
-      });
-
-      setShowCategoryPopup(false);
-      setCategoryName("");
-    }).catch(error);
+    })
+      .then(categoryPostProcess)
+      .catch(error);
   }
 
-  function handleCreateTag() {
-    const tag = new Tag({
+  /**
+   * onClick handler to create a new tag
+   */
+  function createTag() {
+    Tag.create({
       name: tagName,
       id: uuid4(),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       bookmarkIds: [],
       categoryIds: selectedCategory ? [selectedCategory.id] : [],
-    });
-
-    tag.create()
-      .then(function (tag) {
-        feedAllStateComponents(function (bmm: IBMM) {
-          bmm.tagObjects = { ...bmm.tagObjects, [tag.id]: tag };
-          bmm.tags = [...bmm.tags, tag.id];
-
-          // Link tag to a selected category: 2-way linking (tagIds, categoryIds)
-          if (selectedCategory) { // link tag id to category
-            selectedCategory.tagIds = [...selectedCategory.tagIds, tag.id];
-          } else // or add it to the list of unlinked tags
-            bmm.unlinked.tags = [...bmm.unlinked.tags, tag.id];
-
-          return bmm;
-        });
-
-        return selectedCategory || null;
-      }).then(function (category) {
-        // Update the category if there are tags
-        if (category)
-          if (category.tagIds.length > 0)
-            Category.update(category);
-          else
-            throw ("The ID of new tag was not added to the selected bookmark");
-      })
-      .then(function () {
-        setShowTagPopup(false);
-        setTagName("");
-      })
+    })
+      .then(tagPostProcess)
+      .then(categoryTagUpdate)
+      .then(stateUpdates)
       .catch(error);
 
   }
@@ -102,7 +135,7 @@ export default function Footer() {
             className="w-full text-gray-500 p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
           />
           <button
-            onClick={handleCreateCategory}
+            onClick={createCategory}
             className="mt-2 w-full px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
           >
             Create
@@ -130,7 +163,7 @@ export default function Footer() {
             className="w-full p-2 border text-gray-500 border-gray-300 rounded focus:outline-none focus:ring focus:ring-green-300"
           />
           <button
-            onClick={handleCreateTag}
+            onClick={createTag}
             className="mt-2 w-full px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
           >
             Create
