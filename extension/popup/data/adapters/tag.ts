@@ -70,15 +70,21 @@ export default class Tag implements ITag {
         return lockManager.acquire(`Tag.create:${this.id}`, async () => {
             // Create a new tag record in the database if not exists
             try {
-                const existing = await this.exists();
-                if (!existing) {
-                    return await Operator.createRecord<ITag>('tags', this);
+                if (await this.exists()) {
+                    throw new Error(`Tag already exists: ${this.name}`);
                 }
-                return existing;
+                return await Operator.createRecord<ITag>('tags', this);
             } catch (error) {
                 throw new Error(`An error occurred in Tag.create:- ${error}, ${this}`);
             }
         });
+    }
+
+    /**
+     * Alias to the instance.create() mathod
+     */
+    static async create(tag: ITag) {
+        return new Tag(tag).create();
     }
 
     /**

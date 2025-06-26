@@ -88,10 +88,9 @@ export default class Category implements ICategory {
      */
     async create(): Promise<ICategory> {
         const x = lockManager.acquire(`Category.create:${this.name}`, async () => {
-            const existing = await this.exists();
-            if (!existing) // Only proceed if the category does not already exist
-                return Operator.createRecord<ICategory>('categories', this);
-            return existing;
+            if (await this.exists()) // Only proceed if the category does not already exist
+                throw new Error(`Category already exists: ${this.name}`);
+            return Operator.createRecord<ICategory>('categories', this);
         });
 
         try {

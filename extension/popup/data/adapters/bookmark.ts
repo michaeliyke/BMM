@@ -131,8 +131,7 @@ export default class Bookmark implements IBookmark {
     async create(): Promise<IBookmark> {
         const x = lockManager.acquire(`Bookmark.create:${this.id}`, async () => {
             // Create a new bookmark record in the database if not exists
-            const existing = await this.exists();
-            if (existing) return existing;
+            if (await this.exists()) throw new Error(`Bookmark already exists: ${this.id}`);
             return await Operator.createRecord<IBookmark>('bookmarks', this);
         });
         try {
@@ -140,6 +139,13 @@ export default class Bookmark implements IBookmark {
         } catch (error) {
             throw new Error(`An error occurred in Bookmark.create:- ${error}, ${this.id}`);
         }
+    }
+
+    /**
+     * Alias to the instance.create()
+     */
+    static async create(bookmark: IBookmark) {
+        return new Bookmark(bookmark).create();
     }
 
     /**
@@ -160,6 +166,13 @@ export default class Bookmark implements IBookmark {
         } catch (error) {
             throw new Error(`An error occurred in Bookmark.update:- ${error}, ${this.id}`);
         }
+    }
+
+    /**
+     * Alias to instance.update() method
+     */
+    static async update(bookmark: IBookmark) {
+        return new Bookmark(bookmark).update();
     }
 
     /**
