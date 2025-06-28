@@ -29,6 +29,7 @@ export function ByCategoryTags() {
   const [_categories, setCategories] = useState<ICategory[]>([]);
   const [hasExecuted, setHasExecuted] = useState<boolean>(false);
 
+  const initialRun = useRef(true);
 
   function categoryTagsSearch(s: string, d: CL): ICategory[] {
     log(s, d);
@@ -113,13 +114,13 @@ export function ByCategoryTags() {
     setSelectedCategory(category.is_default === 1 ? null : category);
   }
 
-  // Runs once only during page load because the dependency array is empty
   useEffect(function () {
-    setSelectedCategory(defaultCategory);
-    setSelectedTag(null);
-  }, []);
+    if (initialRun.current === true) { // Runs once only during page load
+      setSelectedCategory(defaultCategory);
+      setSelectedTag(null);
+      initialRun.current = false;
+    }
 
-  useEffect(function () {
     setCategories(categories);
 
     return function () {
@@ -129,10 +130,7 @@ export function ByCategoryTags() {
         setHasExecuted(false);
       }
     };
-  }, [
-    setGrouping, selectedTag, selectedCategory, categories, query,
-    setCategories, hasExecuted,
-  ]);
+  }, [setGrouping, selectedTag, selectedCategory, categories, query, setCategories, hasExecuted, setSelectedCategory, setSelectedTag]);
 
 
   return (

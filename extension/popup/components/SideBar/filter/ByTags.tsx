@@ -23,6 +23,8 @@ export function ByTags() {
     tags,
   } = useAppState();
 
+  const initialRun = useRef(true);
+
   /**
    * A reference to a debounced search function.
    * This reference is used to store a debounced version of a search function
@@ -73,13 +75,14 @@ export function ByTags() {
     setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
   }
 
-  // Runs once only during page load because the dependency array is empty
   useEffect(function () {
-    setSelectedCategory(null);
-    setSelectedTag(null);
-  }, []);
 
-  useEffect(function () {
+    if (initialRun.current === true) { // Runs once only during page load
+      setSelectedCategory(null);
+      setSelectedTag(null);
+      initialRun.current = false;
+    }
+
     if (!query)
       setTags(tags);
 

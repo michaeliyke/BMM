@@ -38,6 +38,8 @@ export default function ByCategories() {
     highlightTarget(event.currentTarget, "category");
   }
 
+  const initialRun = useRef(true);
+
   /**
    * A reference to a debounced search function.
    * This reference is used to store a debounced version of a search function
@@ -74,12 +76,13 @@ export default function ByCategories() {
 
   // Runs once only during page load because the dependency array is empty
   useEffect(function () {
-    setSelectedCategory(defaultCategory);
-    setSelectedTag(null);
-  }, []);
-
-  useEffect(function () {
     setCategories(categories);
+
+    if (initialRun.current === true) { // Runs once only during page load
+      setSelectedCategory(defaultCategory);
+      setSelectedTag(null);
+      initialRun.current = false;
+    }
 
     return function () {
       // Cancel the debounced search function when the component unmounts.
@@ -89,7 +92,7 @@ export default function ByCategories() {
       }
     };
 
-  }, [setGrouping, searchFnRef, hasExecuted, setCategories, categories]);
+  }, [setGrouping, searchFnRef, hasExecuted, setCategories, categories, setSelectedCategory, setSelectedTag]);
 
   return (
     <section className="filtered-list w-full h-full overflow-y-auto">

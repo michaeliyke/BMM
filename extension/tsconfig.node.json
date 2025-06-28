@@ -16,8 +16,8 @@
         "noEmit": true,
         /* Linting */
         "strict": true,
-        "noUnusedLocals": false, /* Eslint handles this already */
-        "noUnusedParameters": false,
+        "noUnusedLocals": true, /* Eslint handles this already */
+        "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
         // ESM compatibility
