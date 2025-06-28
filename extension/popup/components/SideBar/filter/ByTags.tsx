@@ -17,7 +17,7 @@ export function ByTags() {
   const {
     setBookmarkToShow,
     selectedTag,
-    setSelectedTag,
+    setSelectedTag, setSelectedCategory,
     setGrouping,
     categories,
     tags,
@@ -61,10 +61,7 @@ export function ByTags() {
     const target = event.currentTarget;
     setSelectedTag(tag);
     setBookmarkToShow(null); /* Allow this later */
-
-    // Update the category text in the header
     highlightTarget(target, "tag");
-    setGrouping(defaultCategory.name + (tag ? ` # ${tag.name}` : ''));
   }
 
   // Brings the selection and highlighting to the default state
@@ -76,9 +73,13 @@ export function ByTags() {
     setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
   }
 
+  // Runs once only during page load because the dependency array is empty
   useEffect(function () {
-    setGrouping(defaultCategory.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+    setSelectedCategory(null);
+    setSelectedTag(null);
+  }, []);
 
+  useEffect(function () {
     if (!query)
       setTags(tags);
 
@@ -90,7 +91,7 @@ export function ByTags() {
       }
     };
 
-  }, [setGrouping, selectedTag, query, hasExecuted, tags]);
+  }, [setGrouping, selectedTag, query, hasExecuted, tags, setSelectedCategory, setSelectedTag]);
 
   return (
     <section className="filtered-list w-full h-full overflow-y-auto">

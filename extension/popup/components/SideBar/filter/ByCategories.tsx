@@ -10,7 +10,7 @@ import { FiSearch } from "react-icons/fi";
 import { PiTagSimpleFill } from "react-icons/pi";
 import { defaultCategory } from "../../../data/data";
 import { useAppState } from "../../../hooks/globalstate";
-import { error, log } from "../../../utils/functional.lib.dev";
+import { log } from "../../../utils/functional.lib.dev";
 import { ICategory } from "../../../utils/types/schemas";
 type DSI = Dispatch<SetStateAction<ICategory[]>>;
 type CL = ICategory[];
@@ -27,14 +27,14 @@ export default function ByCategories() {
     setSelectedCategory,
     setGrouping,
     categories,
+    setSelectedTag,
   } = useAppState();
-  // const allCategories = useAppState((s) => s.allCategories);
+
   const [_categories, setCategories] = useState<ICategory[]>([]);
 
   function toggleSelected(category: ICategory, event: React.MouseEvent<HTMLLIElement>) {
-    setSelectedCategory(category); // Global state Also updates bookmarks
+    setSelectedCategory(category.is_default === 1 ? null : category);
     setBookmarkToShow(null); // Global state
-    setGrouping(category.name); // Global state
     highlightTarget(event.currentTarget, "category");
   }
 
@@ -72,15 +72,15 @@ export default function ByCategories() {
     search(query, _categories, setCategories);
   }
 
-  useEffect(() => {
-    async function init() {
-      // Set the default category text in the header
-      // const d = getAllCategories(allProperties);
-      setGrouping(defaultCategory.name); // Global state
-      setCategories(categories);
-      setSelectedCategory(null);
-    }
-    init().catch(error);
+  // Runs once only during page load because the dependency array is empty
+  useEffect(function () {
+    setSelectedCategory(defaultCategory);
+    setSelectedTag(null);
+  }, []);
+
+  useEffect(function () {
+    setCategories(categories);
+
     return function () {
       // Cancel the debounced search function when the component unmounts.
       if (searchFnRef.current && hasExecuted) {
@@ -88,7 +88,8 @@ export default function ByCategories() {
         setHasExecuted(false);
       }
     };
-  }, [setGrouping, searchFnRef, hasExecuted, setCategories, categories, setSelectedCategory]);
+
+  }, [setGrouping, searchFnRef, hasExecuted, setCategories, categories]);
 
   return (
     <section className="filtered-list w-full h-full overflow-y-auto">

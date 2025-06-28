@@ -3,6 +3,7 @@ import { v4 as uuid4 } from 'uuid';
 import Bookmark from "../../data/adapters/bookmark";
 import Category from "../../data/adapters/category";
 import Tag from "../../data/adapters/tag";
+import { defaultCategory } from "../../data/data";
 import { useAppState } from "../../hooks/globalstate";
 import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl, resetCategoryHighlights, resetTagHighlights } from "../../utils/common";
 import { error } from "../../utils/functional.lib.dev";
@@ -34,14 +35,18 @@ export default function Header() {
 
 
   useEffect(function () {
-    setGrouping(selectedCategory?.name + (selectedTag ? ` # ${selectedTag.name}` : ''));
+    setGrouping(
+      (selectedCategory || defaultCategory).name + (
+        selectedTag ? ` # ${selectedTag.name}` : ''
+      ));
+
     getCurrentTabUrl().then(setUrl).catch(error);
     getCurrentTabTitle().then(setTitle).catch(error);
     getAllTabs().then(setTabs).catch(error);
     setHeaderForm(true);
   }, [
     selectedCategory?.name, selectedTag, setUrl, setTitle, setGrouping,
-    setHeaderForm,
+    setHeaderForm, selectedCategory,
   ]);
 
   function postProcessing(newBookmark: IBookmark) {

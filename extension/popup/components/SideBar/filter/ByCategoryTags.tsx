@@ -88,19 +88,12 @@ export function ByCategoryTags() {
    * @param category The clicked category
    * @param e Event object
    */
-  function categoryClick(category: ICategory, e: React.MouseEvent<HTMLElement, MouseEvent>) {
+  function categoryClick(category: ICategory, e: React.MouseEvent<HTMLElement>) {
     setBookmarkToShow(null);
     setSelectedTag(null);
     highlightTarget(e.currentTarget);
 
-    if (category.is_default === 1) {
-      setSelectedCategory(null);
-      setGrouping(defaultCategory.name);
-    } else {
-      setSelectedCategory(category);
-      setGrouping(category.name);
-    }
-
+    setSelectedCategory(category.is_default === 1 ? null : category);
     setExpandedCategories((s) => ({ ...s, [category.id]: !s[category.id] }));
   }
 
@@ -113,29 +106,23 @@ export function ByCategoryTags() {
    * @param tag The clicked tag
    * @param e Event object
    */
-  function categoryTagClick(category: ICategory, tag: ITag, e: React.MouseEvent<HTMLElement, MouseEvent>) {
+  function categoryTagClick(category: ICategory, tag: ITag, e: React.MouseEvent<HTMLElement>) {
     setSelectedTag(tag);
     setBookmarkToShow(null);
     highlightTarget(e.currentTarget, "tag");
-
-    if (category.is_default === 1) {
-      setSelectedCategory(null);
-      setGrouping(`${defaultCategory.name}#${tag.name}`);
-    } else {
-      setSelectedCategory(category);
-      setGrouping(`${category.name}#${tag.name}`);
-    }
+    setSelectedCategory(category.is_default === 1 ? null : category);
   }
 
-  useEffect(() => {
-    setGrouping(
-      (selectedCategory || defaultCategory).name + (
-        selectedTag ? ` # ${selectedTag.name}` : ''
-      ));
+  // Runs once only during page load because the dependency array is empty
+  useEffect(function () {
+    setSelectedCategory(defaultCategory);
+    setSelectedTag(null);
+  }, []);
 
+  useEffect(function () {
     setCategories(categories);
 
-    return () => {
+    return function () {
       // Cancel the debounced search function when the component unmounts.
       if (searchFnRef.current && hasExecuted) {
         searchFnRef.current.cancel();

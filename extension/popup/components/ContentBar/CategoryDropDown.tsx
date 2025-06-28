@@ -3,7 +3,6 @@ import { FiChevronDown, FiChevronUp, FiTag } from "react-icons/fi";
 import { useClickAway } from "react-use";
 import { useAppState } from "../../hooks/globalstate";
 import { getBookmarkCategories } from "../../utils/appState";
-import { log } from "../../utils/functional.lib.dev";
 import { IBookmark } from "../../utils/types/schemas";
 
 interface CategoryDropdownProps {
@@ -22,7 +21,6 @@ export default function CategoryDropdown({ bookmark }: CategoryDropdownProps) {
   const { bmm } = useAppState();
 
   const categories = getBookmarkCategories(bmm, bookmark.id);
-  log(categories)
 
   useClickAway(dropdownRef, () => setIsOpen(false));
 
