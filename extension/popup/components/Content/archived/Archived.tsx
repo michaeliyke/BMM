@@ -1,10 +1,10 @@
 import moment from "moment";
-import { useAppState } from "../../hooks/globalstate";
-import { sortedBookmarks } from "../../utils/common";
-import { ICategory } from "../../utils/types/schemas";
-import { log } from "../../utils/functional.lib.dev";
+import { useAppState } from "../../../hooks/globalstate";
+import { sortedBookmarks } from "../../../utils/common";
+import { log } from "../../../utils/functional.lib.dev";
+import { ICategory } from "../../../utils/types/schemas";
 
-export default function ListArchived() {
+export default function Archived() {
   const { setBookmarkToShow, data } = useAppState();
 
   function filterArchived(d: ICategory[]) {

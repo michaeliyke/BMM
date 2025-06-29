@@ -5,7 +5,7 @@ import { useAppState } from "../../../hooks/globalstate";
  * GoBackWidget component renders a button that allows users to navigate back
  * to the previous view by setting the bookmark to show to null.
  */
-export function GoBackWidget() {
+export default function GoBack() {
   const { setBookmarkToShow } = useAppState();
 
   function handleGoBack() {

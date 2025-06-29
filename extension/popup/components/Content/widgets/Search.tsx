@@ -8,7 +8,7 @@ import { IBookmark, ICategory } from "../../../utils/types/schemas";
 /**
  * SearchWidget component allows users to search and filter bookmarks.
 */
-export function SearchWidget() {
+export default function Search() {
   const {
     query,
     setQuery,

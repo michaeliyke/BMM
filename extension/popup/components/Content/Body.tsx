@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useAppState } from "../../hooks/globalstate";
-import BookmarkList from "./BookmarkList";
-import BookmarkView from "./BookmarkView";
-import ListArchived from "./ListArchived";
-import ListDeleted from "./ListDeleted";
-import ListFavorites from "./ListFavorites";
+import Archived from "./archived/Archived";
+import BookmarkView from "./bookmark/Bookmark";
+import Bookmarks from "./BookmarkItems";
+import Deleted from "./deleted/Deleted";
+import Favorites from "./favorites/Favorites";
 
 /**
- * The `ContentBody` component is responsible for rendering either the `BookmarkView` or `BookmarkList`
- * component based on the presence of a `bookmarkToShow` prop.
+ * Responsible for rendering various views like Bookmark, Archived, Deleted,
+ * and Favorites
  */
 export default function Body() {
   const [showDetails, setShowDetails] = useState<boolean>(true);
@@ -22,16 +22,16 @@ export default function Body() {
   }
 
   if (filterBy === 'filter:archived') {
-    return <ListArchived />;
+    return <Archived />;
   }
 
   if (filterBy === 'filter:deleted') {
-    return <ListDeleted />;
+    return <Deleted />;
   }
 
   if (filterBy === 'filter:favorites') {
-    return <ListFavorites />;
+    return <Favorites />;
   }
 
-  return <BookmarkList />;
+  return <Bookmarks />;
 }

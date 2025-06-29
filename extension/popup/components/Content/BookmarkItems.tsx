@@ -11,15 +11,15 @@ import { sortedBookmarks } from "../../utils/common";
 import ReadableDate from "../../utils/readabledate";
 import { IBookmark } from "../../utils/types/schemas";
 import BookmarkItemFooter from "./BookmarkItemFooter";
-import CategoryDropdown from "./CategoryDropDown";
 import { ArchiveDialog } from "./dialogs/ArchiveDialog";
 import { DeleteDialog } from "./dialogs/DeleteDialog";
+import CategoryDropdown from "./widgets/CategoryDropDown";
 
 /**
  * BookmarkList component displays a list of bookmarks filtered by a selected tag.
  * Each bookmark can be viewed, edited, archived, or deleted.
  */
-export default function BookmarkList() {
+export default function Bookmarks() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [activeBookmarkIndex, setActiveBookmarkIndex] = useState<number>(-1);

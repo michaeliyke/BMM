@@ -1,5 +1,5 @@
-import ContentBar from '../components/ContentBar/ContentBar';
-import Header from '../components/HeaderBar/Header';
+import Content from '../components/Content/Content';
+import Header from '../components/Header/Header';
 import SideBar from '../components/SideBar/SideBar';
 import { useAppState } from '../hooks/globalstate';
 
@@ -19,7 +19,7 @@ export default function Home() {
       <section className={headerForm ? `pt-[128px]` : 'pt-[35px]'}>
         <SideBar />
 
-        <ContentBar />
+        <Content />
       </section>
     </>
   )

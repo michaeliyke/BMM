@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import { FiChevronDown, FiChevronUp, FiTag } from "react-icons/fi";
 import { useClickAway } from "react-use";
-import { useAppState } from "../../hooks/globalstate";
-import { getBookmarkCategories } from "../../utils/appState";
-import { IBookmark } from "../../utils/types/schemas";
+import { useAppState } from "../../../hooks/globalstate";
+import { getBookmarkCategories } from "../../../utils/appState";
+import { IBookmark } from "../../../utils/types/schemas";
 
 interface CategoryDropdownProps {
   bookmark: IBookmark;

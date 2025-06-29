@@ -1,9 +1,9 @@
 import moment from "moment";
-import { IDeletedBookmark } from "../../utils/types/schemas";
-import BookmarkBin from "../../data/adapters/bookmark_bin";
 import { useEffect, useState } from "react";
+import BookmarkBin from "../../../data/adapters/bookmark_bin";
+import { IDeletedBookmark } from "../../../utils/types/schemas";
 
-export default function ListDeleted() {
+export default function Deleted() {
     const [deletedBookmarks, setDeletedBookmarks] = useState<IDeletedBookmark[]>([]);
 
     useEffect(() => {

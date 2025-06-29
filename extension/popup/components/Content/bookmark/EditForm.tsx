@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import Bookmark from "../../data/adapters/bookmark";
-import { useAppState } from "../../hooks/globalstate";
-import { error } from "../../utils/functional.lib.dev";
-import { IBMM, IBookmark } from "../../utils/types/schemas";
+import Bookmark from "../../../data/adapters/bookmark";
+import { useAppState } from "../../../hooks/globalstate";
+import { error } from "../../../utils/functional.lib.dev";
+import { IBMM, IBookmark } from "../../../utils/types/schemas";
 
 
 export interface BookmarkEditFormProps {
@@ -11,9 +11,9 @@ export interface BookmarkEditFormProps {
 }
 
 /**
- * BookmarkEditForm component allows users to edit the details of a bookmark.
+ * Form to edit the details of a bookmark.
  */
-export function BookmarkEditForm(props: BookmarkEditFormProps) {
+export default function EditForm(props: BookmarkEditFormProps) {
   const { setIsEditing } = props;
   const { bookmarkToShow, setBookmarkToShow, feedAllStateComponents } = useAppState();
   const bookmark = bookmarkToShow!; // Non-null assertion operator to assert not null

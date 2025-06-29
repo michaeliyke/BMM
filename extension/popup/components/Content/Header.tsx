@@ -1,6 +1,6 @@
 import { useAppState } from "../../hooks/globalstate";
-import { GoBackWidget } from "./widgets/GoBackWidget";
-import { SearchWidget } from "./widgets/SearchWidget";
+import GoBack from "./widgets/GoBack";
+import Search from "./widgets/Search";
 
 /**
  * ContentHeader component renders a header section that conditionally displays
@@ -13,9 +13,9 @@ export default function Header() {
     <header className="flex items-center justify-center p-2 bg-gray-_100 border border-gray-200">
       {bookmarkToShow ? (
         <nav aria-label="Go back">
-          <GoBackWidget />
+          <GoBack />
         </nav>
-      ) : <SearchWidget />}
+      ) : <Search />}
     </header>
   );
 }

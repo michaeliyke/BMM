@@ -1,9 +1,9 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
-import Bookmark from "../../data/adapters/bookmark";
-import { IBookmark } from "../../utils/types/schemas";
+import Bookmark from "../../../data/adapters/bookmark";
+import { IBookmark } from "../../../utils/types/schemas";
 
-export default function ListFavorites() {
+export default function Favorites() {
     const [favoriteBookmarks, setFavoriteBookmarks] = useState<IBookmark[]>([]);
 
     useEffect(() => {
