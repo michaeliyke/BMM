@@ -66,7 +66,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
             initiateEditing={initiateEditing}
           />
 
-          /* Details section and the categories tab */
+          {/* Details section and the categories tab */}
           {showDetails
             ? <Body bookmark={bookmark} />
             : <CategoryTab categories={categories} />

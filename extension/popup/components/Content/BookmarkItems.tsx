@@ -2,17 +2,15 @@
 import { useState } from "react";
 import { AiOutlineEdit } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
-import { FaRegStar, FaStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
-import Bookmark from "../../data/adapters/bookmark";
 import { useAppState } from "../../hooks/globalstate";
 import { bookmarkRefFilter } from "../../utils/appState";
 import { sortedBookmarks } from "../../utils/common";
 import ReadableDate from "../../utils/readabledate";
-import { IBookmark } from "../../utils/types/schemas";
 import BookmarkItemFooter from "./BookmarkItemFooter";
-import { ArchiveDialog } from "./dialogs/ArchiveDialog";
-import { DeleteDialog } from "./dialogs/DeleteDialog";
+import Archive from "./archived/Archive";
+import Delete from "./deleted/Delete";
+import Favorite from "./favorites/Favorite";
 import CategoryDropdown from "./widgets/CategoryDropDown";
 
 /**
@@ -123,19 +121,19 @@ export default function Bookmarks() {
           </section>
 
           {/* Favorite button */}
-          <FavoriteButton bookmark={bookmark} />
+          <Favorite bookmark={bookmark} />
 
           {/* Tags Section */}
           <BookmarkItemFooter />
         </article>
       ))}
-      <ArchiveDialog
+      <Archive
         bookmark={filteredBookmarks[activeBookmarkIndex]}
         archiveDialogOpen={archiveDialogOpen}
         setArchiveDialogOpen={setArchiveDialogOpen}
         setActiveBookmarkIndex={setActiveBookmarkIndex}
       />
-      <DeleteDialog
+      <Delete
         bookmark={filteredBookmarks[activeBookmarkIndex]}
         deleteDialogOpen={deleteDialogOpen}
         setDeleteDialogOpen={setDeleteDialogOpen}
@@ -144,28 +142,5 @@ export default function Bookmarks() {
     </section>
 
   );
-}
-
-
-function FavoriteButton({ bookmark }: { bookmark: IBookmark }) {
-  const [starred, setStarred] = useState(bookmark.starred || false);
-
-  function toggleStarred(): void {
-    Bookmark.toggleStarred(bookmark).then(() => {
-      setStarred(!starred);
-    }).catch(console.error);
-  }
-
-  return <aside className="absolute right-4 mt-2 top-1/2 transform -translate-y-2/3">
-    <button
-      type="button"
-      className={`${starred ? "text-dark-yellow" : "text-gray-400"} hover:text-dark-yellow transition duration-200`}
-      aria-label="Favorite"
-      title="Favorite"
-      onClick={toggleStarred}
-    >
-      {starred ? <FaStar size={14} /> : <FaRegStar size={14} />}
-    </button>
-  </aside>;
 }
 

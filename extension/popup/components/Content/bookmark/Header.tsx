@@ -16,6 +16,8 @@ type HeaderProps = {
 export default function Header(props: HeaderProps) {
   const { bookmark, showDetails, setShowDetails, initiateEditing } = props;
   return <header className="mb-4 flex flex-col">
+
+    {/* The url detail */}
     <a
       href={bookmark.url}
       target="_blank"
@@ -24,8 +26,12 @@ export default function Header(props: HeaderProps) {
     >
       {bookmark.url.length > 65 ? `${bookmark.url.substring(0, 65)}...` : bookmark.url}
     </a>
+
+
     <div className="flex justify-between mt-2">
+      {/* Details and Categories tabs */}
       <div className="flex space-x-3">
+        {/* Te Details tab */}
         <button
           type="button"
           className={`px-2 py-1 text-xs font-medium text-gray-700 bg-white border-gray-300 rounded-t-md hover:bg-white ${showDetails ? 'underline' : ''} underline-offset-8`}
@@ -33,6 +39,8 @@ export default function Header(props: HeaderProps) {
         >
           Details
         </button>
+
+        {/* The Categories tab */}
         <button
           type="button"
           className={`px-2 py-1 text-xs font-medium text-gray-700 bg-white bor_der border-gray-300 rounded-t-md hover:bg-white ${!showDetails ? 'underline' : ''} underline-offset-8`}
@@ -41,7 +49,10 @@ export default function Header(props: HeaderProps) {
           Categories
         </button>
       </div>
+      {/* ---------------------------------------- */}
+
       <aside className="flex items-center space-x-2 text-gray-500 text-sm">
+        {/* The Edit button */}
         <button
           type="button"
           onClick={initiateEditing}
@@ -52,6 +63,9 @@ export default function Header(props: HeaderProps) {
           <AiOutlineEdit className="text-gray-500" aria-hidden="true" />
           <span>Edit</span>
         </button>
+
+
+        {/* The Delete button */}
         <button
           type="button"
           className="flex items-center space-x-1 text-xs/2 text-blue-500 hover:underline"
@@ -61,6 +75,9 @@ export default function Header(props: HeaderProps) {
           <BsTrash className="text-gray-500" aria-hidden="true" />
           <span>Delete</span>
         </button>
+
+
+        {/* The Favorite button */}
         <button
           type="button"
           className="flex items-center space-x-1 text-xs/2 text-blue-500 hover:underline"
@@ -70,6 +87,9 @@ export default function Header(props: HeaderProps) {
           <FaRegStar className="text-gray-500" aria-hidden="true" />
           <span>Favorite</span>
         </button>
+
+
+        {/* The Archive button */}
         <button
           type="button"
           className="flex items-center text-xs/2 space-x-1 text-blue-500 hover:underline"
@@ -79,6 +99,9 @@ export default function Header(props: HeaderProps) {
           <MdOutlineArchive className="text-gray-500" aria-hidden="true" />
           <span>Archive</span>
         </button>
+
+
+        {/* The time widget */}
         <time dateTime={bookmark.updated_at} className="flex items-center text-xs/2 space-x-1">
           <FaClock className="text-gray-400" aria-hidden="true" />
           <span>{moment(bookmark.updated_at).fromNow()}</span>

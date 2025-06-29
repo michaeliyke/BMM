@@ -13,7 +13,7 @@ type ArchiveDialogProps = {
 /**
  * ArchiveDialog component renders a modal dialog to confirm the archiving of a bookmark.
  */
-export function ArchiveDialog(props: ArchiveDialogProps) {
+export default function Archive(props: ArchiveDialogProps) {
   const {
     bookmark,
     archiveDialogOpen,

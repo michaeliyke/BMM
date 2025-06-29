@@ -14,7 +14,7 @@ type DeleteDialogProps = {
 /**
  * DeleteDialog component renders a confirmation dialog for deleting a bookmark.
  */
-export function DeleteDialog(props: DeleteDialogProps) {
+export default function Delete(props: DeleteDialogProps) {
   const {
     bookmark,
     deleteDialogOpen,
