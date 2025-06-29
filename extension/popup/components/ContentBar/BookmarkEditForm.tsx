@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import Bookmark from "../../data/adapters/bookmark";
 import { useAppState } from "../../hooks/globalstate";
+import { error } from "../../utils/functional.lib.dev";
+import { IBMM, IBookmark } from "../../utils/types/schemas";
 
 
 export interface BookmarkEditFormProps {
@@ -13,45 +15,42 @@ export interface BookmarkEditFormProps {
  */
 export function BookmarkEditForm(props: BookmarkEditFormProps) {
   const { setIsEditing } = props;
-  const { bookmarkToShow } = useAppState();
+  const { bookmarkToShow, setBookmarkToShow, feedAllStateComponents } = useAppState();
   const bookmark = bookmarkToShow!; // Non-null assertion operator to assert not null
   const [title, setTitle] = useState<string>(bookmark.title);
   const [url, setUrl] = useState<string>(bookmark.url);
   const [description, setDescription] = useState<string>(bookmark.description);
 
   /**
-   * Handles the update of bookmark details.
-   *
-   * @param {IBookmark} updatedDetails - The updated details of the bookmark.
-   * @returns {void}
+   * Replaces the old bookmark object with the updated version within bmm
+   * @param bookmark The bookmark object with the updated parts included
+   */
+  function postProcess(bookmark: IBookmark) {
+    feedAllStateComponents(function (bmm: IBMM) {
+      bmm.bookmarkObjects[bookmark.id] = { ...bookmark };
+      return bmm;
+    });
+    return bookmark;
+  }
+
+  /**
+   * Resets state variables relevant to editing
+   */
+  function setStateVars(bookmark: IBookmark) {
+    setIsEditing(false);
+    setBookmarkToShow(bookmark);
+    return bookmark;
+  }
+
+  /**
+   * Update the details of a bookmark.
    */
   function applyUpdate(e: React.FormEvent) {
     e.preventDefault();
-    const modification = { ...bookmark, title, url, description };
-
-    (new Bookmark(modification)).update().then(() => {
-      // setData((state: ICategory[]) => {
-      //   const newState = [...state]; // shallow copy of the state array
-
-      //   const categoryIndex = newState.findIndex((c) => { // If any returns true
-      //     return c.bookmarks.some((b) => b.id === bookmark.id);
-      //   });
-
-      //   if (categoryIndex === -1) return state; // Safety checks
-
-      //   const bookmarkIndex = newState[categoryIndex].bookmarks.findIndex((b) => b.id === bookmark.id);
-      //   if (bookmarkIndex === -1) return state; // Safety checks
-
-      //   newState[categoryIndex].bookmarks[bookmarkIndex] = modification;
-      //   // console.log("Bookmark updated successfully", modification);
-      //   setIsEditing(false);
-      //   return newState; // Return the new state
-      // });
-
-    })
-      .catch((error) => {
-        console.error("Error updating bookmark", error);
-      });
+    Bookmark.update({ ...bookmark, title, url, description })
+      .then(postProcess)
+      .then(setStateVars)
+      .catch(error);
   }
 
   /**

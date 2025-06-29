@@ -154,11 +154,12 @@ export default class Bookmark implements IBookmark {
      * @returns A promise that resolves when the bookmark is successfully updated.
      * @throws An error if the bookmark with the specified ID does not exist.
      */
-    async update(): Promise<void> {
+    async update(): Promise<IBookmark> {
         const x = lockManager.acquire(`Bookmark.update:${this.id}`, async () => {
             if (!(await this.exists()))
                 throw new Error(`Bookmark.update: Bookmark does not exist: ${this.id}`);
             await Operator.updateRecord<IBookmark>('bookmarks', this);
+            return this;
         });
 
         try {
@@ -233,7 +234,7 @@ export default class Bookmark implements IBookmark {
      *
      * @returns {Promise<void>} A promise that resolves when the bookmark has been archived.
      */
-    async archive(): Promise<void> {
+    async archive(): Promise<IBookmark> {
         this.archived = 1;
         return await this.update();
     }
