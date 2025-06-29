@@ -1,7 +1,7 @@
 /**
  * @fileoverview Provides utility functions for managing and querying bookmark manager state
  * Contains functions for retrieving categories, tags, and bookmarks from the BMM state
- */
+**/
 
 import { IBMM, IBookmark, ICategory, ITag } from "./types/schemas";
 
@@ -85,4 +85,15 @@ export function getBookmarkCategories(bmm: IBMM, bookmarkId: string): ICategory[
 export function getBookmarkTags(bmm: IBMM, bookmarkId: string): ITag[] {
   return bmm.tags.map((tagId) => bmm.tagObjects[tagId])
     .filter((tag) => tag.bookmarkIds.includes(bookmarkId));
+}
+
+/**
+ * Returnes a function that determines if a **ref** is connected to a bookmark or not
+ * @param ref a bookmark's reference point (only category or tag) or null
+ * @returns a function with filter logic to tell **ref** is connected to bookmark or not
+ */
+export function bookmarkRefFilter(ref: ICategory | ITag | null) {
+  return function filter(bookmark: IBookmark) {
+    return (ref === null) || ref.bookmarkIds.includes(bookmark.id);
+  };
 }

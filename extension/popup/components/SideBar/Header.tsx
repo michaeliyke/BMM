@@ -1,11 +1,10 @@
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
 import { FiChevronDown } from "react-icons/fi";
 import { useAppState } from "../../hooks/globalstate";
-import { log } from "../../utils/functional.lib.dev";
-import { IBookmark, ICategory, TFilters } from "../../utils/types/schemas";
+import { TFilters } from "../../utils/types/schemas";
 
 /**
- * SideBarHeader component renders a header with a filter selection dropdown.
+ * Renders the side bar header with a filter selection dropdown.
  */
 export default function Header() {
 
@@ -13,21 +12,15 @@ export default function Header() {
     setQuery,
     setFilterBy,
     filterBy,
-    filteredCategories,
-    setBookmarks,
   } = useAppState();
 
-  function getBookmarks(d: ICategory[]): IBookmark[] {
-    log(d);
-    return [];
-  }
-
+  /**
+   * sets the side bar filter groups such as categories, tags, category/tags, favorites, etc
+   * @param value new filter value to be set
+   */
   function handleFilterSelection(value: TFilters) {
-    if (setFilterBy) {
-      setFilterBy(value);
-      setBookmarks(getBookmarks(filteredCategories));
-      setQuery("");
-    }
+    setFilterBy(value);
+    setQuery("");
   }
 
   const options = [

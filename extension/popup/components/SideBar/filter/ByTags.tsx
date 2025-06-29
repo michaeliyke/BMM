@@ -78,7 +78,7 @@ export function ByTags() {
   useEffect(function () {
 
     if (initialRun.current === true) { // Runs once only during page load
-      setSelectedCategory(null);
+      setSelectedCategory(defaultCategory);
       setSelectedTag(null);
       initialRun.current = false;
     }

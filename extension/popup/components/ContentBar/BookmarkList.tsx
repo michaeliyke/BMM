@@ -6,9 +6,10 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
 import Bookmark from "../../data/adapters/bookmark";
 import { useAppState } from "../../hooks/globalstate";
+import { bookmarkRefFilter } from "../../utils/appState";
 import { sortedBookmarks } from "../../utils/common";
 import ReadableDate from "../../utils/readabledate";
-import { IBookmark, ITag } from "../../utils/types/schemas";
+import { IBookmark } from "../../utils/types/schemas";
 import BookmarkItemFooter from "./BookmarkItemFooter";
 import CategoryDropdown from "./CategoryDropDown";
 import { ArchiveDialog } from "./dialogs/ArchiveDialog";
@@ -26,6 +27,7 @@ export default function BookmarkList() {
     setBookmarkToShow,
     selectedTag,
     bookmarks,
+    selectedCategory,
   } = useAppState();
 
   const handleDelete = (index: number) => {
@@ -38,15 +40,12 @@ export default function BookmarkList() {
     setArchiveDialogOpen(true);
   };
 
+  const tagBookmark = bookmarkRefFilter(selectedTag);
+  const categoryBookmark = bookmarkRefFilter(selectedCategory);
 
-  let filteredBookmarks = bookmarks;
-
-  // Filter out bookmarks that include the selected tag
-  if (selectedTag) {
-    filteredBookmarks = bookmarks.filter(() => {
-      return ([] as ITag[]).some((tag) => tag.name === selectedTag.name);
-    });
-  }
+  let filteredBookmarks = bookmarks.filter(function filter(bookmark) {
+    return tagBookmark(bookmark) && categoryBookmark(bookmark);
+  });
 
   filteredBookmarks = sortedBookmarks(filteredBookmarks);
 
