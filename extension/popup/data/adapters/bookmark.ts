@@ -11,12 +11,15 @@ export default class Bookmark implements IBookmark {
     description: string;
     created_at: string;
     updated_at: string;
-    archived?: number;
-    starred?: number;
-    importType?: "category" | "bookmark" | undefined;
-    importExists?: boolean | undefined;
     categoryIds: string[];
     tagIds: string[];
+
+    // optional fields
+    archived?: number;
+    starred?: number;
+    importType?: "category" | "bookmark";
+    importExists?: boolean;
+    deleted?: number;
 
     constructor(bookmark: IBookmark) {
         this.id = bookmark.id; /* uuid4() */
@@ -27,6 +30,14 @@ export default class Bookmark implements IBookmark {
         this.updated_at = bookmark.updated_at; /* (new Date()).toISOString(); */
         this.categoryIds = bookmark.categoryIds;
         this.tagIds = bookmark.tagIds;
+
+        // optional fileds
+        this.archived = bookmark.archived;
+        this.starred = bookmark.starred;
+        this.importType = bookmark.importType;
+        this.importExists = bookmark.importExists;
+        this.deleted = bookmark.deleted;
+
 
         const prop = isEmpty(['id', 'url', 'created_at', 'updated_at',
             'tagIds', 'categoryIds',], bookmark);

@@ -19,28 +19,30 @@ export interface IUser {
  * A Tag object
  */
 export interface ITag {
-  importExists?: boolean;
   id: string;
   name: string;
   created_at: string;
   updated_at: string;
   categoryIds: string[];
   bookmarkIds: string[];
+
+  importExists?: boolean;
 };
 
 /**
  * A Category object
  */
 export interface ICategory {
-  importType?: 'category' | 'bookmark';
-  importExists?: boolean;
   id: string;
   name: string;
-  is_default?: number; // 0 or 1 Only the dummy default category should have it set
   created_at: string;
   updated_at: string;
   bookmarkIds: string[];
   tagIds: string[];
+
+  importType?: 'category' | 'bookmark';
+  importExists?: boolean;
+  is_default?: number; // 0 or 1 Only the dummy default category should have it set
 };
 
 /**

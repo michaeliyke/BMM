@@ -15,6 +15,11 @@ export default class Category implements ICategory {
     tagIds: string[];
     bookmarkIds: string[];
 
+    // optional fields
+    importType?: 'category' | 'bookmark';
+    importExists?: boolean;
+    is_default?: number;
+
     constructor(category: ICategory) {
         this.id = category.id; /* uuid4() */
         this.name = category.name;
@@ -22,6 +27,11 @@ export default class Category implements ICategory {
         this.updated_at = category.updated_at; /* (new Date()).toISOString() */
         this.tagIds = category.tagIds;
         this.bookmarkIds = category.bookmarkIds;
+
+        // optional fields
+        this.importType = category.importType;
+        this.importExists = category.importExists;
+        this.is_default = category.is_default;
 
         const empty = isEmpty(['id', 'name', 'created_at',
             'updated_at', 'tagIds', 'bookmarkIds'], category);

@@ -12,6 +12,8 @@ export default class Tag implements ITag {
     bookmarkIds: string[];
     categoryIds: string[];
 
+    importExists?: boolean;
+
     constructor(tag: ITag) {
         this.id = tag.id; /* uuid4(); */
         this.name = tag.name;
@@ -19,6 +21,8 @@ export default class Tag implements ITag {
         this.updated_at = tag.updated_at; /* (new Date()).toISOString(); */
         this.bookmarkIds = tag.bookmarkIds;
         this.categoryIds = tag.categoryIds;
+
+        this.importExists = tag.importExists;
 
         const empty = isEmpty(['id', 'name', 'created_at', 'updated_at',
             'bookmarkIds', 'categoryIds'], tag);
