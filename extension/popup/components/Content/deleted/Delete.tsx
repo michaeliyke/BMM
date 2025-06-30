@@ -1,82 +1,65 @@
 import { Dispatch, SetStateAction } from "react";
-import { v4 as uuidv4 } from "uuid";
-import BookmarkBin from "../../../data/adapters/bookmark_bin";
+import Bookmark from "../../../data/adapters/bookmark";
 import { useAppState } from "../../../hooks/globalstate";
-import { IBookmark } from "../../../utils/types/schemas";
+import { error } from "../../../utils/functional.lib.dev";
+import { IBMM, IBookmark } from "../../../utils/types/schemas";
 
 type DeleteDialogProps = {
   bookmark: IBookmark;
-  deleteDialogOpen: boolean;
-  setDeleteDialogOpen: Dispatch<SetStateAction<boolean>>;
-  setActiveBookmarkIndex: Dispatch<SetStateAction<number>>;
+  dialog: boolean;
+  setDialog: Dispatch<SetStateAction<boolean>>;
+  bgOpacity?: number;
 };
 
 /**
- * DeleteDialog component renders a confirmation dialog for deleting a bookmark.
+ * Renders a confirmation dialog for deleting a bookmark.
  */
 export default function Delete(props: DeleteDialogProps) {
-  const {
-    bookmark,
-    deleteDialogOpen,
-    setDeleteDialogOpen,
-    setActiveBookmarkIndex,
-  } = props;
+  const { bookmark, dialog, setDialog, bgOpacity = 50 } = props;
 
-  const { data, setData } = useAppState();
+  const { feedAllStateComponents, bookmarkToShow, setBookmarkToShow } = useAppState();
 
-  if (!deleteDialogOpen)
+  if (!dialog)
     return null;
 
-  function handleCancel() {
-    setActiveBookmarkIndex(-1);
-    setDeleteDialogOpen(false);
+  /**
+  * Replaces the old bookmark object with the updated version within bmm
+  * @param bookmark the updated bookmark object
+  */
+  function postProcess(bookmark: IBookmark) {
+    feedAllStateComponents(function (bmm: IBMM) {
+      bmm.bookmarkObjects[bookmark.id] = { ...bookmark };
+      return bmm;
+    });
+    return bookmark;
   }
 
   /**
-   * Handles the deletion of a bookmark by moving it to the bin and updating the state.
-   *
-   * This function creates a new `BookmarkBin` instance with the provided bookmark's details,
-   * sets the `deleted_at` timestamp to the current date, and assigns a new unique ID.
-   * It then moves the bookmark to the bin and updates the state to remove the deleted bookmark
-   * from the list of bookmarks. If an error occurs during the process, it logs the error to the console.
-   * Finally, it resets the active bookmark index and closes the delete dialog.
-  */
-  function deleteHandler() {
-    const bookmarkBin = new BookmarkBin({
-      created_at: bookmark.created_at,
-      updated_at: bookmark.updated_at,
-      deleted_at: new Date().toISOString(),
-      bookmark_id: bookmark.id,
-      category_ids: '',
-      note_ids: "",
-      tag_ids: '',
-      id: uuidv4(),
-      title: bookmark.title,
-      url: bookmark.url,
-      description: bookmark.description,
-    });
+   * Restores relevant states
+   * @param bookmark the updated bookmark object
+   */
+  function stateUpdates(bookmark: IBookmark) {
+    setDialog(false);
 
-    bookmarkBin.moveToBin()
-      .then(() => {
-        const updatedData = data.map((category) => {
-          const updatedBookmarks = ([] as IBookmark[]).filter((b) => b.id !== bookmark.id);
-          return { ...category, bookmarks: updatedBookmarks };
-        });
-        setData(updatedData);
-        console.log("Bookmark moved to bin successfully.");
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setActiveBookmarkIndex(-1);
-        setDeleteDialogOpen(false);
-      });
+    // if the bookmark is currently displayed, close it
+    if (bookmarkToShow?.id === bookmark.id)
+      setBookmarkToShow(null);
+    return bookmark;
+  }
+
+  /**
+   * Handles the deletion of a bookmark
+  */
+  function deleteHandler(bookmark: IBookmark) {
+    Bookmark.update({ ...bookmark, deleted: 1 })
+      .then(postProcess)
+      .then(stateUpdates)
+      .catch(error);
   }
 
   return (
     <dialog
-      className="fixed h-screen w-screen inset-0 z-1 flex items-center justify-center bg-gray-900 bg-opacity-50"
+      className={`fixed h-screen w-screen inset-0 z-[100000] flex items-center justify-center bg-gray-900 bg-opacity-${bgOpacity}`}
     >
       <article className="bg-white rounded-lg p-6 max-w-sm w-full shadow-md">
         <header>
@@ -87,13 +70,13 @@ export default function Delete(props: DeleteDialogProps) {
         </p>
         <footer className="mt-6 flex justify-end space-x-3">
           <button
-            onClick={handleCancel}
+            onClick={() => setDialog(false)}
             className="px-4 py-2 text-sm text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
           >
             Cancel
           </button>
           <button
-            onClick={deleteHandler}
+            onClick={() => deleteHandler(bookmark)}
             className="px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700"
           >
             Delete

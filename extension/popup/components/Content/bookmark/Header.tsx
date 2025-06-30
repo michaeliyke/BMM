@@ -1,10 +1,12 @@
 import moment from "moment";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { BsTrash } from "react-icons/bs";
 import { FaClock, FaRegStar } from "react-icons/fa";
 import { MdOutlineArchive } from "react-icons/md";
 import { IBookmark } from "../../../utils/types/schemas";
+import Archive from "../archived/Archive";
+import Delete from "../deleted/Delete";
 
 type HeaderProps = {
   bookmark: IBookmark;
@@ -15,6 +17,11 @@ type HeaderProps = {
 
 export default function Header(props: HeaderProps) {
   const { bookmark, showDetails, setShowDetails, initiateEditing } = props;
+
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [archiveDialog, setArchiveDialog] = useState(false);
+
+
   return <header className="mb-4 flex flex-col">
 
     {/* The url detail */}
@@ -31,7 +38,7 @@ export default function Header(props: HeaderProps) {
     <div className="flex justify-between mt-2">
       {/* Details and Categories tabs */}
       <div className="flex space-x-3">
-        {/* Te Details tab */}
+        {/* The Details tab */}
         <button
           type="button"
           className={`px-2 py-1 text-xs font-medium text-gray-700 bg-white border-gray-300 rounded-t-md hover:bg-white ${showDetails ? 'underline' : ''} underline-offset-8`}
@@ -71,6 +78,7 @@ export default function Header(props: HeaderProps) {
           className="flex items-center space-x-1 text-xs/2 text-blue-500 hover:underline"
           aria-label="Delete bookmark"
           title="Delete bookmark"
+          onClick={() => setDeleteDialog(true)}
         >
           <BsTrash className="text-gray-500" aria-hidden="true" />
           <span>Delete</span>
@@ -95,6 +103,7 @@ export default function Header(props: HeaderProps) {
           className="flex items-center text-xs/2 space-x-1 text-blue-500 hover:underline"
           aria-label="Archive bookmark"
           title="Archive bookmark"
+          onClick={() => setArchiveDialog(true)}
         >
           <MdOutlineArchive className="text-gray-500" aria-hidden="true" />
           <span>Archive</span>
@@ -108,5 +117,15 @@ export default function Header(props: HeaderProps) {
         </time>
       </aside>
     </div>
+    <Delete
+      bookmark={bookmark}
+      dialog={deleteDialog}
+      setDialog={setDeleteDialog}
+    />
+    <Archive
+      bookmark={bookmark}
+      dialog={archiveDialog}
+      setDialog={setArchiveDialog}
+    />
   </header>;
 }

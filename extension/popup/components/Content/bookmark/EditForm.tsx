@@ -36,7 +36,7 @@ export default function EditForm(props: BookmarkEditFormProps) {
   /**
    * Resets state variables relevant to editing
    */
-  function setStateVars(bookmark: IBookmark) {
+  function stateUpdates(bookmark: IBookmark) {
     setIsEditing(false);
     setBookmarkToShow(bookmark);
     return bookmark;
@@ -49,7 +49,7 @@ export default function EditForm(props: BookmarkEditFormProps) {
     e.preventDefault();
     Bookmark.update({ ...bookmark, title, url, description })
       .then(postProcess)
-      .then(setStateVars)
+      .then(stateUpdates)
       .catch(error);
   }
 

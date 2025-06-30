@@ -18,25 +18,15 @@ import CategoryDropdown from "./widgets/CategoryDropDown";
  * Each bookmark can be viewed, edited, archived, or deleted.
  */
 export default function Bookmarks() {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
-  const [activeBookmarkIndex, setActiveBookmarkIndex] = useState<number>(-1);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [archiveDialog, setArchiveDialog] = useState(false);
+
   const {
     setBookmarkToShow,
     selectedTag,
     bookmarks,
     selectedCategory,
   } = useAppState();
-
-  const handleDelete = (index: number) => {
-    setActiveBookmarkIndex(index);
-    setDeleteDialogOpen(true);
-  };
-
-  function handleArchive(index: number) {
-    setActiveBookmarkIndex(index);
-    setArchiveDialogOpen(true);
-  };
 
   const tagBookmark = bookmarkRefFilter(selectedTag);
   const categoryBookmark = bookmarkRefFilter(selectedCategory);
@@ -49,8 +39,8 @@ export default function Bookmarks() {
 
   return (
     <section className="grid grid-cols-1 gap-2 bg-gray-50">
-      {filteredBookmarks.map((bookmark, index) => (
-        <article
+      {filteredBookmarks.map(function (bookmark, index) {
+        return <article
           key={index}
           className="relative px-5 pt-1 pb-2 bg-white shadow-md rounded-lg hover:shadow-xl transition duration-300 group"
         >
@@ -72,7 +62,7 @@ export default function Bookmarks() {
             <nav className="flex items-center space-x-5">
               <menu className="flex space-x-3 opacity-0 group-hover:opacity-100 transition duration-300">
                 <button
-                  onClick={() => handleArchive(index)}
+                  onClick={() => setArchiveDialog(true)}
                   className="text-gray-500 hover:text-blue-600 transition duration-200"
                   aria-label="Archive"
                   title="Archive"
@@ -87,7 +77,7 @@ export default function Bookmarks() {
                   <AiOutlineEdit size={14} />
                 </button>
                 <button
-                  onClick={() => handleDelete(index)}
+                  onClick={() => setDeleteDialog(true)}
                   className="text-gray-500 hover:text-red-600 transition duration-200"
                   aria-label="Delete"
                   title="Delete"
@@ -125,20 +115,22 @@ export default function Bookmarks() {
 
           {/* Tags Section */}
           <BookmarkItemFooter />
+
+          {/* Archive and Delete dialogs */}
+          <Delete
+            bookmark={bookmark}
+            dialog={deleteDialog}
+            setDialog={setDeleteDialog}
+            bgOpacity={5}
+          />
+          <Archive
+            bookmark={bookmark}
+            dialog={archiveDialog}
+            setDialog={setArchiveDialog}
+            bgOpacity={5}
+          />
         </article>
-      ))}
-      <Archive
-        bookmark={filteredBookmarks[activeBookmarkIndex]}
-        archiveDialogOpen={archiveDialogOpen}
-        setArchiveDialogOpen={setArchiveDialogOpen}
-        setActiveBookmarkIndex={setActiveBookmarkIndex}
-      />
-      <Delete
-        bookmark={filteredBookmarks[activeBookmarkIndex]}
-        deleteDialogOpen={deleteDialogOpen}
-        setDeleteDialogOpen={setDeleteDialogOpen}
-        setActiveBookmarkIndex={setActiveBookmarkIndex}
-      />
+      })}
     </section>
 
   );

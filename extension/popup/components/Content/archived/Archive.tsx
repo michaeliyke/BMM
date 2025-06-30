@@ -5,38 +5,28 @@ import { IBookmark } from "../../../utils/types/schemas";
 
 type ArchiveDialogProps = {
   bookmark: IBookmark;
-  archiveDialogOpen: boolean;
-  setArchiveDialogOpen: Dispatch<SetStateAction<boolean>>;
-  setActiveBookmarkIndex: Dispatch<SetStateAction<number>>;
+  dialog: boolean;
+  setDialog: Dispatch<SetStateAction<boolean>>;
+  bgOpacity?: number;
 };
 
 /**
  * ArchiveDialog component renders a modal dialog to confirm the archiving of a bookmark.
  */
 export default function Archive(props: ArchiveDialogProps) {
-  const {
-    bookmark,
-    archiveDialogOpen,
-    setArchiveDialogOpen,
-    setActiveBookmarkIndex,
-  } = props;
+  const { bookmark, dialog, setDialog, bgOpacity = 50 } = props;
 
   const { data, setData } = useAppState();
 
-  if (!archiveDialogOpen)
+  if (!dialog)
     return null;
-
-  function handleCancel() {
-    setArchiveDialogOpen(false);
-    setActiveBookmarkIndex(-1);
-  }
 
   /**
    * Handles the archiving of a bookmark. This function updates the bookmark's
    * archived status to 1, updates the state with the new data, and closes the
    * archive dialog.
    */
-  function archiveHandler() {
+  function archiveHandler(bookmark: IBookmark) {
     (new Bookmark(bookmark)).archive()
       .then(() => {
         const updatedData = data.map((category) => {
@@ -51,13 +41,12 @@ export default function Archive(props: ArchiveDialogProps) {
         console.error(error);
       })
       .finally(() => {
-        setArchiveDialogOpen(false);
-        setActiveBookmarkIndex(-1);
+        setDialog(false);
       });
   }
 
   return (
-    <dialog className="fixed h-screen w-screen z-1 inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 open">
+    <dialog className={`fixed h-screen w-screen z-[1000000] inset-0 flex items-center justify-center bg-gray-900 bg-opacity-${bgOpacity} open`}>
       <article className="bg-white rounded-lg p-6 max-w-sm w-full shadow-md">
         <header>
           <h2 className="text-lg font-semibold text-gray-900">Confirm Archiving</h2>
@@ -68,13 +57,13 @@ export default function Archive(props: ArchiveDialogProps) {
         </p>
         <footer className="mt-6 flex justify-end space-x-3">
           <button
-            onClick={handleCancel}
+            onClick={() => setDialog(false)}
             className="px-4 py-2 text-sm text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
           >
             Cancel
           </button>
           <button
-            onClick={archiveHandler}
+            onClick={() => archiveHandler(bookmark)}
             className="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
           >
             Archive
