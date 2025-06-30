@@ -1,27 +1,23 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
-import BookmarkBin from "../../../data/adapters/bookmark_bin";
-import { IDeletedBookmark } from "../../../utils/types/schemas";
+import { useAppState } from "../../../hooks/globalstate";
 
 export default function Deleted() {
-    const [deletedBookmarks, setDeletedBookmarks] = useState<IDeletedBookmark[]>([]);
-
-    useEffect(() => {
-        BookmarkBin.getDeletedBookmarks().then((_deletedBookmarks: IDeletedBookmark[]) => {
-            setDeletedBookmarks(_deletedBookmarks);
-        });
-    }, []);
+    const { bookmarks } = useAppState();
+    const deleted = bookmarks.filter(function (bookmark) {
+        return (bookmark.deleted === 1);
+    });
 
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
-            {deletedBookmarks.map((bookmark, index) => (
-                <article
+            {deleted.map(function (bookmark, index) {
+                return <article
                     key={index}
                     className="relative px-5 py-2 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"
                 >
                     <div className="flex justify-between items-center">
                         <h2 className="text-sm font-semibold text-gray-900 truncate">
                             <button
+                                type="button"
                                 onClick={() => { }}
                                 className="text-sm text-gray-700 line-clamp-2 mt-1 hover:underline"
                                 title="View bookmark details"
@@ -60,7 +56,7 @@ export default function Deleted() {
                     </section>
 
                 </article>
-            ))}
+            })}
         </section>
     );
 }

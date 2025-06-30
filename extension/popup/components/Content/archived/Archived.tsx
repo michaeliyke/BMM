@@ -1,21 +1,21 @@
 import moment from "moment";
 import { useAppState } from "../../../hooks/globalstate";
 import { sortedBookmarks } from "../../../utils/common";
-import { log } from "../../../utils/functional.lib.dev";
-import { ICategory } from "../../../utils/types/schemas";
 
 export default function Archived() {
-  const { setBookmarkToShow, data } = useAppState();
+  const { setBookmarkToShow, bookmarks } = useAppState();
 
-  function filterArchived(d: ICategory[]) {
-    log(d);
-    return [];
-  }
+  const archived = bookmarks.filter(function (bookmark) {
+    return (
+      bookmark.deleted !== 1
+      && bookmark.archived === 1
+    );
+  });
 
   return (
     <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
-      {sortedBookmarks(filterArchived(data)).map((bookmark, index) => (
-        <article
+      {sortedBookmarks(archived).map(function (bookmark, index) {
+        return <article
           key={index}
           className="relative px-5 py-2 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"
         >
@@ -60,7 +60,7 @@ export default function Archived() {
           </section>
 
         </article>
-      ))}
+      })}
     </section>
   );
 }

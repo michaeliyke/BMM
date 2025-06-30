@@ -1,21 +1,17 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
-import Bookmark from "../../../data/adapters/bookmark";
-import { IBookmark } from "../../../utils/types/schemas";
+import { useAppState } from "../../../hooks/globalstate";
 
 export default function Favorites() {
-    const [favoriteBookmarks, setFavoriteBookmarks] = useState<IBookmark[]>([]);
+    const { bookmarks } = useAppState();
 
-    useEffect(() => {
-        Bookmark.getFavorites().then((favorites: IBookmark[]) => {
-            setFavoriteBookmarks(favorites);
-        });
-    }, []);
+    const favoriteBookmarks = bookmarks.filter(function (bookmark) {
+        return bookmark.deleted !== 1 && bookmark.starred === 1
+    });
 
     return (
         <section className="grid grid-cols-1 gap-2 p-6 bg-gray-50">
-            {favoriteBookmarks.map((bookmark, index) => (
-                <article
+            {favoriteBookmarks.map(function (bookmark, index) {
+                return <article
                     key={index}
                     className="relative px-5 py-2 bg-white shadow-md rounded-lg hover:shadow-xl hover:bg-gray-100 transition duration-300 group"
                 >
@@ -60,7 +56,7 @@ export default function Favorites() {
                     </section>
 
                 </article>
-            ))}
+            })}
         </section>
     );
 }
