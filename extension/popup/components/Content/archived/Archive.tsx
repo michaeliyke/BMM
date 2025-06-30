@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import Bookmark from "../../../data/adapters/bookmark";
 import { useAppState } from "../../../hooks/globalstate";
-import { IBookmark } from "../../../utils/types/schemas";
+import { error } from "../../../utils/functional.lib.dev";
+import { IBMM, IBookmark } from "../../../utils/types/schemas";
 
 type ArchiveDialogProps = {
   bookmark: IBookmark;
@@ -16,33 +17,44 @@ type ArchiveDialogProps = {
 export default function Archive(props: ArchiveDialogProps) {
   const { bookmark, dialog, setDialog, bgOpacity = 50 } = props;
 
-  const { data, setData } = useAppState();
+  const { bookmarkToShow, setBookmarkToShow, feedAllStateComponents, } = useAppState();
 
   if (!dialog)
     return null;
 
   /**
-   * Handles the archiving of a bookmark. This function updates the bookmark's
-   * archived status to 1, updates the state with the new data, and closes the
-   * archive dialog.
+   * Replaces the old bookmark object with the updated version within bmm
+   * @param bookmark the updated bookmark object
    */
+  function postProcess(bookmark: IBookmark) {
+    feedAllStateComponents(function (bmm: IBMM) {
+      bmm.bookmarkObjects[bookmark.id] = { ...bookmark };
+      return bmm;
+    });
+    return bookmark;
+  }
+
+  /**
+   * Restores relevant states
+   * @param bookmark the updated bookmark object
+   */
+  function stateUpdates(bookmark: IBookmark) {
+    setDialog(false);
+
+    // if the bookmark is currently displayed, close it
+    if (bookmarkToShow?.id === bookmark.id)
+      setBookmarkToShow(null);
+    return bookmark;
+  }
+
+  /**
+   * Handles the archiving of a bookmark
+  */
   function archiveHandler(bookmark: IBookmark) {
-    (new Bookmark(bookmark)).archive()
-      .then(() => {
-        const updatedData = data.map((category) => {
-          const updatedBookmarks = ([] as IBookmark[]).map((b) => {
-            return b.id === bookmark.id ? { ...b, archived: 1 } : b;
-          });
-          return { ...category, bookmarks: updatedBookmarks };
-        });
-        setData(updatedData);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setDialog(false);
-      });
+    Bookmark.update({ ...bookmark, archived: 1 })
+      .then(postProcess)
+      .then(stateUpdates)
+      .catch(error);
   }
 
   return (

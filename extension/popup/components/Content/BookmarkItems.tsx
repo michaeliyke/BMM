@@ -32,7 +32,12 @@ export default function Bookmarks() {
   const categoryBookmark = bookmarkRefFilter(selectedCategory);
 
   let filteredBookmarks = bookmarks.filter(function filter(bookmark) {
-    return tagBookmark(bookmark) && categoryBookmark(bookmark);
+    return (
+      tagBookmark(bookmark)
+      && categoryBookmark(bookmark)
+      && bookmark.deleted !== 1
+      && bookmark.archived !== 1
+    );
   });
 
   filteredBookmarks = sortedBookmarks(filteredBookmarks);
