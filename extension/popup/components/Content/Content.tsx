@@ -1,6 +1,6 @@
 
-import Body from "./Body";
 import Header from "./Header";
+import Switcher from "./Switcher";
 
 /**
  * ContentBar component is responsible for rendering the content section of the application.
@@ -11,7 +11,7 @@ export default function Content() {
     <article className="content mt-0 border-l border-r border-gray-200 shadow-sm">
       <Header />
 
-      <Body />
+      <Switcher />
       <footer className="p-4 bg-gray-100 border-t border-gray-200">Content Footer</footer>
     </article>
   );

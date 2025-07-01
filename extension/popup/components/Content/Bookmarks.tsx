@@ -7,8 +7,9 @@ import { useAppState } from "../../hooks/globalstate";
 import { bookmarkRefFilter } from "../../utils/appState";
 import { sortedBookmarks } from "../../utils/common";
 import ReadableDate from "../../utils/readabledate";
-import BookmarkItemFooter from "./BookmarkItemFooter";
+import ItemFooter from "./ItemFooter";
 import Archive from "./archived/Archive";
+import Bookmark from "./bookmark/Bookmark";
 import Delete from "./deleted/Delete";
 import Favorite from "./favorites/Favorite";
 import CategoryDropdown from "./widgets/CategoryDropDown";
@@ -22,6 +23,7 @@ export default function Bookmarks() {
   const [archiveDialog, setArchiveDialog] = useState(false);
 
   const {
+    bookmarkToShow,
     setBookmarkToShow,
     selectedTag,
     bookmarks,
@@ -31,7 +33,7 @@ export default function Bookmarks() {
   const tagBookmark = bookmarkRefFilter(selectedTag);
   const categoryBookmark = bookmarkRefFilter(selectedCategory);
 
-  let filteredBookmarks = bookmarks.filter(function filter(bookmark) {
+  const filteredBookmarks = bookmarks.filter(function filter(bookmark) {
     return (
       tagBookmark(bookmark)
       && categoryBookmark(bookmark)
@@ -40,11 +42,14 @@ export default function Bookmarks() {
     );
   });
 
-  filteredBookmarks = sortedBookmarks(filteredBookmarks);
+  if (bookmarkToShow) {
+    return <Bookmark />
+  }
+
 
   return (
     <section className="grid grid-cols-1 gap-2 bg-gray-50">
-      {filteredBookmarks.map(function (bookmark, index) {
+      {sortedBookmarks(filteredBookmarks).map(function (bookmark, index) {
         return <article
           key={index}
           className="relative px-5 pt-1 pb-2 bg-white shadow-md rounded-lg hover:shadow-xl transition duration-300 group"
@@ -118,7 +123,7 @@ export default function Bookmarks() {
           <Favorite bookmark={bookmark} />
 
           {/* Tags Section */}
-          <BookmarkItemFooter />
+          <ItemFooter />
 
           {/* Archive and Delete dialogs */}
           <Delete

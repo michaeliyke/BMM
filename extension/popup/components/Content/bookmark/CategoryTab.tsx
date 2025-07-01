@@ -3,7 +3,22 @@ import CategoryList from "../widgets/CategoryList";
 /**
  * The category tab of the details view of a bookmark
  */
-export default function CategoryTab({ categories }: { categories: string[]; }) {
+export default function CategoryTab() {
+
+  const categories = [
+    'Category 1',
+    'Category 2',
+    'Category 3',
+    'Category 4',
+    'Category 5',
+    'Category 6',
+    'Category 7',
+    'Category 8',
+    'Category 9',
+    'Category 10',
+
+  ];
+
   return <>
     <section aria-labelledby="create-category-heading" className="w-60 mx-auto p-4 bg-white shadow-md rounded-md border border-gray-200">
       <h2

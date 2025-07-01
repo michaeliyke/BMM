@@ -1,6 +1,6 @@
 import { FaCommentDots } from "react-icons/fa";
 import { useAppState } from "../../../hooks/globalstate";
-import BookmarkItemFooter from "../BookmarkItemFooter";
+import ItemFooter from "../ItemFooter";
 
 /**
  * The body of the details view of a bookmark
@@ -32,6 +32,6 @@ export default function Body() {
       </h2>
     </section>
     <hr className="my-3" />
-    <BookmarkItemFooter />
+    <ItemFooter />
   </>;
 }

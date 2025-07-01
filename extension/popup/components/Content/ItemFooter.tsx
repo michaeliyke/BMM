@@ -6,7 +6,7 @@ import { ITag } from "../../utils/types/schemas";
 /**
  * Footer component that displays a list of tags associated with a bookmark and allows adding new tags.
  */
-export default function BookmarkItemFooter() {
+export default function ItemFooter() {
   const [showTagInput, setShowTagInput] = useState(false);
   const [newTag, setNewTag] = useState("");
   // const bookmark = bookmarkToShow;

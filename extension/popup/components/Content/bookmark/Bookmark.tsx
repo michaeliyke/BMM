@@ -1,22 +1,16 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import Body from "./body";
 import CategoryTab from "./CategoryTab";
 import EditForm from "./EditForm";
 import Header from "./Header";
 
-type BookmarkViewProps = {
-  showDetails: boolean;
-  setShowDetails: Dispatch<SetStateAction<boolean>>;
-};
-
-
 /**
  * Displays the details view of a selected bookmark.
  * It allows users to view and edit the bookmark information.
  */
-export default function BookmarkView(props: BookmarkViewProps) {
-  const { showDetails, setShowDetails } = props;
+export default function Bookmark() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [showDetails, setShowDetails] = useState<boolean>(true);
 
   /**
    * Handles the edit action by setting the editing state to true.
@@ -25,20 +19,6 @@ export default function BookmarkView(props: BookmarkViewProps) {
   function initiateEditing() {
     setIsEditing(true);
   }
-
-  const categories = [
-    'Category 1',
-    'Category 2',
-    'Category 3',
-    'Category 4',
-    'Category 5',
-    'Category 6',
-    'Category 7',
-    'Category 8',
-    'Category 9',
-    'Category 10',
-
-  ]
 
   return (
     isEditing ?
@@ -61,7 +41,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
           {/* Details section and the categories tab */}
           {showDetails
             ? <Body />
-            : <CategoryTab categories={categories} />
+            : <CategoryTab />
           }
         </article>
       </section >
