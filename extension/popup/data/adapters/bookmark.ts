@@ -45,56 +45,6 @@ export default class Bookmark implements IBookmark {
     }
 
     /**
-     * Retrieves the list of favorite bookmarks.
-     *
-     * This method acquires a lock to ensure that the retrieval process is thread-safe.
-     * It fetches all bookmark records and filters out those that are not starred.
-     *
-     * @returns {Promise<IBookmark[]>} A promise that resolves to an array of favorite bookmarks.
-     * @throws {Error} Throws an error if the retrieval process fails.
-     */
-    static async getFavorites(): Promise<IBookmark[]> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        return lockManager.acquire(`${callerName}:getFavorites`, async () => {
-            try {
-                const records = await Operator.getRecords<IBookmark>('bookmarks');
-                return records.filter((bookmark) => bookmark.starred === 1);
-            } catch (error) {
-                throw new Error(`An error occurred in Bookmark.getFavorites:- ${error}`);
-            }
-        });
-    }
-
-    /**
-     * Toggles the 'starred' property of a given bookmark.
-     *
-     * This method acquires a lock based on the caller's name and the bookmark ID to ensure
-     * that the operation is thread-safe. It retrieves the existing bookmark record, toggles
-     * the 'starred' property (setting it to 1 if it was 0 or undefined, and to 0 if it was 1),
-     * updates the record in the database, and returns the updated bookmark.
-     *
-     * @param {IBookmark} bookmark - The bookmark object to be toggled.
-     * @returns {Promise<IBookmark>} - A promise that resolves to the updated bookmark object.
-     * @throws {Error} - Throws an error if the bookmark is not found or if any other error occurs during the operation.
-     */
-    static async toggleStarred(bookmark: IBookmark): Promise<IBookmark> {
-        const callerName = new Error().stack?.split('\n')[2].trim().split(' ')[1];
-        return lockManager.acquire(`${callerName}:${bookmark.id}`, async () => {
-            try {
-                const existing = await Operator.getRecordById<IBookmark>('bookmarks', bookmark.id);
-                if (!existing) throw new Error(`Bookmark.toggleStarred: Bookmark not found: ${bookmark.id}`);
-                // toggle the starred property even if undefined earlier
-                existing.starred = existing.starred ? 0 : 1;
-                await Operator.updateRecord<IBookmark>('bookmarks', existing);
-                return existing;
-            } catch (error) {
-                throw new Error(`An error occurred in Bookmark.toggleStarred:- ${error}, ${bookmark.id}`);
-            }
-        }
-        );
-    }
-
-    /**
      * Checks if a bookmark with the given ID exists in the database.
      *
      * @param ID - The unique identifier of the bookmark to check.
@@ -188,27 +138,6 @@ export default class Bookmark implements IBookmark {
     }
 
     /**
-     * Deletes a bookmark by its ID.
-     *
-     * @returns {Promise<void>} A promise that resolves when the bookmark is deleted.
-     * @throws {Error} If the bookmark with the specified ID does not exist.
-     */
-    async delete(): Promise<void> {
-        return lockManager.acquire(`Bookmark.delete:${this.id}`, async () => {
-            if (!(await this.exists())) {
-                throw new Error(`Bookmark.delete:- Bookmark not found: ${this}`);
-            }
-
-            // TODO: Check & raise an error to call this.moveTags and this.moveCategories
-            try {
-                await Operator.deleteRecord('bookmarks', this.id);
-            } catch (error) {
-                throw new Error(`An error occurred in Bookmark.delete:- ${error}, ${this.id}`);
-            }
-        });
-    }
-
-    /**
      * Retrieves a list of bookmarks from the database.
      *
      * @returns {Promise<IBookmark[]>} A promise that resolves to an array of bookmarks.
@@ -221,33 +150,6 @@ export default class Bookmark implements IBookmark {
                 throw new Error(`An error occurred in Bookmark.getBookmarks:- ${error}`);
             }
         });
-    }
-
-    /**
-     * Retrieves a bookmark by its unique identifier.
-     *
-     * @param {string} ID - The unique identifier of the bookmark.
-     * @returns {Promise<IBookmark>} A promise that resolves to the bookmark object.
-     */
-    static async getBookmarkById(ID: string): Promise<IBookmark> {
-        return lockManager.acquire(`Bookmark.getBookmarkById:${ID}`, async () => {
-            try {
-                return await Operator.getRecordById<IBookmark>('bookmarks', ID) || null;
-            } catch (error) {
-                throw new Error(`An error occurred in Bookmark.getBookmarkById:- ${error}, ${ID}`);
-            }
-        });
-    }
-
-    /**
-     * Archives the current bookmark by setting its `archived` property to 1
-     * and then updating the bookmark in the database.
-     *
-     * @returns {Promise<void>} A promise that resolves when the bookmark has been archived.
-     */
-    async archive(): Promise<IBookmark> {
-        this.archived = 1;
-        return await this.update();
     }
 
     static async fechAllProperties() {

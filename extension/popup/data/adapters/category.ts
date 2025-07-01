@@ -1,9 +1,7 @@
 import { isEmpty } from "../../utils/common";
 import { lockManager } from "../../utils/locker";
 import {
-    ICategory,
-    ICategoryBookmark,
-    ICategoryTag
+    ICategory
 } from "../../utils/types/schemas";
 import { Operator } from "../operator";
 
@@ -64,34 +62,6 @@ export default class Category implements ICategory {
     }
 
     /**
-     * Fetches all categories along with their associated bookmarks and tags.
-     *
-     * This method retrieves all categories from the database, and for each category,
-     * it fetches the associated tags and bookmarks. For each bookmark, it also fetches
-     * the associated tags and attaches them to the bookmark.
-     *
-     * @returns {Promise<ICategory[]>} A promise that resolves to an array of categories,
-     * each containing their associated bookmarks and tags.
-     */
-    static async getAll(): Promise<ICategory[]> {
-        // TODO: Modify to fetch all categories, its bookmarks and tags and their refs
-        return lockManager.acquire('Category.getAll', async () => {
-            const categories = await Category.getCategories();
-            /* for (const category of categories) {
-                const tags = await CategoryTag.getTags(category.id);
-                const bookmarks = await CategoryBookmark.getBookmarks(category.id);
-                for (const bookmark of bookmarks) {
-                    const tags = await BookmarkTag.getTags(bookmark.id);
-                    bookmark.tags = tags;
-                }
-                category.bookmarks = bookmarks;
-                category.tags = tags;
-            } */
-            return categories;
-        });
-    }
-
-    /**
      * Creates a new category record in the database.
      *
      * @returns A promise that resolves when the category has been successfully created.
@@ -142,106 +112,5 @@ export default class Category implements ICategory {
      */
     static async update(category: ICategory) {
         return new Category(category).update();
-    }
-
-    /**
-     * Retrieves a list of categories from the database.
-     *
-     * @returns {Promise<ICategory[]>} A promise that resolves to an array of category objects.
-     */
-    static async getCategories(): Promise<ICategory[]> {
-        return lockManager.acquire('Category.getCategories', async () => {
-            try {
-                return await Operator.getRecords<ICategory>('categories');
-            } catch (error) {
-                throw new Error(`An error occurred in Category.getCategories:- ${error}, ${this}`);
-            }
-        });
-    }
-
-    /**
-     * Retrieves a category by its ID.
-     *
-     * @param {string} ID - The unique identifier of the category.
-     * @returns {Promise<ICategory>} A promise that resolves to the category object.
-     */
-    static async getCategoryById(ID: string): Promise<ICategory> {
-        return lockManager.acquire(`Category.getCategoryById:${ID}`, async () => {
-            try {
-                return await Operator.getRecordById<ICategory>('categories', ID) || null;
-            } catch (error) {
-                throw new Error(`An error occurred in Category.getCategoryById:- ${error}, ${this}`);
-            }
-        });
-    }
-
-    /**
-     * Retrieves a category by its name.
-     *
-     * This method acquires a lock to ensure that the retrieval operation is thread-safe.
-     * It uses the `Operator.getRecordByIndex` method to fetch the category record from the 'categories' store
-     * using the 'categories_index' index.
-     *
-     * @param name - The name of the category to retrieve.
-     * @returns A promise that resolves to the category object.
-     * @throws An error if the retrieval operation fails.
-     */
-    static async getCategoryByName(name: string): Promise<ICategory> {
-        return lockManager.acquire(`Category.getCategoryById:${name}`, async () => {
-            try {
-                return await Operator.getRecordByIndex<ICategory>('categories', 'categories_index', name) || null;
-            } catch (error) {
-                throw new Error(`An error occurred in Category.getCategoryById:- ${error}, ${this}`);
-            }
-        });
-    }
-
-    /**
-     * Deletes a category by its ID, migrating its bookmarks and tags to the default category.
-     *
-     * @throws {Error} If the category with the given ID does not exist.
-     * @throws {Error} If the default category does not exist.
-     * @throws {Error} If attempting to delete the default category.
-     * @returns A promise that resolves when the category has been deleted and its bookmarks and tags have been migrated.
-     */
-    async delete(): Promise<void> {
-        lockManager.acquire(`Category.delete:${this.name}`, async () => {
-            // Ensure the category exists
-            try {
-                if (!(await Operator.getRecordByIndex('categories', 'categories_index', this.id)))
-                    throw new Error(`Category with id ${this.id} not found`);
-
-                // Ensure the default category exists
-                const defaultCategory = await Operator.getDefaultCategory();
-                if (!defaultCategory)
-                    throw new Error('Default category not found');
-
-                // The default category cannot be deleted but can be changed
-                if (this.id === defaultCategory.id)
-                    throw new Error('Cannot delete the default category');
-
-                // Query to handle compound keys between category_id and any other key: [categoryId, "..."]
-                const query = IDBKeyRange.bound([this.id, ""], [this.id, "\uffff"]);
-
-                // Migrate all its bookmarks to the default category
-                const categoryBookmarks = await Operator.getRecordsByIndex<ICategoryBookmark>('category_bookmarks', 'category_bookmarks_index', query);
-                for (const categoryBookmark of categoryBookmarks) {
-                    const updated = { ...categoryBookmark, category_id: defaultCategory.id };
-                    await Operator.updateRecord<ICategoryBookmark>('category_bookmarks', updated);
-                }
-
-                // Migrate all its tags to the default category
-                const categoryTags = await Operator.getRecordsByIndex<ICategoryTag>('category_tags', 'category_tags_index', query);
-                for (const categoryTag of categoryTags) {
-                    const updated = { ...categoryTag, category_id: defaultCategory.id };
-                    await Operator.updateRecord<ICategoryTag>('category_tags', updated);
-                }
-
-                // Delete the category itself
-                await Operator.deleteRecord('categories', this.id);
-            } catch (error) {
-                throw new Error(`An error occurred in Category.delete:- ${error}, ${this}`);
-            }
-        });
     }
 }

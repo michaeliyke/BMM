@@ -2,16 +2,9 @@ import Bookmark from "./adapters/bookmark";
 import Category from "./adapters/category";
 // import User from "./adapters/user";
 import { IBookmark, ICategory } from "../utils/types/schemas";
-export default {
-    /**
-     * Retrieves all categories.
-     *
-     * @returns {Promise<ICategory[]>} A promise that resolves to an array of ICategory objects.
-     */
-    async getAll() {
-        return await Category.getAll();
-    },
 
+
+export default {
     async fetchAllProperties() {
         return await Bookmark.fechAllProperties();
     },

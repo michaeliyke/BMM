@@ -47,10 +47,6 @@ export const Operator = {
                 // users table
                 if (!db.objectStoreNames.contains("users"))
                     db.createObjectStore("users", { keyPath: "id" });
-
-                // bookmark_bin table: uniqueness NOT needed
-                if (!db.objectStoreNames.contains("bookmark_bin"))
-                    db.createObjectStore("bookmark_bin", { keyPath: "id" });
             };
 
             request.onsuccess = () => resolve(request.result);
@@ -241,31 +237,6 @@ export const Operator = {
             });
         });
     },
-
-    /**
-     * Retrieves the default category from the database.
-     *
-     * This method initializes the database, starts a read-only transaction on the
-     * "categories" object store, and retrieves the record where the `is_default` field is 1
-     * using the "default_category_index".
-     *
-     * @returns {Promise<ICategory>} A promise that resolves to the default category.
-     * @throws Will reject the promise if there is an error during the database transaction.
-     */
-    async getDefaultCategory(): Promise<ICategory> {
-        return queueManager.enqueue(async () => {
-            const db = await this.initializeDatabase();
-            return await new Promise((resolve, reject) => {
-                const tx = db.transaction("categories", "readonly");
-                const store = tx.objectStore("categories");
-                const index = store.index("default_category_index");
-                const request = index.get(1);  // return the record whose is_default === 1
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => resolve(request.result);
-            });
-        });
-    },
-
 
     /**
      * Deletes records from an IndexedDB object store by a specified index and query.
