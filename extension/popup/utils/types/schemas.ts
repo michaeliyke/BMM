@@ -125,25 +125,6 @@ export interface IBMM {
 
 export type ImportData = ICategory[] | IBookmark[];
 
-
-export interface ICategoryBookmark {
-  id: string;
-  category_id: string;
-  bookmark_id: string;
-};
-
-export interface ICategoryTag {
-  id: string;
-  category_id: string;
-  tag_id: string;
-};
-
-export interface IBookmarkTag {
-  id: string;
-  bookmark_id: string;
-  tag_id: string;
-};
-
 // All Data Adapters should implement the following interface
 export interface IDATA {
   exists(): Promise<boolean>;
