@@ -105,9 +105,8 @@ export default function Bookmarks() {
               href={bookmark.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-blue-500 mb-0 hover:underline truncate inline"
+              className="text-xs text-blue-500 whitespace-nowrap mb-0 text-ellipsis hover:underline overflow-hidden truncate inline-block max-w-[50ch]"
               title={bookmark.url}
-              style={{ display: 'inline-block', maxWidth: '50ch', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
             >
               {bookmark.url}
             </a>

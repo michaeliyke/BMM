@@ -1,11 +1,12 @@
 import { FaCommentDots } from "react-icons/fa";
-import { IBookmark } from "../../../utils/types/schemas";
+import { useAppState } from "../../../hooks/globalstate";
 import BookmarkItemFooter from "../BookmarkItemFooter";
 
 /**
  * The body of the details view of a bookmark
  */
-export default function Body({ bookmark }: { bookmark: IBookmark }) {
+export default function Body() {
+  const { bookmarkToShow } = useAppState();
   return <>
     {/* Description */}
     <section className="mb-6" aria-labelledby="description-heading">
@@ -13,10 +14,10 @@ export default function Body({ bookmark }: { bookmark: IBookmark }) {
         id="description-heading"
         className="text-sm text-gray-500 text-center font-semibold mb-2"
       >
-        {bookmark.title}
+        {bookmarkToShow?.title}
       </h2>
       <p className="text-gray-700 text-sm/2 leading-relaxed">
-        {bookmark.description}
+        {bookmarkToShow?.description}
       </p>
     </section>
 

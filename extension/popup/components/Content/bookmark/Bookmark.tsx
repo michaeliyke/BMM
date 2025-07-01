@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { useAppState } from "../../../hooks/globalstate";
 import Body from "./body";
 import CategoryTab from "./CategoryTab";
 import EditForm from "./EditForm";
@@ -18,7 +17,6 @@ type BookmarkViewProps = {
 export default function BookmarkView(props: BookmarkViewProps) {
   const { showDetails, setShowDetails } = props;
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const { bookmarkToShow: bookmark } = useAppState();
 
   /**
    * Handles the edit action by setting the editing state to true.
@@ -26,11 +24,6 @@ export default function BookmarkView(props: BookmarkViewProps) {
    */
   function initiateEditing() {
     setIsEditing(true);
-  }
-
-
-  if (!bookmark) {
-    return <p>No bookmark selected</p>;
   }
 
   const categories = [
@@ -60,7 +53,6 @@ export default function BookmarkView(props: BookmarkViewProps) {
         >
           {/* Header sectiom*/}
           <Header
-            bookmark={bookmark}
             showDetails={showDetails}
             setShowDetails={setShowDetails}
             initiateEditing={initiateEditing}
@@ -68,7 +60,7 @@ export default function BookmarkView(props: BookmarkViewProps) {
 
           {/* Details section and the categories tab */}
           {showDetails
-            ? <Body bookmark={bookmark} />
+            ? <Body />
             : <CategoryTab categories={categories} />
           }
         </article>
