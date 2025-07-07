@@ -14,8 +14,7 @@ export default class Category implements ICategory {
     bookmarkIds: string[];
 
     // optional fields
-    importType?: 'category' | 'bookmark';
-    importExists?: boolean;
+    importID?: string;
     is_default?: number;
 
     constructor(category: ICategory) {
@@ -27,8 +26,7 @@ export default class Category implements ICategory {
         this.bookmarkIds = category.bookmarkIds;
 
         // optional fields
-        this.importType = category.importType;
-        this.importExists = category.importExists;
+        this.importID = category.importID;
         this.is_default = category.is_default;
 
         const empty = isEmpty(['id', 'name', 'created_at',

@@ -26,7 +26,7 @@ export interface ITag {
   categoryIds: string[];
   bookmarkIds: string[];
 
-  importExists?: boolean;
+  importID?: string;
 };
 
 /**
@@ -40,8 +40,7 @@ export interface ICategory {
   bookmarkIds: string[];
   tagIds: string[];
 
-  importType?: 'category' | 'bookmark';
-  importExists?: boolean;
+  importID?: string;
   is_default?: number; // 0 or 1 Only the dummy default category should have it set
 };
 
@@ -58,12 +57,21 @@ export interface IBookmark {
   categoryIds: string[];
   tagIds: string[];
   // Optional properties set as needed
-  importType?: 'category' | 'bookmark';
-  importExists?: boolean;
+  importID?: string;
   archived?: number; // 0 or 1
   deleted?: number; // 0 or 1
   starred?: number; // 0 or 1
 };
+
+/**
+ * BMM core data types
+ */
+export type BMMTypes = ICategory | IBookmark | ITag;
+
+/**
+ * BMM core type string tuples
+ */
+export type BMMTypesStr = "category" | "bookmark" | "tag";
 
 /**
  * A generic map of entity IDs to corresponding values.
@@ -165,6 +173,20 @@ export type TFilters = "filter:categories"
   | "filter:archived"
   | "filter:deleted"
   ;
+
+/**
+ * Few File MIME Types for convinience
+ *
+ * This list will be progressive.
+ * Basically, we add what we need each time if not already included.
+ */
+export type mimetypes = "application/json"
+  | "text/plain"
+  | "image/png"
+  | "image/jpeg"
+  | "image/gif"
+  ;
+
 
 export interface ITab {
   checked: boolean;

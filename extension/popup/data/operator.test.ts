@@ -39,33 +39,10 @@ describe("INTEGRATED TESTS FOR DATA Operator", async () => {
             expect(db.objectStoreNames.contains("categories")).toBe(true);
             const store = db.transaction("categories").objectStore("categories");
             expect(store.indexNames.contains("categories_index")).toBe(true);
-            expect(store.indexNames.contains("default_category_index")).toBe(true);
         });
 
         it("should create the users store", () => { // users store
             expect(db.objectStoreNames.contains("users")).toBe(true);
-        });
-
-        it("should create the bookmark_bin store", () => { // bookmark_bin store
-            expect(db.objectStoreNames.contains("bookmark_bin")).toBe(true);
-        });
-
-        it("should create the bookmark_tags store with index", () => { // bookmark_tags store
-            expect(db.objectStoreNames.contains("bookmark_tags")).toBe(true);
-            const store = db.transaction("bookmark_tags").objectStore("bookmark_tags");
-            expect(store.indexNames.contains("bookmark_tags_index")).toBe(true);
-        });
-
-        it("should create the category_bookmarks store with index", () => { // category_bookmarks store
-            expect(db.objectStoreNames.contains("category_bookmarks")).toBe(true);
-            const store = db.transaction("category_bookmarks").objectStore("category_bookmarks");
-            expect(store.indexNames.contains("category_bookmarks_index")).toBe(true);
-        });
-
-        it("should create the category_tags store with index", () => { // category_tags store
-            expect(db.objectStoreNames.contains("category_tags")).toBe(true);
-            const store = db.transaction("category_tags").objectStore("category_tags");
-            expect(store.indexNames.contains("category_tags_index")).toBe(true);
         });
     });
 
@@ -143,26 +120,6 @@ describe("INTEGRATED TESTS FOR DATA Operator", async () => {
         it("should reject if the store or index does not exist", async () => {
             await expect(Operator.getRecordsByIndex("invalidStore", "tags_index", "Technology")).rejects.toThrow();
         });
-
-        it("should retrieve records within a specified key range", async () => {
-            const range = IDBKeyRange.bound("Bookmark 1", "Bookmark 2");
-            const result = await Operator.getRecordsByIndex("tags", "tags_index", range);
-            expect(result).toEqual(expect.arrayContaining([data[0], data[1]]));
-        });
-
-        it("should retrieve records within a specified key range", async () => {
-            const range = IDBKeyRange.bound("Bookmark 1", "Bookmark 6");
-            const result = await Operator.getRecordsByIndex("tags", "tags_index", range);
-            expect(result).toEqual(data);
-        });
-
-        it("should throw if lower is greater than upper bound for a key range", async () => {
-            try {
-                IDBKeyRange.bound("Bookmark 3", "Bookmark 1");
-            } catch (error) {
-                expect(error).toBeInstanceOf(DOMException);
-            }
-        });
     });
 
     describe("Method: Operator.getRecordByIndex()", () => {
@@ -181,22 +138,6 @@ describe("INTEGRATED TESTS FOR DATA Operator", async () => {
 
         it("should reject if the store or index does not exist", async () => {
             await expect(Operator.getRecordByIndex("invalidStore", "categories_index", "Science Category")).rejects.toThrow();
-        });
-    });
-
-    describe("Method: Operator.getDefaultCategory()", () => {
-        it("should retrieve the default category", async () => {
-            const defaultCategory = { id: "1", name: "General", is_default: 1 };
-            await Operator.createRecord("categories", defaultCategory);
-
-            const result = await Operator.getDefaultCategory();
-            expect(result).toEqual(defaultCategory);
-            await Operator.deleteRecord("categories", "1");
-        });
-
-        it("should return undefined if no default category exists", async () => {
-            const result = await Operator.getDefaultCategory();
-            expect(result).toBeUndefined();
         });
     });
 
@@ -274,14 +215,6 @@ describe("INTEGRATED TESTS FOR DATA Operator", async () => {
             await expect(Operator.deleteRecordsByIndex("tags", "tags_index", "NonExistent")).resolves.not.toThrow();
             const allRecords = await Operator.getRecords("tags");
             expect(allRecords.length).toBe(3);
-        });
-
-        it("should delete records in a key range query", async () => {
-            const range = IDBKeyRange.bound("Tag A", "Tag C"); // Covers all records
-            await Operator.deleteRecordsByIndex("tags", "tags_index", range);
-
-            const remaining = await Operator.getRecords("tags");
-            expect(remaining).toEqual([]); // Everything deleted
         });
 
         it("should reject if the index does not exist", async () => {

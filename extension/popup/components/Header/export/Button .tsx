@@ -6,7 +6,16 @@ type IPProps = {
   categories: ICategory[];
 }
 
-export default function ImportPopover(props: IPProps) {
+/**
+ * Button component for exporting bookmark categories as a JSON file.
+ *
+ * This component displays a popover containing a list of exported bookmark names (currently empty)
+ * and provides a button to trigger the export of the provided categories as a downloadable JSON file.
+ *
+ * @param props - The properties for the Button component, including bookmark categories to export.
+ * @returns A React element rendering the export button and popover UI.
+ */
+export default function Button(props: IPProps) {
   // const names = getBookmarks(props.categories).map(bookmark => bookmark.title);
   const names: string[] = [];
 

@@ -17,8 +17,7 @@ export default class Bookmark implements IBookmark {
     // optional fields
     archived?: number;
     starred?: number;
-    importType?: "category" | "bookmark";
-    importExists?: boolean;
+    importID?: string;
     deleted?: number;
 
     constructor(bookmark: IBookmark) {
@@ -34,8 +33,7 @@ export default class Bookmark implements IBookmark {
         // optional fileds
         this.archived = bookmark.archived;
         this.starred = bookmark.starred;
-        this.importType = bookmark.importType;
-        this.importExists = bookmark.importExists;
+        this.importID = bookmark.importID;
         this.deleted = bookmark.deleted;
 
 

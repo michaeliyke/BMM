@@ -12,7 +12,7 @@ export default class Tag implements ITag {
     bookmarkIds: string[];
     categoryIds: string[];
 
-    importExists?: boolean;
+    importID?: string;
 
     constructor(tag: ITag) {
         this.id = tag.id; /* uuid4(); */
@@ -22,7 +22,7 @@ export default class Tag implements ITag {
         this.bookmarkIds = tag.bookmarkIds;
         this.categoryIds = tag.categoryIds;
 
-        this.importExists = tag.importExists;
+        this.importID = tag.importID;
 
         const empty = isEmpty(['id', 'name', 'created_at', 'updated_at',
             'bookmarkIds', 'categoryIds'], tag);

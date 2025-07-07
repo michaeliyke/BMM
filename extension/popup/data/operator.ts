@@ -1,3 +1,4 @@
+import { getAllBookmarks, getAllCategories, getAllTags } from "../utils/appState";
 import { queueManager } from "../utils/locker";
 import { IBMM, ICategory, ITag } from "../utils/types/schemas";
 
@@ -115,6 +116,67 @@ export const Operator = {
                 const request = store.add(data);
                 request.onerror = () => reject(request.error);
                 request.onsuccess = () => resolve(data);
+            });
+        });
+    },
+
+    /**
+     * Inserts mutiple records at once into an indexedDb store identified by
+     *  {@link storeName}
+     * @param storeName the name of the indexedDB {@link store} (table) to insert into
+     * @param items the records to insert into the store
+     * @returns the {@link items} just inserted into the store
+     */
+    async createRecords<T>(storeName: string, items: T[]): Promise<T[]> {
+        const db = await this.initializeDatabase();
+        return queueManager.enqueue(async function () {
+            return new Promise(function (resolve, reject) {
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+
+                for (const item of items)
+                    store.add(item);
+
+                tx.oncomplete = () => resolve(items);
+                tx.onerror = () => reject(tx.error);
+                tx.onabort = () => reject(tx.error);
+            });
+        })
+    },
+
+    /**
+     * Full {@link bmm} data restore
+     * Does everything in the same transaction for a complete ACID behavior
+     *
+     * @param bmm data to be restores
+     * @returns the same input {@link bmm} data
+     */
+    async restoreBMMRecords(bmm: IBMM): Promise<IBMM> {
+        const db = await this.initializeDatabase();
+
+        return queueManager.enqueue(async function () {
+            // Init the db once, and get a single transaction
+            const tx = db.transaction(["categories", "tags", "bookmarks"], "readwrite");
+
+            // Insert bookmarks into its store
+            const bookmarkStore = tx.objectStore("bookmarks");
+            for (const bookmark of getAllBookmarks(bmm))
+                bookmarkStore.add(bookmark);
+
+            // Insert categories into its store
+            const categoryStore = tx.objectStore("categories");
+            for (const category of getAllCategories(bmm))
+                categoryStore.add(category);
+
+            // Insert tags into its store
+            const tagStore = tx.objectStore("tags");
+            for (const tag of getAllTags(bmm))
+                tagStore.add(tag);
+
+            return new Promise(function (resolve, reject) {
+                tx.oncomplete = () => resolve(bmm);
+                tx.onerror = () => reject(tx.error);
+                tx.onabort = () => reject(tx.error);
             });
         });
     },

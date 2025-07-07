@@ -9,8 +9,8 @@ import { getAllTabs, getCurrentTabTitle, getCurrentTabUrl, resetCategoryHighligh
 import { error } from "../../utils/functional.lib.dev";
 import { IBMM, IBookmark, ITab } from "../../utils/types/schemas";
 import AddAllWidget from "./AddAllWidget";
-import ExportWidget from "./ImportExport/ExportWidget";
-import ImportWidget from "./ImportExport/ImportWidget";
+import Export from "./export/Export";
+import Import from "./import/Import";
 
 /**
  * Header component for the Bookmark Manager application.
@@ -224,8 +224,8 @@ export default function Header() {
           <div className="form-control flex space-x-2">
             <AddAllWidget tabs={tabs} setTabs={setTabs} />
             {/* Submit Button */}
-            <ImportWidget />
-            <ExportWidget />
+            <Import />
+            <Export />
 
             <button
               disabled={isButtonDisabled}
